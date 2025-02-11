@@ -221,7 +221,7 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
           style={{ 
             backgroundImage: `url("${layer.path}")`,
             zIndex: index + 1,
-            animationDuration: `${(200 - (index * 30)) / scrollSpeedMultiplier}s`
+            animationDuration: `${(200 - (index * 30)) / (currentScene === 1 ? 0.2 : 1)}s`
           }}
         />
       ))}
@@ -253,7 +253,7 @@ function Home() {
                   </a>
                 </span>
                 <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>B.S. Electrical Engineering, Cockrell School of Engineering '24</span>
+                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
               </p>
               <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
             </div>
@@ -475,7 +475,6 @@ function SceneViewer() {
     <div className="scene-viewer">
       <div className="scene-viewer-content">
         <SceneSelector />
-        <ParallaxBackground scrollSpeedMultiplier={1} />
       </div>
     </div>
   );
@@ -516,7 +515,7 @@ function Layout({ children, hideSceneSelector = false }) {
   return (
     <SceneContext.Provider value={{ currentScene, setCurrentScene }}>
       <ThemeContext.Provider value={theme}>
-        <ParallaxBackground />
+        <ParallaxBackground scrollSpeedMultiplier={1} />
         <Header />
         <TableOfContents />
         {!hideSceneSelector && location.pathname === '/scene-viewer' && <SceneSelector />}
