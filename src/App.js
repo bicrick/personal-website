@@ -1,6 +1,11 @@
 import React, { useEffect, createContext, useContext, useState } from 'react';
 import { Link, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, EffectCube } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-cube';
 import './App.css';
 import PrivacyPolicy from './PrivacyPolicy';
 
@@ -264,98 +269,204 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
 function Home() {
   const theme = useTheme();
   const isDarkMode = theme.name === 'night';
+  const isMobile = window.innerWidth <= 768;
 
   return (
     <div className="App">
       <div className="container">
-        <div id="about" className="pixel-card">
-          <div className="bio-container">
-            <div className="bio-content">
-              <p className="pixel-text bio">
-                <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                  Data Engineer at 
-                  <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
-                    <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
-                  </a>
-                </span>
-                <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                  The University of Texas at Austin
-                  <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
-                    <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
-                  </a>
-                </span>
-                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
-              </p>
-              <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
-            </div>
-            <div className="bio-profile">
-              <div className="bio-profile-image">
-                <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
+        {isMobile ? (
+          <Swiper
+            effect={'cube'}
+            grabCursor={true}
+            modules={[EffectCube, Pagination]}
+            className="mobile-swiper"
+            pagination={{
+              clickable: true,
+            }}
+            cubeEffect={{
+              shadow: false,
+              slideShadows: false,
+            }}
+          >
+            <SwiperSlide>
+              <div className="pixel-card">
+                <div className="bio-container">
+                  <div className="bio-content">
+                    <p className="pixel-text bio">
+                      <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                        Data Engineer at 
+                        <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
+                          <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
+                        </a>
+                      </span>
+                      <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                        The University of Texas at Austin
+                        <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
+                          <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
+                        </a>
+                      </span>
+                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
+                    </p>
+                    <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
+                  </div>
+                  <div className="bio-profile">
+                    <div className="bio-profile-image">
+                      <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
+                    </div>
+                    <div className="bio-social-links">
+                      <a 
+                        href="https://github.com/bicrick" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="pixel-button"
+                        style={isDarkMode ? { 
+                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                          borderColor: '#9d4edd',
+                          color: '#ffffff'
+                        } : undefined}
+                      >
+                        <i className="fab fa-github"></i>
+                      </a>
+                      <a 
+                        href="https://www.linkedin.com/in/patrick-brown-470617195/" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="pixel-button"
+                        style={isDarkMode ? { 
+                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                          borderColor: '#9d4edd',
+                          color: '#ffffff'
+                        } : undefined}
+                      >
+                        <i className="fab fa-linkedin"></i>
+                      </a>
+                      <a 
+                        href="https://x.com/patrickbbrown" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="pixel-button"
+                        style={isDarkMode ? { 
+                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                          borderColor: '#9d4edd',
+                          color: '#ffffff'
+                        } : undefined}
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                          <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="bio-social-links">
-                <a 
-                  href="https://github.com/bicrick" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="pixel-button"
-                  style={isDarkMode ? { 
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    borderColor: '#9d4edd',
-                    color: '#ffffff'
-                  } : undefined}
-                >
-                  <i className="fab fa-github"></i>
-                </a>
-                <a 
-                  href="https://www.linkedin.com/in/patrick-brown-470617195/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="pixel-button"
-                  style={isDarkMode ? { 
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    borderColor: '#9d4edd',
-                    color: '#ffffff'
-                  } : undefined}
-                >
-                  <i className="fab fa-linkedin"></i>
-                </a>
-                <a 
-                  href="https://x.com/patrickbbrown" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="pixel-button"
-                  style={isDarkMode ? { 
-                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                    borderColor: '#9d4edd',
-                    color: '#ffffff'
-                  } : undefined}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                    <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                  </svg>
-                </a>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="pixel-card">
+                <h3 className="about-me-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>About Me</h3>
+                <div className="about-me-content">
+                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                    When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                  </p>
+                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                    In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
+                  </p>
+                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                    Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
+                  </p>
+                </div>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          <>
+            <div className="pixel-card">
+              <div className="bio-container">
+                <div className="bio-content">
+                  <p className="pixel-text bio">
+                    <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                      Data Engineer at 
+                      <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
+                        <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
+                      </a>
+                    </span>
+                    <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                      The University of Texas at Austin
+                      <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
+                        <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
+                      </a>
+                    </span>
+                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
+                  </p>
+                  <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
+                </div>
+                <div className="bio-profile">
+                  <div className="bio-profile-image">
+                    <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
+                  </div>
+                  <div className="bio-social-links">
+                    <a 
+                      href="https://github.com/bicrick" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <i className="fab fa-github"></i>
+                    </a>
+                    <a 
+                      href="https://www.linkedin.com/in/patrick-brown-470617195/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <i className="fab fa-linkedin"></i>
+                    </a>
+                    <a 
+                      href="https://x.com/patrickbbrown" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                        <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div className="pixel-card">
-          <h3 className="about-me-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>About Me</h3>
-          <div className="about-me-content">
-            <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
-              When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
-            </p>
-
-            <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
-              In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
-            </p>
-
-            <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
-              Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
-            </p>
-          </div>
-        </div>
+            <div className="pixel-card">
+              <h3 className="about-me-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>About Me</h3>
+              <div className="about-me-content">
+                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                </p>
+                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
+                </p>
+                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -560,15 +671,9 @@ function SceneViewer() {
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container">
-        <div className="footer-content">
-          <div className="footer-top">
-            <span className="copyright">© 2025 Patrick Brown</span>
-            <span className="separator">•</span>
-            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-          </div>
-        </div>
-      </div>
+      <span className="copyright">© 2025 Patrick Brown</span>
+      <span className="separator">•</span>
+      <Link to="/privacy" className="footer-link">Privacy Policy</Link>
     </footer>
   );
 }
