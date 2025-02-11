@@ -313,7 +313,6 @@ function Home() {
                         </a>
                       </span>
                       <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
                     </p>
                     <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
                   </div>
@@ -462,7 +461,7 @@ function Home() {
               <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
               <div className="about-me-content">
                 <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                  When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                  When I discover something new, I am immediately excited. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
                 </p>
                 <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                   In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
