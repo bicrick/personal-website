@@ -9,6 +9,8 @@ This website serves as my personal portfolio, highlighting:
 - My academic pursuit of an MS in Artificial Intelligence at The University of Texas at Austin
 - Course projects and academic work through my MSAI repository
 
+You can visit the live website here: https://bicrick.github.io/personal-website/
+
 ## Features
 
 - Clean, modern UI with responsive design
