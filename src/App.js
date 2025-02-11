@@ -273,23 +273,28 @@ function Home() {
 
   return (
     <div className="App">
-      <div className="container">
+      <div className="container" style={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%'
+      }}>
         {isMobile ? (
           <Swiper
-            effect={'cube'}
             grabCursor={true}
-            modules={[EffectCube, Pagination]}
+            modules={[Pagination]}
             className="mobile-swiper"
             pagination={{
               clickable: true,
             }}
-            cubeEffect={{
-              shadow: false,
-              slideShadows: false,
+            spaceBetween={30}
+            style={{
+              padding: '20px 0',
+              width: '100%'
             }}
           >
-            <SwiperSlide>
-              <div className="pixel-card">
+            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
                 <div className="bio-container">
                   <div className="bio-content">
                     <p className="pixel-text bio">
@@ -361,17 +366,17 @@ function Home() {
                 </div>
               </div>
             </SwiperSlide>
-            <SwiperSlide>
-              <div className="pixel-card">
-                <h3 className="about-me-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>About Me</h3>
+            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
+                <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
                 <div className="about-me-content">
-                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                     When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
                   </p>
-                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                     In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
                   </p>
-                  <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                     Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
                   </p>
                 </div>
@@ -452,15 +457,15 @@ function Home() {
               </div>
             </div>
             <div className="pixel-card">
-              <h3 className="about-me-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>About Me</h3>
+              <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
               <div className="about-me-content">
-                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                   When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
                 </p>
-                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                   In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
                 </p>
-                <p className="pixel-text about-text" style={isDarkMode ? { color: '#ffffff' } : undefined}>
+                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                   Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
                 </p>
               </div>
@@ -475,6 +480,7 @@ function Home() {
 function Projects() {
   const theme = useTheme();
   const isDarkMode = theme.name === 'night';
+  const isMobile = window.innerWidth <= 768;
 
   const tooltipStyle = isDarkMode ? {
     backgroundColor: 'rgba(20, 20, 35, 0.95) !important',
@@ -485,8 +491,21 @@ function Projects() {
 
   return (
     <div className="App">
-      <div className="container">
-        <div className="pixel-card">
+      <div className="container" style={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        minHeight: '100vh',
+        paddingBottom: '50px'
+      }}>
+        <div className="pixel-card" style={{ 
+          width: isMobile ? '85%' : '100%',
+          maxWidth: isMobile ? '400px' : 'none',
+          marginBottom: '30px',
+          paddingBottom: '20px',
+          overflow: 'visible'
+        }}>
           <h3>
             <a href="https://github.com/bicrick/MSAI" 
               target="_blank"
@@ -614,7 +633,7 @@ function Contact() {
     <div className="App">
       <div className="container">
         <div className="pixel-card" style={{
-          maxWidth: '300px',
+          maxWidth: '280px',
           margin: '20px auto'
         }}>
           <div className="contact-section">
