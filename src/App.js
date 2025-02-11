@@ -291,7 +291,8 @@ function Home() {
             spaceBetween={30}
             style={{
               padding: '20px 0',
-              width: '100%'
+              width: '100%',
+              marginTop: '-100px'
             }}
           >
             <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -306,7 +307,7 @@ function Home() {
                         </a>
                       </span>
                       <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                        The University of Texas at Austin
+                        University of Texas at Austin
                         <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
                           <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
                         </a>
