@@ -168,11 +168,16 @@ function Header() {
 
 function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
   const { currentScene } = useScene();
-  const [layers, setLayers] = useState([]);
+  const [scenes, setScenes] = useState({
+    current: {
+      layers: [],
+      state: 'entering'
+    },
+    previous: null
+  });
 
   useEffect(() => {
-    // Load the layers for the current scene
-    const loadLayers = async () => {
+    const loadScene = async () => {
       try {
         const sceneNumber = currentScene;
         const layerNumbers = {
@@ -185,33 +190,73 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
           7: [1, 2] // Boulders
         };
 
-        const sceneLayers = layerNumbers[sceneNumber].map(num => ({
+        const newLayers = layerNumbers[sceneNumber].map(num => ({
           number: num,
-          path: `/Nature Landscapes Free Pixel Art/nature_${sceneNumber}/${num}.png`
+          path: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_${sceneNumber}/${num}.png`
         }));
 
-        setLayers(sceneLayers);
+        // Set up scene transition
+        setScenes(prev => ({
+          current: {
+            layers: newLayers,
+            state: 'entering'
+          },
+          previous: prev.current.layers.length ? {
+            layers: prev.current.layers,
+            state: 'exiting'
+          } : null
+        }));
+
+        // Activate new scene after a short delay to ensure CSS transitions work
+        const activateTimeout = setTimeout(() => {
+          setScenes(prev => ({
+            current: {
+              ...prev.current,
+              state: 'active'
+            },
+            previous: prev.previous
+          }));
+        }, 50);
+
+        // Clean up old scene after transition completes
+        const cleanup = setTimeout(() => {
+          setScenes(prev => ({
+            current: prev.current,
+            previous: null
+          }));
+        }, 1500);
+
+        return () => {
+          clearTimeout(activateTimeout);
+          clearTimeout(cleanup);
+        };
       } catch (error) {
-        console.error('Error loading scene layers:', error);
+        console.error('Error loading scene:', error);
       }
     };
 
-    loadLayers();
+    loadScene();
   }, [currentScene]);
 
-  return (
-    <div className="parallax-container">
-      {layers.map((layer, index) => (
+  const renderScene = (scene, key) => (
+    <div key={key} className={`scene ${scene.state}`}>
+      {scene.layers.map((layer, index) => (
         <div
-          key={layer.number}
+          key={`${key}-${layer.number}`}
           className={`parallax-layer layer-${layer.number}`}
           style={{ 
             backgroundImage: `url("${layer.path}")`,
-            zIndex: index + 1,
             animationDuration: `${(200 - (index * 30)) / (currentScene === 1 ? 0.2 : 1)}s`
           }}
         />
       ))}
+    </div>
+  );
+
+  return (
+    <div className="parallax-container">
+      {scenes.previous && renderScene(scenes.previous, 'previous')}
+      {renderScene(scenes.current, 'current')}
     </div>
   );
 }
@@ -230,13 +275,13 @@ function Home() {
                 <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
                   Data Engineer at 
                   <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
-                    <img src="/heb-logo.png" alt="H-E-B" className="heb-logo" />
+                    <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
                   </a>
                 </span>
                 <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
                   The University of Texas at Austin
                   <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
-                    <img src="/longhorn.png" alt="UT Austin" className="ut-logo" />
+                    <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
                   </a>
                 </span>
                 <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
@@ -246,16 +291,46 @@ function Home() {
             </div>
             <div className="bio-profile">
               <div className="bio-profile-image">
-                <img src="/profile-pixelated.png" alt="Profile" className="bio-avatar" />
+                <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
               </div>
               <div className="bio-social-links">
-                <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                <a 
+                  href="https://github.com/bicrick" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                <a 
+                  href="https://www.linkedin.com/in/patrick-brown-470617195/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
                   <i className="fab fa-linkedin"></i>
                 </a>
-                <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                <a 
+                  href="https://x.com/patrickbbrown" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
                   <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
                     <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
                   </svg>

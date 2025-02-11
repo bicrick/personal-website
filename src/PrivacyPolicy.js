@@ -6,13 +6,13 @@ function PrivacyPolicy() {
   return (
     <>
       <div className="parallax-container">
-        <div className="parallax-layer layer-1" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/1.png")' }} />
-        <div className="parallax-layer layer-2" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/2.png")' }} />
-        <div className="parallax-layer layer-3" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/3.png")' }} />
-        <div className="parallax-layer layer-5" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/5.png")' }} />
-        <div className="parallax-layer layer-6" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/6.png")' }} />
-        <div className="parallax-layer layer-7" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/7.png")' }} />
-        <div className="parallax-layer layer-8" style={{ backgroundImage: 'url("/Nature Landscapes Free Pixel Art/nature_1/8.png")' }} />
+        <div className="parallax-layer layer-1" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/1.png")` }} />
+        <div className="parallax-layer layer-2" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/2.png")` }} />
+        <div className="parallax-layer layer-3" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/3.png")` }} />
+        <div className="parallax-layer layer-5" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/5.png")` }} />
+        <div className="parallax-layer layer-6" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/6.png")` }} />
+        <div className="parallax-layer layer-7" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/7.png")` }} />
+        <div className="parallax-layer layer-8" style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/8.png")` }} />
       </div>
 
       <div className="App">

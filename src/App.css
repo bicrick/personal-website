@@ -80,8 +80,34 @@ html {
   height: 100vh;
   overflow: hidden;
   z-index: 0;
+  background-color: var(--background);
+  transition: background-color 2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Scene container for each set of layers */
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.scene.entering {
+  opacity: 0;
+}
+
+.scene.active {
+  opacity: 1;
+}
+
+.scene.exiting {
+  opacity: 0;
+}
+
+/* Base parallax layer styles */
 .parallax-layer {
   position: absolute;
   top: 0;
@@ -90,68 +116,58 @@ html {
   height: 100%;
   background-repeat: repeat-x;
   background-position: 0 bottom;
-  background-size: contain;
+  background-size: auto 100%;
   image-rendering: pixelated;
-  will-change: transform;
+  will-change: transform, opacity;
   animation: slideBackground linear infinite;
   transform-origin: bottom;
+  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Adjust background sizing for each layer to maintain aspect ratio */
+/* Remove the background tint layer since we don't need it */
+.scene::before {
+  display: none;
+}
+
+/* Layer specific styles with proper stacking */
 .layer-1 { 
-  z-index: 1; 
+  z-index: 2;
   animation-duration: 200s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-2 { 
-  z-index: 2; 
+  z-index: 3;
   animation-duration: 160s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-3 { 
-  z-index: 3; 
+  z-index: 4;
   animation-duration: 120s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-4 { 
-  z-index: 4; 
+  z-index: 5;
   animation-duration: 100s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-5 { 
-  z-index: 5; 
+  z-index: 6;
   animation-duration: 80s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-6 { 
-  z-index: 6; 
+  z-index: 7;
   animation-duration: 60s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-7 { 
-  z-index: 7; 
+  z-index: 8;
   animation-duration: 40s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .layer-8 { 
-  z-index: 8; 
+  z-index: 9;
   animation-duration: 30s;
-  height: 100%;
-  background-size: auto 100%;
 }
 
 .App {
@@ -168,6 +184,7 @@ html {
   z-index: 1;
   padding-top: 0;
   color: var(--text);
+  background: transparent;
 }
 
 .cloud-container,
@@ -869,8 +886,14 @@ html {
   font-family: 'Press Start 2P', cursive;
   font-size: 1.2rem;
   margin: 0;
-  color: #2f3542;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  text-shadow: 2px 2px 0 var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.header-name:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
 /* Remove unused header profile styles */
@@ -916,7 +939,7 @@ html {
 .header-nav-link {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.9rem;
-  color: #2f3542;
+  color: var(--text);
   text-decoration: none;
   padding: 0.5rem 0.75rem;
   transition: all 0.2s ease;
@@ -925,15 +948,15 @@ html {
 }
 
 .header-nav-link:hover {
-  color: #4834d4;
+  color: var(--accent);
   transform: translateY(-2px);
 }
 
 .header-nav-link.active {
-  color: #4834d4;
-  background-color: #ffffff;
-  border: 4px solid #4834d4;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  color: var(--accent);
+  background-color: var(--cardBg);
+  border: 4px solid var(--accent);
+  box-shadow: 4px 4px 0 var(--shadow);
   transform: none;
 }
 
