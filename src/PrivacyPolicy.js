@@ -17,12 +17,6 @@ function PrivacyPolicy() {
 
       <div className="App">
         <div className="container">
-          <nav className="breadcrumb">
-            <Link to="/" className="breadcrumb-link">home</Link>
-            <span className="breadcrumb-separator">►</span>
-            <span className="breadcrumb-current">privacy</span>
-          </nav>
-
           <div className="pixel-card">
             <h1 className="pixel-text section-title">Privacy Policy</h1>
             <p className="pixel-text privacy-date">Revised Jun. 3, 2019</p>
@@ -68,16 +62,6 @@ function PrivacyPolicy() {
           </div>
         </div>
       </div>
-
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <span className="copyright">© 2025 Patrick Brown</span>
-            <span className="separator">•</span>
-            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }
