@@ -163,7 +163,6 @@ function Header() {
             <NavLink to="/" className="header-nav-link" end>About</NavLink>
             <NavLink to="/projects" className="header-nav-link">Projects</NavLink>
             <NavLink to="/contact" className="header-nav-link">Contact</NavLink>
-            <NavLink to="/scene-viewer" className="header-nav-link">Scenes</NavLink>
           </nav>
         </div>
       </div>
@@ -184,7 +183,9 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
   useEffect(() => {
     const loadScene = async () => {
       try {
-        const sceneNumber = currentScene;
+        const sceneNumber = currentScene?.id;
+        if (!sceneNumber) return;
+
         const layerNumbers = {
           1: [1, 2, 3, 5, 6, 7, 8], // Lake Meadow
           2: [1, 2, 3, 4], // Grasslands
@@ -251,7 +252,7 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
           className={`parallax-layer layer-${layer.number}`}
           style={{ 
             backgroundImage: `url("${layer.path}")`,
-            animationDuration: `${(200 - (index * 30)) / (currentScene === 1 ? 0.2 : 1)}s`
+            animationDuration: `${(200 - (index * 30)) / (currentScene?.id === 1 ? 0.2 : 1)}s`
           }}
         />
       ))}
@@ -678,35 +679,49 @@ function Contact() {
   );
 }
 
+const scenes = [
+  { id: 1, name: 'Lake Meadow', accent: '#4834d4', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/orig.png` },
+  { id: 7, name: 'Boulders', accent: '#d4954b', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_7/orig.png` },
+  { id: 2, name: 'Grasslands', accent: '#ff7e67', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_2/orig.png` },
+  { id: 3, name: 'Mountain', accent: '#a18cd1', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_3/orig.png` },
+  { id: 4, name: 'Forrested Meadow', accent: '#2ecc71', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_4/orig.png` },
+  { id: 5, name: 'Desert', accent: '#f1c40f', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_5/orig.png` },
+  { id: 6, name: 'Snowy Forest', accent: '#3498db', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_6/orig.png` },
+];
+
 function SceneSelector() {
+  const [isOpen, setIsOpen] = useState(false);
   const { currentScene, setCurrentScene } = useScene();
-  const theme = useTheme();
-  const isDarkMode = theme.name === 'night';
-  
-  const scenes = [
-    { id: 1, name: 'Lake Meadow', accent: '#4834d4' },
-    { id: 7, name: 'Boulders', accent: '#d4954b' },
-    { id: 2, name: 'Grasslands', accent: '#ff7e67' },
-    { id: 3, name: 'Mountain', accent: '#a18cd1' },
-    { id: 4, name: 'Forrested Meadow', accent: '#86c232' },
-    { id: 5, name: 'Flower Meadow', accent: '#ff4d94' },
-    { id: 6, name: 'Northern Lights', accent: '#9d4edd' },
-  ];
 
   return (
-    <div className="scene-selector">
-      {scenes.map((scene) => (
-        <button
-          key={scene.id}
-          className={`scene-button ${currentScene === scene.id ? 'active' : ''}`}
-          onClick={() => setCurrentScene(scene.id)}
-          style={{
-            borderColor: scene.accent,
-            background: currentScene === scene.id ? scene.accent : 'transparent',
-            '--hover-accent': scene.accent
-          }}
-        />
-      ))}
+    <div className={`scene-selector book-tabs ${isOpen ? 'open' : ''}`}>
+      <div className="drawer-container">
+        <button 
+          className="drawer-pull"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close scene selector" : "Open scene selector"}
+        >
+          <span className="drawer-icon">{isOpen ? '>' : '<'}</span>
+        </button>
+        <div className="scenes-container">
+          {scenes.map((scene) => (
+            <button
+              key={scene.id}
+              className={`scene-tab ${currentScene?.id === scene.id ? 'active' : ''}`}
+              onClick={() => setCurrentScene(scene)}
+              style={{ '--tab-accent': scene.accent, '--tab-bg': 'white' }}
+            >
+              <div className="tab-thumbnail-wrapper">
+                <img
+                  className="tab-thumbnail"
+                  src={scene.thumbnail}
+                  alt={scene.name}
+                />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -731,20 +746,23 @@ function Footer() {
   );
 }
 
-function Layout({ children, hideSceneSelector = false }) {
+function Layout({ children }) {
   const location = useLocation();
   const [currentScene, setCurrentScene] = useState(() => {
-    // Generate a random scene number between 1 and 7 on initial load
-    return Math.floor(Math.random() * 7) + 1;
+    // Generate a random scene ID between 1 and 7 on initial load
+    const randomId = Math.floor(Math.random() * 7) + 1;
+    return scenes.find(scene => scene.id === randomId);
   });
-  const theme = themes[currentScene];
+  const theme = themes[currentScene?.id];
 
   useEffect(() => {
     // Update CSS variables when theme changes
-    const root = document.documentElement;
-    Object.entries(theme.colors).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value);
-    });
+    if (theme) {
+      const root = document.documentElement;
+      Object.entries(theme.colors).forEach(([key, value]) => {
+        root.style.setProperty(`--${key}`, value);
+      });
+    }
   }, [theme]);
 
   return (
@@ -753,7 +771,7 @@ function Layout({ children, hideSceneSelector = false }) {
         <ParallaxBackground scrollSpeedMultiplier={1} />
         <Header />
         <TableOfContents />
-        {!hideSceneSelector && location.pathname === '/scene-viewer' && <SceneSelector />}
+        <SceneSelector />
         {children}
         <Footer />
       </ThemeContext.Provider>
@@ -768,7 +786,6 @@ function App() {
       <Route path="/projects" element={<Layout><Projects /></Layout>} />
       <Route path="/contact" element={<Layout><Contact /></Layout>} />
       <Route path="/privacy" element={<Layout><PrivacyPolicy /></Layout>} />
-      <Route path="/scene-viewer" element={<Layout hideSceneSelector={true}><SceneViewer /></Layout>} />
     </Routes>
   );
 }
