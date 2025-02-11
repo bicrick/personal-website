@@ -489,16 +489,22 @@ function Projects() {
         <div className="pixel-card">
           <h3>
             <a href="https://github.com/bicrick/MSAI" 
-          target="_blank"
-          rel="noopener noreferrer"
-              className="project-title-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="header-nav-link"
               style={isDarkMode ? { 
                 color: '#9d4edd', 
-                borderColor: '#9d4edd', 
-                backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-              } : undefined}>
-              <span className="pixel-text">MSAI Coursework →</span>
+                borderColor: '#9d4edd',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              } : {
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+              <span className="pixel-text">MSAI Coursework</span>
+              <i className="fab fa-github" style={{ fontSize: '16px' }}></i>
             </a>
           </h3>
           <p className="pixel-text project-description" style={isDarkMode ? { color: '#ffffff' } : undefined}>
@@ -601,21 +607,49 @@ function Projects() {
 }
 
 function Contact() {
+  const theme = useTheme();
+  const isDarkMode = theme.name === 'night';
+
   return (
     <div className="App">
       <div className="container">
-        <div className="pixel-card">
-          <div className="email-container">
-            <div className="email-group">
-              <h3 className="pixel-text">Personal</h3>
-              <a href="mailto:patrickbrownai@gmail.com" className="email-link">
-                <span className="selectable">patrickbrownai@gmail.com</span>
+        <div className="pixel-card" style={{
+          maxWidth: '300px',
+          margin: '20px auto'
+        }}>
+          <div className="contact-section">
+            <h3 className="contact-label" style={{ color: theme.colors.accent }}>Personal</h3>
+            <div className="contact-email-wrapper">
+              <a 
+                href="mailto:patrickbrownai@gmail.com" 
+                className="contact-email"
+                style={{
+                  borderColor: theme.colors.border,
+                  backgroundColor: theme.colors.buttonBg,
+                  color: theme.colors.text,
+                  boxShadow: `4px 4px 0 ${theme.colors.shadow}`,
+                  textAlign: 'center'
+                }}
+              >
+                <span className="contact-text">patrickbrownai@gmail.com</span>
               </a>
             </div>
-            <div className="email-group">
-              <h3 className="pixel-text">Work</h3>
-              <a href="mailto:patrickbrown@heb.com" className="email-link">
-                <span className="selectable">patrickbrown@heb.com</span>
+          </div>
+          <div className="contact-section">
+            <h3 className="contact-label" style={{ color: theme.colors.accent }}>Work</h3>
+            <div className="contact-email-wrapper">
+              <a 
+                href="mailto:patrickbrown@heb.com" 
+                className="contact-email"
+                style={{
+                  borderColor: theme.colors.border,
+                  backgroundColor: theme.colors.buttonBg,
+                  color: theme.colors.text,
+                  boxShadow: `4px 4px 0 ${theme.colors.shadow}`,
+                  textAlign: 'center'
+                }}
+              >
+                <span className="contact-text">patrickbrown@heb.com</span>
               </a>
             </div>
           </div>
