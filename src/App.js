@@ -151,19 +151,6 @@ function Header() {
             <Link to="/" style={{ textDecoration: 'none' }}>
               <h1 className="header-name">Patrick Brown</h1>
             </Link>
-            <div className="header-social-links">
-              <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer" className="pixel-button">
-                <i className="fab fa-github"></i>
-              </a>
-              <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer" className="pixel-button">
-                <i className="fab fa-linkedin"></i>
-              </a>
-              <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer" className="pixel-button">
-                <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                  <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                </svg>
-              </a>
-            </div>
           </div>
         </div>
         <div className="header-right">
@@ -258,7 +245,22 @@ function Home() {
               <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
             </div>
             <div className="bio-profile">
-              <img src="/profile-pixelated.png" alt="Profile" className="bio-avatar" />
+              <div className="bio-profile-image">
+                <img src="/profile-pixelated.png" alt="Profile" className="bio-avatar" />
+              </div>
+              <div className="bio-social-links">
+                <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                  <i className="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                  <i className="fab fa-linkedin"></i>
+                </a>
+                <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer" className="pixel-button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                    <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
