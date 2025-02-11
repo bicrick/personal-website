@@ -681,18 +681,19 @@ function Contact() {
 }
 
 const scenes = [
-  { id: 1, name: 'Lake Meadow', accent: '#4834d4', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/orig.png` },
-  { id: 7, name: 'Boulders', accent: '#d4954b', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_7/orig.png` },
-  { id: 2, name: 'Grasslands', accent: '#ff7e67', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_2/orig.png` },
-  { id: 3, name: 'Mountain', accent: '#a18cd1', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_3/orig.png` },
-  { id: 4, name: 'Forrested Meadow', accent: '#2ecc71', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_4/orig.png` },
-  { id: 5, name: 'Desert', accent: '#f1c40f', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_5/orig.png` },
-  { id: 6, name: 'Snowy Forest', accent: '#3498db', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_6/orig.png` },
+  { id: 1, name: 'Lake Meadow', accent: themes[1].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/orig.png` },
+  { id: 7, name: 'Boulders', accent: themes[7].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_7/orig.png` },
+  { id: 2, name: 'Grasslands', accent: themes[2].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_2/orig.png` },
+  { id: 3, name: 'Mountain', accent: themes[3].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_3/orig.png` },
+  { id: 4, name: 'Forrested Meadow', accent: themes[4].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_4/orig.png` },
+  { id: 5, name: 'Desert', accent: themes[5].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_5/orig.png` },
+  { id: 6, name: 'Snowy Forest', accent: themes[6].colors.accent, thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_6/orig.png` },
 ];
 
 function SceneSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const { currentScene, setCurrentScene } = useScene();
+  const theme = useTheme();
 
   return (
     <div className={`scene-selector book-tabs ${isOpen ? 'open' : ''}`}>
@@ -710,7 +711,12 @@ function SceneSelector() {
               key={scene.id}
               className={`scene-tab ${currentScene?.id === scene.id ? 'active' : ''}`}
               onClick={() => setCurrentScene(scene)}
-              style={{ '--tab-accent': scene.accent, '--tab-bg': 'white' }}
+              style={{ 
+                '--tab-accent': scene.accent,
+                '--tab-bg': 'white',
+                borderColor: scene.accent,
+                boxShadow: currentScene?.id === scene.id ? `0 0 0 2px ${scene.accent}` : undefined
+              }}
             >
               <div className="tab-thumbnail-wrapper">
                 <img
