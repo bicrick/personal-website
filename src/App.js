@@ -692,7 +692,20 @@ const scenes = [
 
 function SceneSelector() {
   const [isOpen, setIsOpen] = useState(false);
+  const [autoSwitch, setAutoSwitch] = useState(false);
   const { currentScene, setCurrentScene } = useScene();
+
+  useEffect(() => {
+    let interval;
+    if (autoSwitch) {
+      interval = setInterval(() => {
+        const currentIndex = scenes.findIndex(scene => scene.id === currentScene?.id);
+        const nextIndex = (currentIndex + 1) % scenes.length;
+        setCurrentScene(scenes[nextIndex]);
+      }, 15000); // Switch every 15 seconds
+    }
+    return () => clearInterval(interval);
+  }, [autoSwitch, currentScene, setCurrentScene]);
 
   return (
     <div className={`scene-selector book-tabs ${isOpen ? 'open' : ''}`}>
@@ -721,6 +734,14 @@ function SceneSelector() {
               </div>
             </button>
           ))}
+          <div className="auto-switch-container">
+            <span className="toggle-label">Auto</span>
+            <button
+              className={`toggle-switch ${autoSwitch ? 'active' : ''}`}
+              onClick={() => setAutoSwitch(!autoSwitch)}
+              aria-label="Toggle auto switch scenes"
+            />
+          </div>
         </div>
       </div>
     </div>
