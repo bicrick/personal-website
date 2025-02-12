@@ -1180,7 +1180,7 @@ html {
   position: relative;
   display: flex;
   flex-direction: row;
-  transform: translateX(calc(100% - 40px));
+  transform: translateX(calc(100% - 36px));
   transition: transform 0.3s ease;
 }
 
@@ -1220,7 +1220,6 @@ html {
   background-color: var(--cardBg);
   border: 4px solid var(--border);
   border-right: none;
-  box-shadow: -8px 8px 0 var(--shadow);
   backdrop-filter: blur(5px);
   position: relative;
   z-index: 1;
@@ -1275,7 +1274,7 @@ html {
 
   .drawer-container {
     flex-direction: column;
-    transform: translateY(calc(100% - 40px));
+    transform: translateY(calc(100% - 36px));
   }
 
   .scene-selector.open .drawer-container {

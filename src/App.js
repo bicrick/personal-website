@@ -313,6 +313,7 @@ function Home() {
                         </a>
                       </span>
                       <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '23</span>
                     </p>
                     <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
                   </div>
@@ -372,7 +373,7 @@ function Home() {
                 <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
                 <div className="about-me-content">
                   <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    When I discover something new, I become obsessed. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                    I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
                   </p>
                   <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                     In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
@@ -461,7 +462,7 @@ function Home() {
               <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
               <div className="about-me-content">
                 <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                  When I discover something new, I am immediately excited. Outside of tech, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                  I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
                 </p>
                 <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
                   In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
@@ -682,11 +683,11 @@ function Contact() {
 const scenes = [
   { id: 1, name: 'Lake Meadow', accent: '#4834d4', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/orig.png` },
   { id: 7, name: 'Boulders', accent: '#d4954b', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_7/orig.png` },
-  { id: 2, name: 'Grasslands', accent: '#ff7e67', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_2/orig.png` },
-  { id: 3, name: 'Mountain', accent: '#a18cd1', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_3/orig.png` },
-  { id: 4, name: 'Forrested Meadow', accent: '#2ecc71', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_4/orig.png` },
-  { id: 5, name: 'Desert', accent: '#f1c40f', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_5/orig.png` },
-  { id: 6, name: 'Snowy Forest', accent: '#3498db', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_6/orig.png` },
+  { id: 2, name: 'Warm', accent: '#ff7e67', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_2/orig.png` },
+  { id: 3, name: 'Sunset', accent: '#a18cd1', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_3/orig.png` },
+  { id: 4, name: 'Forest', accent: '#86c232', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_4/orig.png` },
+  { id: 5, name: 'Flower', accent: '#ff4d94', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_5/orig.png` },
+  { id: 6, name: 'Night', accent: '#9d4edd', thumbnail: `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_6/orig.png` },
 ];
 
 function SceneSelector() {
