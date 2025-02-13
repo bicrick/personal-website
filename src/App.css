@@ -1467,7 +1467,12 @@ html {
   }
 }
 
-/* Audio player portal styles */
+/* Remove legacy audio player styles */
+.audio-player {
+  display: none;
+}
+
+/* Keep the audio player portal styles */
 .audio-player-portal {
   position: fixed;
   bottom: 25px;
@@ -1487,7 +1492,8 @@ html {
 }
 
 .audio-player-portal .audio-button,
-.audio-player-portal .skip-button {
+.audio-player-portal .skip-button,
+.audio-player-portal .visualizer-container {
   width: 52px;
   height: 52px;
   padding: 10px;
@@ -1501,15 +1507,26 @@ html {
   background-color: var(--cardBg);
 }
 
+.audio-player-portal .visualizer-container {
+  width: 180px;
+  height: 44px;
+  padding: 0;
+  margin-top: 0;
+  position: relative;
+  image-rendering: pixelated;
+}
+
 .audio-player-portal .audio-button:hover,
-.audio-player-portal .skip-button:hover {
+.audio-player-portal .skip-button:hover,
+.audio-player-portal .visualizer-container:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--shadow) !important;
   background-color: var(--buttonHoverBg);
 }
 
 .audio-player-portal .audio-button:active,
-.audio-player-portal .skip-button:active {
+.audio-player-portal .skip-button:active,
+.audio-player-portal .visualizer-container:active {
   transform: translate(2px, 2px);
   box-shadow: 2px 2px 0 var(--shadow) !important;
 }
@@ -1525,23 +1542,13 @@ html {
   transform: rotate(180deg);
 }
 
-.audio-player-portal .visualizer-container {
-  width: 180px;
-  height: 44px;
-  position: relative;
-  image-rendering: pixelated;
-  margin-top: -8px;
-  transition: all 0.2s ease;
-}
-
 .audio-player-portal .visualizer-canvas {
   width: 100%;
   height: 100%;
-  border: 4px solid var(--border);
-  backdrop-filter: blur(5px);
   image-rendering: pixelated;
   transition: all 0.2s ease;
-  background-color: var(--cardBg);
+  background-color: transparent;
+  border: none;
 }
 
 .audio-player-portal .arrow-indicator {
