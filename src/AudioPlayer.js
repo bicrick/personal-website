@@ -37,10 +37,10 @@ function AudioPlayerPortal() {
     };
   }, [theme.colors.cardBg, theme.colors.accent]);
 
-  // Base URL for assets - handle custom domain
-  const baseUrl = window.location.hostname === 'patrickbrownai.com'
-    ? 'https://bicrick.github.io/personal-website'  // Use GitHub Pages URL on production
-    : process.env.PUBLIC_URL;  // Use PUBLIC_URL for other environments
+  // Base URL for assets - use direct paths in production, PUBLIC_URL in development
+  const baseUrl = process.env.NODE_ENV === 'production'
+    ? ''  // Use direct paths in production
+    : process.env.PUBLIC_URL;  // Use PUBLIC_URL for development
 
   const songs = [
     `${baseUrl}/sound/lofi.mp3`,
