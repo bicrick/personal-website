@@ -37,8 +37,10 @@ function AudioPlayerPortal() {
     };
   }, [theme.colors.cardBg, theme.colors.accent]);
 
-  // Base URL for assets - always use PUBLIC_URL
-  const baseUrl = process.env.PUBLIC_URL;
+  // Base URL for assets - handle custom domain
+  const baseUrl = window.location.hostname === 'patrickbrownai.com'
+    ? 'https://bicrick.github.io/personal-website'  // Use GitHub Pages URL on production
+    : process.env.PUBLIC_URL;  // Use PUBLIC_URL for other environments
 
   const songs = [
     `${baseUrl}/sound/lofi.mp3`,
