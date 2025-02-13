@@ -38,9 +38,9 @@ function AudioPlayerPortal() {
   }, [theme.colors.cardBg, theme.colors.accent]);
 
   const songs = [
-    'lofi.mp3',
-    'lofi-2.mp3',
-    'lofi-3.mp3'
+    `${process.env.PUBLIC_URL}/sound/lofi.mp3`,
+    `${process.env.PUBLIC_URL}/sound/lofi-2.mp3`,
+    `${process.env.PUBLIC_URL}/sound/lofi-3.mp3`
   ];
 
   // Initialize audio context and analyser
@@ -181,8 +181,11 @@ function AudioPlayerPortal() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Set crossOrigin before setting src
+    audio.crossOrigin = "anonymous";
+    
     if (!audio.src) {
-      audio.src = `${process.env.PUBLIC_URL}/sound/${songs[currentSongIndex]}`;
+      audio.src = songs[currentSongIndex];
     }
     
     audio.loop = false;
@@ -191,6 +194,13 @@ function AudioPlayerPortal() {
       const nextIndex = (currentSongIndex + 1) % songs.length;
       globalCurrentSong = nextIndex;
       setCurrentSongIndex(nextIndex);
+      audio.src = songs[nextIndex];
+      if (isPlaying) {
+        audio.play().catch(error => {
+          console.error('Error playing next song:', error);
+          setAudioError('Failed to play next song');
+        });
+      }
     };
     
     const handleError = (e) => {
@@ -265,7 +275,7 @@ function AudioPlayerPortal() {
     
     if (audioRef.current) {
       const wasPlaying = !audioRef.current.paused;
-      audioRef.current.src = `${process.env.PUBLIC_URL}/sound/${songs[nextIndex]}`;
+      audioRef.current.src = songs[nextIndex];
       if (wasPlaying) {
         audioRef.current.play().catch(error => {
           console.error('Error playing new song:', error);
@@ -281,7 +291,7 @@ function AudioPlayerPortal() {
   useEffect(() => {
     if (audioRef.current && globalCurrentSong !== currentSongIndex) {
       const wasPlaying = !audioRef.current.paused;
-      audioRef.current.src = `${process.env.PUBLIC_URL}/sound/${songs[currentSongIndex]}`;
+      audioRef.current.src = songs[currentSongIndex];
       if (wasPlaying) {
         audioRef.current.play().catch(error => {
           console.error('Error playing new song:', error);
@@ -291,7 +301,7 @@ function AudioPlayerPortal() {
         });
       }
     }
-  }, [currentSongIndex]); // Only run when currentSongIndex changes
+  }, [currentSongIndex, songs]); // Add songs to dependency array
 
   const playerContent = (
     <div className="audio-player-portal">
@@ -362,7 +372,7 @@ function AudioPlayerPortal() {
           {audioError}
         </div>
       )}
-      <audio ref={audioRef} />
+      <audio ref={audioRef} crossOrigin="anonymous" />
     </div>
   );
 
