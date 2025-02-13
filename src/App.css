@@ -1617,3 +1617,29 @@ html {
   }
 }
 
+.scene-arrow-indicator {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  width: 48px;
+  height: 48px;
+  animation: pulseOpacity 1.2s ease-in-out infinite, pulseColor 2s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 1000;
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .scene-arrow-indicator {
+    right: auto;
+    left: 50%;
+    bottom: 100%;
+    top: auto;
+    transform: translateX(-50%) rotate(-90deg);
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}
+

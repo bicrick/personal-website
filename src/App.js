@@ -694,7 +694,10 @@ const scenes = [
 function SceneSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const [autoSwitch, setAutoSwitch] = useState(false);
+  const [showArrow, setShowArrow] = useState(true);
   const { currentScene, setCurrentScene } = useScene();
+  const theme = useTheme();
+  const isDarkMode = theme.name === 'night';
 
   useEffect(() => {
     let interval;
@@ -708,14 +711,27 @@ function SceneSelector() {
     return () => clearInterval(interval);
   }, [autoSwitch, currentScene, setCurrentScene]);
 
+  const handleDrawerClick = () => {
+    setIsOpen(!isOpen);
+    setShowArrow(false);
+  };
+
   return (
     <div className={`scene-selector book-tabs ${isOpen ? 'open' : ''}`}>
       <div className="drawer-container">
         <button 
           className="drawer-pull"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleDrawerClick}
           aria-label={isOpen ? "Close scene selector" : "Open scene selector"}
         >
+          {showArrow && !isOpen && (
+            <img
+              src={`${process.env.NODE_ENV === 'production' ? '' : process.env.PUBLIC_URL}/sound/down-arrow.svg`}
+              alt="Click to open scene selector"
+              className="scene-arrow-indicator"
+              style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+            />
+          )}
           <span className="drawer-icon">{isOpen ? '>' : '<'}</span>
         </button>
         <div className="scenes-container">
