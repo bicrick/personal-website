@@ -226,28 +226,30 @@ function AudioPlayerPortal() {
         audio.removeEventListener('error', handleError);
       }
 
-      // Clean up global resources
-      if (globalSource) {
-        globalSource.disconnect();
-        globalSource = null;
-      }
+      // Clean up global resources on unmount only
+      if (audio === null) {
+        if (globalSource) {
+          globalSource.disconnect();
+          globalSource = null;
+        }
 
-      if (globalAnalyser) {
-        globalAnalyser.disconnect();
-        globalAnalyser = null;
-      }
+        if (globalAnalyser) {
+          globalAnalyser.disconnect();
+          globalAnalyser = null;
+        }
 
-      if (globalAudioContext) {
-        globalAudioContext.close().catch(console.error);
-        globalAudioContext = null;
-      }
+        if (globalAudioContext) {
+          globalAudioContext.close().catch(console.error);
+          globalAudioContext = null;
+        }
 
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+          animationRef.current = null;
+        }
       }
     };
-  }, []); // Empty dependency array - only run on mount
+  }, [currentSongIndex, isPlaying, songs]); // Add necessary dependencies
 
   const togglePlay = async () => {
     if (!audioRef.current) return;
