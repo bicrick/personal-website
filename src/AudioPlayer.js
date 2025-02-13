@@ -37,12 +37,8 @@ function AudioPlayerPortal() {
     };
   }, [theme.colors.cardBg, theme.colors.accent]);
 
-  // Base URL for assets - use local server for development
-  const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? process.env.PUBLIC_URL  // Use local development server
-    : window.location.hostname === 'patrickbrownai.com'
-      ? ''  // Use relative paths on production domain
-      : process.env.PUBLIC_URL;  // Fallback for other domains
+  // Base URL for assets - always use PUBLIC_URL
+  const baseUrl = process.env.PUBLIC_URL;
 
   const songs = [
     `${baseUrl}/sound/lofi.mp3`,
