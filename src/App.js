@@ -771,9 +771,8 @@ function Footer() {
 function Layout({ children }) {
   const location = useLocation();
   const [currentScene, setCurrentScene] = useState(() => {
-    // Generate a random scene ID between 1 and 7 on initial load
-    const randomId = Math.floor(Math.random() * 7) + 1;
-    return scenes.find(scene => scene.id === randomId);
+    // Set Lake Meadow (scene 1) as the default scene
+    return scenes.find(scene => scene.id === 1);
   });
   const theme = themes[currentScene?.id];
 
