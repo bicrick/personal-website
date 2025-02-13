@@ -37,10 +37,17 @@ function AudioPlayerPortal() {
     };
   }, [theme.colors.cardBg, theme.colors.accent]);
 
+  // Base URL for assets - use local server for development
+  const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? process.env.PUBLIC_URL  // Use local development server
+    : window.location.hostname === 'patrickbrownai.com'
+      ? ''  // Use relative paths on production domain
+      : process.env.PUBLIC_URL;  // Fallback for other domains
+
   const songs = [
-    `${process.env.PUBLIC_URL}/sound/lofi.mp3`,
-    `${process.env.PUBLIC_URL}/sound/lofi-2.mp3`,
-    `${process.env.PUBLIC_URL}/sound/lofi-3.mp3`
+    `${baseUrl}/sound/lofi.mp3`,
+    `${baseUrl}/sound/lofi-2.mp3`,
+    `${baseUrl}/sound/lofi-3.mp3`
   ];
 
   // Initialize audio context and analyser
@@ -307,7 +314,7 @@ function AudioPlayerPortal() {
     <div className="audio-player-portal">
       {showArrow && (
         <img
-          src={`${process.env.PUBLIC_URL}/sound/down-arrow.svg`}
+          src={`${baseUrl}/sound/down-arrow.svg`}
           alt="Click to play music"
           className="arrow-indicator"
           style={isDarkMode ? { filter: 'invert(1)' } : undefined}
@@ -326,7 +333,7 @@ function AudioPlayerPortal() {
           }}
         >
           <img
-            src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`}
+            src={`${baseUrl}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`}
             alt={isPlaying ? "Mute" : "Unmute"}
             className="speaker-icon"
             style={isDarkMode ? { filter: 'invert(1)' } : undefined}
@@ -346,7 +353,7 @@ function AudioPlayerPortal() {
               }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/sound/skip.svg`}
+                src={`${baseUrl}/sound/skip.svg`}
                 alt="Skip"
                 className="skip-icon"
                 style={isDarkMode ? { filter: 'invert(1)' } : undefined}
