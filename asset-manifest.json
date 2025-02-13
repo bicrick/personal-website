@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "https://bicrick.github.io/personal-website/static/css/main.1740d251.css",
-    "main.js": "https://bicrick.github.io/personal-website/static/js/main.2f080712.js",
+    "main.css": "https://bicrick.github.io/personal-website/static/css/main.6d5adbb3.css",
+    "main.js": "https://bicrick.github.io/personal-website/static/js/main.5a3aa3fd.js",
     "static/js/488.d07c9134.chunk.js": "https://bicrick.github.io/personal-website/static/js/488.d07c9134.chunk.js",
     "index.html": "https://bicrick.github.io/personal-website/index.html",
-    "main.1740d251.css.map": "https://bicrick.github.io/personal-website/static/css/main.1740d251.css.map",
-    "main.2f080712.js.map": "https://bicrick.github.io/personal-website/static/js/main.2f080712.js.map",
+    "main.6d5adbb3.css.map": "https://bicrick.github.io/personal-website/static/css/main.6d5adbb3.css.map",
+    "main.5a3aa3fd.js.map": "https://bicrick.github.io/personal-website/static/js/main.5a3aa3fd.js.map",
     "488.d07c9134.chunk.js.map": "https://bicrick.github.io/personal-website/static/js/488.d07c9134.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1740d251.css",
-    "static/js/main.2f080712.js"
+    "static/css/main.6d5adbb3.css",
+    "static/js/main.5a3aa3fd.js"
   ]
 }
