@@ -147,9 +147,17 @@ function TableOfContents() {
 
 function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showArrow, setShowArrow] = useState(true);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const audioRef = useRef(null);
   const theme = useTheme();
   const isDarkMode = theme.name === 'night';
+
+  const songs = [
+    'lofi.mp3',
+    'lofi-2.mp3',
+    'lofi-3.mp3'
+  ];
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -159,18 +167,49 @@ function AudioPlayer() {
         audioRef.current.play();
       }
       setIsPlaying(!isPlaying);
+      setShowArrow(false);
     }
+  };
+
+  const handleSongEnd = () => {
+    // Move to next song, or back to first song if at the end
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
   };
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.loop = true;
+      audioRef.current.loop = false; // Disable loop since we're handling it manually
+      audioRef.current.addEventListener('ended', handleSongEnd);
     }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('ended', handleSongEnd);
+      }
+    };
   }, []);
+
+  // Effect to handle song changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = `${process.env.PUBLIC_URL}/sound/${songs[currentSongIndex]}`;
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  }, [currentSongIndex]);
 
   return (
     <div className="audio-player">
-      <audio ref={audioRef} src={`${process.env.PUBLIC_URL}/sound/lofi.mp3`} />
+      {showArrow && (
+        <img 
+          src={`${process.env.PUBLIC_URL}/sound/down-arrow.svg`}
+          alt="Click to play music"
+          className="arrow-indicator"
+          style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+        />
+      )}
+      <audio ref={audioRef} />
       <button 
         onClick={togglePlay}
         className={`pixel-button audio-button ${isDarkMode ? 'dark-mode' : ''}`}
