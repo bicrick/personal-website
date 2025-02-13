@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useContext, useState } from 'react';
+import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
 import { Link, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -142,6 +142,52 @@ function TableOfContents() {
         </li>
       </ul>
     </nav>
+  );
+}
+
+function AudioPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const theme = useTheme();
+  const isDarkMode = theme.name === 'night';
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.loop = true;
+    }
+  }, []);
+
+  return (
+    <div className="audio-player">
+      <audio ref={audioRef} src={`${process.env.PUBLIC_URL}/sound/lofi.mp3`} />
+      <button 
+        onClick={togglePlay}
+        className={`pixel-button audio-button ${isDarkMode ? 'dark-mode' : ''}`}
+        aria-label={isPlaying ? "Mute audio" : "Unmute audio"}
+        style={isDarkMode ? {
+          borderColor: theme.colors.border,
+          boxShadow: `4px 4px 0 ${theme.colors.shadow}`
+        } : undefined}
+      >
+        <img 
+          src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`} 
+          alt={isPlaying ? "Mute" : "Unmute"}
+          className="speaker-icon"
+          style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+        />
+      </button>
+    </div>
   );
 }
 
@@ -795,6 +841,7 @@ function Layout({ children }) {
         <SceneSelector />
         {children}
         <Footer />
+        <AudioPlayer />
       </ThemeContext.Provider>
     </SceneContext.Provider>
   );
