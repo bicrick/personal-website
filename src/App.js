@@ -176,6 +176,10 @@ function AudioPlayer() {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
   };
 
+  const handleSkip = () => {
+    handleSongEnd(); // Reuse the song end handler to skip to next song
+  };
+
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.loop = false; // Disable loop since we're handling it manually
@@ -210,22 +214,42 @@ function AudioPlayer() {
         />
       )}
       <audio ref={audioRef} />
-      <button 
-        onClick={togglePlay}
-        className={`pixel-button audio-button ${isDarkMode ? 'dark-mode' : ''}`}
-        aria-label={isPlaying ? "Mute audio" : "Unmute audio"}
-        style={isDarkMode ? {
-          borderColor: theme.colors.border,
-          boxShadow: `4px 4px 0 ${theme.colors.shadow}`
-        } : undefined}
-      >
-        <img 
-          src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`} 
-          alt={isPlaying ? "Mute" : "Unmute"}
-          className="speaker-icon"
-          style={isDarkMode ? { filter: 'invert(1)' } : undefined}
-        />
-      </button>
+      <div className="audio-controls">
+        <button 
+          onClick={togglePlay}
+          className={`pixel-button audio-button ${isDarkMode ? 'dark-mode' : ''}`}
+          aria-label={isPlaying ? "Mute audio" : "Unmute audio"}
+          style={isDarkMode ? {
+            borderColor: theme.colors.border,
+            boxShadow: `4px 4px 0 ${theme.colors.shadow}`
+          } : undefined}
+        >
+          <img 
+            src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`} 
+            alt={isPlaying ? "Mute" : "Unmute"}
+            className="speaker-icon"
+            style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+          />
+        </button>
+        {isPlaying && (
+          <button 
+            onClick={handleSkip}
+            className={`skip-button ${isDarkMode ? 'dark-mode' : ''}`}
+            aria-label="Skip to next song"
+            style={isDarkMode ? {
+              borderColor: theme.colors.border,
+              boxShadow: `4px 4px 0 ${theme.colors.shadow}`
+            } : undefined}
+          >
+            <img 
+              src={`${process.env.PUBLIC_URL}/sound/skip.svg`}
+              alt="Skip"
+              className="skip-icon"
+              style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+            />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

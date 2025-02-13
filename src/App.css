@@ -706,7 +706,7 @@ html {
   content: '';
   position: absolute;
   bottom: 100%;
-  left: 100px; /* Add left offset to create dead zone for audio player */
+  left: 160px; /* Increased from 100px to accommodate both audio and skip buttons */
   right: 0;
   height: 40px; /* Height of hover detection area */
   background: transparent;
@@ -749,7 +749,7 @@ html {
   }
 
   .footer::before {
-    left: 80px; /* Slightly smaller offset for mobile */
+    left: 140px; /* Increased from 80px for mobile to accommodate both buttons */
     height: 30px;
   }
 }
@@ -1551,6 +1551,64 @@ html {
   }
 
   .speaker-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.audio-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.skip-button {
+  width: 52px;
+  height: 52px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 4px solid var(--border);
+  box-shadow: 4px 4px 0 var(--shadow);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+.skip-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--shadow);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.skip-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+
+.skip-button.dark-mode {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.skip-button.dark-mode:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.skip-icon {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+  transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+  .skip-button {
+    width: 48px;
+    height: 48px;
+    padding: 8px;
+  }
+
+  .skip-icon {
     width: 26px;
     height: 26px;
   }
