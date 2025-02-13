@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
+import React, { useEffect, createContext, useContext, useState, useRef, useCallback } from 'react';
 import { Link, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-cube';
 import './App.css';
 import PrivacyPolicy from './PrivacyPolicy';
+import AudioPlayerPortal from './AudioPlayer';
 
 const SceneContext = createContext();
 const ThemeContext = createContext();
@@ -149,7 +150,14 @@ function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showArrow, setShowArrow] = useState(true);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [audioError, setAudioError] = useState(null);
+  
   const audioRef = useRef(null);
+  const canvasRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const analyserRef = useRef(null);
+  const sourceRef = useRef(null);
+  const animationRef = useRef(null);
   const theme = useTheme();
   const isDarkMode = theme.name === 'night';
 
@@ -159,97 +167,286 @@ function AudioPlayer() {
     'lofi-3.mp3'
   ];
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
+  // Initialize audio context and analyser
+  const initializeAudio = useCallback(async () => {
+    try {
+      if (!audioContextRef.current) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContextRef.current = new AudioContext();
       }
-      setIsPlaying(!isPlaying);
-      setShowArrow(false);
+
+      if (audioContextRef.current.state === 'suspended') {
+        await audioContextRef.current.resume();
+      }
+
+      if (!analyserRef.current) {
+        analyserRef.current = audioContextRef.current.createAnalyser();
+        analyserRef.current.fftSize = 256;
+        analyserRef.current.smoothingTimeConstant = 0.8;
+      }
+
+      if (!sourceRef.current && audioRef.current) {
+        sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
+        sourceRef.current.connect(analyserRef.current);
+        analyserRef.current.connect(audioContextRef.current.destination);
+      }
+
+      setAudioError(null);
+    } catch (error) {
+      console.error('Error initializing audio:', error);
+      setAudioError('Failed to initialize audio system');
     }
-  };
+  }, []);
 
-  const handleSongEnd = () => {
-    // Move to next song, or back to first song if at the end
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
-  };
-
-  const handleSkip = () => {
-    handleSongEnd(); // Reuse the song end handler to skip to next song
-  };
-
+  // Clean up audio context on unmount
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.loop = false; // Disable loop since we're handling it manually
-      audioRef.current.addEventListener('ended', handleSongEnd);
-    }
-
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener('ended', handleSongEnd);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      audioContextRef.current = null;
+      analyserRef.current = null;
+      sourceRef.current = null;
     };
   }, []);
 
-  // Effect to handle song changes
+  // Handle visualization
+  useEffect(() => {
+    if (!isPlaying || !canvasRef.current || !analyserRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const bufferLength = analyserRef.current.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    // Set up canvas with device pixel ratio
+    const setupCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      return rect;
+    };
+
+    let rect = setupCanvas();
+    let lastDrawTime = 0;
+    const fps = 30;
+    const frameInterval = 1000 / fps;
+
+    const draw = (timestamp) => {
+      if (!canvasRef.current || !analyserRef.current) return;
+      
+      animationRef.current = requestAnimationFrame(draw);
+      
+      const elapsed = timestamp - lastDrawTime;
+      if (elapsed < frameInterval) return;
+      
+      lastDrawTime = timestamp;
+      
+      // Check if canvas size has changed
+      const currentRect = canvas.getBoundingClientRect();
+      if (currentRect.width !== rect.width || currentRect.height !== rect.height) {
+        rect = setupCanvas();
+      }
+
+      analyserRef.current.getByteFrequencyData(dataArray);
+
+      // Clear canvas
+      ctx.fillStyle = theme.colors.cardBg;
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      const numBars = 8;
+      const barWidth = Math.floor((rect.width - 8) / numBars);
+      const barSpacing = 1;
+      const pixelSize = 2;
+      const maxBarHeight = rect.height - 8;
+
+      // Draw bars
+      for (let i = 0; i < numBars; i++) {
+        const dataIndex = Math.floor(Math.pow(i / numBars, 1.5) * 20);
+        let value = 0;
+        const binCount = 3;
+        
+        // Average multiple frequency bins for smoother visualization
+        for (let j = 0; j < binCount; j++) {
+          value += dataArray[dataIndex + j] || 0;
+        }
+        value = value / binCount;
+        
+        // Reduce amplitude for lower frequencies to prevent overwhelming visuals
+        if (i < 3) value *= 0.7;
+
+        const rawHeight = (value / 255) * maxBarHeight;
+        const barHeight = Math.max(pixelSize, Math.floor(rawHeight / pixelSize) * pixelSize);
+        const x = 4 + (i * (barWidth + barSpacing));
+
+        // Draw main bar
+        ctx.fillStyle = theme.colors.accent;
+        ctx.fillRect(
+          Math.floor(x),
+          Math.floor(rect.height - 4 - barHeight),
+          Math.floor(barWidth - barSpacing),
+          barHeight
+        );
+
+        // Randomly add highlights
+        if (Math.random() > 0.9) {
+          ctx.fillStyle = isDarkMode ? theme.colors.cardBg : '#ffffff';
+          ctx.fillRect(
+            Math.floor(x),
+            Math.floor(rect.height - 4 - barHeight),
+            Math.floor((barWidth - barSpacing) / 2),
+            pixelSize
+          );
+        }
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPlaying, theme.colors, isDarkMode]);
+
+  const togglePlay = async () => {
+    if (!audioRef.current) return;
+
+    try {
+      await initializeAudio();
+      
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        if (!audioRef.current.src) {
+          audioRef.current.src = `${process.env.PUBLIC_URL}/sound/${songs[currentSongIndex]}`;
+        }
+        await audioRef.current.play();
+      }
+      
+      setIsPlaying(!isPlaying);
+      setShowArrow(false);
+      setAudioError(null);
+    } catch (error) {
+      console.error('Error toggling playback:', error);
+      setAudioError('Failed to play audio');
+    }
+  };
+
+  const handleSongEnd = useCallback(() => {
+    setCurrentSongIndex(prevIndex => (prevIndex + 1) % songs.length);
+  }, [songs.length]);
+
+  const handleSkip = () => {
+    handleSongEnd();
+  };
+
+  // Set up audio element event listeners
   useEffect(() => {
     if (audioRef.current) {
+      audioRef.current.loop = false;
+      audioRef.current.addEventListener('ended', handleSongEnd);
+      
+      // Add error handling
+      const handleError = (e) => {
+        console.error('Audio error:', e);
+        setAudioError('Error playing audio');
+        setIsPlaying(false);
+      };
+      
+      audioRef.current.addEventListener('error', handleError);
+      
+      return () => {
+        audioRef.current.removeEventListener('ended', handleSongEnd);
+        audioRef.current.removeEventListener('error', handleError);
+      };
+    }
+  }, [handleSongEnd]);
+
+  // Handle song changes
+  useEffect(() => {
+    if (audioRef.current) {
+      const wasPlaying = !audioRef.current.paused;
       audioRef.current.src = `${process.env.PUBLIC_URL}/sound/${songs[currentSongIndex]}`;
-      if (isPlaying) {
-        audioRef.current.play();
+      if (wasPlaying) {
+        audioRef.current.play().catch(error => {
+          console.error('Error playing new song:', error);
+          setAudioError('Failed to play new song');
+        });
       }
     }
-  }, [currentSongIndex]);
+  }, [currentSongIndex, songs]);
 
   return (
     <div className="audio-player">
       {showArrow && (
-        <img 
+        <img
           src={`${process.env.PUBLIC_URL}/sound/down-arrow.svg`}
           alt="Click to play music"
           className="arrow-indicator"
           style={isDarkMode ? { filter: 'invert(1)' } : undefined}
         />
       )}
-      <audio ref={audioRef} />
       <div className="audio-controls">
-        <button 
+        <button
           onClick={togglePlay}
-          className={`pixel-button audio-button ${isDarkMode ? 'dark-mode' : ''}`}
+          className={`audio-button ${isDarkMode ? 'dark-mode' : ''}`}
           aria-label={isPlaying ? "Mute audio" : "Unmute audio"}
-          style={isDarkMode ? {
+          style={{
             borderColor: theme.colors.border,
             boxShadow: `4px 4px 0 ${theme.colors.shadow}`
-          } : undefined}
+          }}
         >
-          <img 
-            src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`} 
+          <img
+            src={`${process.env.PUBLIC_URL}/sound/${isPlaying ? 'speaker.png' : 'speaker-mute.png'}`}
             alt={isPlaying ? "Mute" : "Unmute"}
             className="speaker-icon"
             style={isDarkMode ? { filter: 'invert(1)' } : undefined}
           />
         </button>
         {isPlaying && (
-          <button 
-            onClick={handleSkip}
-            className={`skip-button ${isDarkMode ? 'dark-mode' : ''}`}
-            aria-label="Skip to next song"
-            style={isDarkMode ? {
-              borderColor: theme.colors.border,
-              boxShadow: `4px 4px 0 ${theme.colors.shadow}`
-            } : undefined}
-          >
-            <img 
-              src={`${process.env.PUBLIC_URL}/sound/skip.svg`}
-              alt="Skip"
-              className="skip-icon"
-              style={isDarkMode ? { filter: 'invert(1)' } : undefined}
-            />
-          </button>
+          <>
+            <button
+              onClick={handleSkip}
+              className={`skip-button ${isDarkMode ? 'dark-mode' : ''}`}
+              aria-label="Skip to next song"
+              style={{
+                borderColor: theme.colors.border,
+                boxShadow: `4px 4px 0 ${theme.colors.shadow}`
+              }}
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/sound/skip.svg`}
+                alt="Skip"
+                className="skip-icon"
+                style={isDarkMode ? { filter: 'invert(1)' } : undefined}
+              />
+            </button>
+            <div className="visualizer-container">
+              <canvas
+                ref={canvasRef}
+                className="visualizer-canvas"
+                style={{
+                  borderColor: theme.colors.border,
+                  boxShadow: `4px 4px 0 ${theme.colors.shadow}`
+                }}
+              />
+            </div>
+          </>
         )}
       </div>
+      {audioError && (
+        <div className="audio-error" style={{ color: theme.colors.accent }}>
+          {audioError}
+        </div>
+      )}
+      <audio ref={audioRef} />
     </div>
   );
 }
@@ -904,7 +1101,7 @@ function Layout({ children }) {
         <SceneSelector />
         {children}
         <Footer />
-        <AudioPlayer />
+        <AudioPlayerPortal />
       </ThemeContext.Provider>
     </SceneContext.Provider>
   );
