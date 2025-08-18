@@ -616,6 +616,84 @@ function Projects() {
             </ul>
           </div>
         </div>
+
+        <div className="pixel-card" style={{ 
+          width: isMobile ? '85%' : '100%',
+          maxWidth: isMobile ? '400px' : 'none',
+          marginBottom: '30px',
+          paddingBottom: '20px',
+          overflow: 'visible'
+        }}>
+          <h3>
+            <span className="pixel-text" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+              Multiplayer Connect 4
+            </span>
+          </h3>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'flex-start',
+            gap: '15px',
+            flexWrap: 'wrap'
+          }}>
+            <p className="pixel-text project-description" style={{ 
+              ...(isDarkMode ? { color: '#ffffff' } : {}),
+              flex: 1,
+              margin: 0,
+              minWidth: isMobile ? '100%' : '300px'
+            }}>
+              Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.
+            </p>
+            <div className="project-buttons" style={{ 
+              display: 'flex', 
+              gap: '15px',
+              flexWrap: 'wrap',
+              alignItems: 'flex-start'
+            }}>
+              <a 
+                href="https://multiplayer-connect-4-xi.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="pixel-button"
+                style={isDarkMode ? { 
+                  backgroundColor: 'rgba(157, 78, 221, 0.2)',
+                  borderColor: '#9d4edd',
+                  color: '#ffffff',
+                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.3)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '12px 20px'
+                } : {
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '12px 20px'
+                }}
+              >
+                <span>Play Now</span>
+              </a>
+              <a 
+                href="https://github.com/bicrick/multiplayer-connect-4" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="pixel-button"
+                style={isDarkMode ? { 
+                  backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                  borderColor: '#9d4edd',
+                  color: '#ffffff',
+                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '12px 20px'
+                } : {
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '12px 20px'
+                }}
+              >
+                <i className="fab fa-github" style={{ fontSize: '16px' }}></i>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
       <Tooltip 
         id="course-tooltip"
