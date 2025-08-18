@@ -1,0 +1,7 @@
+To start locally run:
+
+npm start from root
+
+Only deploy when I ask. When i ask run this:
+
+gh-pages -d build to push to gh pages

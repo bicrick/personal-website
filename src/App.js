@@ -649,10 +649,8 @@ function Projects() {
               flexWrap: 'wrap',
               alignItems: 'flex-start'
             }}>
-              <a 
-                href="https://multiplayer-connect-4-xi.vercel.app/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <Link 
+                to="/connect4"
                 className="pixel-button"
                 style={isDarkMode ? { 
                   backgroundColor: 'rgba(157, 78, 221, 0.2)',
@@ -669,7 +667,7 @@ function Projects() {
                 }}
               >
                 <span>Play Now</span>
-              </a>
+              </Link>
               <a 
                 href="https://github.com/bicrick/multiplayer-connect-4" 
                 target="_blank" 
@@ -703,6 +701,76 @@ function Projects() {
         style={tooltipStyle}
       />
     </div>
+  );
+}
+
+function Connect4Game() {
+  // Prevent body scrolling when component mounts
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
+    // Cleanup: restore scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    };
+  }, []);
+  
+  return (
+    <>
+      <iframe
+        src="https://multiplayer-connect-4-xi.vercel.app/"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          border: 'none',
+          margin: 0,
+          padding: 0,
+          zIndex: 9999
+        }}
+        title="Multiplayer Connect 4 Game"
+        allow="microphone; camera"
+      />
+      <Link
+        to="/projects"
+        className="pixel-button"
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          zIndex: 10000,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '12px 16px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          border: '4px solid #2f3542',
+          color: '#2f3542',
+          textDecoration: 'none',
+          boxShadow: '6px 6px 0 rgba(47, 53, 66, 0.3)',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = '#ffffff';
+          e.target.style.transform = 'translate(-2px, -2px)';
+          e.target.style.boxShadow = '8px 8px 0 rgba(47, 53, 66, 0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+          e.target.style.transform = 'translate(0, 0)';
+          e.target.style.boxShadow = '6px 6px 0 rgba(47, 53, 66, 0.3)';
+        }}
+      >
+        <span>←</span>
+        <span>Back</span>
+      </Link>
+    </>
   );
 }
 
@@ -901,6 +969,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/projects" element={<Layout><Projects /></Layout>} />
+      <Route path="/connect4" element={<Connect4Game />} />
       <Route path="/contact" element={<Layout><Contact /></Layout>} />
       <Route path="/privacy" element={<Layout><PrivacyPolicy /></Layout>} />
     </Routes>
