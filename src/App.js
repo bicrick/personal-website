@@ -1,8 +1,7 @@
-import React, { useEffect, createContext, useContext, useState } from 'react';
+import React, { useEffect, createContext, useContext, useState, useRef } from 'react';
 import { Link, Routes, Route, NavLink } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cube';
@@ -397,60 +396,80 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
 
 // Mobile Components
 function MobileLayout() {
-  const [currentSection, setCurrentSection] = useState(0);
-  const sections = ['About', 'Projects', 'Contact', 'Themes'];
+  const [currentCard, setCurrentCard] = useState(0);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const swiperRef = useRef(null);
+  
+  // Create individual cards for main carousel
+  const cards = [
+    { type: 'profile', title: 'About' },
+    { type: 'about-text', title: 'About' },
+    { type: 'projects-title', title: 'Projects' },
+    { type: 'project-coursework', title: 'Projects' },
+    { type: 'project-connect4', title: 'Projects' },
+    { type: 'contact', title: 'Contact' },
+    { type: 'theme-selector', title: 'Themes' }
+  ];
+
+  const handleCardSelect = (cardIndex) => {
+    setCurrentCard(cardIndex);
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideTo(cardIndex);
+    }
+  };
+
+  if (showThemeSelector) {
+    return <MobileThemeSelectorPage onBack={() => setShowThemeSelector(false)} />;
+  }
 
   return (
     <div className="mobile-layout">
-      <MobileHeader currentSection={currentSection} sections={sections} />
+      <MobileHeader currentCard={currentCard} totalCards={cards.length} cardInfo={cards[currentCard]} />
       <Swiper
+        ref={swiperRef}
         direction="horizontal"
         spaceBetween={0}
         slidesPerView={1}
-        onSlideChange={(swiper) => setCurrentSection(swiper.activeIndex)}
-        className="mobile-swiper-fullscreen"
+        onSlideChange={(swiper) => setCurrentCard(swiper.activeIndex)}
+        className="mobile-swiper-rigid"
         allowTouchMove={true}
         grabCursor={true}
-        modules={[Pagination]}
-        pagination={{
-          clickable: true,
-          bulletClass: 'mobile-pagination-bullet',
-          bulletActiveClass: 'mobile-pagination-bullet-active'
-        }}
+        modules={[]}
       >
-        <SwiperSlide>
-          <MobileAbout />
-        </SwiperSlide>
-        <SwiperSlide>
-          <MobileProjects />
-        </SwiperSlide>
-        <SwiperSlide>
-          <MobileContact />
-        </SwiperSlide>
-        <SwiperSlide>
-          <MobileThemeSelector />
-        </SwiperSlide>
+        <SwiperSlide><MobileProfileCard /></SwiperSlide>
+        <SwiperSlide><MobileAboutTextCard /></SwiperSlide>
+        <SwiperSlide><MobileProjectsTitleCard /></SwiperSlide>
+        <SwiperSlide><MobileCourseworkCard /></SwiperSlide>
+        <SwiperSlide><MobileConnect4Card /></SwiperSlide>
+        <SwiperSlide><MobileContactCard /></SwiperSlide>
+        <SwiperSlide><MobileThemeSelectorCard onOpen={() => setShowThemeSelector(true)} /></SwiperSlide>
       </Swiper>
+      <MobileScrollablePagination 
+        totalCards={cards.length} 
+        currentCard={currentCard} 
+        onCardSelect={handleCardSelect}
+      />
     </div>
   );
 }
 
-function MobileHeader({ currentSection, sections }) {
+function MobileHeader({ currentCard, totalCards, cardInfo }) {
   return (
     <header className="mobile-header">
       <h1 className="mobile-title">Patrick Brown</h1>
       <div className="mobile-nav-indicator">
-        <span className="current-section">{sections[currentSection]}</span>
-        <span className="section-counter">{currentSection + 1}/{sections.length}</span>
+        <span className="current-section">{cardInfo?.title || 'Loading'}</span>
+        <span className="section-counter">{currentCard + 1}/{totalCards}</span>
       </div>
     </header>
   );
 }
 
-function MobileAbout() {
+// Individual Card Components
+function MobileProfileCard() {
   return (
-    <div className="mobile-section mobile-about">
-      <div className="mobile-card">
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card">
         <div className="mobile-profile-section">
           <div className="mobile-profile-image">
             <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" />
@@ -488,57 +507,77 @@ function MobileAbout() {
             <span>Twitter</span>
           </a>
         </div>
+      </div>
+    </div>
+  );
+}
 
+function MobileAboutTextCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card">
         <div className="mobile-about-text">
           <p>I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.</p>
-          <p>In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing.</p>
+          <p>In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.</p>
         </div>
       </div>
     </div>
   );
 }
 
-function MobileProjects() {
+function MobileProjectsTitleCard() {
   return (
-    <div className="mobile-section mobile-projects">
-      <div className="mobile-card">
-        <h2 className="mobile-section-title">Projects</h2>
-        
-        <div className="mobile-project">
-          <h3>University of Texas AI Masters Coursework</h3>
-          <p>A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.</p>
-          <div className="mobile-courses-grid">
-            <div className="mobile-course">Advances in Deep Learning</div>
-            <div className="mobile-course">Automated Logical Reasoning</div>
-            <div className="mobile-course">Deep Learning</div>
-            <div className="mobile-course">Machine Learning</div>
-            <div className="mobile-course">Online Learning & Optimization</div>
-            <div className="mobile-course">Optimization</div>
-            <div className="mobile-course">Reinforcement Learning</div>
-            <div className="mobile-course">Natural Language Processing</div>
-          </div>
-        </div>
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card mobile-title-card">
+        <h1 className="mobile-big-title">Projects</h1>
+      </div>
+    </div>
+  );
+}
 
-        <div className="mobile-project">
-          <h3>Multiplayer Connect 4</h3>
-          <p>Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
-          <div className="mobile-project-buttons">
-            <a href="/connect4" className="mobile-project-button primary">Play Now</a>
-            <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-project-button secondary">
-              <i className="fab fa-github"></i> View Code
-            </a>
-          </div>
+function MobileCourseworkCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card">
+        <h3 className="mobile-card-title">University of Texas AI Masters Coursework</h3>
+        <p className="mobile-card-description">A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.</p>
+        <div className="mobile-courses-grid">
+          <div className="mobile-course">Advances in Deep Learning</div>
+          <div className="mobile-course">Automated Logical Reasoning</div>
+          <div className="mobile-course">Deep Learning</div>
+          <div className="mobile-course">Machine Learning</div>
+          <div className="mobile-course">Online Learning & Optimization</div>
+          <div className="mobile-course">Optimization</div>
+          <div className="mobile-course">Reinforcement Learning</div>
+          <div className="mobile-course">Natural Language Processing</div>
         </div>
       </div>
     </div>
   );
 }
 
-function MobileContact() {
+function MobileConnect4Card() {
   return (
-    <div className="mobile-section mobile-contact">
-      <div className="mobile-card">
-        <h2 className="mobile-section-title">Contact</h2>
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card">
+        <h3 className="mobile-card-title">Multiplayer Connect 4</h3>
+        <p className="mobile-card-description">Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
+        <div className="mobile-project-buttons">
+          <a href="/connect4" className="mobile-project-button primary">Play Now</a>
+          <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-project-button secondary">
+            <i className="fab fa-github"></i> View Code
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileContactCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card">
+        <h2 className="mobile-card-title">Contact</h2>
         
         <div className="mobile-contact-section">
           <h3>Personal</h3>
@@ -560,49 +599,124 @@ function MobileContact() {
   );
 }
 
-function MobileThemeSelector() {
-  const { currentScene, setCurrentScene } = useScene();
-  const [activeTab, setActiveTab] = useState(() => {
-    if (currentScene && typeof currentScene.id === 'string' && currentScene.id.startsWith('ocean')) {
-      return 'ocean';
-    }
-    return 'nature';
-  });
-
-  const currentScenes = activeTab === 'nature' ? natureScenes : oceanScenes;
-
+function MobileThemeSelectorCard({ onOpen }) {
   return (
-    <div className="mobile-section mobile-theme-selector">
-      <div className="mobile-card">
-        <h2 className="mobile-section-title">Choose Theme</h2>
-        
-        <div className="mobile-theme-tabs">
-          <button
-            className={`mobile-theme-tab ${activeTab === 'nature' ? 'active' : ''}`}
-            onClick={() => setActiveTab('nature')}
-          >
-            Nature
-          </button>
-          <button
-            className={`mobile-theme-tab ${activeTab === 'ocean' ? 'active' : ''}`}
-            onClick={() => setActiveTab('ocean')}
-          >
-            Ocean
-          </button>
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card mobile-title-card" onClick={onOpen}>
+        <h1 className="mobile-big-title">Select Theme</h1>
+        <div className="mobile-theme-preview">
+          <div className="theme-preview-text">Tap to choose your theme</div>
+          <div className="theme-preview-arrow">→</div>
         </div>
+      </div>
+    </div>
+  );
+}
 
-        <div className="mobile-themes-grid">
-          {currentScenes.map((scene) => (
-            <button
-              key={scene.id}
-              className={`mobile-theme-option ${currentScene?.id === scene.id ? 'active' : ''}`}
-              onClick={() => setCurrentScene(scene)}
-            >
-              <img src={scene.thumbnail} alt={scene.name} />
-              <span>{scene.name}</span>
-            </button>
-          ))}
+function MobileThemeSelectorPage({ onBack }) {
+  const [currentTheme, setCurrentTheme] = useState(0);
+  const themeSwiperRef = useRef(null);
+  
+  const handleThemeSelect = (themeIndex) => {
+    setCurrentTheme(themeIndex);
+    if (themeSwiperRef.current && themeSwiperRef.current.swiper) {
+      themeSwiperRef.current.swiper.slideTo(themeIndex);
+    }
+  };
+  
+  return (
+    <div className="mobile-layout">
+      <div className="mobile-header">
+        <button className="mobile-back-button" onClick={onBack}>
+          ← Back
+        </button>
+        <h1 className="mobile-title">Choose Theme</h1>
+        <div className="mobile-nav-indicator">
+          <span className="section-counter">{currentTheme + 1}/{scenes.length}</span>
         </div>
+      </div>
+      <Swiper
+        ref={themeSwiperRef}
+        direction="horizontal"
+        spaceBetween={0}
+        slidesPerView={1}
+        onSlideChange={(swiper) => setCurrentTheme(swiper.activeIndex)}
+        className="mobile-swiper-rigid"
+        allowTouchMove={true}
+        grabCursor={true}
+        modules={[]}
+      >
+        {scenes.map((scene) => (
+          <SwiperSlide key={scene.id}>
+            <MobileThemeCard scene={scene} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <MobileScrollablePagination 
+        totalCards={scenes.length} 
+        currentCard={currentTheme} 
+        onCardSelect={handleThemeSelect}
+      />
+    </div>
+  );
+}
+
+function MobileThemeCard({ scene }) {
+  const { currentScene, setCurrentScene } = useScene();
+  const theme = themes[scene.id];
+  const isActive = currentScene?.id === scene.id;
+  
+  return (
+    <div className="mobile-card-container">
+      <div 
+        className={`mobile-rigid-card mobile-theme-card ${isActive ? 'active' : ''}`}
+        style={{ 
+          borderColor: theme?.colors.accent || '#2196f3',
+          borderWidth: isActive ? '6px' : '4px'
+        }}
+        onClick={() => setCurrentScene(scene)}
+      >
+        <div className="mobile-theme-image">
+          <img src={scene.thumbnail} alt={scene.name} />
+        </div>
+        <div className="mobile-theme-name">{scene.name}</div>
+        {isActive && <div className="mobile-theme-active-indicator">✓ Active</div>}
+      </div>
+    </div>
+  );
+}
+
+function MobileScrollablePagination({ totalCards, currentCard, onCardSelect }) {
+  const paginationRef = useRef(null);
+  
+  useEffect(() => {
+    if (paginationRef.current) {
+      const container = paginationRef.current;
+      const activeButton = container.children[currentCard];
+      if (activeButton) {
+        const containerWidth = container.offsetWidth;
+        const buttonLeft = activeButton.offsetLeft;
+        const buttonWidth = activeButton.offsetWidth;
+        const scrollLeft = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+        
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [currentCard]);
+  
+  return (
+    <div className="mobile-pagination-container">
+      <div className="mobile-pagination-scrollable" ref={paginationRef}>
+        {Array.from({ length: totalCards }, (_, index) => (
+          <button
+            key={index}
+            className={`mobile-pagination-hatch ${index === currentCard ? 'active' : ''}`}
+            onClick={() => onCardSelect(index)}
+          />
+        ))}
       </div>
     </div>
   );
