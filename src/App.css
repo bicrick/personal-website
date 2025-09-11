@@ -11,6 +11,7 @@
 html {
   overflow-y: overlay;
   scrollbar-gutter: auto;
+  overscroll-behavior-y: none;
 }
 
 /* Style the scrollbar for webkit browsers */
@@ -241,7 +242,7 @@ html {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
   position: relative;
   z-index: 2;
   animation: fadeIn 0.5s ease-out forwards;
@@ -297,6 +298,30 @@ html {
 }
 
 .bio-profile-image:hover {
+  transform: translateY(-2px);
+}
+
+.bio-avatar-large {
+  width: 200px;
+  height: 200px;
+  border: none;
+  display: block;
+  image-rendering: auto;
+  border-radius: 50%;
+}
+
+.bio-profile-image-large {
+  padding: 4px;
+  border: 4px solid var(--border);
+  box-shadow: 8px 8px 0 var(--shadow);
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s ease;
+  width: 200px;
+  height: 200px;
+}
+
+.bio-profile-image-large:hover {
   transform: translateY(-2px);
 }
 
@@ -541,6 +566,16 @@ html {
   .bio-profile-image {
     width: 90px;
     height: 90px;
+  }
+  
+  .bio-avatar-large {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .bio-profile-image-large {
+    width: 140px;
+    height: 140px;
   }
   
   h1.pixel-text {
@@ -863,23 +898,24 @@ html {
   background-color: var(--cardBg);
   backdrop-filter: blur(5px);
   border-bottom: 4px solid var(--border);
-  margin-bottom: 1.5rem;
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   z-index: 100;
+  overflow: hidden;
 }
 
 .header::before {
   content: '';
   position: absolute;
-  top: -100vh;
+  top: -200vh;
   left: 0;
   right: 0;
-  height: 100vh;
+  height: 200vh;
   background-color: var(--cardBg);
+  backdrop-filter: blur(5px);
   z-index: -1;
 }
 

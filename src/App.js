@@ -302,118 +302,28 @@ function Home() {
                   <div className="bio-content">
                     <p className="pixel-text bio">
                       <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                        Data Engineer at 
+                        Data Engineer II at 
                         <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
                           <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
                         </a>
+                        <span style={isDarkMode ? { color: '#9d4edd' } : undefined}> • Based in Austin, TX</span>
                       </span>
+                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Computer Engineering '23</span>
                       <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                        University of Texas at Austin
+                        The University of Texas at Austin
                         <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
                           <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
                         </a>
                       </span>
-                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '23</span>
                     </p>
-                    <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
-                  </div>
-                  <div className="bio-profile">
-                    <div className="bio-profile-image">
-                      <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
-                    </div>
-                    <div className="bio-social-links">
-                      <a 
-                        href="https://github.com/bicrick" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="pixel-button"
-                        style={isDarkMode ? { 
-                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                          borderColor: '#9d4edd',
-                          color: '#ffffff'
-                        } : undefined}
-                      >
-                        <i className="fab fa-github"></i>
-                      </a>
-                      <a 
-                        href="https://www.linkedin.com/in/patrick-brown-470617195/" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="pixel-button"
-                        style={isDarkMode ? { 
-                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                          borderColor: '#9d4edd',
-                          color: '#ffffff'
-                        } : undefined}
-                      >
-                        <i className="fab fa-linkedin"></i>
-                      </a>
-                      <a 
-                        href="https://x.com/patrickbbrown" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="pixel-button"
-                        style={isDarkMode ? { 
-                          backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                          borderColor: '#9d4edd',
-                          color: '#ffffff'
-                        } : undefined}
-                      >
-                        <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                          <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
-                <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
-                <div className="about-me-content">
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
-                  </p>
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
-                  </p>
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
-                  </p>
-                </div>
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        ) : (
-          <>
-            <div className="pixel-card">
-              <div className="bio-container">
-                <div className="bio-content">
-                  <p className="pixel-text bio">
-                    <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                      Data Engineer at 
-                      <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
-                        <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
-                      </a>
-                    </span>
-                    <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                      The University of Texas at Austin
-                      <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
-                        <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
-                      </a>
-                    </span>
-                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Electrical Engineering '24</span>
-                  </p>
-                  <p className="pixel-text location" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Based in Austin, TX</p>
-                </div>
-                <div className="bio-profile">
-                  <div className="bio-profile-image">
-                    <img src={`${process.env.PUBLIC_URL}/profile-pixelated.png`} alt="Profile" className="bio-avatar" />
-                  </div>
-                  <div className="bio-social-links">
+                  <div className="bio-social-links-centered" style={{ 
+                    marginTop: '1.5rem', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    gap: '1rem',
+                    paddingRight: '2rem' 
+                  }}>
                     <a 
                       href="https://github.com/bicrick" 
                       target="_blank" 
@@ -455,6 +365,108 @@ function Home() {
                         <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
                       </svg>
                     </a>
+                  </div>
+                  </div>
+                  <div className="bio-profile">
+                    <div className="bio-profile-image-large">
+                      <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" className="bio-avatar-large" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
+                <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
+                <div className="about-me-content">
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+                    I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+                  </p>
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+                    In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
+                  </p>
+                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+                    Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
+                  </p>
+                </div>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        ) : (
+          <>
+            <div className="pixel-card">
+              <div className="bio-container">
+                <div className="bio-content">
+                  <p className="pixel-text bio">
+                    <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                      Data Engineer II at 
+                      <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
+                        <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
+                      </a>
+                      <span style={isDarkMode ? { color: '#9d4edd' } : undefined}> • Based in Austin, TX</span>
+                    </span>
+                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Computer Engineering '23</span>
+                    <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                      The University of Texas at Austin
+                      <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
+                        <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
+                      </a>
+                    </span>
+                  </p>
+                  <div className="bio-social-links-centered" style={{ 
+                    marginTop: '1.5rem', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    gap: '1rem',
+                    paddingRight: '2rem' 
+                  }}>
+                    <a 
+                      href="https://github.com/bicrick" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <i className="fab fa-github"></i>
+                    </a>
+                    <a 
+                      href="https://www.linkedin.com/in/patrick-brown-470617195/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <i className="fab fa-linkedin"></i>
+                    </a>
+                    <a 
+                      href="https://x.com/patrickbbrown" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="pixel-button"
+                      style={isDarkMode ? { 
+                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                        borderColor: '#9d4edd',
+                        color: '#ffffff'
+                      } : undefined}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                        <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <div className="bio-profile">
+                  <div className="bio-profile-image-large">
+                    <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" className="bio-avatar-large" />
                   </div>
                 </div>
               </div>
@@ -510,24 +522,9 @@ function Projects() {
           overflow: 'visible'
         }}>
           <h3>
-            <a href="https://github.com/bicrick/MSAI" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="header-nav-link"
-              style={isDarkMode ? { 
-                color: '#9d4edd', 
-                borderColor: '#9d4edd',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              } : {
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-              <span className="pixel-text">MSAI Coursework</span>
-              <i className="fab fa-github" style={{ fontSize: '16px' }}></i>
-            </a>
+            <span className="pixel-text" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+              University of Texas AI Masters Coursework
+            </span>
           </h3>
           <p className="pixel-text project-description" style={isDarkMode ? { color: '#ffffff' } : undefined}>
             A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.
@@ -612,6 +609,32 @@ function Projects() {
                 } : undefined}
               >
                 Optimization
+              </li>
+              <li 
+                className="pixel-button"
+                data-tooltip-id="course-tooltip" 
+                data-tooltip-content="Covers multi-armed bandits, MDPs, dynamic programming, Monte Carlo methods, and policy gradients."
+                style={isDarkMode ? { 
+                  borderColor: '#9d4edd', 
+                  color: '#ffffff',
+                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
+                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
+                } : undefined}
+              >
+                Reinforcement Learning
+              </li>
+              <li 
+                className="pixel-button"
+                data-tooltip-id="course-tooltip" 
+                data-tooltip-content="Covers neural networks, attention mechanisms, transformers, and language models like BERT and GPT."
+                style={isDarkMode ? { 
+                  borderColor: '#9d4edd', 
+                  color: '#ffffff',
+                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
+                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
+                } : undefined}
+              >
+                Natural Language Processing
               </li>
             </ul>
           </div>
