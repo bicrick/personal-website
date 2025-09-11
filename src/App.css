@@ -1555,18 +1555,21 @@ html {
 /* Mobile Rigid Card Layout */
 .mobile-layout {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
+  min-height: 100vh; /* Fallback */
   overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .mobile-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: env(safe-area-inset-top);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
   height: 60px;
   background: var(--cardBg);
   border-bottom: 4px solid var(--border);
@@ -1583,6 +1586,8 @@ html {
   font-size: 1rem;
   color: var(--accent);
   margin: 0;
+  text-align: center;
+  flex: 1;
 }
 
 .mobile-nav-indicator {
@@ -1616,21 +1621,39 @@ html {
 /* Header Shuffle Button */
 .mobile-header-shuffle-button {
   background: var(--buttonBg);
-  border: 2px solid var(--border);
-  border-radius: 4px;
+  border: 3px solid var(--accent);
+  border-radius: 6px;
   color: var(--text);
   font-family: 'VT323', monospace;
-  font-size: 0.8rem;
-  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 2px 2px 0 var(--shadow);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .mobile-header-shuffle-button:hover {
   background: var(--buttonHoverBg);
-  transform: translateY(-1px) rotate(5deg);
+  transform: translateY(-1px) rotate(3deg);
   box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.mobile-header-shuffle-button:active {
+  transform: translateY(1px) rotate(-2deg);
+  box-shadow: 1px 1px 0 var(--shadow);
+}
+
+/* Smaller screens need smaller shuffle button */
+@media (max-width: 380px) {
+  .mobile-header-shuffle-button {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border: 2px solid var(--accent);
+  }
 }
 
 /* Small Shuffle Button Below Theme */
@@ -1677,13 +1700,15 @@ html {
 
 .mobile-swiper-rigid {
   width: 100vw !important;
-  height: 100vh !important;
-  padding-top: 60px !important;
+  height: 100dvh !important;
+  min-height: 100vh !important; /* Fallback */
+  padding-top: calc(60px + env(safe-area-inset-top)) !important;
 }
 
 .mobile-swiper-rigid .swiper-slide {
   width: 100vw !important;
-  height: calc(100vh - 60px) !important;
+  height: calc(100dvh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  min-height: calc(100vh - 120px) !important; /* Fallback */
   overflow: hidden !important;
   display: flex !important;
   align-items: center !important;
@@ -1693,12 +1718,24 @@ html {
 /* Rigid Card System */
 .mobile-card-container {
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: calc(100dvh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  min-height: calc(100vh - 120px); /* Fallback for older browsers */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem;
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   box-sizing: border-box;
+}
+
+/* Smaller screens need even less padding */
+@media (max-width: 380px) {
+  .mobile-card-container {
+    padding: 0.25rem;
+    padding-top: max(0.25rem, env(safe-area-inset-top));
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  }
 }
 
 .mobile-rigid-card {
@@ -1754,17 +1791,35 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1rem, 4vw, 1.5rem);
-  margin-bottom: clamp(1rem, 4vw, 2rem);
+  gap: clamp(0.5rem, 4vw, 1.5rem);
+  margin-bottom: clamp(0.5rem, 4vw, 2rem);
+}
+
+/* Smaller screens need tighter spacing */
+@media (max-width: 380px) {
+  .mobile-profile-section {
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 
 .mobile-profile-image {
-  width: clamp(140px, 25vw, 160px);
-  height: clamp(140px, 25vw, 160px);
+  width: clamp(120px, 25vw, 160px);
+  height: clamp(120px, 25vw, 160px);
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid var(--border);
   box-shadow: 4px 4px 0 var(--shadow);
+}
+
+/* Smaller screens need smaller profile image */
+@media (max-width: 380px) {
+  .mobile-profile-image {
+    width: 100px;
+    height: 100px;
+    border: 3px solid var(--border);
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
 }
 
 .mobile-profile-image img {
@@ -1779,15 +1834,25 @@ html {
 }
 
 .mobile-job-title {
-  font-size: clamp(0.9rem, 4vw, 1.1rem);
+  font-size: clamp(0.8rem, 4vw, 1.1rem);
   color: var(--accent);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   flex-wrap: wrap;
   text-align: center;
+  line-height: 1.2;
+}
+
+/* Smaller screens need smaller text */
+@media (max-width: 380px) {
+  .mobile-job-title {
+    font-size: 0.7rem;
+    gap: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
 }
 
 .mobile-company-logo {
@@ -1796,18 +1861,36 @@ html {
 }
 
 .mobile-location {
-  font-size: clamp(0.9rem, 4vw, 1rem);
+  font-size: clamp(0.8rem, 4vw, 1rem);
   color: var(--text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+/* Smaller screens need smaller location text */
+@media (max-width: 380px) {
+  .mobile-location {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+  }
 }
 
 .mobile-education {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  font-size: clamp(0.9rem, 4vw, 1rem);
+  gap: 0.3rem;
+  font-size: clamp(0.8rem, 4vw, 1rem);
   color: var(--text);
   text-align: center;
+  line-height: 1.2;
+}
+
+/* Smaller screens need tighter education spacing */
+@media (max-width: 380px) {
+  .mobile-education {
+    gap: 0.2rem;
+    font-size: 0.7rem;
+  }
 }
 
 .mobile-university {
@@ -1826,22 +1909,40 @@ html {
 .mobile-social-links {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin: 2rem 0;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+/* Smaller screens need tighter social spacing */
+@media (max-width: 380px) {
+  .mobile-social-links {
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+  }
 }
 
 .mobile-social-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(50px, 12vw, 60px);
-  height: clamp(50px, 12vw, 60px);
+  width: clamp(45px, 12vw, 60px);
+  height: clamp(45px, 12vw, 60px);
   background: var(--buttonBg);
   border: 4px solid var(--border);
   border-radius: 8px;
   color: var(--text);
   text-decoration: none;
   transition: all 0.2s ease;
+}
+
+/* Smaller screens need smaller social buttons */
+@media (max-width: 380px) {
+  .mobile-social-button {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-radius: 6px;
+  }
 }
 
 .mobile-social-button:hover {
@@ -1851,7 +1952,15 @@ html {
 
 .mobile-social-button i,
 .mobile-social-button svg {
-  font-size: clamp(1.2rem, 3vw, 1.4rem);
+  font-size: clamp(1rem, 3vw, 1.4rem);
+}
+
+/* Smaller screens need smaller icons */
+@media (max-width: 380px) {
+  .mobile-social-button i,
+  .mobile-social-button svg {
+    font-size: 0.9rem;
+  }
 }
 
 .mobile-about-text {
@@ -2105,15 +2214,31 @@ html {
 .mobile-contact-grid {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 4vw, 2rem);
+  gap: clamp(1rem, 4vw, 1.5rem);
   width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Smaller screens need tighter spacing */
+@media (max-width: 380px) {
+  .mobile-contact-grid {
+    gap: 0.75rem;
+  }
 }
 
 .mobile-contact-item {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   align-items: center;
+}
+
+/* Smaller screens need even tighter item spacing */
+@media (max-width: 380px) {
+  .mobile-contact-item {
+    gap: 0.4rem;
+  }
 }
 
 .mobile-contact-label {
@@ -2121,6 +2246,17 @@ html {
   font-size: clamp(0.8rem, 3vw, 1rem);
   color: var(--accent);
   text-align: center;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+/* Smaller screens need tighter label spacing */
+@media (max-width: 380px) {
+  .mobile-contact-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+    padding: 0.3rem 0;
+  }
 }
 
 .mobile-contact-link {
@@ -2128,7 +2264,7 @@ html {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: clamp(1rem, 3vw, 1.25rem);
+  padding: clamp(0.8rem, 3vw, 1rem);
   background: var(--buttonBg);
   border: 4px solid var(--border);
   border-radius: 8px;
@@ -2137,8 +2273,24 @@ html {
   font-family: 'VT323', monospace;
   font-size: clamp(0.9rem, 3vw, 1rem);
   transition: all 0.2s ease;
+  box-shadow: 4px 4px 0 var(--shadow);
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
+  min-height: 50px;
+}
+
+/* Smaller screens need more compact contact links */
+@media (max-width: 380px) {
+  .mobile-contact-link {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+    gap: 0.5rem;
+    border: 3px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 3px 3px 0 var(--shadow);
+    min-height: 44px;
+    max-width: 280px;
+  }
 }
 
 .mobile-contact-link:hover {
@@ -2147,8 +2299,15 @@ html {
 }
 
 .mobile-contact-link i {
-  font-size: clamp(1.2rem, 4vw, 1.4rem);
+  font-size: clamp(1rem, 4vw, 1.2rem);
   flex-shrink: 0;
+}
+
+/* Smaller screens need smaller contact icons */
+@media (max-width: 380px) {
+  .mobile-contact-link i {
+    font-size: 0.9rem;
+  }
 }
 
 /* Mobile Theme Selector Styles */
@@ -2273,10 +2432,17 @@ html {
 /* Scrollable Pagination */
 .mobile-pagination-container {
   position: fixed;
-  bottom: 100px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
+}
+
+/* Smaller screens need pagination closer to bottom */
+@media (max-width: 380px) {
+  .mobile-pagination-container {
+    bottom: calc(10px + env(safe-area-inset-bottom));
+  }
 }
 
 .mobile-pagination-scrollable {
@@ -2336,12 +2502,14 @@ html {
 
 /* Mobile swiper full height */
 .mobile-swiper-rigid {
-  height: calc(100vh - 60px) !important;
-  padding-top: 60px !important;
+  height: calc(100dvh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  min-height: calc(100vh - 120px) !important; /* Fallback */
+  padding-top: calc(60px + env(safe-area-inset-top)) !important;
 }
 
 .mobile-swiper-rigid .swiper-slide {
-  height: calc(100vh - 60px) !important;
+  height: calc(100dvh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+  min-height: calc(100vh - 120px) !important; /* Fallback */
 }
 
 /* Container adjustments for mobile */
