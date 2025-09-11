@@ -550,8 +550,10 @@ function MobileAboutTextCard() {
 function MobileProjectsTitleCard() {
   return (
     <div className="mobile-card-container">
-      <div className="mobile-rigid-card mobile-title-card">
-        <h1 className="mobile-big-title">Projects</h1>
+      <div className="mobile-projects-floating">
+        <button className="mobile-projects-small-button">
+          Projects
+        </button>
       </div>
     </div>
   );
@@ -597,14 +599,17 @@ function MobileCourseworkCard() {
 
   return (
     <div className="mobile-card-container">
-      <div className="mobile-rigid-card">
-        <h3 className="mobile-card-title">UT AI Masters Coursework</h3>
-        <p className="mobile-card-description">Tap any course to learn more</p>
-        <div className="mobile-courses-grid-two-column">
+      <div className="mobile-coursework-floating">
+        <div className="mobile-coursework-header">
+          <h2>UT AI Masters Coursework</h2>
+          <p>Tap any course to learn more</p>
+        </div>
+        
+        <div className="mobile-course-blobs">
           {courses.map((course, index) => (
             <div 
               key={index}
-              className="mobile-course-item"
+              className="mobile-course-blob"
               onClick={() => setSelectedCourse(course)}
             >
               {course.name}
@@ -636,12 +641,15 @@ function MobileCourseworkCard() {
 function MobileConnect4Card() {
   return (
     <div className="mobile-card-container">
-      <div className="mobile-rigid-card">
-        <h3 className="mobile-card-title">Multiplayer Connect 4</h3>
-        <p className="mobile-card-description">Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
-        <div className="mobile-project-buttons">
-          <a href="/connect4" className="mobile-project-button primary">Play Now</a>
-          <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-project-button secondary">
+      <div className="mobile-connect4-floating">
+        <div className="mobile-connect4-header">
+          <h2>Multiplayer Connect 4</h2>
+          <p>Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
+        </div>
+        
+        <div className="mobile-connect4-buttons">
+          <a href="/connect4" className="mobile-connect4-button primary">Play Now</a>
+          <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button">
             <i className="fab fa-github"></i> View Code
           </a>
         </div>
@@ -653,25 +661,21 @@ function MobileConnect4Card() {
 function MobileContactCard() {
   return (
     <div className="mobile-card-container">
-      <div className="mobile-rigid-card">
-        <h2 className="mobile-card-title">Contact</h2>
-        
-        <div className="mobile-contact-grid">
-          <div className="mobile-contact-item">
-            <div className="mobile-contact-label">Personal</div>
-            <a href="mailto:patrickbrownai@gmail.com" className="mobile-contact-link">
-              <i className="fas fa-envelope"></i>
-              <span>patrickbrownai@gmail.com</span>
-            </a>
-          </div>
+      <div className="mobile-contact-floating">
+        <div className="mobile-contact-section">
+          <div className="mobile-contact-section-header">Personal</div>
+          <a href="mailto:patrickbrownai@gmail.com" className="mobile-contact-link">
+            <i className="fas fa-envelope"></i>
+            <span>patrickbrownai@gmail.com</span>
+          </a>
+        </div>
 
-          <div className="mobile-contact-item">
-            <div className="mobile-contact-label">Work</div>
-            <a href="mailto:patrickbrown@heb.com" className="mobile-contact-link">
-              <i className="fas fa-envelope"></i>
-              <span>patrickbrown@heb.com</span>
-            </a>
-          </div>
+        <div className="mobile-contact-section">
+          <div className="mobile-contact-section-header">Work</div>
+          <a href="mailto:patrickbrown@heb.com" className="mobile-contact-link">
+            <i className="fas fa-envelope"></i>
+            <span>patrickbrown@heb.com</span>
+          </a>
         </div>
       </div>
     </div>
@@ -683,11 +687,19 @@ function MobileThemeSelectorCard({ onOpen }) {
   
   return (
     <div className="mobile-card-container">
-      <div className="mobile-rigid-card mobile-title-card" onClick={onOpen}>
-        <h1 className="mobile-big-title">Select Theme</h1>
-        <div className="mobile-theme-preview">
-          <div className="theme-preview-text">Current: {currentScene?.name || 'Loading...'}</div>
-          <div className="theme-preview-arrow">→</div>
+      <div className="mobile-theme-selector-floating">
+        <div className="mobile-theme-selector-header">
+          <h2>Select Theme</h2>
+          <p>Current: {currentScene?.name || 'Loading...'}</p>
+        </div>
+        
+        <div className="mobile-theme-thumbnail-container" onClick={onOpen}>
+          <img 
+            src={currentScene?.thumbnail || `${process.env.PUBLIC_URL}/Nature Landscapes Free Pixel Art/nature_1/1.png`}
+            alt={currentScene?.name || 'Current theme'} 
+            className="mobile-theme-thumbnail"
+          />
+          <div className="mobile-theme-name">{currentScene?.name || 'Loading...'}</div>
         </div>
       </div>
     </div>
