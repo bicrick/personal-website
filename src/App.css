@@ -1276,6 +1276,45 @@ html {
   margin-left: -4px;
 }
 
+.theme-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.theme-tab {
+  padding: 0.4rem 0.8rem;
+  background: var(--buttonBg);
+  border: 3px solid var(--border);
+  color: var(--text);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.theme-tab:hover {
+  background: var(--buttonHoverBg);
+  transform: translateY(-1px);
+}
+
+.theme-tab.active {
+  background: var(--accent);
+  color: var(--cardBg);
+  transform: translateY(-1px);
+}
+
+.scenes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .auto-switch-container {
   padding: 0.5rem;
   display: flex;
@@ -1395,12 +1434,29 @@ html {
   }
 
   .scenes-container {
-    flex-direction: row;
+    flex-direction: column;
     border: 4px solid var(--border);
     border-bottom: none;
     box-shadow: 0 -8px 0 var(--shadow);
     margin-top: -4px;
     margin-left: 0;
+    width: calc(100vw - 40px);
+    max-width: 400px;
+  }
+
+  .theme-tabs {
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+  }
+
+  .scenes-grid {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .scene-tab {
+    flex-shrink: 0;
   }
 
   .scene-tab:hover {
