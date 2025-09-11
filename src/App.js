@@ -411,6 +411,19 @@ function MobileLayout() {
     { type: 'theme-selector', title: 'Themes' }
   ];
 
+  // Force re-render when returning from theme selector
+  useEffect(() => {
+    if (!showThemeSelector && swiperRef.current && swiperRef.current.swiper) {
+      // Small delay to ensure swiper is ready
+      setTimeout(() => {
+        const activeIndex = swiperRef.current.swiper.activeIndex;
+        if (activeIndex !== currentCard) {
+          setCurrentCard(activeIndex);
+        }
+      }, 100);
+    }
+  }, [showThemeSelector, currentCard]);
+
   const handleCardSelect = (cardIndex) => {
     setCurrentCard(cardIndex);
     if (swiperRef.current && swiperRef.current.swiper) {
@@ -419,12 +432,24 @@ function MobileLayout() {
   };
 
   if (showThemeSelector) {
-    return <MobileThemeSelectorPage onBack={() => setShowThemeSelector(false)} />;
+    return <MobileThemeSelectorPage onBack={() => {
+      setShowThemeSelector(false);
+      // Ensure we're on the theme selector card when returning
+      setCurrentCard(6); // Theme selector is the last card (index 6)
+      if (swiperRef.current && swiperRef.current.swiper) {
+        swiperRef.current.swiper.slideTo(6);
+      }
+    }} />;
   }
 
   return (
     <div className="mobile-layout">
-      <MobileHeader currentCard={currentCard} totalCards={cards.length} cardInfo={cards[currentCard]} />
+      <MobileHeader 
+        key={`header-${currentCard}-${showThemeSelector}`}
+        currentCard={currentCard} 
+        totalCards={cards.length} 
+        cardInfo={cards[currentCard]} 
+      />
       <Swiper
         ref={swiperRef}
         direction="horizontal"
@@ -533,22 +558,77 @@ function MobileProjectsTitleCard() {
 }
 
 function MobileCourseworkCard() {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  
+  const courses = [
+    {
+      name: "Advances in Deep Learning",
+      description: "Advanced topics in deep learning, covering optimization, computer vision, graphics, unsupervised learning, language models, and deep learning for games."
+    },
+    {
+      name: "Automated Logical Reasoning", 
+      description: "Study of computational logic and its applications in software verification, covering logical theories and algorithms for determining satisfiability."
+    },
+    {
+      name: "Deep Learning",
+      description: "Fundamentals of deep learning, from optimization to computer vision, graphics, unsupervised learning, and applications in games."
+    },
+    {
+      name: "Machine Learning",
+      description: "Core machine learning concepts including classification, neural networks, Bayesian methods, and computational learning theory."
+    },
+    {
+      name: "Online Learning & Optimization",
+      description: "Focus on algorithms for large scale convex optimization and online learning, with applications in Machine Learning."
+    },
+    {
+      name: "Optimization", 
+      description: "Covers Linear Programming and Convex Optimization, including algorithms like gradient descent and newton method."
+    },
+    {
+      name: "Reinforcement Learning",
+      description: "Covers multi-armed bandits, MDPs, dynamic programming, Monte Carlo methods, and policy gradients."
+    },
+    {
+      name: "Natural Language Processing",
+      description: "Covers neural networks, attention mechanisms, transformers, and language models like BERT and GPT."
+    }
+  ];
+
   return (
     <div className="mobile-card-container">
       <div className="mobile-rigid-card">
-        <h3 className="mobile-card-title">University of Texas AI Masters Coursework</h3>
-        <p className="mobile-card-description">A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.</p>
-        <div className="mobile-courses-grid">
-          <div className="mobile-course">Advances in Deep Learning</div>
-          <div className="mobile-course">Automated Logical Reasoning</div>
-          <div className="mobile-course">Deep Learning</div>
-          <div className="mobile-course">Machine Learning</div>
-          <div className="mobile-course">Online Learning & Optimization</div>
-          <div className="mobile-course">Optimization</div>
-          <div className="mobile-course">Reinforcement Learning</div>
-          <div className="mobile-course">Natural Language Processing</div>
+        <h3 className="mobile-card-title">UT AI Masters Coursework</h3>
+        <p className="mobile-card-description">Tap any course to learn more</p>
+        <div className="mobile-courses-grid-two-column">
+          {courses.map((course, index) => (
+            <div 
+              key={index}
+              className="mobile-course-item"
+              onClick={() => setSelectedCourse(course)}
+            >
+              {course.name}
+            </div>
+          ))}
         </div>
       </div>
+      
+      {selectedCourse && (
+        <div className="mobile-course-modal" onClick={() => setSelectedCourse(null)}>
+          <div className="mobile-course-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-course-modal-header">
+              <h4>{selectedCourse.name}</h4>
+              <button 
+                className="mobile-course-modal-close"
+                onClick={() => setSelectedCourse(null)}
+              >
+                ×
+              </button>
+            </div>
+            <p>{selectedCourse.description}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -617,12 +697,21 @@ function MobileThemeSelectorCard({ onOpen }) {
 function MobileThemeSelectorPage({ onBack }) {
   const [currentTheme, setCurrentTheme] = useState(0);
   const themeSwiperRef = useRef(null);
+  const { setCurrentScene } = useScene();
   
   const handleThemeSelect = (themeIndex) => {
     setCurrentTheme(themeIndex);
     if (themeSwiperRef.current && themeSwiperRef.current.swiper) {
       themeSwiperRef.current.swiper.slideTo(themeIndex);
     }
+  };
+
+  const handleShuffle = () => {
+    const randomIndex = Math.floor(Math.random() * scenes.length);
+    const randomScene = scenes[randomIndex];
+    handleThemeSelect(randomIndex);
+    // Actually select/apply the theme
+    setCurrentScene(randomScene);
   };
   
   return (
@@ -633,7 +722,9 @@ function MobileThemeSelectorPage({ onBack }) {
         </button>
         <h1 className="mobile-title">Choose Theme</h1>
         <div className="mobile-nav-indicator">
-          <span className="section-counter">{currentTheme + 1}/{scenes.length}</span>
+          <button className="mobile-header-shuffle-button" onClick={handleShuffle}>
+            🎲 Shuffle
+          </button>
         </div>
       </div>
       <Swiper
@@ -693,7 +784,7 @@ function MobileScrollablePagination({ totalCards, currentCard, onCardSelect }) {
   useEffect(() => {
     if (paginationRef.current) {
       const container = paginationRef.current;
-      const activeButton = container.children[currentCard];
+      const activeButton = container.querySelector('.mobile-pagination-hatch.active');
       if (activeButton) {
         const containerWidth = container.offsetWidth;
         const buttonLeft = activeButton.offsetLeft;
@@ -707,17 +798,55 @@ function MobileScrollablePagination({ totalCards, currentCard, onCardSelect }) {
       }
     }
   }, [currentCard]);
+
+  // For large numbers of cards (>10), show only a subset around current position
+  const getVisibleDots = () => {
+    if (totalCards <= 10) {
+      // Show all dots if 10 or fewer
+      return Array.from({ length: totalCards }, (_, index) => index);
+    }
+    
+    // Show 7 dots max: current + 3 on each side
+    const maxVisible = 7;
+    const sideCount = Math.floor((maxVisible - 1) / 2);
+    
+    let start = Math.max(0, currentCard - sideCount);
+    let end = Math.min(totalCards - 1, currentCard + sideCount);
+    
+    // Adjust if we're near the beginning or end
+    if (end - start + 1 < maxVisible) {
+      if (start === 0) {
+        end = Math.min(totalCards - 1, start + maxVisible - 1);
+      } else if (end === totalCards - 1) {
+        start = Math.max(0, end - maxVisible + 1);
+      }
+    }
+    
+    const visibleIndices = [];
+    for (let i = start; i <= end; i++) {
+      visibleIndices.push(i);
+    }
+    return visibleIndices;
+  };
+
+  const visibleDots = getVisibleDots();
   
   return (
     <div className="mobile-pagination-container">
       <div className="mobile-pagination-scrollable" ref={paginationRef}>
-        {Array.from({ length: totalCards }, (_, index) => (
+        {totalCards > 10 && currentCard > 3 && (
+          <button className="mobile-pagination-ellipsis">⋯</button>
+        )}
+        {visibleDots.map((index) => (
           <button
             key={index}
             className={`mobile-pagination-hatch ${index === currentCard ? 'active' : ''}`}
             onClick={() => onCardSelect(index)}
           />
         ))}
+        {totalCards > 10 && currentCard < totalCards - 4 && (
+          <button className="mobile-pagination-ellipsis">⋯</button>
+        )}
       </div>
     </div>
   );
