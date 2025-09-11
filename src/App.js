@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useContext, useState } from 'react';
-import { Link, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { Link, Routes, Route, NavLink } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -395,12 +395,225 @@ function ParallaxBackground({ scrollSpeedMultiplier = 1 }) {
   );
 }
 
+// Mobile Components
+function MobileLayout() {
+  const [currentSection, setCurrentSection] = useState(0);
+  const sections = ['About', 'Projects', 'Contact', 'Themes'];
+
+  return (
+    <div className="mobile-layout">
+      <MobileHeader currentSection={currentSection} sections={sections} />
+      <Swiper
+        direction="horizontal"
+        spaceBetween={0}
+        slidesPerView={1}
+        onSlideChange={(swiper) => setCurrentSection(swiper.activeIndex)}
+        className="mobile-swiper-fullscreen"
+        allowTouchMove={true}
+        grabCursor={true}
+        modules={[Pagination]}
+        pagination={{
+          clickable: true,
+          bulletClass: 'mobile-pagination-bullet',
+          bulletActiveClass: 'mobile-pagination-bullet-active'
+        }}
+      >
+        <SwiperSlide>
+          <MobileAbout />
+        </SwiperSlide>
+        <SwiperSlide>
+          <MobileProjects />
+        </SwiperSlide>
+        <SwiperSlide>
+          <MobileContact />
+        </SwiperSlide>
+        <SwiperSlide>
+          <MobileThemeSelector />
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  );
+}
+
+function MobileHeader({ currentSection, sections }) {
+  return (
+    <header className="mobile-header">
+      <h1 className="mobile-title">Patrick Brown</h1>
+      <div className="mobile-nav-indicator">
+        <span className="current-section">{sections[currentSection]}</span>
+        <span className="section-counter">{currentSection + 1}/{sections.length}</span>
+      </div>
+    </header>
+  );
+}
+
+function MobileAbout() {
+  return (
+    <div className="mobile-section mobile-about">
+      <div className="mobile-card">
+        <div className="mobile-profile-section">
+          <div className="mobile-profile-image">
+            <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" />
+          </div>
+          <div className="mobile-bio">
+            <div className="mobile-job-title">
+              Data Engineer II at 
+              <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="mobile-company-logo" />
+            </div>
+            <div className="mobile-location">Based in Austin, TX</div>
+            <div className="mobile-education">
+              <div>Masters in AI Student</div>
+              <div>BS Computer Engineering '23</div>
+              <div className="mobile-university">
+                The University of Texas at Austin
+                <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="mobile-university-logo" />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mobile-social-links">
+          <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
+            <i className="fab fa-github"></i>
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
+            <i className="fab fa-linkedin"></i>
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+            </svg>
+            <span>Twitter</span>
+          </a>
+        </div>
+
+        <div className="mobile-about-text">
+          <p>I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.</p>
+          <p>In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileProjects() {
+  return (
+    <div className="mobile-section mobile-projects">
+      <div className="mobile-card">
+        <h2 className="mobile-section-title">Projects</h2>
+        
+        <div className="mobile-project">
+          <h3>University of Texas AI Masters Coursework</h3>
+          <p>A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.</p>
+          <div className="mobile-courses-grid">
+            <div className="mobile-course">Advances in Deep Learning</div>
+            <div className="mobile-course">Automated Logical Reasoning</div>
+            <div className="mobile-course">Deep Learning</div>
+            <div className="mobile-course">Machine Learning</div>
+            <div className="mobile-course">Online Learning & Optimization</div>
+            <div className="mobile-course">Optimization</div>
+            <div className="mobile-course">Reinforcement Learning</div>
+            <div className="mobile-course">Natural Language Processing</div>
+          </div>
+        </div>
+
+        <div className="mobile-project">
+          <h3>Multiplayer Connect 4</h3>
+          <p>Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
+          <div className="mobile-project-buttons">
+            <a href="/connect4" className="mobile-project-button primary">Play Now</a>
+            <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-project-button secondary">
+              <i className="fab fa-github"></i> View Code
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileContact() {
+  return (
+    <div className="mobile-section mobile-contact">
+      <div className="mobile-card">
+        <h2 className="mobile-section-title">Contact</h2>
+        
+        <div className="mobile-contact-section">
+          <h3>Personal</h3>
+          <a href="mailto:patrickbrownai@gmail.com" className="mobile-contact-button">
+            <i className="fas fa-envelope"></i>
+            <span>patrickbrownai@gmail.com</span>
+          </a>
+        </div>
+
+        <div className="mobile-contact-section">
+          <h3>Work</h3>
+          <a href="mailto:patrickbrown@heb.com" className="mobile-contact-button">
+            <i className="fas fa-envelope"></i>
+            <span>patrickbrown@heb.com</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileThemeSelector() {
+  const { currentScene, setCurrentScene } = useScene();
+  const [activeTab, setActiveTab] = useState(() => {
+    if (currentScene && typeof currentScene.id === 'string' && currentScene.id.startsWith('ocean')) {
+      return 'ocean';
+    }
+    return 'nature';
+  });
+
+  const currentScenes = activeTab === 'nature' ? natureScenes : oceanScenes;
+
+  return (
+    <div className="mobile-section mobile-theme-selector">
+      <div className="mobile-card">
+        <h2 className="mobile-section-title">Choose Theme</h2>
+        
+        <div className="mobile-theme-tabs">
+          <button
+            className={`mobile-theme-tab ${activeTab === 'nature' ? 'active' : ''}`}
+            onClick={() => setActiveTab('nature')}
+          >
+            Nature
+          </button>
+          <button
+            className={`mobile-theme-tab ${activeTab === 'ocean' ? 'active' : ''}`}
+            onClick={() => setActiveTab('ocean')}
+          >
+            Ocean
+          </button>
+        </div>
+
+        <div className="mobile-themes-grid">
+          {currentScenes.map((scene) => (
+            <button
+              key={scene.id}
+              className={`mobile-theme-option ${currentScene?.id === scene.id ? 'active' : ''}`}
+              onClick={() => setCurrentScene(scene)}
+            >
+              <img src={scene.thumbnail} alt={scene.name} />
+              <span>{scene.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Home() {
   const theme = useTheme();
   const isDarkMode = theme.name === 'night';
   const isMobile = window.innerWidth <= 768;
 
-  return (
+  return isMobile ? <MobileLayout /> : (
     <div className="App">
       <div className="container" style={{ 
         display: 'flex',
@@ -408,212 +621,97 @@ function Home() {
         alignItems: 'center',
         width: '100%'
       }}>
-        {isMobile ? (
-          <Swiper
-            grabCursor={true}
-            modules={[Pagination]}
-            className="mobile-swiper"
-            pagination={{
-              clickable: true,
-            }}
-            spaceBetween={30}
-            style={{
-              padding: '20px 0',
-              width: '100%',
-              marginTop: '-100px'
-            }}
-          >
-            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
-                <div className="bio-container">
-                  <div className="bio-content">
-                    <p className="pixel-text bio">
-                      <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                        Data Engineer II at 
-                        <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
-                          <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
-                        </a>
-                        <span style={isDarkMode ? { color: '#9d4edd' } : undefined}> • Based in Austin, TX</span>
-                      </span>
-                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                      <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Computer Engineering '23</span>
-                      <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                        The University of Texas at Austin
-                        <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
-                          <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
-                        </a>
-                      </span>
-                    </p>
-                  <div className="bio-social-links-centered" style={{ 
-                    marginTop: '1.5rem', 
-                    display: 'flex', 
-                    justifyContent: 'center', 
-                    gap: '1rem',
-                    paddingRight: '2rem' 
-                  }}>
-                    <a 
-                      href="https://github.com/bicrick" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <i className="fab fa-github"></i>
-                    </a>
-                    <a 
-                      href="https://www.linkedin.com/in/patrick-brown-470617195/" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <i className="fab fa-linkedin"></i>
-                    </a>
-                    <a 
-                      href="https://x.com/patrickbbrown" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                        <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                      </svg>
-                    </a>
-                  </div>
-                  </div>
-                  <div className="bio-profile">
-                    <div className="bio-profile-image-large">
-                      <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" className="bio-avatar-large" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              <div className="pixel-card" style={{ width: '85%', maxWidth: '400px' }}>
-                <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
-                <div className="about-me-content">
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
-                  </p>
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
-                  </p>
-                  <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                    Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
-                  </p>
-                </div>
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        ) : (
-          <>
-            <div className="pixel-card">
-              <div className="bio-container">
-                <div className="bio-content">
-                  <p className="pixel-text bio">
-                    <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                      Data Engineer II at 
-                      <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
-                        <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
-                      </a>
-                      <span style={isDarkMode ? { color: '#9d4edd' } : undefined}> • Based in Austin, TX</span>
-                    </span>
-                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
-                    <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Computer Engineering '23</span>
-                    <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-                      The University of Texas at Austin
-                      <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
-                        <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
-                      </a>
-                    </span>
-                  </p>
-                  <div className="bio-social-links-centered" style={{ 
-                    marginTop: '1.5rem', 
-                    display: 'flex', 
-                    justifyContent: 'center', 
-                    gap: '1rem',
-                    paddingRight: '2rem' 
-                  }}>
-                    <a 
-                      href="https://github.com/bicrick" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <i className="fab fa-github"></i>
-                    </a>
-                    <a 
-                      href="https://www.linkedin.com/in/patrick-brown-470617195/" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <i className="fab fa-linkedin"></i>
-                    </a>
-                    <a 
-                      href="https://x.com/patrickbbrown" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="pixel-button"
-                      style={isDarkMode ? { 
-                        backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                        borderColor: '#9d4edd',
-                        color: '#ffffff'
-                      } : undefined}
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
-                        <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-                <div className="bio-profile">
-                  <div className="bio-profile-image-large">
-                    <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" className="bio-avatar-large" />
-                  </div>
-                </div>
+        <div className="pixel-card">
+          <div className="bio-container">
+            <div className="bio-content">
+              <p className="pixel-text bio">
+                <span className="job-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                  Data Engineer II at 
+                  <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer" className="heb-link">
+                    <img src={`${process.env.PUBLIC_URL}/heb-logo.png`} alt="H-E-B" className="heb-logo" />
+                  </a>
+                  <span style={isDarkMode ? { color: '#9d4edd' } : undefined}> • Based in Austin, TX</span>
+                </span>
+                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>Masters in AI Student</span>
+                <span style={isDarkMode ? { color: '#ffffff' } : undefined}>BS Computer Engineering '23</span>
+                <span className="university-title" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
+                  The University of Texas at Austin
+                  <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer" className="ut-link">
+                    <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="ut-logo" />
+                  </a>
+                </span>
+              </p>
+              <div className="bio-social-links-centered" style={{ 
+                marginTop: '1.5rem', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                gap: '1rem',
+                paddingRight: '2rem' 
+              }}>
+                <a 
+                  href="https://github.com/bicrick" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
+                  <i className="fab fa-github"></i>
+                </a>
+                <a 
+                  href="https://www.linkedin.com/in/patrick-brown-470617195/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
+                  <i className="fab fa-linkedin"></i>
+                </a>
+                <a 
+                  href="https://x.com/patrickbbrown" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pixel-button"
+                  style={isDarkMode ? { 
+                    backgroundColor: 'rgba(20, 20, 35, 0.95)',
+                    borderColor: '#9d4edd',
+                    color: '#ffffff'
+                  } : undefined}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+                    <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                  </svg>
+                </a>
               </div>
             </div>
-            <div className="pixel-card">
-              <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
-              <div className="about-me-content">
-                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                  I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
-                </p>
-                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                  In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
-                </p>
-                <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
-                  Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
-                </p>
+            <div className="bio-profile">
+              <div className="bio-profile-image-large">
+                <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Profile" className="bio-avatar-large" />
               </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
+        <div className="pixel-card">
+          <h3 className="about-me-title" style={{ color: theme.colors.accent }}>About Me</h3>
+          <div className="about-me-content">
+            <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+              I am a serial learner, always eager to dive into new challenges and technologies. When I'm not tinkering with code, you'll find me running track, playing golf, hiking trails, or cheering on Texas Football.
+            </p>
+            <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+              In tech, I'm focused on AI's creative applications, particularly in generative models. I work on projects spanning image synthesis, music generation, and point cloud processing, pushing the boundaries of what's possible with computational creativity.
+            </p>
+            <p className="pixel-text about-text" style={{ color: theme.colors.text }}>
+              Currently exploring diffusion models and their applications across different domains, while keeping an eye on emerging architectures and techniques in the field.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1135,6 +1233,7 @@ function Layout({ children }) {
     return defaultScenes[randomIndex];
   });
   const theme = themes[currentScene?.id];
+  const isMobile = window.innerWidth <= 768;
 
   useEffect(() => {
     // Update CSS variables when theme changes
@@ -1146,16 +1245,32 @@ function Layout({ children }) {
     }
   }, [theme]);
 
+  useEffect(() => {
+    // Lock scroll on mobile for swipe experience
+    if (isMobile) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    };
+  }, [isMobile]);
+
   return (
     <SceneContext.Provider value={{ currentScene, setCurrentScene }}>
       <ThemeContext.Provider value={theme}>
         <ParallaxBackground scrollSpeedMultiplier={1} />
-        <Header />
-        <TableOfContents />
-        <SceneSelector />
+        {!isMobile && <Header />}
+        {!isMobile && <TableOfContents />}
+        {!isMobile && <SceneSelector />}
         {children}
-        <Footer />
-        <AudioPlayerPortal />
+        {!isMobile && <Footer />}
+        {!isMobile && <AudioPlayerPortal />}
       </ThemeContext.Provider>
     </SceneContext.Provider>
   );
