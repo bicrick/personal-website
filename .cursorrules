@@ -5,3 +5,5 @@ npm start from root
 Only deploy when I ask. When i ask run this:
 
 gh-pages -d build to push to gh pages
+
+Do not run 'echo' commands after generation to say a implementation is ready.
