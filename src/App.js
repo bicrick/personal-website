@@ -648,7 +648,7 @@ function MobileConnect4Card() {
         </div>
         
         <div className="mobile-connect4-buttons">
-          <a href="/connect4" className="mobile-connect4-button primary">Play Now</a>
+          <a href="https://multiplayer-connect-4-xi.vercel.app/" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button primary">Play Now</a>
           <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button">
             <i className="fab fa-github"></i> View Code
           </a>
@@ -683,7 +683,14 @@ function MobileContactCard() {
 }
 
 function MobileThemeSelectorCard({ onOpen }) {
-  const { currentScene } = useScene();
+  const { currentScene, setCurrentScene } = useScene();
+  
+  const handleShuffle = (e) => {
+    e.stopPropagation();
+    const allScenes = [...natureScenes, ...oceanScenes];
+    const randomIndex = Math.floor(Math.random() * allScenes.length);
+    setCurrentScene(allScenes[randomIndex]);
+  };
   
   return (
     <div className="mobile-card-container">
@@ -701,6 +708,10 @@ function MobileThemeSelectorCard({ onOpen }) {
           />
           <div className="mobile-theme-name">{currentScene?.name || 'Loading...'}</div>
         </div>
+        
+        <button className="mobile-theme-card-shuffle-button" onClick={handleShuffle}>
+          🎲 Shuffle
+        </button>
       </div>
     </div>
   );

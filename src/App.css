@@ -1794,7 +1794,7 @@ html {
 .mobile-coursework-floating {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
   width: 100%;
   align-items: center;
 }
@@ -1827,29 +1827,33 @@ html {
 }
 
 .mobile-course-blobs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
   width: 100%;
-  max-width: 300px;
-  align-items: center;
+  max-width: 320px;
+  justify-items: stretch;
 }
 
 .mobile-course-blob {
   background: var(--buttonBg);
   border: 3px solid var(--border);
   border-radius: 6px;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.4rem;
   font-family: 'VT323', monospace;
-  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  font-size: clamp(0.65rem, 2.5vw, 0.75rem);
   color: var(--text);
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 3px 3px 0 var(--shadow);
   width: 100%;
   text-align: center;
-  line-height: 1.3;
-  max-width: 280px;
+  line-height: 1.1;
+  min-height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .mobile-course-blob:hover {
@@ -2042,6 +2046,35 @@ html {
   font-size: clamp(0.8rem, 3vw, 0.9rem);
   color: var(--text);
   margin: 0;
+}
+
+.mobile-theme-card-shuffle-button {
+  background: var(--buttonBg);
+  border: 3px solid var(--accent);
+  border-radius: 6px;
+  color: var(--accent);
+  font-family: 'VT323', monospace;
+  font-size: clamp(0.75rem, 3vw, 0.85rem);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 3px 3px 0 var(--shadow);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.mobile-theme-card-shuffle-button:hover {
+  background: var(--buttonHoverBg);
+  transform: translateY(-1px);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.mobile-theme-card-shuffle-button:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0 var(--shadow);
 }
 
 .mobile-big-title {
@@ -2393,7 +2426,6 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: flex-start;
   justify-content: center;
