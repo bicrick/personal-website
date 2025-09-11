@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "https://patrickbrownai.com/static/css/main.8decb70a.css",
-    "main.js": "https://patrickbrownai.com/static/js/main.0d334aa8.js",
+    "main.css": "https://patrickbrownai.com/static/css/main.9769b9f0.css",
+    "main.js": "https://patrickbrownai.com/static/js/main.0d64a5a0.js",
     "static/js/488.d07c9134.chunk.js": "https://patrickbrownai.com/static/js/488.d07c9134.chunk.js",
     "index.html": "https://patrickbrownai.com/index.html",
-    "main.8decb70a.css.map": "https://patrickbrownai.com/static/css/main.8decb70a.css.map",
-    "main.0d334aa8.js.map": "https://patrickbrownai.com/static/js/main.0d334aa8.js.map",
+    "main.9769b9f0.css.map": "https://patrickbrownai.com/static/css/main.9769b9f0.css.map",
+    "main.0d64a5a0.js.map": "https://patrickbrownai.com/static/js/main.0d64a5a0.js.map",
     "488.d07c9134.chunk.js.map": "https://patrickbrownai.com/static/js/488.d07c9134.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8decb70a.css",
-    "static/js/main.0d334aa8.js"
+    "static/css/main.9769b9f0.css",
+    "static/js/main.0d64a5a0.js"
   ]
 }
