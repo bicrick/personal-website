@@ -481,10 +481,10 @@ function MobileProfileCard() {
             </div>
             <div className="mobile-location">Based in Austin, TX</div>
             <div className="mobile-education">
-              <div>Masters in AI Student</div>
+              <div>MS Artificial Intelligence Student</div>
               <div>BS Computer Engineering '23</div>
               <div className="mobile-university">
-                The University of Texas at Austin
+                University of Texas at Austin
                 <img src={`${process.env.PUBLIC_URL}/longhorn.png`} alt="UT Austin" className="mobile-university-logo" />
               </div>
             </div>
@@ -494,17 +494,14 @@ function MobileProfileCard() {
         <div className="mobile-social-links">
           <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
             <i className="fab fa-github"></i>
-            <span>GitHub</span>
           </a>
           <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
             <i className="fab fa-linkedin"></i>
-            <span>LinkedIn</span>
           </a>
           <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer" className="mobile-social-button">
             <svg viewBox="0 0 24 24" width="18" height="18">
               <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
             </svg>
-            <span>Twitter</span>
           </a>
         </div>
       </div>
@@ -579,20 +576,22 @@ function MobileContactCard() {
       <div className="mobile-rigid-card">
         <h2 className="mobile-card-title">Contact</h2>
         
-        <div className="mobile-contact-section">
-          <h3>Personal</h3>
-          <a href="mailto:patrickbrownai@gmail.com" className="mobile-contact-button">
-            <i className="fas fa-envelope"></i>
-            <span>patrickbrownai@gmail.com</span>
-          </a>
-        </div>
+        <div className="mobile-contact-grid">
+          <div className="mobile-contact-item">
+            <div className="mobile-contact-label">Personal</div>
+            <a href="mailto:patrickbrownai@gmail.com" className="mobile-contact-link">
+              <i className="fas fa-envelope"></i>
+              <span>patrickbrownai@gmail.com</span>
+            </a>
+          </div>
 
-        <div className="mobile-contact-section">
-          <h3>Work</h3>
-          <a href="mailto:patrickbrown@heb.com" className="mobile-contact-button">
-            <i className="fas fa-envelope"></i>
-            <span>patrickbrown@heb.com</span>
-          </a>
+          <div className="mobile-contact-item">
+            <div className="mobile-contact-label">Work</div>
+            <a href="mailto:patrickbrown@heb.com" className="mobile-contact-link">
+              <i className="fas fa-envelope"></i>
+              <span>patrickbrown@heb.com</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -600,12 +599,14 @@ function MobileContactCard() {
 }
 
 function MobileThemeSelectorCard({ onOpen }) {
+  const { currentScene } = useScene();
+  
   return (
     <div className="mobile-card-container">
       <div className="mobile-rigid-card mobile-title-card" onClick={onOpen}>
         <h1 className="mobile-big-title">Select Theme</h1>
         <div className="mobile-theme-preview">
-          <div className="theme-preview-text">Tap to choose your theme</div>
+          <div className="theme-preview-text">Current: {currentScene?.name || 'Loading...'}</div>
           <div className="theme-preview-arrow">→</div>
         </div>
       </div>
