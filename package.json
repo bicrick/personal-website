@@ -9,8 +9,6 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",
     "react-scripts": "5.0.1",
-    "react-tooltip": "^5.28.0",
-    "swiper": "^11.2.2",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -41,7 +39,6 @@
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",
-    "glob": "^13.0.0",
-    "purify-css": "^1.2.5"
+    "glob": "^13.0.0"
   }
 }
