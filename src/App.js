@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cube';
-import './App.css';
+import './App.purified.css';
 import PrivacyPolicy from './PrivacyPolicy';
 import AudioPlayerPortal from './AudioPlayer';
 
@@ -405,8 +405,11 @@ function MobileLayout() {
     { type: 'profile', title: 'About' },
     { type: 'about-text', title: 'About' },
     { type: 'projects-title', title: 'Projects' },
+    { type: 'project-docprep', title: 'Projects' },
+    { type: 'project-gd-visualizer', title: 'Projects' },
+    { type: 'project-ballistic-gd', title: 'Projects' },
     { type: 'project-coursework', title: 'Projects' },
-    { type: 'project-connect4', title: 'Projects' },
+    { type: 'project-games', title: 'Projects' },
     { type: 'contact', title: 'Contact' },
     { type: 'theme-selector', title: 'Themes' }
   ];
@@ -435,9 +438,9 @@ function MobileLayout() {
     return <MobileThemeSelectorPage onBack={() => {
       setShowThemeSelector(false);
       // Ensure we're on the theme selector card when returning
-      setCurrentCard(6); // Theme selector is the last card (index 6)
+      setCurrentCard(9); // Theme selector is the last card (index 9)
       if (swiperRef.current && swiperRef.current.swiper) {
-        swiperRef.current.swiper.slideTo(6);
+        swiperRef.current.swiper.slideTo(9);
       }
     }} />;
   }
@@ -464,8 +467,11 @@ function MobileLayout() {
         <SwiperSlide><MobileProfileCard /></SwiperSlide>
         <SwiperSlide><MobileAboutTextCard /></SwiperSlide>
         <SwiperSlide><MobileProjectsTitleCard /></SwiperSlide>
+        <SwiperSlide><MobileDocPrepCard /></SwiperSlide>
+        <SwiperSlide><MobileGDVisualizerCard /></SwiperSlide>
+        <SwiperSlide><MobileBallisticGDCard /></SwiperSlide>
         <SwiperSlide><MobileCourseworkCard /></SwiperSlide>
-        <SwiperSlide><MobileConnect4Card /></SwiperSlide>
+        <SwiperSlide><MobileGamesCard /></SwiperSlide>
         <SwiperSlide><MobileContactCard /></SwiperSlide>
         <SwiperSlide><MobileThemeSelectorCard onOpen={() => setShowThemeSelector(true)} /></SwiperSlide>
       </Swiper>
@@ -554,104 +560,163 @@ function MobileProjectsTitleCard() {
         <button className="mobile-projects-small-button">
           Projects
         </button>
+        <p style={{ 
+          textAlign: 'center', 
+          marginTop: '20px',
+          fontSize: '14px',
+          color: 'inherit'
+        }}>
+          For a full list, visit my{' '}
+          <a 
+            href="https://github.com/bicrick?tab=repositories" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              color: 'inherit',
+              textDecoration: 'underline',
+              fontWeight: 'bold'
+            }}
+          >
+            GitHub
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MobileDocPrepCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card" style={{ padding: '16px' }}>
+        <p style={{ margin: 0, lineHeight: '1.6' }}>
+          <strong style={{ fontSize: '16px' }}>DocPrep</strong> — Document preparation and management platform for streamlined workflow automation.
+        </p>
+        <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+          <a href="https://docprep.site" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button primary" style={{ fontSize: '13px', padding: '8px 14px' }}>Visit Site</a>
+          <a href="https://github.com/bicrick/docprep-site" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button" style={{ fontSize: '13px', padding: '8px 14px' }}>
+            <i className="fab fa-github"></i> Code
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileGDVisualizerCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card" style={{ padding: '16px' }}>
+        <p style={{ margin: 0, lineHeight: '1.6' }}>
+          <strong style={{ fontSize: '16px' }}>Gradient Descent Visualizer</strong> — A visualization tool for various gradient based optimization algorithms.
+        </p>
+        <div style={{ marginTop: '12px' }}>
+          <a href="https://github.com/bicrick/gd-visualizer" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button" style={{ fontSize: '13px', padding: '8px 14px' }}>
+            <i className="fab fa-github"></i> View Code
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileBallisticGDCard() {
+  return (
+    <div className="mobile-card-container">
+      <div className="mobile-rigid-card" style={{ padding: '16px' }}>
+        <p style={{ margin: 0, lineHeight: '1.6' }}>
+          <strong style={{ fontSize: '16px' }}>Ballistic GD</strong> — Experimenting with different optimizers on CIFAR-10 and MNIST.
+        </p>
+        <div style={{ marginTop: '12px' }}>
+          <a href="https://github.com/bicrick/ballistic-gd" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button" style={{ fontSize: '13px', padding: '8px 14px' }}>
+            <i className="fab fa-github"></i> View Code
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
 function MobileCourseworkCard() {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  
-  const courses = [
-    {
-      name: "Advances in Deep Learning",
-      description: "Advanced topics in deep learning, covering optimization, computer vision, graphics, unsupervised learning, language models, and deep learning for games."
-    },
-    {
-      name: "Automated Logical Reasoning", 
-      description: "Study of computational logic and its applications in software verification, covering logical theories and algorithms for determining satisfiability."
-    },
-    {
-      name: "Deep Learning",
-      description: "Fundamentals of deep learning, from optimization to computer vision, graphics, unsupervised learning, and applications in games."
-    },
-    {
-      name: "Machine Learning",
-      description: "Core machine learning concepts including classification, neural networks, Bayesian methods, and computational learning theory."
-    },
-    {
-      name: "Online Learning & Optimization",
-      description: "Focus on algorithms for large scale convex optimization and online learning, with applications in Machine Learning."
-    },
-    {
-      name: "Optimization", 
-      description: "Covers Linear Programming and Convex Optimization, including algorithms like gradient descent and newton method."
-    },
-    {
-      name: "Reinforcement Learning",
-      description: "Covers multi-armed bandits, MDPs, dynamic programming, Monte Carlo methods, and policy gradients."
-    },
-    {
-      name: "Natural Language Processing",
-      description: "Covers neural networks, attention mechanisms, transformers, and language models like BERT and GPT."
-    }
-  ];
-
   return (
     <div className="mobile-card-container">
-      <div className="mobile-coursework-floating">
-        <div className="mobile-coursework-header">
-          <h2>UT AI Masters Coursework</h2>
-          <p>Tap any course to learn more</p>
-        </div>
-        
-        <div className="mobile-course-blobs">
-          {courses.map((course, index) => (
-            <div 
-              key={index}
-              className="mobile-course-blob"
-              onClick={() => setSelectedCourse(course)}
-            >
-              {course.name}
-            </div>
-          ))}
-        </div>
+      <div className="mobile-rigid-card" style={{ padding: '16px' }}>
+        <p style={{ margin: 0, lineHeight: '1.6' }}>
+          <strong style={{ fontSize: '16px' }}>UT AI Masters Coursework</strong> — Advances in Deep Learning • Automated Logical Reasoning • Deep Learning • Machine Learning • Online Learning & Optimization • Optimization • Reinforcement Learning • Natural Language Processing
+        </p>
       </div>
-      
-      {selectedCourse && (
-        <div className="mobile-course-modal" onClick={() => setSelectedCourse(null)}>
-          <div className="mobile-course-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-course-modal-header">
-              <h4>{selectedCourse.name}</h4>
-              <button 
-                className="mobile-course-modal-close"
-                onClick={() => setSelectedCourse(null)}
-              >
-                ×
-              </button>
-            </div>
-            <p>{selectedCourse.description}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-function MobileConnect4Card() {
+function MobileGamesCard() {
   return (
     <div className="mobile-card-container">
-      <div className="mobile-connect4-floating">
-        <div className="mobile-connect4-header">
-          <h2>Multiplayer Connect 4</h2>
-          <p>Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.</p>
-        </div>
+      <div className="mobile-rigid-card" style={{ padding: '16px' }}>
+        <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>Games</h3>
         
-        <div className="mobile-connect4-buttons">
-          <a href="https://multiplayer-connect-4-xi.vercel.app/" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button primary">Play Now</a>
-          <a href="https://github.com/bicrick/multiplayer-connect-4" target="_blank" rel="noopener noreferrer" className="mobile-connect4-button">
-            <i className="fab fa-github"></i> View Code
-          </a>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{
+            border: '2px solid currentColor',
+            padding: '12px',
+            borderRadius: '6px'
+          }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px' }}>Multiplayer Backgammon</h4>
+            <a 
+              href="https://github.com/bicrick/multiplayer-backgammon" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mobile-connect4-button"
+              style={{ width: '100%', justifyContent: 'center', fontSize: '13px', padding: '8px' }}
+            >
+              <i className="fab fa-github"></i> View Code
+            </a>
+          </div>
+
+          <div style={{
+            border: '2px solid currentColor',
+            padding: '12px',
+            borderRadius: '6px'
+          }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px' }}>Multiplayer Connect 4</h4>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <a 
+                href="https://multiplayer-connect-4-xi.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mobile-connect4-button primary"
+                style={{ flex: 1, justifyContent: 'center', fontSize: '13px', padding: '8px' }}
+              >
+                Play
+              </a>
+              <a 
+                href="https://github.com/bicrick/multiplayer-connect-4" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mobile-connect4-button"
+                style={{ flex: 1, justifyContent: 'center', fontSize: '13px', padding: '8px' }}
+              >
+                <i className="fab fa-github"></i>
+              </a>
+            </div>
+          </div>
+
+          <div style={{
+            border: '2px solid currentColor',
+            padding: '12px',
+            borderRadius: '6px'
+          }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: '15px' }}>Fighting Balls</h4>
+            <a 
+              href="https://github.com/bicrick/fighting-balls" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mobile-connect4-button"
+              style={{ width: '100%', justifyContent: 'center', fontSize: '13px', padding: '8px' }}
+            >
+              <i className="fab fa-github"></i> View Code
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -1006,204 +1071,238 @@ function Projects() {
         minHeight: '100vh',
         paddingBottom: '50px'
       }}>
-        <div className="pixel-card" style={{ 
-          width: isMobile ? '85%' : '100%',
-          maxWidth: isMobile ? '400px' : 'none',
+        <div style={{ 
+          textAlign: 'center',
           marginBottom: '30px',
-          paddingBottom: '20px',
-          overflow: 'visible'
+          color: isDarkMode ? '#ffffff' : '#2f3542'
         }}>
-          <h3>
-            <span className="pixel-text" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-              University of Texas AI Masters Coursework
-            </span>
-          </h3>
-          <p className="pixel-text project-description" style={isDarkMode ? { color: '#ffffff' } : undefined}>
-            A comprehensive collection of coursework and assignments from my Master of Science in Artificial Intelligence program.
+          <p style={{ margin: 0, fontSize: '15px' }}>
+            For a full list of projects, visit my{' '}
+            <a 
+              href="https://github.com/bicrick?tab=repositories" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ 
+                color: isDarkMode ? '#9d4edd' : '#4834d4',
+                textDecoration: 'underline',
+                fontWeight: 'bold'
+              }}
+            >
+              GitHub
+            </a>
           </p>
-          <div id="courses" className="course-list">
-            <h4 className="pixel-text" style={isDarkMode ? { color: '#9d4edd' } : undefined}>Courses:</h4>
-            <ul className="pixel-grid">
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Advanced topics in deep learning, covering optimization, computer vision, graphics, unsupervised learning, language models, and deep learning for games."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Advances in Deep Learning
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Study of computational logic and its applications in software verification, covering logical theories and algorithms for determining satisfiability."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Automated Logical Reasoning
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Fundamentals of deep learning, from optimization to computer vision, graphics, unsupervised learning, and applications in games."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Deep Learning
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Core machine learning concepts including classification, neural networks, Bayesian methods, and computational learning theory."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Machine Learning
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Focus on algorithms for large scale convex optimization and online learning, with applications in Machine Learning."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Online Learning & Optimization
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Covers Linear Programming and Convex Optimization, including algorithms like gradient descent and newton method."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Optimization
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Covers multi-armed bandits, MDPs, dynamic programming, Monte Carlo methods, and policy gradients."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Reinforcement Learning
-              </li>
-              <li 
-                className="pixel-button"
-                data-tooltip-id="course-tooltip" 
-                data-tooltip-content="Covers neural networks, attention mechanisms, transformers, and language models like BERT and GPT."
-                style={isDarkMode ? { 
-                  borderColor: '#9d4edd', 
-                  color: '#ffffff',
-                  backgroundColor: 'rgba(157, 78, 221, 0.1)',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)'
-                } : undefined}
-              >
-                Natural Language Processing
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div className="pixel-card" style={{ 
           width: isMobile ? '85%' : '100%',
           maxWidth: isMobile ? '400px' : 'none',
-          marginBottom: '30px',
-          paddingBottom: '20px',
+          padding: '30px',
           overflow: 'visible'
         }}>
-          <h3>
-            <span className="pixel-text" style={isDarkMode ? { color: '#9d4edd' } : undefined}>
-              Multiplayer Connect 4
-            </span>
-          </h3>
           <div style={{ 
-            display: 'flex', 
-            alignItems: 'flex-start',
-            gap: '15px',
-            flexWrap: 'wrap'
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px'
           }}>
-            <p className="pixel-text project-description" style={{ 
-              ...(isDarkMode ? { color: '#ffffff' } : {}),
-              flex: 1,
-              margin: 0,
-              minWidth: isMobile ? '100%' : '300px'
+            <div style={{
+              paddingBottom: '20px',
+              borderBottom: isDarkMode ? '1px solid rgba(157, 78, 221, 0.3)' : '1px solid rgba(47, 53, 66, 0.2)'
             }}>
-              Real-time multiplayer Connect 4 built with Next.js, Supabase, and TypeScript. Features room codes and arcade-style design.
-            </p>
-            <div className="project-buttons" style={{ 
-              display: 'flex', 
-              gap: '15px',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start'
+              <h3 style={{ 
+                margin: '0 0 8px 0',
+                fontSize: '18px',
+                color: isDarkMode ? '#9d4edd' : '#4834d4'
+              }}>
+                DocPrep
+              </h3>
+              <p style={{ 
+                margin: '0 0 10px 0',
+                lineHeight: '1.6',
+                color: isDarkMode ? '#ffffff' : undefined
+              }}>
+                Document preparation and management platform for streamlined workflow automation.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', fontSize: '14px' }}>
+                <a 
+                  href="https://docprep.site" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ 
+                    color: isDarkMode ? '#9d4edd' : '#4834d4',
+                    textDecoration: 'underline'
+                  }}
+                >
+                  Visit Site →
+                </a>
+                <a 
+                  href="https://github.com/bicrick/docprep-site" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ 
+                    color: isDarkMode ? '#9d4edd' : '#4834d4',
+                    textDecoration: 'underline'
+                  }}
+                >
+                  GitHub →
+                </a>
+              </div>
+            </div>
+
+            <div style={{
+              paddingBottom: '20px',
+              borderBottom: isDarkMode ? '1px solid rgba(157, 78, 221, 0.3)' : '1px solid rgba(47, 53, 66, 0.2)'
             }}>
-              <Link 
-                to="/connect4"
-                className="pixel-button"
-                style={isDarkMode ? { 
-                  backgroundColor: 'rgba(157, 78, 221, 0.2)',
-                  borderColor: '#9d4edd',
-                  color: '#ffffff',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.3)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '12px 20px'
-                } : {
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '12px 20px'
-                }}
-              >
-                <span>Play Now</span>
-              </Link>
+              <h3 style={{ 
+                margin: '0 0 8px 0',
+                fontSize: '18px',
+                color: isDarkMode ? '#9d4edd' : '#4834d4'
+              }}>
+                Gradient Descent Visualizer
+              </h3>
+              <p style={{ 
+                margin: '0 0 10px 0',
+                lineHeight: '1.6',
+                color: isDarkMode ? '#ffffff' : undefined
+              }}>
+                A visualization tool for various gradient based optimization algorithms.
+              </p>
               <a 
-                href="https://github.com/bicrick/multiplayer-connect-4" 
+                href="https://github.com/bicrick/gd-visualizer" 
                 target="_blank" 
-                rel="noopener noreferrer" 
-                className="pixel-button"
-                style={isDarkMode ? { 
-                  backgroundColor: 'rgba(20, 20, 35, 0.95)',
-                  borderColor: '#9d4edd',
-                  color: '#ffffff',
-                  boxShadow: '4px 4px 0 rgba(157, 78, 221, 0.2)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '12px 20px'
-                } : {
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '12px 20px'
+                rel="noopener noreferrer"
+                style={{ 
+                  color: isDarkMode ? '#9d4edd' : '#4834d4',
+                  textDecoration: 'underline',
+                  fontSize: '14px'
                 }}
               >
-                <i className="fab fa-github" style={{ fontSize: '16px' }}></i>
+                GitHub →
               </a>
+            </div>
+
+            <div style={{
+              paddingBottom: '20px',
+              borderBottom: isDarkMode ? '1px solid rgba(157, 78, 221, 0.3)' : '1px solid rgba(47, 53, 66, 0.2)'
+            }}>
+              <h3 style={{ 
+                margin: '0 0 8px 0',
+                fontSize: '18px',
+                color: isDarkMode ? '#9d4edd' : '#4834d4'
+              }}>
+                Ballistic GD
+              </h3>
+              <p style={{ 
+                margin: '0 0 10px 0',
+                lineHeight: '1.6',
+                color: isDarkMode ? '#ffffff' : undefined
+              }}>
+                Experimenting with different optimizers on CIFAR-10 and MNIST.
+              </p>
+              <a 
+                href="https://github.com/bicrick/ballistic-gd" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ 
+                  color: isDarkMode ? '#9d4edd' : '#4834d4',
+                  textDecoration: 'underline',
+                  fontSize: '14px'
+                }}
+              >
+                GitHub →
+              </a>
+            </div>
+
+            <div style={{
+              paddingBottom: '20px',
+              borderBottom: isDarkMode ? '1px solid rgba(157, 78, 221, 0.3)' : '1px solid rgba(47, 53, 66, 0.2)'
+            }}>
+              <h3 style={{ 
+                margin: '0 0 8px 0',
+                fontSize: '18px',
+                color: isDarkMode ? '#9d4edd' : '#4834d4'
+              }}>
+                UT AI Masters Coursework
+              </h3>
+              <p style={{ 
+                margin: '0',
+                lineHeight: '1.6',
+                fontSize: '14px',
+                color: isDarkMode ? '#ffffff' : undefined
+              }}>
+                Advances in Deep Learning • Automated Logical Reasoning • Deep Learning • Machine Learning • Online Learning & Optimization • Optimization • Reinforcement Learning • Natural Language Processing
+              </p>
+            </div>
+
+            <div>
+              <h3 style={{ 
+                margin: '0 0 16px 0',
+                fontSize: '18px',
+                color: isDarkMode ? '#9d4edd' : '#4834d4'
+              }}>
+                Games
+              </h3>
+              <div style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                <div>
+                  <strong style={{ fontSize: '16px', color: isDarkMode ? '#ffffff' : undefined }}>Multiplayer Backgammon</strong>
+                  {' '}<a 
+                    href="https://github.com/bicrick/multiplayer-backgammon" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ 
+                      color: isDarkMode ? '#9d4edd' : '#4834d4',
+                      textDecoration: 'underline',
+                      fontSize: '14px'
+                    }}
+                  >
+                    GitHub →
+                  </a>
+                </div>
+                <div>
+                  <strong style={{ fontSize: '16px', color: isDarkMode ? '#ffffff' : undefined }}>Multiplayer Connect 4</strong>
+                  {' '}<Link 
+                    to="/connect4"
+                    style={{ 
+                      color: isDarkMode ? '#9d4edd' : '#4834d4',
+                      textDecoration: 'underline',
+                      fontSize: '14px',
+                      marginRight: '12px'
+                    }}
+                  >
+                    Play →
+                  </Link>
+                  <a 
+                    href="https://github.com/bicrick/multiplayer-connect-4" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ 
+                      color: isDarkMode ? '#9d4edd' : '#4834d4',
+                      textDecoration: 'underline',
+                      fontSize: '14px'
+                    }}
+                  >
+                    GitHub →
+                  </a>
+                </div>
+                <div>
+                  <strong style={{ fontSize: '16px', color: isDarkMode ? '#ffffff' : undefined }}>Fighting Balls</strong>
+                  {' '}<a 
+                    href="https://github.com/bicrick/fighting-balls" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ 
+                      color: isDarkMode ? '#9d4edd' : '#4834d4',
+                      textDecoration: 'underline',
+                      fontSize: '14px'
+                    }}
+                  >
+                    GitHub →
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
