@@ -216,7 +216,12 @@ footer p {
     font-size: 18px;
   }
 
+  .social-links {
+    justify-content: center;
+    margin: 20px auto;
+  }
+
   .social-links a {
-    margin-right: 12px;
+    margin-right: 0;
   }
 }
