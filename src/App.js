@@ -55,7 +55,7 @@ function Home() {
           Proficient in both GCP and AWS cloud platforms.
         </p>
         <p>
-          Build full ETL pipelines using Kafka, Spark, and Databricks. Design workflows with complex job dependencies, cron schedules, and conditional triggers.
+          Built full ETL pipelines using Kafka, Spark, and Databricks. Designed workflows with complex job dependencies, cron schedules, and conditional triggers.
         </p>
         <p>
           Built the full-stack Data Engineering Dashboard using React, FastAPI, Python, Docker, and PostgreSQL. Onboarded 10+ Data Engineering teams. The dashboard tracks ETL metadata including SLAs, run history, cost metrics, and stale jobs across multiple platforms like Databricks, Argo, and Informatica.
