@@ -116,7 +116,8 @@ function Home() {
 
 
       <section>
-        <h2>Games - I like to tinker and code up games that me and my friends can play</h2>
+        <h2>Games</h2>
+        <p>I like to tinker and code up games that me and my friends can play.</p>
         <ul>
           <li>
             <strong>Multiplayer Backgammon</strong> — <a href="https://multiplayer-backgammon.vercel.app/" target="_blank" rel="noopener noreferrer">Play</a> • <a href="https://github.com/bicrick/multiplayer-backgammon" target="_blank" rel="noopener noreferrer">GitHub</a>
