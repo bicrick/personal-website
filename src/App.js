@@ -7,7 +7,7 @@ function Home() {
   return (
     <div className="container">
       <header>
-        <img src={`${process.env.PUBLIC_URL}/profile.png`} alt="Patrick Brown" className="profile-pic" />
+        <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="profile-pic" />
         <div className="header-content">
           <h1>Patrick Brown</h1>
           <p className="subtitle">
@@ -45,9 +45,6 @@ function Home() {
         <p>
           I thrive on diving into new challenges and novel tech stacks. Part of being a great engineer is learning on the fly, and I'm a self-starter who can quickly pick up new skills.
         </p>
-        <p>
-          I am a serial hobbyist. I love precision-based games like golf, billiards, darts, disc-golf, tennis, and pickleball. I also enjoy video games (Minecraft, Factorio, Rainbow Six Siege, Fortnite). I am a big college football fan. I prefer guac over queso.
-        </p>
       </section>
 
       <hr />
@@ -55,16 +52,16 @@ function Home() {
       <section>
         <h2>Experience</h2>
         <p>
-          I have experience in both GCP and AWS. I'm proficient with each cloud platform.
+          Proficient in both GCP and AWS cloud platforms.
         </p>
         <p>
-          I have experience building full ETL pipelines using Kafka, Spark, and Databricks. I build workflows with complex job dependencies, cron schedules, and conditional triggers.
+          Build full ETL pipelines using Kafka, Spark, and Databricks. Design workflows with complex job dependencies, cron schedules, and conditional triggers.
         </p>
         <p>
-          I built the full-stack Data Engineering Dashboard using React, FastAPI, Python, Docker, and PostgreSQL. Onboarded 10+ Data Engineering teams. It tracks ETL metadata including SLAs, run history, cost metrics, and stale jobs across multiple platforms like Databricks, Argo, and Informatica.
+          Built the full-stack Data Engineering Dashboard using React, FastAPI, Python, Docker, and PostgreSQL. Onboarded 10+ Data Engineering teams. The dashboard tracks ETL metadata including SLAs, run history, cost metrics, and stale jobs across multiple platforms like Databricks, Argo, and Informatica.
         </p>
         <p>
-          I am a big fan of using AI tools like <a href="https://cursor.com" target="_blank" rel="noopener noreferrer">Cursor</a> to code. They help me prototype faster, debug more efficiently, and ship quality code quickly.
+          Leverage AI tools like <a href="https://cursor.com" target="_blank" rel="noopener noreferrer">Cursor</a> to prototype faster, debug more efficiently, and ship quality code quickly.
         </p>
       </section>
 
@@ -129,6 +126,15 @@ function Home() {
             <strong>Fighting Balls</strong> — <a href="https://bicrick.github.io/fighting-balls/" target="_blank" rel="noopener noreferrer">Play</a> • <a href="https://github.com/bicrick/fighting-balls" target="_blank" rel="noopener noreferrer">GitHub</a>
           </li>
         </ul>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Hobbies</h2>
+        <p>
+          I am a serial hobbyist. I love precision-based games like golf, billiards, darts, disc-golf, tennis, and pickleball. I also enjoy video games (Minecraft, Factorio, Rainbow Six Siege, Fortnite). I am a big college football fan. I prefer guac over queso.
+        </p>
       </section>
 
       <hr />
