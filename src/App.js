@@ -55,7 +55,7 @@ function Home() {
           Proficient in both GCP and AWS cloud platforms.
         </p>
         <p>
-          Built full ETL pipelines using Kafka, Spark, and Databricks. Designed workflows with complex job dependencies, cron schedules, and conditional triggers.
+          Built full ETL pipelines using Kafka, Spark, and Databricks. Orchestrated ETL pipelines using Argo Workflows on Kubernetes with complex DAG dependencies and event-driven triggers.
         </p>
         <p>
           Built the full-stack Data Engineering Dashboard using React, FastAPI, Python, Docker, and PostgreSQL. Onboarded 10+ Data Engineering teams. The dashboard tracks ETL metadata including SLAs, run history, cost metrics, and stale jobs across multiple platforms like Databricks, Argo, and Informatica.
@@ -70,7 +70,7 @@ function Home() {
       <section>
         <h2>University of Texas AI Masters - <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer">See Program</a></h2>
         <p>
-          The rapid pace of AI innovation caught my attention. I completed my AI master's at UT Austin while working full-time. I learned the full lifecycle from dataset curation to model training to inference optimization. This made me a more complete engineer. I can now bridge traditional data engineering with modern AI systems and build end-to-end solutions.
+          The rapid pace of AI innovation caught my attention. I completed my AI master's at UT Austin while working full-time. I learned the full lifecycle of building AI models—from dataset curation and preprocessing to model training, evaluation, and inference optimization—across domains including computer vision, NLP, and optimization. This made me a more complete engineer. I can now bridge traditional data engineering with modern AI systems and build end-to-end solutions.
         </p>
       </section>
 
