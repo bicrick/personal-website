@@ -44,3 +44,4 @@ purify(content, css, options, function(purifiedCSS) {
   console.log('  2. If satisfied, replace src/App.css with the purified version');
   console.log('  3. Test your app to ensure nothing broke\n');
 });
+
