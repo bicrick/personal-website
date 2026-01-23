@@ -49,10 +49,10 @@ function About() {
               I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
             </p>
             <p>
-              These days I play a lot of golf (+1 handicap). I like puzzle/automation games (Factorio, Minecraft). I like to experiment with different agentic tooling workflows.
+              Generally I am pulled by what intrigues me and not pushed by what I am supposed to do. I like to experiment with different agentic development workflows. I currently use Cursor and Claude Code.
             </p>
             <p>
-              Generally I am pulled by what intrigues me and not pushed by what I am supposed to do.
+              These days I play a lot of golf (+1 handicap). I like puzzle/automation games (Factorio, Minecraft).
             </p>
             <hr className="separator" />
             <div className="social">
