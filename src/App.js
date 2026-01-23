@@ -16,44 +16,52 @@ function Navigation() {
 
 function Home() {
   return (
-    <div>
-      <Navigation />
-      <div className="home-container">
-        <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="home-pic" />
-        <h1 className="home-heading">patrick brown</h1>
-        <div className="home-content">
-          <p>I build tools to turn imagination into reality.</p>
-          <p>currently working as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the Austin, TX area.</p>
-        </div>
-      </div>
+    <div className="App_mainContainer">
+      <main className="App_mainColumn">
+        <header className="App_header">
+          <Navigation />
+        </header>
+        <section>
+          <h2 className="home-heading">patrick brown</h2>
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="home-pic" />
+          <div className="home-content">
+            <p>I build software to solve problems.</p>
+            <p>currently working as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the Austin, TX area.</p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
 
 function About() {
   return (
-    <div>
-      <Navigation />
-      <div className="container">
-        <h1 className="about-heading">about</h1>
-        <div className="about-content">
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" />
-          <p>
-            I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
-          </p>
-          <p>
-            These days I play a lot of golf (+1 handicap). I like puzzle/automation games (Factorio, Minecraft). I like to experiment with different agentic tooling workflows.
-          </p>
-          <p>
-            Generally I am pulled around by what intrigues me and not what I am 'supposed' to do.
-          </p>
-          <hr className="separator" />
-          <div className="social">
-            <p>twitter: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
-            <p>github: <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">bicrick</a></p>
+    <div className="App_mainContainer">
+      <main className="App_mainColumn">
+        <header className="App_header">
+          <Navigation />
+        </header>
+        <section>
+          <h2 className="about-heading">about</h2>
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="about-pic" />
+          <div className="about-content">
+            <p>
+              I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
+            </p>
+            <p>
+              These days I play a lot of golf (+1 handicap). I like puzzle/automation games (Factorio, Minecraft). I like to experiment with different agentic tooling workflows.
+            </p>
+            <p>
+              Generally I am pulled by what intrigues me and not pushed by what I am supposed to do.
+            </p>
+            <hr className="separator" />
+            <div className="social">
+              <p>twitter: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
+              <p>github: <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">bicrick</a></p>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
@@ -62,7 +70,7 @@ function Projects() {
   const projects = [
     {
       title: 'docprep',
-      image: null,
+      image: `${process.env.PUBLIC_URL}/docprep-1200x600.png`,
       link: 'https://docprep.site'
     },
     {
@@ -72,7 +80,7 @@ function Projects() {
     },
     {
       title: 'Gradient Descent Visualizer',
-      image: null,
+      image: `${process.env.PUBLIC_URL}/gd-visualizer-1200x600.png`,
       link: 'https://github.com/bicrick/gd-visualizer'
     },
     {
@@ -87,39 +95,43 @@ function Projects() {
     },
     {
       title: 'Fighting Balls',
-      image: null,
+      image: `${process.env.PUBLIC_URL}/fighting-balls-1200x600.png`,
       link: 'https://bicrick.github.io/fighting-balls/'
     }
   ];
 
   return (
-    <div>
-      <Navigation />
-      <div className="container">
-        <h2 className="projects-heading">selected projects</h2>
-        <div className="projects-grid">
-          {projects.map((project, index) => (
-            <a 
-              key={index} 
-              href={project.link} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <div className="project-card">
-                {project.image ? (
-                  <img src={project.image} alt={project.title} />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
-                )}
-                <div className="project-overlay">
-                  {project.title}
+    <div className="App_mainContainer">
+      <main className="App_mainColumn">
+        <header className="App_header">
+          <Navigation />
+        </header>
+        <section>
+          <h2 className="projects-heading">selected projects</h2>
+          <div className="projects-grid">
+            {projects.map((project, index) => (
+              <a 
+                key={index} 
+                href={project.link} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <div className="project-card">
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
+                  )}
+                  <div className="project-overlay">
+                    {project.title}
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
