@@ -4,6 +4,6 @@ npm start from root
 
 Only deploy when I ask. When i ask run this:
 
-gh-pages -d build to push to gh pages
+npm run deploy to push to vercel
 
 Do not run 'echo' commands after generation to say a implementation is ready.

@@ -70,31 +70,37 @@ function Projects() {
   const projects = [
     {
       title: 'docprep',
+      description: 'msoffice plaintext extractor',
       image: `${process.env.PUBLIC_URL}/docprep-1200x600.png`,
       link: 'https://docprep.site'
     },
     {
-      title: 'Ballistic Optimizer Research',
-      image: null,
+      title: 'ballistic optimizer research',
+      description: 'new optimizer methods to rival adam and sgd',
+      image: `${process.env.PUBLIC_URL}/ballistic-gd-1200x600.png`,
       link: 'https://github.com/bicrick/ballistic-gd'
     },
     {
-      title: 'Gradient Descent Visualizer',
+      title: 'gd-visualizer',
+      description: 'an intuitive 3d gradient descent visualizer',
       image: `${process.env.PUBLIC_URL}/gd-visualizer-1200x600.png`,
       link: 'https://github.com/bicrick/gd-visualizer'
     },
     {
-      title: 'Multiplayer Backgammon',
+      title: 'multiplayer backgammon',
+      description: 'play backgammon with friends online',
       image: null,
       link: 'https://multiplayer-backgammon.vercel.app/'
     },
     {
-      title: 'Multiplayer Connect 4',
+      title: 'multiplayer connect 4',
+      description: 'classic connect 4 with multiplayer',
       image: null,
       link: 'https://multiplayer-connect-4-xi.vercel.app/'
     },
     {
-      title: 'Fighting Balls',
+      title: 'fighting balls',
+      description: 'watch the balls fight! exciting',
       image: `${process.env.PUBLIC_URL}/fighting-balls-1200x600.png`,
       link: 'https://bicrick.github.io/fighting-balls/'
     }
@@ -124,7 +130,7 @@ function Projects() {
                     <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
                   )}
                   <div className="project-overlay">
-                    {project.title}
+                    <div>{project.title} - {project.description}</div>
                   </div>
                 </div>
               </a>
