@@ -40,7 +40,7 @@ function Docprep() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/docprep/docprep-compression.png`} 
         alt="Doc Prep Compression Visualization" 
-        style={{ width: '66.67%', marginTop: '1.5rem', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
+        style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
         Docprep mirrors your file tree structure while extracting documents into plain text, dramatically reducing file sizes and making content AI-readable
@@ -97,7 +97,7 @@ function Docprep() {
       </p>
 
       <p>
-        <a href="https://docprep.site" target="_blank" rel="noopener noreferrer">Try Docprep</a>
+        <a href="https://docprep.site" target="_blank" rel="noopener noreferrer">try docprep</a>
       </p>
     </ProjectDetail>
   );
