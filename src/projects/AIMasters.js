@@ -26,27 +26,6 @@ function AIMasters() {
       <h2>/ notable projects</h2>
 
       <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>Advances in Deep Learning - Model Compression</h3>
-        <img 
-          src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`} 
-          alt="Memory reduction through compression techniques" 
-          style={{ width: '75%', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
-        />
-        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
-          Memory footprint comparison: QLoRA achieves 4.5x compression while 4-bit quantization reaches 6.3x reduction
-        </p>
-        <p style={{ marginBottom: '0.75rem' }}>
-          Implemented memory-efficient training techniques for large neural networks. Built half-precision networks, LoRA adapters, 4-bit quantization, and QLoRA from scratch. The goal was to train and run large models on limited hardware without sacrificing accuracy.
-        </p>
-        <p style={{ marginBottom: '0.25rem' }}>
-          Started with a 73MB network and implemented four compression approaches. Half-precision gave 50% memory reduction. LoRA added trainable low-rank adapters to frozen half-precision weights. 4-bit quantization used custom block quantization to achieve 7x memory reduction. QLoRA combined both techniques for maximum efficiency.
-        </p>
-        <p style={{ marginBottom: '0.25rem' }}>
-          The quantization implementation used block-wise quantization where groups of weights share a normalization factor stored in float16. Each weight gets packed into 4 bits. Had to implement custom loading hooks since PyTorch doesn't natively support this format. The quantized weights remain frozen during training - for trainability, QLoRA adds full-precision LoRA adapters on top of the frozen 4-bit base.
-        </p>
-      </div>
-
-      <div style={{ marginBottom: '3rem' }}>
         <h3 style={{ marginBottom: '0.5rem' }}>Deep Learning - Multi-task Road Detection</h3>
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
           <div style={{ width: '50%' }}>
@@ -78,6 +57,27 @@ function AIMasters() {
         </p>
         <p style={{ marginBottom: '0.25rem' }}>
           Trained on SuperTuxKart racing data with two loss functions - cross-entropy for segmentation and absolute error for depth. The model had to handle class imbalance since most pixels are background. Used IoU metric instead of raw accuracy. Final model achieved IoU over 0.75 and depth MAE under 0.05 on both overall pixels and lane boundaries specifically.
+        </p>
+      </div>
+
+      <div style={{ marginBottom: '3rem' }}>
+        <h3 style={{ marginBottom: '0.5rem' }}>Advances in Deep Learning - Model Compression</h3>
+        <img 
+          src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`} 
+          alt="Memory reduction through compression techniques" 
+          style={{ width: '75%', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
+        />
+        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
+          Memory footprint comparison: QLoRA achieves 4.5x compression while 4-bit quantization reaches 6.3x reduction
+        </p>
+        <p style={{ marginBottom: '0.75rem' }}>
+          Implemented memory-efficient training techniques for large neural networks. Built half-precision networks, LoRA adapters, 4-bit quantization, and QLoRA from scratch. The goal was to train and run large models on limited hardware without sacrificing accuracy.
+        </p>
+        <p style={{ marginBottom: '0.25rem' }}>
+          Started with a 73MB network and implemented four compression approaches. Half-precision gave 50% memory reduction. LoRA added trainable low-rank adapters to frozen half-precision weights. 4-bit quantization used custom block quantization to achieve 7x memory reduction. QLoRA combined both techniques for maximum efficiency.
+        </p>
+        <p style={{ marginBottom: '0.25rem' }}>
+          The quantization implementation used block-wise quantization where groups of weights share a normalization factor stored in float16. Each weight gets packed into 4 bits. Had to implement custom loading hooks since PyTorch doesn't natively support this format. The quantized weights remain frozen during training - for trainability, QLoRA adds full-precision LoRA adapters on top of the frozen 4-bit base.
         </p>
       </div>
 
