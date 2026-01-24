@@ -88,7 +88,9 @@ function GDVisualizer() {
       </ul>
 
       <p>
-        <a href="https://github.com/bicrick/gd-visualizer" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        <a href="https://gd.bicrick.com" target="_blank" rel="noopener noreferrer">Try here</a>
+        {' | '}
+        <a href="https://github.com/bicrick/gd-visualizer" target="_blank" rel="noopener noreferrer">See the repo</a>
       </p>
     </ProjectDetail>
   );
