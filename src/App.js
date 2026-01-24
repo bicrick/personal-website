@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 import Docprep from './projects/Docprep';
 import BallisticGD from './projects/BallisticGD';
@@ -175,18 +176,21 @@ function Projects() {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/projects/docprep" element={<Docprep />} />
-      <Route path="/projects/ballistic-gd" element={<BallisticGD />} />
-      <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
-      <Route path="/projects/fighting-balls" element={<FightingBalls />} />
-      <Route path="/projects/connect4" element={<Connect4 />} />
-      <Route path="/projects/ai-masters" element={<AIMasters />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/docprep" element={<Docprep />} />
+        <Route path="/projects/ballistic-gd" element={<BallisticGD />} />
+        <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
+        <Route path="/projects/fighting-balls" element={<FightingBalls />} />
+        <Route path="/projects/connect4" element={<Connect4 />} />
+        <Route path="/projects/ai-masters" element={<AIMasters />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Analytics />
+    </>
   );
 }
 

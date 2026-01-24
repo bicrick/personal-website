@@ -20,7 +20,7 @@ function Docprep() {
       </p>
 
       <p>
-        So I showed him what Cursor could actually do. Working in the financial sector, he deals with models, pitch decks, reports - the usual corporate toolkit. I told him I thought we could use Cursor to help with a lot of that work. To prove it, we sat down and built a full pitch deck from a giant file tree of company documents.
+        So I showed him what Cursor could actually do. Working in the financial sector, he deals with models, pitch decks, reports - the usual corporate toolkit. I told him I thought we could use Cursor to help with a lot of that work. To prove it, we sat down and built a presentation from a giant file tree of company documents.
       </p>
 
       <p>
