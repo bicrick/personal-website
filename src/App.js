@@ -77,35 +77,35 @@ function Projects() {
     {
       title: 'docprep',
       description: 'msoffice plaintext extractor',
-      image: `${process.env.PUBLIC_URL}/docprep-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
       link: '/projects/docprep',
       external: false
     },
     {
-      title: 'artificial intelligence masters - coursework',
-      description: 'ai implementations and learnings',
-      image: `${process.env.PUBLIC_URL}/ut-msai-1200x600.png`,
+      title: 'artificial intelligence masters',
+      description: 'coursework and takeaways',
+      image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       link: '/projects/ai-masters',
       external: false
     },
     {
       title: 'ballistic optimizer research',
       description: 'new optimizer methods to rival adam and sgd',
-      image: `${process.env.PUBLIC_URL}/ballistic-gd-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/ballistic-gd/ballistic-gd-1200x600.png`,
       link: '/projects/ballistic-gd',
       external: false
     },
     {
       title: 'gd-visualizer',
       description: 'compare optimizer performance in 3d',
-      image: `${process.env.PUBLIC_URL}/gd-visualizer-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
       link: '/projects/gd-visualizer',
       external: false
     },
     {
       title: 'fighting balls',
       description: 'watch the balls fight! exciting',
-      image: `${process.env.PUBLIC_URL}/fighting-balls-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/fighting-balls/fighting-balls-1200x600.png`,
       link: '/projects/fighting-balls',
       external: false
     },
