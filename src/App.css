@@ -137,6 +137,19 @@ section {
   margin-bottom: 1rem;
 }
 
+.projects-grid a {
+  position: relative;
+  z-index: 1;
+}
+
+.projects-grid a:hover {
+  z-index: 10;
+}
+
+.projects-grid a:after {
+  display: none;
+}
+
 .project-card {
   position: relative;
   width: 100%;
@@ -144,6 +157,12 @@ section {
   background: #f0f0f0;
   filter: drop-shadow(10px 10px 10px rgba(0,0,0,.4));
   border-radius: 4px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.project-card:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(10px 10px 12px rgba(0,0,0,.45));
 }
 
 .project-card::before {

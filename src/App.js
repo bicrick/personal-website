@@ -1,6 +1,12 @@
 import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
+import Docprep from './projects/Docprep';
+import BallisticGD from './projects/BallisticGD';
+import GDVisualizer from './projects/GDVisualizer';
+import FightingBalls from './projects/FightingBalls';
+import Connect4 from './projects/Connect4';
+import AIMasters from './projects/AIMasters';
 
 function Navigation() {
   return (
@@ -72,37 +78,43 @@ function Projects() {
       title: 'docprep',
       description: 'msoffice plaintext extractor',
       image: `${process.env.PUBLIC_URL}/docprep-1200x600.png`,
-      link: 'https://docprep.site'
+      link: '/projects/docprep',
+      external: false
+    },
+    {
+      title: 'artificial intelligence masters - coursework',
+      description: 'ai implementations and learnings',
+      image: `${process.env.PUBLIC_URL}/ut-msai-1200x600.png`,
+      link: '/projects/ai-masters',
+      external: false
     },
     {
       title: 'ballistic optimizer research',
       description: 'new optimizer methods to rival adam and sgd',
       image: `${process.env.PUBLIC_URL}/ballistic-gd-1200x600.png`,
-      link: 'https://github.com/bicrick/ballistic-gd'
+      link: '/projects/ballistic-gd',
+      external: false
     },
     {
       title: 'gd-visualizer',
-      description: 'an intuitive 3d gradient descent visualizer',
+      description: 'compare optimizer performance in 3d',
       image: `${process.env.PUBLIC_URL}/gd-visualizer-1200x600.png`,
-      link: 'https://github.com/bicrick/gd-visualizer'
-    },
-    {
-      title: 'multiplayer backgammon',
-      description: 'play backgammon with friends online',
-      image: null,
-      link: 'https://multiplayer-backgammon.vercel.app/'
-    },
-    {
-      title: 'multiplayer connect 4',
-      description: 'classic connect 4 with multiplayer',
-      image: null,
-      link: 'https://multiplayer-connect-4-xi.vercel.app/'
+      link: '/projects/gd-visualizer',
+      external: false
     },
     {
       title: 'fighting balls',
       description: 'watch the balls fight! exciting',
       image: `${process.env.PUBLIC_URL}/fighting-balls-1200x600.png`,
-      link: 'https://bicrick.github.io/fighting-balls/'
+      link: '/projects/fighting-balls',
+      external: false
+    },
+    {
+      title: 'multiplayer connect 4',
+      description: 'classic connect 4 with multiplayer',
+      image: null,
+      link: '/projects/connect4',
+      external: false
     }
   ];
 
@@ -116,24 +128,43 @@ function Projects() {
           <h2 className="projects-heading">selected projects</h2>
           <div className="projects-grid">
             {projects.map((project, index) => (
-              <a 
-                key={index} 
-                href={project.link} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div className="project-card">
-                  {project.image ? (
-                    <img src={project.image} alt={project.title} />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
-                  )}
-                  <div className="project-overlay">
-                    <div>{project.title} - {project.description}</div>
+              project.external ? (
+                <a 
+                  key={index} 
+                  href={project.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="project-card">
+                    {project.image ? (
+                      <img src={project.image} alt={project.title} />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
+                    )}
+                    <div className="project-overlay">
+                      <div>{project.title} - {project.description}</div>
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              ) : (
+                <Link 
+                  key={index} 
+                  to={project.link}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="project-card">
+                    {project.image ? (
+                      <img src={project.image} alt={project.title} />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
+                    )}
+                    <div className="project-overlay">
+                      <div>{project.title} - {project.description}</div>
+                    </div>
+                  </div>
+                </Link>
+              )
             ))}
           </div>
         </section>
@@ -148,6 +179,12 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/projects" element={<Projects />} />
+      <Route path="/projects/docprep" element={<Docprep />} />
+      <Route path="/projects/ballistic-gd" element={<BallisticGD />} />
+      <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
+      <Route path="/projects/fighting-balls" element={<FightingBalls />} />
+      <Route path="/projects/connect4" element={<Connect4 />} />
+      <Route path="/projects/ai-masters" element={<AIMasters />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
