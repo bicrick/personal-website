@@ -4,10 +4,10 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import './App.css';
 import Docprep from './projects/Docprep';
-import BallisticGD from './projects/BallisticGD';
-import GDVisualizer from './projects/GDVisualizer';
-import FightingBalls from './projects/FightingBalls';
-import Connect4 from './projects/Connect4';
+// import BallisticGD from './projects/BallisticGD';
+// import GDVisualizer from './projects/GDVisualizer';
+// import FightingBalls from './projects/FightingBalls';
+// import Connect4 from './projects/Connect4';
 import AIMasters from './projects/AIMasters';
 
 function Navigation() {
@@ -89,35 +89,36 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       link: '/projects/ai-masters',
       external: false
-    },
-    {
-      title: 'ballistic optimizer research',
-      description: 'new optimizer methods to rival adam and sgd',
-      image: `${process.env.PUBLIC_URL}/images/ballistic-gd/ballistic-gd-1200x600.png`,
-      link: '/projects/ballistic-gd',
-      external: false
-    },
-    {
-      title: 'gd-visualizer',
-      description: 'compare optimizer performance in 3d',
-      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
-      link: '/projects/gd-visualizer',
-      external: false
-    },
-    {
-      title: 'fighting balls',
-      description: 'watch the balls fight! exciting',
-      image: `${process.env.PUBLIC_URL}/images/fighting-balls/fighting-balls-1200x600.png`,
-      link: '/projects/fighting-balls',
-      external: false
-    },
-    {
-      title: 'multiplayer connect 4',
-      description: 'classic connect 4 with multiplayer',
-      image: null,
-      link: '/projects/connect4',
-      external: false
     }
+    // Hidden projects - to be worked on later
+    // {
+    //   title: 'ballistic optimizer research',
+    //   description: 'new optimizer methods to rival adam and sgd',
+    //   image: `${process.env.PUBLIC_URL}/images/ballistic-gd/ballistic-gd-1200x600.png`,
+    //   link: '/projects/ballistic-gd',
+    //   external: false
+    // },
+    // {
+    //   title: 'gd-visualizer',
+    //   description: 'compare optimizer performance in 3d',
+    //   image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
+    //   link: '/projects/gd-visualizer',
+    //   external: false
+    // },
+    // {
+    //   title: 'fighting balls',
+    //   description: 'watch the balls fight! exciting',
+    //   image: `${process.env.PUBLIC_URL}/images/fighting-balls/fighting-balls-1200x600.png`,
+    //   link: '/projects/fighting-balls',
+    //   external: false
+    // },
+    // {
+    //   title: 'multiplayer connect 4',
+    //   description: 'classic connect 4 with multiplayer',
+    //   image: null,
+    //   link: '/projects/connect4',
+    //   external: false
+    // }
   ];
 
   return (
@@ -183,11 +184,12 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/docprep" element={<Docprep />} />
-        <Route path="/projects/ballistic-gd" element={<BallisticGD />} />
-        <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
-        <Route path="/projects/fighting-balls" element={<FightingBalls />} />
-        <Route path="/projects/connect4" element={<Connect4 />} />
         <Route path="/projects/ai-masters" element={<AIMasters />} />
+        {/* Hidden project routes - to be worked on later */}
+        {/* <Route path="/projects/ballistic-gd" element={<BallisticGD />} /> */}
+        {/* <Route path="/projects/gd-visualizer" element={<GDVisualizer />} /> */}
+        {/* <Route path="/projects/fighting-balls" element={<FightingBalls />} /> */}
+        {/* <Route path="/projects/connect4" element={<Connect4 />} /> */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Analytics />
