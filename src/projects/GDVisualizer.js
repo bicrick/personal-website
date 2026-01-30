@@ -80,7 +80,7 @@ function GDVisualizer() {
       </p>
 
       <p>
-        I'm still adding more optimizers and topologies, but the core is solid. You can select a starting position, run multiple optimizers simultaneously, and watch them navigate the same landscape. The tool currently focuses on two highly parametrizable loss landscapes: Gaussian Wells and Ackley. Gaussian Wells lets you adjust the global scale, well width, well depth, and number of wells. Ackley lets you tune the amplitude, decay rate, frequency, and vertical scale. This parametrization creates diverse test environments - you can vary the depth of local minima, how many there are, and where they're placed to systematically test optimizer behavior.
+        The tool currently focuses on two highly parametrizable loss landscapes: Gaussian Wells and Ackley. Gaussian Wells lets you adjust the global scale, well width, well depth, and number of wells. Ackley lets you tune the amplitude, decay rate, frequency, and vertical scale. This parametrization creates diverse test environments - you can vary the depth of local minima, how many there are, and where they're placed to systematically test optimizer behavior.
       </p>
 
       <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', marginBottom: '2rem' }}>
