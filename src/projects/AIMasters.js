@@ -3,7 +3,14 @@ import ProjectDetail from '../components/ProjectDetail';
 
 function AIMasters() {
   return (
-    <ProjectDetail title="artificial intelligence masters - coursework">
+    <ProjectDetail 
+      title="artificial intelligence masters - coursework"
+      seoTitle="UT Austin AI Masters - Coursework by bicrick"
+      seoDescription="UT Austin Master's in Artificial Intelligence coursework by bicrick (Patrick Brown) - Deep learning, NLP, transformers, model compression, reinforcement learning projects and takeaways."
+      seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"
+      seoUrl="https://bicrick.com/projects/ai-masters"
+      seoImage="https://bicrick.com/images/ai-masters/ut-msai-1200x600.png"
+    >
       <img 
         src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`} 
         alt="UT Austin MSAI" 

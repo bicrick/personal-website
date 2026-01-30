@@ -5,7 +5,14 @@ import 'katex/dist/katex.min.css';
 
 function GDVisualizer() {
   return (
-    <ProjectDetail title="gd-visualizer">
+    <ProjectDetail 
+      title="gd-visualizer"
+      seoTitle="GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick"
+      seoDescription="GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React."
+      seoKeywords="bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js"
+      seoUrl="https://bicrick.com/projects/gd-visualizer"
+      seoImage="https://bicrick.com/images/gd-visualizer/gd-visualizer-1200x600.png"
+    >
       <img 
         src={`${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`} 
         alt="GD Visualizer" 

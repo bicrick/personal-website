@@ -3,7 +3,14 @@ import ProjectDetail from '../components/ProjectDetail';
 
 function Docprep() {
   return (
-    <ProjectDetail title="docprep">
+    <ProjectDetail 
+      title="docprep"
+      seoTitle="docprep - Microsoft Office Plaintext Extractor by bicrick"
+      seoDescription="docprep by bicrick (Patrick Brown) - Desktop application that extracts Microsoft Office documents into plaintext for AI-ready document processing. Built with PyWebView and React."
+      seoKeywords="bicrick, Patrick Brown, docprep, Microsoft Office, plaintext extractor, AI documents, PyWebView, React"
+      seoUrl="https://bicrick.com/projects/docprep"
+      seoImage="https://bicrick.com/images/docprep/docprep-1200x600.png"
+    >
       <img 
         src={`${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`} 
         alt="Docprep" 

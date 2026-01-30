@@ -9,6 +9,8 @@ import GDVisualizer from './projects/GDVisualizer';
 // import FightingBalls from './projects/FightingBalls';
 // import Connect4 from './projects/Connect4';
 import AIMasters from './projects/AIMasters';
+import SEO from './components/SEO';
+import StructuredData from './components/StructuredData';
 
 function Navigation() {
   return (
@@ -25,13 +27,19 @@ function Navigation() {
 function Home() {
   return (
     <div className="App_mainContainer">
+      <SEO 
+        ogTitle="bicrick - Patrick Brown | Data Engineer & Software Developer"
+        description="Patrick Brown (bicrick) - Data Engineer at H-E-B building ETL pipelines and data infrastructure. Software developer working in Austin, TX."
+        url="https://bicrick.com"
+      />
+      <StructuredData />
       <main className="App_mainColumn">
         <header className="App_header">
           <Navigation />
         </header>
         <section>
           <h2 className="home-heading">patrick brown</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="home-pic" />
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="home-pic" />
           <div className="home-content">
             <p>I build software to solve problems.</p>
             <p>currently working as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the Austin, TX area.</p>
@@ -45,13 +53,20 @@ function Home() {
 function About() {
   return (
     <div className="App_mainContainer">
+      <SEO 
+        ogTitle="About bicrick - Patrick Brown | Data Engineer"
+        description="About Patrick Brown (bicrick) - Data Engineer at H-E-B, UT Austin AI Masters graduate, software developer in Austin, TX."
+        url="https://bicrick.com/about"
+        keywords="bicrick, Patrick Brown, About, Data Engineer, Software Developer, Austin, HEB, UT Austin, AI Masters"
+      />
+      <StructuredData />
       <main className="App_mainColumn">
         <header className="App_header">
           <Navigation />
         </header>
         <section>
           <h2 className="about-heading">about</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="Patrick Brown" className="about-pic" />
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="about-pic" />
           <div className="about-content">
             <p>
               I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
@@ -81,21 +96,24 @@ function Projects() {
       description: 'msoffice plaintext extractor',
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
       link: '/projects/docprep',
-      external: false
+      external: false,
+      seoDescription: 'docprep by bicrick - Microsoft Office plaintext extractor for AI-ready document processing'
     },
     {
       title: 'artificial intelligence masters',
       description: 'coursework and takeaways',
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       link: '/projects/ai-masters',
-      external: false
+      external: false,
+      seoDescription: 'UT Austin AI Masters coursework by bicrick - Deep learning, NLP, and machine learning projects'
     },
     {
       title: 'gd-visualizer',
       description: 'compare optimizer performance in 3d',
       image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
       link: '/projects/gd-visualizer',
-      external: false
+      external: false,
+      seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
     }
     // Hidden projects - to be worked on later
     // {
@@ -123,6 +141,13 @@ function Projects() {
 
   return (
     <div className="App_mainContainer">
+      <SEO 
+        ogTitle="Projects by bicrick - Software Development Portfolio"
+        description="Software projects by bicrick (Patrick Brown) - docprep, AI Masters coursework, gradient descent visualizer, and more."
+        url="https://bicrick.com/projects"
+        keywords="bicrick, Patrick Brown, Projects, Portfolio, Software Development, docprep, AI, Machine Learning"
+      />
+      <StructuredData />
       <main className="App_mainColumn">
         <header className="App_header">
           <Navigation />
