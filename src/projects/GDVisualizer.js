@@ -6,7 +6,7 @@ import 'katex/dist/katex.min.css';
 function GDVisualizer() {
   return (
     <ProjectDetail 
-      title="gd-visualizer"
+      title={<>gd-visualizer - <a href="https://gd.bicrick.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a></>}
       seoTitle="GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick"
       seoDescription="GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React."
       seoKeywords="bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js"
@@ -73,6 +73,10 @@ function GDVisualizer() {
       
       <p>
         I went with Three.js for the 3D rendering and React for the UI. There's a Python backend that handles all the trajectory computation. The architecture is straightforward. The backend calculates the optimizer paths, passes them to the frontend, and Three.js renders everything in real-time.
+      </p>
+
+      <p>
+        Since we don't have an actual dataset, we emulate gradient descent by giving each optimizer the gradient directly beneath its current position. The optimizers don't see the entire loss landscape. They only know the local gradient at their location and execute update steps as if they were training a real model, except we're computing gradients from the topology itself rather than from data.
       </p>
 
       <p>
