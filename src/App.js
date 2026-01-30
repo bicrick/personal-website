@@ -5,7 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import './App.css';
 import Docprep from './projects/Docprep';
 // import BallisticGD from './projects/BallisticGD';
-// import GDVisualizer from './projects/GDVisualizer';
+import GDVisualizer from './projects/GDVisualizer';
 // import FightingBalls from './projects/FightingBalls';
 // import Connect4 from './projects/Connect4';
 import AIMasters from './projects/AIMasters';
@@ -89,6 +89,13 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       link: '/projects/ai-masters',
       external: false
+    },
+    {
+      title: 'gd-visualizer',
+      description: 'compare optimizer performance in 3d',
+      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
+      link: '/projects/gd-visualizer',
+      external: false
     }
     // Hidden projects - to be worked on later
     // {
@@ -96,13 +103,6 @@ function Projects() {
     //   description: 'new optimizer methods to rival adam and sgd',
     //   image: `${process.env.PUBLIC_URL}/images/ballistic-gd/ballistic-gd-1200x600.png`,
     //   link: '/projects/ballistic-gd',
-    //   external: false
-    // },
-    // {
-    //   title: 'gd-visualizer',
-    //   description: 'compare optimizer performance in 3d',
-    //   image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
-    //   link: '/projects/gd-visualizer',
     //   external: false
     // },
     // {
@@ -187,7 +187,7 @@ function App() {
         <Route path="/projects/ai-masters" element={<AIMasters />} />
         {/* Hidden project routes - to be worked on later */}
         {/* <Route path="/projects/ballistic-gd" element={<BallisticGD />} /> */}
-        {/* <Route path="/projects/gd-visualizer" element={<GDVisualizer />} /> */}
+        <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
         {/* <Route path="/projects/fighting-balls" element={<FightingBalls />} /> */}
         {/* <Route path="/projects/connect4" element={<Connect4 />} /> */}
         <Route path="*" element={<Navigate to="/" replace />} />

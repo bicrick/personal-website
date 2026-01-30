@@ -96,6 +96,24 @@ function Docprep() {
         There's a real opportunity here. The corporate world is sitting on mountains of data that could be useful, but it's locked inside formats that modern AI tools struggle with. Docprep is a step toward unlocking that.
       </p>
 
+      <h2>/ update: january 29th, 2026</h2>
+      
+      <p>
+        Two months after launching docprep, Anthropic released Claude Cowork with built-in support for extracting and working with Microsoft Office documents directly. The extraction happens at runtime, eliminating the need for preprocessing entirely. But more importantly, Claude Cowork exists within the Claude application itself - a chat interface where non-technical users can ask questions and get answers without ever touching code. docprep required people to use Cursor, export plain text, and work in a developer environment. Claude Cowork is just a conversation. For the vast majority of corporate workers who don't code, that's a far more complete solution.
+      </p>
+
+      <p>
+        Even though only a small office was able to use docprep before it became obsolete, I learned something valuable: the AI landscape moves fast, and foundation model providers will eventually build first-party solutions to problems that seem like business opportunities today.
+      </p>
+
+      <p>
+        But here's what made it worth building anyway.
+      </p>
+
+      <p>
+        The process of taking docprep from concept to a deployed desktop application taught me things I couldn't have learned otherwise. I worked through the entire pipeline: aesthetic design, architecting a PyWebView desktop app, building DMG and EXE installers, getting the application notarized and code-signed so it doesn't trigger malware warnings on user machines. These weren't things I knew how to do when I started - they were problems I had to solve as they came up.
+      </p>
+
       <p>
         <a href="https://docprep.site" target="_blank" rel="noopener noreferrer">try docprep</a>
       </p>
