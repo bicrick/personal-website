@@ -7,16 +7,7 @@
   ],
   "headers": [
     {
-      "source": "/static/media/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.(woff|woff2|ttf|otf|eot))",
+      "source": "/static/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
