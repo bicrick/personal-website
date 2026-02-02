@@ -33,7 +33,7 @@ function AIMasters() {
       <h2>/ notable projects</h2>
 
       <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>Deep Learning - Multi-task Road Detection</h3>
+        <h3 style={{ marginBottom: '0.5rem' }}>Deep Learning: Multi-task Road Detection</h3>
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
           <div style={{ width: '50%' }}>
             <img 
@@ -68,7 +68,7 @@ function AIMasters() {
       </div>
 
       <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>Advances in Deep Learning - Model Compression</h3>
+        <h3 style={{ marginBottom: '0.5rem' }}>Advances in Deep Learning: Model Compression</h3>
         <img 
           src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`} 
           alt="Memory reduction through compression techniques" 
@@ -89,7 +89,7 @@ function AIMasters() {
       </div>
 
       <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>NLP - Transformer Language Model from Scratch</h3>
+        <h3 style={{ marginBottom: '0.5rem' }}>NLP: Transformer Language Model from Scratch</h3>
         <img 
           src={`${process.env.PUBLIC_URL}/images/ai-masters/positional_encoding_comparison.png`} 
           alt="Impact of positional encodings on self-attention" 
@@ -105,7 +105,7 @@ function AIMasters() {
           The letter counting task was designed to test if the model could learn to attend to relevant context. Given a string, predict how many times each character appeared before that position. This requires the model to look back through the sequence and count. Without positional encodings the model treats input as a bag of characters. With positional encodings it can distinguish position and achieved 98% accuracy.
         </p>
         <p style={{ marginBottom: '0.25rem' }}>
-          For language modeling, trained on the text8 dataset - 100k characters from Wikipedia. Implemented causal masking so tokens can't attend to future positions. The model predicts the next character at each position simultaneously. Used perplexity as the evaluation metric. Final model achieved perplexity under 7, which corresponds to reasonable compression and generation quality for a character-level model.
+          For language modeling, trained on the text8 dataset (100k characters from Wikipedia). Implemented causal masking so tokens can't attend to future positions. The model predicts the next character at each position simultaneously. Used perplexity as the evaluation metric. Final model achieved perplexity under 7, which corresponds to reasonable compression and generation quality for a character-level model.
         </p>
       </div>
 
@@ -122,43 +122,43 @@ function AIMasters() {
       <h2>/ course list</h2>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>deep learning</strong> - core concepts like CNNs, residual networks, and computer vision tasks. built classifiers and segmentation models for racing games.
+        <strong>deep learning:</strong> core concepts like CNNs, residual networks, and computer vision tasks. built classifiers and segmentation models for racing games.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>ethics in ai</strong> - explored ethical frameworks from different cultures and applied them to AI design decisions around fairness, accountability, and transparency.
+        <strong>ethics in ai:</strong> explored ethical frameworks from different cultures and applied them to AI design decisions around fairness, accountability, and transparency.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>machine learning</strong> - classical algorithms like linear regression, decision trees, SVMs, and neural networks. covered theory and practical implementation.
+        <strong>machine learning:</strong> classical algorithms like linear regression, decision trees, SVMs, and neural networks. covered theory and practical implementation.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>planning, search, and reasoning under uncertainty</strong> - algorithms for path planning, adversarial search, bayesian state estimation, and markov decision processes.
+        <strong>planning, search, and reasoning under uncertainty:</strong> algorithms for path planning, adversarial search, bayesian state estimation, and markov decision processes.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>reinforcement learning</strong> - everything from multi-armed bandits to policy gradients. implemented Q-learning, SARSA, and REINFORCE from Sutton & Barto.
+        <strong>reinforcement learning:</strong> everything from multi-armed bandits to policy gradients. implemented Q-learning, SARSA, and REINFORCE from Sutton & Barto.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>advances in deep generative models</strong> - modern generative techniques including GANs, diffusion models, flow-based models, and autoregressive language models.
+        <strong>advances in deep generative models:</strong> modern generative techniques including GANs, diffusion models, flow-based models, and autoregressive language models.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>automated logical reasoning</strong> - built SAT solvers with conflict-driven clause learning and SMT solvers. used Dafny for formal verification of programs.
+        <strong>automated logical reasoning:</strong> built SAT solvers with conflict-driven clause learning and SMT solvers. used Dafny for formal verification of programs.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>natural language processing</strong> - sentiment analysis, language modeling, transformers, and fact-checking. worked with BERT, DeBERTa, and custom transformer implementations.
+        <strong>natural language processing:</strong> sentiment analysis, language modeling, transformers, and fact-checking. worked with BERT, DeBERTa, and custom transformer implementations.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>online learning and optimization</strong> - online algorithms, regret bounds, multi-armed bandits, and contextual bandits. implemented UCB, EXP3, and Thompson sampling.
+        <strong>online learning and optimization:</strong> online algorithms, regret bounds, multi-armed bandits, and contextual bandits. implemented UCB, EXP3, and Thompson sampling.
       </p>
       
       <p style={{ marginBottom: '0.5rem' }}>
-        <strong>optimization</strong> - convex optimization theory covering gradient descent, Newton's method, duality, KKT conditions, and interior point methods.
+        <strong>optimization:</strong> convex optimization theory covering gradient descent, Newton's method, duality, KKT conditions, and interior point methods.
       </p>
       
       <p style={{ marginTop: '2rem', fontSize: '0.9rem' }}>
