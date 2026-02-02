@@ -15,6 +15,8 @@ function GDVisualizer() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`} 
         alt="GD Visualizer" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
@@ -27,7 +29,7 @@ function GDVisualizer() {
         I saw this video of a cheese rolling contest in Britain where people chase a wheel of cheese down a steep hill. I was studying optimizers at the time in my master's program, and it got me thinking about how different optimizers use physical analogues to reach the bottom of a loss landscape. But more specifically, it got me thinking about a wheel rolling down a hill and how that's different from a ball or sliding object.
       </p>
 
-      <div style={{ width: '100%', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ width: '100%', marginTop: '1.5rem', marginBottom: '1.5rem', position: 'relative', paddingBottom: '56.25%', height: 0 }}>
         <iframe 
           width="100%" 
           height="600" 
@@ -36,7 +38,7 @@ function GDVisualizer() {
           frameBorder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
           allowFullScreen
-          style={{ maxWidth: '100%' }}
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
         />
       </div>
 
@@ -87,6 +89,8 @@ function GDVisualizer() {
           <img 
             src={`${process.env.PUBLIC_URL}/images/gd-visualizer/gaussian-well.png`} 
             alt="Gaussian Wells" 
+            width="1200"
+            height="600"
             style={{ width: '100%', marginBottom: '0.5rem' }}
           />
           <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
@@ -97,6 +101,8 @@ function GDVisualizer() {
           <img 
             src={`${process.env.PUBLIC_URL}/images/gd-visualizer/ackley.png`} 
             alt="Ackley Function" 
+            width="1200"
+            height="600"
             style={{ width: '100%', marginBottom: '0.5rem' }}
           />
           <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
@@ -114,6 +120,8 @@ function GDVisualizer() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`} 
         alt="Testing Four Base Optimizers" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
@@ -194,6 +202,8 @@ function GDVisualizer() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/gd-visualizer/loop.gif`} 
         alt="Wheel Optimizer Spiral" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>

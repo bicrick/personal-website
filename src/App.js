@@ -39,7 +39,7 @@ function Home() {
         </header>
         <section>
           <h2 className="home-heading">patrick brown</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="home-pic" />
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="home-pic" width="200" height="200" />
           <div className="home-content">
             <p>I build software to solve problems.</p>
             <p>currently working as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the Austin, TX area.</p>
@@ -66,7 +66,7 @@ function About() {
         </header>
         <section>
           <h2 className="about-heading">about</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="about-pic" />
+          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="about-pic" width="200" height="200" />
           <div className="about-content">
             <p>
               I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
@@ -166,7 +166,7 @@ function Projects() {
                 >
                   <div className="project-card">
                     {project.image ? (
-                      <img src={project.image} alt={project.title} />
+                      <img src={project.image} alt={project.title} width="1200" height="600" />
                     ) : (
                       <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
                     )}
@@ -183,7 +183,7 @@ function Projects() {
                 >
                   <div className="project-card">
                     {project.image ? (
-                      <img src={project.image} alt={project.title} />
+                      <img src={project.image} alt={project.title} width="1200" height="600" />
                     ) : (
                       <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
                     )}

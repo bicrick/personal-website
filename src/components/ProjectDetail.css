@@ -122,4 +122,16 @@
   .project-article h3 {
     font-size: 1.2em;
   }
+
+  /* Ensure images maintain aspect ratio and don't cause shifts */
+  .project-article img {
+    height: auto;
+    display: block;
+  }
+
+  /* Improve rendering performance on mobile */
+  .project-article {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
+  }
 }

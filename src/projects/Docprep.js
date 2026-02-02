@@ -14,6 +14,8 @@ function Docprep() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`} 
         alt="Docprep" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
@@ -47,6 +49,8 @@ function Docprep() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/docprep/docprep-compression.png`} 
         alt="Doc Prep Compression Visualization" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>

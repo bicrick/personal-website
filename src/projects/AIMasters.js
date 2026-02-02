@@ -14,6 +14,8 @@ function AIMasters() {
       <img 
         src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`} 
         alt="UT Austin MSAI" 
+        width="1200"
+        height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
@@ -39,6 +41,8 @@ function AIMasters() {
             <img 
               src={`${process.env.PUBLIC_URL}/images/ai-masters/00001_im.jpg`} 
               alt="Mario Kart racing game input" 
+              width="400"
+              height="300"
               style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
             />
             <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
@@ -49,6 +53,8 @@ function AIMasters() {
             <img 
               src={`${process.env.PUBLIC_URL}/images/ai-masters/00002_depth.png`} 
               alt="Depth map prediction" 
+              width="400"
+              height="300"
               style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
             />
             <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
@@ -72,6 +78,8 @@ function AIMasters() {
         <img 
           src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`} 
           alt="Memory reduction through compression techniques" 
+          width="1200"
+          height="600"
           style={{ width: '75%', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
         />
         <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
@@ -93,6 +101,8 @@ function AIMasters() {
         <img 
           src={`${process.env.PUBLIC_URL}/images/ai-masters/positional_encoding_comparison.png`} 
           alt="Impact of positional encodings on self-attention" 
+          width="1200"
+          height="600"
           style={{ width: '100%', marginBottom: '0.5rem' }}
         />
         <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
