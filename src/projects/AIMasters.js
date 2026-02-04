@@ -4,7 +4,7 @@ import ProjectDetail from '../components/ProjectDetail';
 function AIMasters() {
   return (
     <ProjectDetail 
-      title="artificial intelligence masters - coursework"
+      title={<>artificial intelligence masters - <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>see program info</a></>}
       seoTitle="UT Austin AI Masters - Coursework by bicrick"
       seoDescription="UT Austin Master's in Artificial Intelligence coursework by bicrick (Patrick Brown) - Deep learning, NLP, transformers, model compression, reinforcement learning projects and takeaways."
       seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"

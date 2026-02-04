@@ -53,11 +53,11 @@ function GDVisualizer() {
       <h2>/ the real problem</h2>
       
       <p>
-        Most people don't realize that gradient descent is very close to physical analogues. Seeing it this way gives you a real understanding of what's actually happening inside the computer when we're optimizing.
+        For newcomers, gradient descent is hard to understand intuitively. This visual aid lets you see what optimization looks like in a simple two-parameter space, making the abstract concept concrete.
       </p>
 
       <p>
-        It also makes understanding local minima pretty plain to see. Some optimizers get stuck easily. Some run really quickly but are more prone to getting trapped. Some go slow and are computationally heavy but tend to find better solutions. Without visualization, these trade-offs are just abstract concepts.
+        It also makes understanding different optimizers pretty plain to see. Some get stuck in local minima easily. Some run really quickly but are more prone to getting trapped. Some go slow and are computationally heavy but tend to find better solutions. Without visualization, these trade-offs are just abstract concepts.
       </p>
 
       <h2>/ the solution</h2>
