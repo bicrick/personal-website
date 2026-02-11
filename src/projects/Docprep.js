@@ -128,6 +128,10 @@ function Docprep() {
       <p>
         <a href="https://docprep.site" target="_blank" rel="noopener noreferrer">try docprep</a>
       </p>
+
+      <p>
+        <a href="https://github.com/bicrick/docprep" target="_blank" rel="noopener noreferrer">view source code</a> - The repository has been made public since the app is obsolete.
+      </p>
     </ProjectDetail>
   );
 }
