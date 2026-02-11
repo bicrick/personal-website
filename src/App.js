@@ -195,6 +195,10 @@ function Projects() {
               )
             ))}
           </div>
+          <hr className="separator" />
+          <p>
+            to see other work <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">click here</a>
+          </p>
         </section>
       </main>
     </div>
