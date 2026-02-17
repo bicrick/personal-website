@@ -154,6 +154,17 @@ function GDVisualizer() {
         Now that I have the basic optimizers working I wanted to start working on my own optimizer. The wheel optimizer implements that rolling wheel physics I wanted to test from the start. A wheel doesn't just slide down a hill. It rolls, and that distinction matters. When a wheel is spinning fast, it has gyroscopic stability that resists turning. The faster it spins, the more it wants to maintain its current trajectory.
       </p>
 
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1.5rem', marginBottom: '2rem' }}>
+        <img 
+          src={`${process.env.PUBLIC_URL}/images/gd-visualizer/bike-wheel.gif`} 
+          alt="Rolling wheel physics" 
+          style={{ width: '500px', maxWidth: '100%', display: 'block', marginBottom: '0.5rem' }}
+        />
+        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.9rem', textAlign: 'center', margin: 0, lineHeight: 1.2 }}>
+          Hanging wheel exhibiting gyroscopic stability
+        </p>
+      </div>
+
       <p>
         Standard momentum-based gradient descent is like a ball rolling down a hill. The gradient pushes the velocity directly, and the ball follows the slope. But a wheel is different. Try to turn a fast-spinning wheel, and it resists. This gyroscopic effect means the wheel maintains its trajectory through small perturbations in the landscape, exactly what you want when trying to avoid getting trapped in shallow local minima.
       </p>

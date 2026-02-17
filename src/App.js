@@ -93,6 +93,14 @@ function About() {
 function Projects() {
   const projects = [
     {
+      title: 'gd-visualizer',
+      description: 'compare optimizer performance in 3d',
+      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
+      link: '/projects/gd-visualizer',
+      external: false,
+      seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
+    },
+    {
       title: 'docprep',
       description: 'msoffice plaintext extractor',
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
@@ -107,14 +115,6 @@ function Projects() {
       link: '/projects/ai-masters',
       external: false,
       seoDescription: 'UT Austin AI Masters coursework by bicrick - Deep learning, NLP, and machine learning projects'
-    },
-    {
-      title: 'gd-visualizer',
-      description: 'compare optimizer performance in 3d',
-      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
-      link: '/projects/gd-visualizer',
-      external: false,
-      seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
     }
     // Hidden projects - to be worked on later
     // {
