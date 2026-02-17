@@ -79,8 +79,9 @@ function About() {
             </p>
             <hr className="separator" />
             <div className="social">
-              <p>twitter: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
               <p>github: <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">bicrick</a></p>
+              <p>resume: <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">resume.bicrick.com</a></p>
+              <p>twitter: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
             </div>
           </div>
         </section>
