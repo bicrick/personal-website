@@ -5,7 +5,7 @@ import { InlineMath, BlockMath } from 'react-katex';
 function GDVisualizer() {
   return (
     <ProjectDetail 
-      title={<>gd-visualizer - <a href="https://gd.bicrick.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a></>}
+      title={<>gd-visualizer - <a href="https://gd.bicrick.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a><span style={{ marginLeft: 'auto' }}>November 2025</span></>}
       seoTitle="GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick"
       seoDescription="GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React."
       seoKeywords="bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js"

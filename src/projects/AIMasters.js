@@ -4,7 +4,7 @@ import ProjectDetail from '../components/ProjectDetail';
 function AIMasters() {
   return (
     <ProjectDetail 
-      title={<>artificial intelligence masters - <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>see program info</a></>}
+      title={<>artificial intelligence masters - <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>see program info</a><span style={{ marginLeft: 'auto' }}>Fall 2024 - Fall 2025</span></>}
       seoTitle="UT Austin AI Masters - Coursework by bicrick"
       seoDescription="UT Austin Master's in Artificial Intelligence coursework by bicrick (Patrick Brown) - Deep learning, NLP, transformers, model compression, reinforcement learning projects and takeaways."
       seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"
@@ -171,8 +171,14 @@ function AIMasters() {
         <strong>optimization:</strong> convex optimization theory covering gradient descent, Newton's method, duality, KKT conditions, and interior point methods.
       </p>
       
+      <h2>/ repository</h2>
+
+      <p>
+        The code for this coursework is hosted in a private <a href="https://github.com/bicrick/MSAI" target="_blank" rel="noopener noreferrer">GitHub repository</a>. It stays private for academic integrity reasons. Access is available upon request. Email patrickbrownai@gmail.com for inquiries.
+      </p>
+
       <p style={{ marginTop: '2rem', fontSize: '0.9rem' }}>
-        <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer" style={{ color: '#0066cc' }}>
+        <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer">
           UT Austin Master's in Artificial Intelligence Program
         </a>
       </p>

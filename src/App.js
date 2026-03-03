@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import './App.css';
 import Docprep from './projects/Docprep';
+import QwopPython from './projects/QwopPython';
 // import BallisticGD from './projects/BallisticGD';
 import GDVisualizer from './projects/GDVisualizer';
 // import FightingBalls from './projects/FightingBalls';
@@ -93,12 +94,12 @@ function About() {
 function Projects() {
   const projects = [
     {
-      title: 'gd-visualizer',
-      description: 'compare optimizer performance in 3d',
-      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
-      link: '/projects/gd-visualizer',
+      title: 'qwop-python',
+      description: 'gymnasium env for QWOP',
+      image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
+      link: '/projects/qwop-python',
       external: false,
-      seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
+      seoDescription: 'qwop-python by bicrick - Gymnasium environment for QWOP game, pure Python Box2D for RL training'
     },
     {
       title: 'docprep',
@@ -107,6 +108,14 @@ function Projects() {
       link: '/projects/docprep',
       external: false,
       seoDescription: 'docprep by bicrick - Microsoft Office plaintext extractor for AI-ready document processing'
+    },
+    {
+      title: 'gd-visualizer',
+      description: 'compare optimizer performance in 3d',
+      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
+      link: '/projects/gd-visualizer',
+      external: false,
+      seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
     },
     {
       title: 'artificial intelligence masters',
@@ -214,6 +223,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/docprep" element={<Docprep />} />
+        <Route path="/projects/qwop-python" element={<QwopPython />} />
         <Route path="/projects/ai-masters" element={<AIMasters />} />
         {/* Hidden project routes - to be worked on later */}
         {/* <Route path="/projects/ballistic-gd" element={<BallisticGD />} /> */}
