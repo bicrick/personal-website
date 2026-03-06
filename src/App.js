@@ -10,6 +10,7 @@ import GDVisualizer from './projects/GDVisualizer';
 // import FightingBalls from './projects/FightingBalls';
 // import Connect4 from './projects/Connect4';
 import AIMasters from './projects/AIMasters';
+import Notepadable from './projects/Notepadable';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
 
@@ -94,20 +95,20 @@ function About() {
 function Projects() {
   const projects = [
     {
+      title: 'notepadable',
+      description: 'text editor encoded in the URL',
+      image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`,
+      link: '/projects/notepadable',
+      external: false,
+      seoDescription: 'notepadable by bicrick - Minimalist text editor that encodes your document into the URL. No server, no database. Share a link, share the doc.'
+    },
+    {
       title: 'qwop-python',
       description: 'gymnasium env for QWOP',
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
       link: '/projects/qwop-python',
       external: false,
       seoDescription: 'qwop-python by bicrick - Gymnasium environment for QWOP game, pure Python Box2D for RL training'
-    },
-    {
-      title: 'docprep',
-      description: 'msoffice plaintext extractor',
-      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
-      link: '/projects/docprep',
-      external: false,
-      seoDescription: 'docprep by bicrick - Microsoft Office plaintext extractor for AI-ready document processing'
     },
     {
       title: 'gd-visualizer',
@@ -124,6 +125,14 @@ function Projects() {
       link: '/projects/ai-masters',
       external: false,
       seoDescription: 'UT Austin AI Masters coursework by bicrick - Deep learning, NLP, and machine learning projects'
+    },
+    {
+      title: 'docprep',
+      description: 'msoffice plaintext extractor',
+      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
+      link: '/projects/docprep',
+      external: false,
+      seoDescription: 'docprep by bicrick - Microsoft Office plaintext extractor for AI-ready document processing'
     }
     // Hidden projects - to be worked on later
     // {
@@ -228,6 +237,7 @@ function App() {
         {/* Hidden project routes - to be worked on later */}
         {/* <Route path="/projects/ballistic-gd" element={<BallisticGD />} /> */}
         <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
+        <Route path="/projects/notepadable" element={<Notepadable />} />
         {/* <Route path="/projects/fighting-balls" element={<FightingBalls />} /> */}
         {/* <Route path="/projects/connect4" element={<Connect4 />} /> */}
         <Route path="*" element={<Navigate to="/" replace />} />

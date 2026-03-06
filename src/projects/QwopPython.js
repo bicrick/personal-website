@@ -4,7 +4,7 @@ import ProjectDetail from '../components/ProjectDetail';
 function QwopPython() {
   return (
     <ProjectDetail 
-      title={<>qwop-python - <a href="https://github.com/bicrick/qwop-python" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>view repo</a><span style={{ marginLeft: 'auto' }}>March 2026</span></>}
+      title={<>qwop-python - <a href="https://github.com/bicrick/qwop-python" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>view repo</a><span style={{ marginLeft: 'auto' }}>February 2026</span></>}
       seoTitle="qwop-python - Gymnasium QWOP Environment by bicrick"
       seoDescription="qwop-python by bicrick - Pure Python Box2D Gymnasium environment for QWOP. Headless RL training, 20x faster than chromedriver-based alternatives."
       seoKeywords="bicrick, Patrick Brown, qwop-python, QWOP, Gymnasium, reinforcement learning, Box2D, RL training"
