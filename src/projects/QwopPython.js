@@ -50,12 +50,6 @@ function QwopPython() {
         Agentic AI can turn many browser-based JavaScript games into interactive pure Python gyms. Extract the source, break it apart, replicate the physics. The result is more performant and simpler for extracting observations. No DOM scraping, no chromedriver, just direct state access.
       </p>
 
-      <h2>/ new goals</h2>
-
-      <p>
-        Going after the world record. I have tried multiple different model architectures: PPO, QRDQN, DQN from imitation. I still have a ways to go before breaking the <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">world record (45.530)</a>. I will keep this page updated with results.
-      </p>
-
       <p>
         <a href="https://github.com/bicrick/qwop-python" target="_blank" rel="noopener noreferrer">check out the repo</a>
       </p>
