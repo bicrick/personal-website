@@ -12,11 +12,11 @@ function Notepadable() {
       seoImage="https://bicrick.com/images/notepadable/notepadable-logo.png"
     >
       <img 
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`} 
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`} 
         alt="notepadable" 
         width="1200"
         height="600"
-        style={{ width: '100%', marginBottom: '0.5rem' }}
+        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '2.5rem auto 2rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
         A minimalist text editor that encodes your entire document into the URL

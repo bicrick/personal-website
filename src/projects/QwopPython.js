@@ -12,7 +12,7 @@ function QwopPython() {
       seoImage="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
     >
       <img 
-        src={`${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`} 
+        src={`${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-header.gif`} 
         alt="qwop-python" 
         width="1200"
         height="600"
