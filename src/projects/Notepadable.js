@@ -41,14 +41,14 @@ function Notepadable() {
       </p>
 
       <img 
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-1200x600.png`} 
-        alt="notepadable home page" 
-        width="1200"
-        height="600"
-        style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-compression-pipeline.png`} 
+        alt="Flow from input text through dictionary lookup, variable-length encoding, bitstream packing, to compressed base64 output" 
+        width="3892"
+        height="5032"
+        style={{ width: '100%', height: 'auto', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
-        The home page: your text encoded in the URL, with a live demo panel
+        Hybrid compression: dictionary lookup, variable-length codes, bit packing, then onward to lz-string and URL-safe encoding
       </p>
 
       <p>
