@@ -59,10 +59,6 @@ function Notepadable() {
         Documents can be shared with a password. The encryption is entirely client-side using the Web Crypto API: AES-256-GCM for authenticated encryption, PBKDF2 with 100,000 iterations to derive the key from the password, and a random salt and IV for every encryption. A wrong password does not produce garbled output; decryption simply fails. The encrypted payload lives in the URL hash, same as unencrypted documents. The server never sees the password or the plaintext. For encrypted links, the <code>/raw</code> API accepts the password as a <code>?p=</code> query parameter so scripts can fetch decrypted content when needed.
       </p>
 
-      <p>
-        The editor supports Markdown and <a href="https://mermaid.js.org" target="_blank" rel="noopener noreferrer">Mermaid</a> diagrams. Toggle preview from the toolbar to render both. Mermaid diagrams go in fenced code blocks tagged <code>mermaid</code> and render inline: flowcharts, sequence diagrams, ER diagrams. Useful for specs, architecture notes, and documentation that lives in a shareable link.
-      </p>
-
       <h2>/ the /raw API and LLM workflows</h2>
       
       <p>

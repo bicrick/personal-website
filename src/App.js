@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -92,7 +92,61 @@ function About() {
   );
 }
 
+function SortDropdown({ value, onChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const options = [
+    { value: 'relevance', label: 'relevance' },
+    { value: 'date', label: 'newest first' }
+  ];
+  const selectedOption = options.find((option) => option.value === value);
+
+  const handleSelect = (nextValue) => {
+    onChange(nextValue);
+    setIsOpen(false);
+  };
+
+  return (
+    <div
+      className="sort-dropdown"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setIsOpen(false);
+        }
+      }}
+    >
+      <button
+        type="button"
+        className="sort-dropdown-button"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span>{selectedOption.label}</span>
+        <span className="sort-dropdown-caret" aria-hidden="true" />
+      </button>
+      {isOpen && (
+        <div className="sort-dropdown-menu" role="listbox" aria-label="sort projects">
+          {options.filter((option) => option.value !== value).map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`sort-dropdown-option${option.value === value ? ' active' : ''}`}
+              role="option"
+              aria-selected={option.value === value}
+              onClick={() => handleSelect(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Projects() {
+  const [sortBy, setSortBy] = useState('relevance');
+
   const projects = [
     {
       title: 'notepadable',
@@ -100,14 +154,18 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`,
       link: '/projects/notepadable',
       external: false,
+      relevanceRank: 4,
+      dateRank: 1,
       seoDescription: 'notepadable by bicrick - Minimalist text editor that encodes your document into the URL. No server, no database. Share a link, share the doc.'
     },
     {
       title: 'qwop-python',
-      description: 'gymnasium env for QWOP',
+      description: 'reinforcement learning gym environment for QWOP',
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
       link: '/projects/qwop-python',
       external: false,
+      relevanceRank: 1,
+      dateRank: 2,
       seoDescription: 'qwop-python by bicrick - Gymnasium environment for QWOP game, pure Python Box2D for RL training'
     },
     {
@@ -116,6 +174,8 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
       link: '/projects/gd-visualizer',
       external: false,
+      relevanceRank: 2,
+      dateRank: 3,
       seoDescription: 'GD Visualizer by bicrick - 3D gradient descent optimizer comparison tool'
     },
     {
@@ -124,6 +184,8 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       link: '/projects/ai-masters',
       external: false,
+      relevanceRank: 3,
+      dateRank: 5,
       seoDescription: 'UT Austin AI Masters coursework by bicrick - Deep learning, NLP, and machine learning projects'
     },
     {
@@ -132,6 +194,8 @@ function Projects() {
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
       link: '/projects/docprep',
       external: false,
+      relevanceRank: 5,
+      dateRank: 4,
       seoDescription: 'docprep by bicrick - Microsoft Office plaintext extractor for AI-ready document processing'
     }
     // Hidden projects - to be worked on later
@@ -158,6 +222,12 @@ function Projects() {
     // }
   ];
 
+  const sortedProjects = [...projects].sort((a, b) => (
+    sortBy === 'date'
+      ? a.dateRank - b.dateRank
+      : a.relevanceRank - b.relevanceRank
+  ));
+
   return (
     <div className="App_mainContainer">
       <SEO 
@@ -172,9 +242,15 @@ function Projects() {
           <Navigation />
         </header>
         <section>
-          <h2 className="projects-heading">selected projects</h2>
+          <div className="projects-header-row">
+            <h2 className="projects-heading">selected projects</h2>
+            <div className="projects-sort">
+              <span>sort</span>
+              <SortDropdown value={sortBy} onChange={setSortBy} />
+            </div>
+          </div>
           <div className="projects-grid">
-            {projects.map((project, index) => (
+            {sortedProjects.map((project, index) => (
               project.external ? (
                 <a 
                   key={index} 
