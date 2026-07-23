@@ -1,19 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './ProjectDetail.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 
 function Navigation() {
+  const { pathname } = useLocation();
+  const linkClass = (path) => (
+    pathname === path || (path === '/projects' && pathname.startsWith('/projects/'))
+      ? 'nav-link is-active'
+      : 'nav-link'
+  );
+
   return (
     <div className="nav">
-      <Link to="/">bicrick</Link>
+      <Link to="/" className={linkClass('/')}>bicrick</Link>
       <span className="nav-separator">·</span>
-      <Link to="/about">about</Link>
+      <Link to="/about" className={linkClass('/about')}>about</Link>
       <span className="nav-separator">·</span>
-      <Link to="/projects">projects</Link>
+      <Link to="/projects" className={linkClass('/projects')} aria-current={pathname.startsWith('/projects') ? 'page' : undefined}>projects</Link>
       <span className="nav-separator">·</span>
-      <Link to="/contact">contact</Link>
+      <Link to="/contact" className={linkClass('/contact')}>contact</Link>
     </div>
   );
 }
