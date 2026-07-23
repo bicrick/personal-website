@@ -27,7 +27,9 @@ function StructuredData() {
     },
     "sameAs": [
       "https://github.com/bicrick",
+      "https://www.linkedin.com/in/patrick-brown-470617195/",
       "https://x.com/patrickbbrown",
+      "https://cursor.com/@bicrick",
       "https://bicrick.com/contact"
     ],
     "knowsAbout": [

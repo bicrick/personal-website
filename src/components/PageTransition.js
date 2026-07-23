@@ -76,7 +76,7 @@ export function FadeNavigateProvider({ children }) {
   );
 }
 
-/** Fades the active chapter page; keep outside sticky nav. */
+/** Fades the active page; keep outside sticky nav. */
 export default function PageTransition({ children }) {
   const { phase } = useFadeNavigate();
   const shellClass = [

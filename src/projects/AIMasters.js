@@ -3,25 +3,29 @@ import ProjectDetail from '../components/ProjectDetail';
 
 function AIMasters() {
   return (
-    <ProjectDetail 
-      title={<>artificial intelligence masters - <a href="https://cdso.utexas.edu/msai" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>see program info</a><span style={{ marginLeft: 'auto' }}>Fall 2024 - Fall 2025</span></>}
+    <ProjectDetail
+      title="artificial intelligence masters"
+      date="Fall 2024 – Fall 2025"
+      linkHref="https://cdso.utexas.edu/msai"
+      linkLabel="see program info"
+      abstract="Notes from UT Austin's AI master's: the projects, coursework, and intuitions that stuck. For anyone who wants the highlights without reading the whole thing."
       seoTitle="UT Austin AI Masters - Coursework by bicrick"
       seoDescription="UT Austin Master's in Artificial Intelligence coursework by bicrick (Patrick Brown) - Deep learning, NLP, transformers, model compression, reinforcement learning projects and takeaways."
       seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"
       seoUrl="https://bicrick.com/projects/ai-masters"
       seoImage="https://bicrick.com/images/ai-masters/ut-msai-1200x600.png"
     >
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`} 
-        alt="UT Austin MSAI" 
+      <img
+        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`}
+        alt="UT Austin MSAI"
         width="1200"
         height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p className="project-caption">
         Motivations, coursework, and takeaways from my time at UT Austin
       </p>
-      
+
       <h2>/ motivations</h2>
       
       <p>

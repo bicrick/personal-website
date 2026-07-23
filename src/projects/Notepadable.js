@@ -3,25 +3,29 @@ import ProjectDetail from '../components/ProjectDetail';
 
 function Notepadable() {
   return (
-    <ProjectDetail 
-      title={<>notepadable - <a href="https://notepadable.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a><span style={{ marginLeft: 'auto' }}>March 2026</span></>}
+    <ProjectDetail
+      title="notepadable"
+      date="March 2026"
+      linkHref="https://notepadable.com"
+      linkLabel="try here"
+      abstract="A text editor that lives entirely in the URL. Share a link, share the doc. No server, no accounts, no upload. The document is the URL."
       seoTitle="notepadable - URL-Encoded Text Editor by bicrick"
       seoDescription="notepadable by bicrick (Patrick Brown) - Minimalist text editor that encodes your document into the URL. No server, no database. Share a link, share the doc. Built with TypeScript and CodeMirror 6."
       seoKeywords="bicrick, Patrick Brown, notepadable, text editor, URL encoding, markdown, PWA, CodeMirror, TypeScript"
       seoUrl="https://bicrick.com/projects/notepadable"
       seoImage="https://bicrick.com/images/notepadable/notepadable-logo.png"
     >
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`} 
-        alt="notepadable" 
+      <img
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`}
+        alt="notepadable"
         width="1200"
         height="600"
-        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '2.5rem auto 2rem' }}
+        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '0 auto 0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p className="project-caption">
         A minimalist text editor that encodes your entire document into the URL
       </p>
-      
+
       <h2>/ inspired by</h2>
       
       <p>

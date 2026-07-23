@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './CursorActivityHeatmap.css';
 
 const PROFILE_URL = 'https://cursor.com/@bicrick';
@@ -110,10 +110,30 @@ function buildYtdGrid(activityCounts, year) {
   return { weeks, levelFor, monthMarkers };
 }
 
+function useCoarsePointer() {
+  const [coarse, setCoarse] = useState(() => (
+    typeof window !== 'undefined'
+      && window.matchMedia('(hover: none), (pointer: coarse)').matches
+  ));
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: none), (pointer: coarse)');
+    const onChange = () => setCoarse(mq.matches);
+    onChange();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return coarse;
+}
+
 function CursorActivityHeatmap() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
   const [tooltip, setTooltip] = useState(null);
+  const [armedDate, setArmedDate] = useState(null);
+  const rootRef = useRef(null);
+  const isCoarse = useCoarsePointer();
 
   useEffect(() => {
     let cancelled = false;
@@ -147,6 +167,20 @@ function CursorActivityHeatmap() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isCoarse || !armedDate) return undefined;
+
+    const onPointerDown = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        setTooltip(null);
+        setArmedDate(null);
+      }
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [isCoarse, armedDate]);
+
   const year = useMemo(() => {
     if (data?.activityCounts?.length) {
       return Number(data.activityCounts[data.activityCounts.length - 1].date.slice(0, 4));
@@ -163,32 +197,58 @@ function CursorActivityHeatmap() {
     return null;
   }
 
-  const showTip = (event, day) => {
+  const placeTip = (event, day) => {
     if (!day.inRange) {
       setTooltip(null);
       return;
     }
     const rect = event.currentTarget.getBoundingClientRect();
+    const pad = 8;
+    const x = Math.min(
+      Math.max(rect.left + rect.width / 2, pad + 40),
+      window.innerWidth - pad - 40
+    );
     setTooltip({
       text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}`,
-      x: rect.left + rect.width / 2,
+      x,
       y: rect.top,
+      date: day.date,
     });
+  };
+
+  const clearTip = () => {
+    setTooltip(null);
+    setArmedDate(null);
+  };
+
+  const handleDotClick = (event, day) => {
+    if (!day.inRange || !isCoarse) return;
+
+    // First tap: reveal tooltip only. Second tap on the same blob: navigate.
+    if (armedDate === day.date) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    placeTip(event, day);
+    setArmedDate(day.date);
   };
 
   return (
     <a
-      className="cursor-activity"
+      ref={rootRef}
+      className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
       href={PROFILE_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Cursor token usage for @bicrick"
-      onMouseLeave={() => setTooltip(null)}
+      onMouseLeave={() => {
+        if (!isCoarse) clearTip();
+      }}
     >
       <span className="cursor-activity-label">token usage</span>
       <div className="cursor-activity-graph">
         <div className="cursor-activity-months">
-          <span className="cursor-activity-gutter" />
+          <span className="cursor-activity-gutter" aria-hidden="true" />
           <div
             className="cursor-activity-month-track"
             style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
@@ -205,7 +265,7 @@ function CursorActivityHeatmap() {
         </div>
 
         <div className="cursor-activity-body">
-          <div className="cursor-activity-days">
+          <div className="cursor-activity-days" aria-hidden="true">
             {DAY_LABELS.map((label, i) => (
               <span key={`day-${i}`}>{label}</span>
             ))}
@@ -215,25 +275,40 @@ function CursorActivityHeatmap() {
             className="cursor-activity-weeks"
             style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
           >
-            {grid.weeks.map((week, wi) => (
-              <div key={`week-${wi}`} className="cursor-activity-week">
-                {week.map((day) => {
-                  const level = grid.levelFor(day.count);
-                  return (
-                    <span
-                      key={day.date}
-                      className={`cursor-activity-dot level-${level < 0 ? 'empty' : level}`}
-                      onMouseEnter={(event) => showTip(event, day)}
-                      onMouseMove={(event) => showTip(event, day)}
-                      onFocus={(event) => showTip(event, day)}
-                      onBlur={() => setTooltip(null)}
-                    />
-                  );
-                })}
-              </div>
-            ))}
+              {grid.weeks.map((week, wi) => (
+                <div key={`week-${wi}`} className="cursor-activity-week">
+                  {week.map((day) => {
+                    const level = grid.levelFor(day.count);
+                    const isArmed = armedDate === day.date;
+                    return (
+                      <span
+                        key={day.date}
+                        data-date={day.date}
+                        className={[
+                          'cursor-activity-dot',
+                          `level-${level < 0 ? 'empty' : level}`,
+                          isArmed ? 'is-armed' : '',
+                        ].filter(Boolean).join(' ')}
+                        onMouseEnter={(event) => {
+                          if (!isCoarse) placeTip(event, day);
+                        }}
+                        onMouseMove={(event) => {
+                          if (!isCoarse) placeTip(event, day);
+                        }}
+                        onFocus={(event) => {
+                          if (!isCoarse) placeTip(event, day);
+                        }}
+                        onBlur={() => {
+                          if (!isCoarse) clearTip();
+                        }}
+                        onClick={(event) => handleDotClick(event, day)}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
       </div>
 
       {tooltip && (

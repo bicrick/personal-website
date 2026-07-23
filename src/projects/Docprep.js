@@ -3,25 +3,29 @@ import ProjectDetail from '../components/ProjectDetail';
 
 function Docprep() {
   return (
-    <ProjectDetail 
-      title={<>docprep - <a href="https://docprep.site" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a><span style={{ marginLeft: 'auto' }}>December 2026</span></>}
+    <ProjectDetail
+      title="docprep"
+      date="December 2025"
+      linkHref="https://docprep.site"
+      linkLabel="try here"
+      abstract="Turns bloated Microsoft Office docs into AI-ready plaintext, so LLMs get the signal without a gigabyte of formatting noise, and corporate file trees become indexable."
       seoTitle="docprep - Microsoft Office Plaintext Extractor by bicrick"
       seoDescription="docprep by bicrick (Patrick Brown) - Desktop application that extracts Microsoft Office documents into plaintext for AI-ready document processing. Built with PyWebView and React."
       seoKeywords="bicrick, Patrick Brown, docprep, Microsoft Office, plaintext extractor, AI documents, PyWebView, React"
       seoUrl="https://bicrick.com/projects/docprep"
       seoImage="https://bicrick.com/images/docprep/docprep-1200x600.png"
     >
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`} 
-        alt="Docprep" 
+      <img
+        src={`${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`}
+        alt="Docprep"
         width="1200"
         height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p className="project-caption">
         A plaintext extractor for Microsoft Office documents
       </p>
-      
+
       <h2>/ how it started</h2>
       
       <p>

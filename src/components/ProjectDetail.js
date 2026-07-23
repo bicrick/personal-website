@@ -25,24 +25,64 @@ function Navigation() {
   );
 }
 
-function ProjectDetail({ title, children, seoTitle, seoDescription, seoKeywords, seoUrl, seoImage }) {
+function ProjectDetail({
+  title,
+  date,
+  linkHref,
+  linkLabel,
+  abstract,
+  children,
+  seoTitle,
+  seoDescription,
+  seoKeywords,
+  seoUrl,
+  seoImage,
+}) {
   return (
-    <div className="App_mainContainer">
-      <SEO 
+    <div className="App_mainContainer landing-page">
+      <SEO
         ogTitle={seoTitle || `${title} - bicrick`}
         description={seoDescription || `${title} project by bicrick (Patrick Brown)`}
         keywords={seoKeywords || `bicrick, Patrick Brown, ${title}, Project`}
-        url={seoUrl || `https://bicrick.com/projects/${title.toLowerCase().replace(/\s+/g, '-')}`}
-        image={seoImage || "https://bicrick.com/casual_logo.png"}
+        url={seoUrl || `https://bicrick.com/projects/${String(title).toLowerCase().replace(/\s+/g, '-')}`}
+        image={seoImage || 'https://bicrick.com/casual_logo.png'}
       />
       <StructuredData />
-      <main className="App_mainColumn project-detail">
-        <header className="App_header">
+      <header className="App_header landing-nav">
+        <div className="App_mainColumn landing-nav-inner project-nav-inner">
           <Navigation />
-        </header>
+        </div>
+      </header>
+      <main className="App_mainColumn landing project-detail">
         <article className="project-article">
-          <h3 className="project-subtitle">{title}</h3>
-          {children}
+          <Link to="/projects" className="project-back">
+            ← projects
+          </Link>
+          <header className="project-header">
+            <h1 className="project-title">{title}</h1>
+            <div className="project-meta">
+              {linkHref && linkLabel && (
+                <a href={linkHref} target="_blank" rel="noopener noreferrer">
+                  {linkLabel}
+                </a>
+              )}
+              {linkHref && linkLabel && date && (
+                <span className="project-meta-sep" aria-hidden="true">·</span>
+              )}
+              {date && <span className="project-date">{date}</span>}
+            </div>
+          </header>
+
+          {abstract && (
+            <section className="project-abstract" aria-label="abstract">
+              <h2>/ abstract</h2>
+              <p>{abstract}</p>
+            </section>
+          )}
+
+          <div className="project-body">
+            {children}
+          </div>
         </article>
       </main>
     </div>

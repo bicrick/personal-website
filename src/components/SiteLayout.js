@@ -3,11 +3,11 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import PageTransition, { FadeNavigateProvider, useFadeNavigate } from './PageTransition';
-import { CHAPTER_SEO, normalizeChapterPath } from '../constants/chapters';
+import { PAGE_SEO, normalizePagePath } from '../constants/pages';
 
 function Navigation() {
   const { pathname } = useLocation();
-  const currentPath = normalizeChapterPath(pathname);
+  const currentPath = normalizePagePath(pathname);
   const { navigateWithFade } = useFadeNavigate();
 
   const linkClass = (path) => (
@@ -71,7 +71,8 @@ function Navigation() {
 
 function SiteChrome() {
   const { pathname } = useLocation();
-  const seo = CHAPTER_SEO[normalizeChapterPath(pathname)] || CHAPTER_SEO['/'];
+  const currentPath = normalizePagePath(pathname);
+  const seo = PAGE_SEO[currentPath] || PAGE_SEO['/'];
 
   return (
     <div className="App_mainContainer landing-page">

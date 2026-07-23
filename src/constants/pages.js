@@ -1,4 +1,4 @@
-export const CHAPTER_SEO = {
+export const PAGE_SEO = {
   '/': {
     ogTitle: 'bicrick - Patrick Brown | Data Engineer & Software Developer',
     description: 'Patrick Brown (bicrick) - Data Engineer at H-E-B specializing in large-scale ML data preparation. Pipelines, analytics dashboards, GCP and AWS. Austin, TX.',
@@ -24,7 +24,7 @@ export const CHAPTER_SEO = {
   },
 };
 
-export function normalizeChapterPath(pathname) {
+export function normalizePagePath(pathname) {
   if (!pathname) return '/';
   if (pathname === '/') return '/';
   return pathname.replace(/\/+$/, '') || '/';

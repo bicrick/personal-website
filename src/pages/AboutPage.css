@@ -1,0 +1,43 @@
+.page-section.about-page {
+  padding-top: var(--page-pad-top);
+  padding-bottom: var(--page-pad-bottom);
+}
+
+.about-compose {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.about-lead {
+  width: 100%;
+}
+
+.about-notes {
+  width: 100%;
+}
+
+.about-heatmap {
+  margin: 1.75rem 0 2.25rem;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .page-section.about-page {
+    padding-bottom: 3rem;
+  }
+
+  .about-heading {
+    font-size: 1.7rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .about-lead,
+  .about-notes {
+    font-size: inherit;
+  }
+
+  .about-heatmap {
+    margin: 1.5rem 0 2rem;
+  }
+}

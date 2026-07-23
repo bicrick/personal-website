@@ -5,6 +5,13 @@ export default function HomePage() {
     <section className="page-section home-section" aria-label="home">
       <div className="page-section-inner home-inner">
         <div className="home-compose">
+          <img
+            src={`${process.env.PUBLIC_URL}/about/headshot.jpg`}
+            alt="Patrick Brown"
+            className="home-pic"
+            width="320"
+            height="320"
+          />
           <div className="home-copy">
             <h2 className="home-heading">Patrick Brown</h2>
             <p className="home-bio">
@@ -20,13 +27,6 @@ export default function HomePage() {
               <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
             </div>
           </div>
-          <img
-            src={`${process.env.PUBLIC_URL}/about/headshot.jpg`}
-            alt="Patrick Brown"
-            className="home-pic"
-            width="260"
-            height="260"
-          />
         </div>
       </div>
     </section>

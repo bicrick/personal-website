@@ -4,25 +4,29 @@ import { InlineMath, BlockMath } from 'react-katex';
 
 function GDVisualizer() {
   return (
-    <ProjectDetail 
-      title={<>gd-visualizer - <a href="https://gd.bicrick.com" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb' }}>try here</a><span style={{ marginLeft: 'auto' }}>November 2025</span></>}
+    <ProjectDetail
+      title="gd-visualizer"
+      date="November 2025"
+      linkHref="https://gd.bicrick.com"
+      linkLabel="try here"
+      abstract="An interactive 3D tool for watching optimizers race down loss landscapes, so you can see why SGD, Adam, and momentum find different solutions, and test new ideas before burning GPU time."
       seoTitle="GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick"
       seoDescription="GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React."
       seoKeywords="bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js"
       seoUrl="https://bicrick.com/projects/gd-visualizer"
       seoImage="https://bicrick.com/images/gd-visualizer/gd-visualizer-1200x600.png"
     >
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`} 
-        alt="GD Visualizer" 
+      <img
+        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`}
+        alt="GD Visualizer"
         width="1200"
         height="600"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p className="project-caption">
         A 3D visualization tool for understanding how optimizers navigate loss landscapes
       </p>
-      
+
       <h2>/ how it started</h2>
       
       <p>

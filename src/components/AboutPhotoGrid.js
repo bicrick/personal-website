@@ -2,12 +2,12 @@ import React, { useEffect, useId, useState } from 'react';
 import './AboutPhotoGrid.css';
 
 const PHOTOS = [
-  { src: `${process.env.PUBLIC_URL}/casual_logo.png`, alt: 'bicrick' },
   { src: `${process.env.PUBLIC_URL}/about/img-4149.jpg`, alt: 'With puppy' },
   { src: `${process.env.PUBLIC_URL}/about/img-5095.jpg`, alt: 'Outdoor selfie' },
   { src: `${process.env.PUBLIC_URL}/about/img-5482.jpg`, alt: 'Pumpkin Open' },
   { src: `${process.env.PUBLIC_URL}/about/golf-swing.gif`, alt: 'Golf swing' },
   { src: `${process.env.PUBLIC_URL}/about/img-5371.png`, alt: 'Portrait' },
+  { src: `${process.env.PUBLIC_URL}/about/img-4643.gif`, alt: 'Track race' },
 ];
 
 function AboutPhotoGrid() {
