@@ -13,6 +13,7 @@ import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
+import CursorActivityHeatmap from './components/CursorActivityHeatmap';
 
 function Navigation() {
   return (
@@ -22,6 +23,8 @@ function Navigation() {
       <Link to="/about">about</Link>
       <span className="nav-separator">·</span>
       <Link to="/projects">projects</Link>
+      <span className="nav-separator">·</span>
+      <Link to="/contact">contact</Link>
     </div>
   );
 }
@@ -31,7 +34,7 @@ function Home() {
     <div className="App_mainContainer">
       <SEO 
         ogTitle="bicrick - Patrick Brown | Data Engineer & Software Developer"
-        description="Patrick Brown (bicrick) - Data Engineer at H-E-B building ETL pipelines and data infrastructure. Software developer working in Austin, TX."
+        description="Patrick Brown (bicrick) - Data Engineer at H-E-B specializing in large-scale ML data preparation. Pipelines, analytics dashboards, GCP and AWS. Austin, TX."
         url="https://bicrick.com"
       />
       <StructuredData />
@@ -41,10 +44,9 @@ function Home() {
         </header>
         <section>
           <h2 className="home-heading">patrick brown</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="home-pic" width="200" height="200" />
+          <img src={`${process.env.PUBLIC_URL}/about/headshot.jpg`} alt="Patrick Brown" className="home-pic" width="200" height="200" />
           <div className="home-content">
-            <p>I build software to solve problems.</p>
-            <p>currently working as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the Austin, TX area.</p>
+            <p>data engineer specializing in large-scale ML data preparation at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>. living in the austin, tx area.</p>
           </div>
         </section>
       </main>
@@ -57,9 +59,9 @@ function About() {
     <div className="App_mainContainer">
       <SEO 
         ogTitle="About bicrick - Patrick Brown | Data Engineer"
-        description="About Patrick Brown (bicrick) - Data Engineer at H-E-B, UT Austin AI Masters graduate, software developer in Austin, TX."
+        description="About Patrick Brown (bicrick) - Data Engineer at H-E-B focused on large-scale ML data prep, pipelines, analytics dashboards, and cloud infrastructure on GCP and AWS. UT Austin AI Masters. Austin, TX."
         url="https://bicrick.com/about"
-        keywords="bicrick, Patrick Brown, About, Data Engineer, Software Developer, Austin, HEB, UT Austin, AI Masters"
+        keywords="bicrick, Patrick Brown, About, Data Engineer, ML Data Prep, GCP, AWS, Austin, HEB, UT Austin, AI Masters"
       />
       <StructuredData />
       <main className="App_mainColumn">
@@ -68,16 +70,29 @@ function About() {
         </header>
         <section>
           <h2 className="about-heading">about</h2>
-          <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick - Patrick Brown" className="about-pic" width="200" height="200" />
+          <div className="about-pics">
+            <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick" className="about-pic" width="200" height="200" />
+            <img src={`${process.env.PUBLIC_URL}/about/img-4149.jpg`} alt="With puppy" className="about-pic" width="200" height="200" />
+            <img src={`${process.env.PUBLIC_URL}/about/img-5095.jpg`} alt="Outdoor selfie" className="about-pic" width="200" height="200" />
+            <img src={`${process.env.PUBLIC_URL}/about/img-5482.jpg`} alt="Pumpkin Open" className="about-pic" width="200" height="200" />
+            <img src={`${process.env.PUBLIC_URL}/about/golf-swing.gif`} alt="Golf swing" className="about-pic" width="200" height="200" />
+          </div>
           <div className="about-content">
             <p>
-              I'm an engineer working in the Austin, TX area. I studied Computer Engineering and Artificial Intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a Data Engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a> building ETL pipelines and data infrastructure.
+              engineer in the austin, tx area. studied computer engineering and artificial intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>. currently a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>.
             </p>
             <p>
-              Generally I am pulled by what intrigues me and not pushed by what I am supposed to do. I like to experiment with different agentic development workflows. I currently use Cursor and Claude Code.
+              work spans large-scale ML data prep, pipelines, full-stack analytics dashboards, and cloud infrastructure. experienced on GCP and AWS.
             </p>
             <p>
-              These days I play a lot of golf (+1 handicap). I like puzzle/automation games (Factorio, Minecraft).
+              generally pulled by what intrigues me, not pushed by what I'm supposed to do. <Link to="/projects">see projects</Link>.
+            </p>
+            <p>
+              these days I am constantly experimenting with different agentic development workflows. I use <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">Cursor</a> and Claude Code.
+            </p>
+            <CursorActivityHeatmap />
+            <p>
+              these days I play a lot of golf (+1 handicap). like puzzle/automation games (factorio, minecraft).
             </p>
             <hr className="separator" />
             <div className="social">
@@ -85,6 +100,33 @@ function About() {
               <p>resume: <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">pdf</a></p>
               <p>x: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
             </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function Contact() {
+  return (
+    <div className="App_mainContainer">
+      <SEO
+        ogTitle="Contact bicrick - Patrick Brown"
+        description="Contact Patrick Brown (bicrick) — email patrickbrownai@gmail.com"
+        url="https://bicrick.com/contact"
+        keywords="bicrick, Patrick Brown, Contact, Email"
+      />
+      <StructuredData />
+      <main className="App_mainColumn">
+        <header className="App_header">
+          <Navigation />
+        </header>
+        <section>
+          <h2 className="contact-heading">contact</h2>
+          <div className="contact-content">
+            <p>
+              email: <a href="mailto:patrickbrownai@gmail.com">patrickbrownai@gmail.com</a>
+            </p>
           </div>
         </section>
       </main>
@@ -307,6 +349,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/projects/docprep" element={<Docprep />} />
         <Route path="/projects/qwop-python" element={<QwopPython />} />
         <Route path="/projects/ai-masters" element={<AIMasters />} />

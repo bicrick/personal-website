@@ -1,0 +1,219 @@
+.cursor-activity {
+  --ca-ink: #21232d;
+  --ca-mute: #9a9a9a;
+  --ca-blue: #2563eb;
+  --ca-0: #ececec;
+  --ca-1: #cfe0ff;
+  --ca-2: #9dbffc;
+  --ca-3: #6b9ef5;
+  --ca-4: #2563eb;
+
+  display: block;
+  color: inherit;
+  margin: 1.25em 0 1.75em;
+  max-width: 100%;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* kill global link underline on this block */
+.cursor-activity:after {
+  content: none !important;
+  display: none !important;
+}
+
+.cursor-activity:hover,
+.cursor-activity:focus-visible {
+  color: var(--ca-blue);
+}
+
+.cursor-activity:hover .cursor-activity-stat strong,
+.cursor-activity:focus-visible .cursor-activity-stat strong {
+  color: var(--ca-blue);
+}
+
+.cursor-activity:active .cursor-activity-stat strong {
+  color: var(--ca-blue);
+}
+
+.cursor-activity-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.cursor-activity-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.cursor-activity-stat span {
+  color: var(--ca-mute);
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.cursor-activity:hover .cursor-activity-stat span,
+.cursor-activity:focus-visible .cursor-activity-stat span {
+  color: #7aa2f5;
+}
+
+.cursor-activity-stat strong {
+  color: var(--ca-ink);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+}
+
+.cursor-activity-graph {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.cursor-activity-months {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.3rem;
+}
+
+.cursor-activity-gutter {
+  width: 12px;
+  flex: 0 0 12px;
+}
+
+.cursor-activity-month-track {
+  display: grid;
+  flex: 1;
+  min-width: 480px;
+  color: var(--ca-mute);
+  font-size: 0.65rem;
+}
+
+.cursor-activity-body {
+  display: flex;
+  gap: 5px;
+  min-width: 500px;
+}
+
+.cursor-activity-days {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  gap: 3px;
+  width: 12px;
+  flex: 0 0 12px;
+  color: var(--ca-mute);
+  font-size: 0.6rem;
+  line-height: 10px;
+}
+
+.cursor-activity-weeks {
+  display: grid;
+  gap: 3px;
+  flex: 1;
+}
+
+.cursor-activity-week {
+  display: grid;
+  grid-template-rows: repeat(7, 10px);
+  gap: 3px;
+}
+
+.cursor-activity-dot {
+  width: 10px;
+  height: 10px;
+  margin: 0 auto;
+  border-radius: 1px;
+  background: var(--ca-0);
+  transform: scale(1);
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease,
+    opacity 0.15s ease;
+}
+
+.cursor-activity-dot.level-empty {
+  background: transparent;
+  pointer-events: none;
+}
+
+.cursor-activity-dot.level-0 { background: var(--ca-0); }
+.cursor-activity-dot.level-1 { background: var(--ca-1); }
+.cursor-activity-dot.level-2 { background: var(--ca-2); }
+.cursor-activity-dot.level-3 { background: var(--ca-3); }
+.cursor-activity-dot.level-4 { background: var(--ca-4); }
+
+.cursor-activity:hover .cursor-activity-dot.level-1,
+.cursor-activity:focus-visible .cursor-activity-dot.level-1 {
+  background: #b7d0ff;
+}
+
+.cursor-activity:hover .cursor-activity-dot.level-2,
+.cursor-activity:focus-visible .cursor-activity-dot.level-2 {
+  background: #8bb4fb;
+}
+
+.cursor-activity:hover .cursor-activity-dot.level-3,
+.cursor-activity:focus-visible .cursor-activity-dot.level-3 {
+  background: #5a94f3;
+}
+
+.cursor-activity:hover .cursor-activity-dot.level-4,
+.cursor-activity:focus-visible .cursor-activity-dot.level-4,
+.cursor-activity:active .cursor-activity-dot.level-4 {
+  background: var(--ca-blue);
+}
+
+.cursor-activity-dot:not(.level-empty):hover {
+  transform: scale(1.45);
+  background: var(--ca-blue);
+  opacity: 1;
+}
+
+.cursor-activity-tip {
+  position: fixed;
+  z-index: 20;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  background: #21232d;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: cursor-tip-in 0.12s ease;
+}
+
+.cursor-activity-tip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 6px;
+  height: 6px;
+  background: #21232d;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+@keyframes cursor-tip-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 4px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 8px));
+  }
+}
+
+@media (max-width: 800px) {
+  .cursor-activity-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

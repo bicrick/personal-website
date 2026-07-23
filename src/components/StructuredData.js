@@ -8,7 +8,8 @@ function StructuredData() {
     "name": "Patrick Brown",
     "alternateName": "bicrick",
     "url": "https://bicrick.com",
-    "image": "https://bicrick.com/casual_logo.png",
+    "image": "https://bicrick.com/about/headshot.jpg",
+    "email": "mailto:patrickbrownai@gmail.com",
     "jobTitle": "Data Engineer",
     "worksFor": {
       "@type": "Organization",
@@ -26,14 +27,18 @@ function StructuredData() {
     },
     "sameAs": [
       "https://github.com/bicrick",
-      "https://x.com/patrickbbrown"
+      "https://x.com/patrickbbrown",
+      "https://bicrick.com/contact"
     ],
     "knowsAbout": [
       "Data Engineering",
-      "Software Development",
+      "Machine Learning Data Preparation",
+      "ML Pipelines",
+      "Analytics Dashboards",
+      "Google Cloud Platform",
+      "Amazon Web Services",
       "Artificial Intelligence",
-      "Machine Learning",
-      "ETL Pipelines",
+      "Software Development",
       "Python",
       "React"
     ]

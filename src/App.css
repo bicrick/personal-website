@@ -96,13 +96,34 @@ section {
   margin-bottom: 1em;
 }
 
+.about-pics {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 1.25em;
+  width: 100%;
+}
+
 .about-pic {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 1em;
+  flex: 1 1 0;
+  width: 0;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  min-width: 0;
 }
 
 .about-content {
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+/* Contact page */
+.contact-heading {
+  margin-bottom: 1em;
+}
+
+.contact-content {
   font-size: inherit;
   line-height: 1.5;
 }
@@ -275,6 +296,7 @@ section {
 .home-pic {
   width: 200px;
   height: 200px;
+  object-fit: cover;
   margin-bottom: 1em;
 }
 

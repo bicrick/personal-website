@@ -12,6 +12,8 @@ function Navigation() {
       <Link to="/about">about</Link>
       <span className="nav-separator">·</span>
       <Link to="/projects">projects</Link>
+      <span className="nav-separator">·</span>
+      <Link to="/contact">contact</Link>
     </div>
   );
 }
