@@ -351,12 +351,15 @@ section {
   margin-bottom: 0.5rem;
 }
 
-.projects-grid a {
+.projects-grid > a,
+.projects-grid > .project-card {
   position: relative;
   z-index: 1;
 }
 
-.projects-grid a:hover {
+.projects-grid > a:hover,
+.projects-grid > .project-card:hover,
+.projects-grid > .project-card.is-expanded {
   z-index: 10;
 }
 

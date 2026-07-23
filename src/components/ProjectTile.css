@@ -1,0 +1,129 @@
+.project-tile-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.project-card--choosable {
+  isolation: isolate;
+}
+
+.project-card-trigger {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+  font: inherit;
+}
+
+.project-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #e0e0e0;
+}
+
+.project-choice-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.project-choice-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.project-choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-pixel);
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.project-choice:after {
+  display: none;
+}
+
+.project-choice span {
+  position: relative;
+  z-index: 1;
+}
+
+.project-choice--app {
+  flex: 2 1 66.666%;
+  background: rgba(33, 35, 45, 0.72);
+}
+
+.project-choice--blog {
+  flex: 1 1 33.333%;
+  background: rgba(33, 35, 45, 0.58);
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.project-choice--app:hover,
+.project-choice--app:focus-visible {
+  background: rgba(33, 35, 45, 0.86);
+  outline: none;
+}
+
+.project-choice--blog:hover,
+.project-choice--blog:focus-visible {
+  background: rgba(33, 35, 45, 0.78);
+  outline: none;
+}
+
+.project-card--choosable.is-expanded {
+  z-index: 10;
+  transform: scale(1.02);
+  filter: drop-shadow(0 10px 20px rgba(33, 35, 45, 0.16));
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 800px) {
+  .project-choice {
+    font-size: 1.15rem;
+  }
+
+  .project-card--choosable.is-expanded {
+    filter: drop-shadow(10px 10px 12px rgba(0, 0, 0, 0.45));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-choice-panel,
+  .project-choice {
+    transition: none;
+  }
+}

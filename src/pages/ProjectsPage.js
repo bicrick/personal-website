@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import ProjectTile from '../components/ProjectTile';
 
 function SortDropdown({ value, onChange }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,14 +55,15 @@ function SortDropdown({ value, onChange }) {
 
 export default function ProjectsPage() {
   const [sortBy, setSortBy] = useState('relevance');
+  const [expandedKey, setExpandedKey] = useState(null);
 
   const projects = [
     {
       title: 'notepadable',
       description: 'text editor encoded in the URL',
       image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`,
-      link: '/projects/notepadable',
-      external: false,
+      blogLink: '/projects/notepadable',
+      appLink: 'https://notepadable.com',
       relevanceRank: 4,
       dateRank: 1,
     },
@@ -70,8 +71,7 @@ export default function ProjectsPage() {
       title: 'qwop-python',
       description: 'reinforcement learning gym environment for QWOP',
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
-      link: '/projects/qwop-python',
-      external: false,
+      blogLink: '/projects/qwop-python',
       relevanceRank: 1,
       dateRank: 2,
     },
@@ -79,8 +79,8 @@ export default function ProjectsPage() {
       title: 'gd-visualizer',
       description: 'compare optimizer performance in 3d',
       image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
-      link: '/projects/gd-visualizer',
-      external: false,
+      blogLink: '/projects/gd-visualizer',
+      appLink: 'https://gd.bicrick.com',
       relevanceRank: 2,
       dateRank: 3,
     },
@@ -88,8 +88,7 @@ export default function ProjectsPage() {
       title: 'artificial intelligence masters',
       description: 'coursework and takeaways',
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
-      link: '/projects/ai-masters',
-      external: false,
+      blogLink: '/projects/ai-masters',
       relevanceRank: 3,
       dateRank: 5,
     },
@@ -97,8 +96,8 @@ export default function ProjectsPage() {
       title: 'docprep',
       description: 'msoffice plaintext extractor',
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
-      link: '/projects/docprep',
-      external: false,
+      blogLink: '/projects/docprep',
+      appLink: 'https://docprep.site',
       relevanceRank: 5,
       dateRank: 4,
     },
@@ -121,45 +120,20 @@ export default function ProjectsPage() {
           </div>
         </div>
         <div className="projects-grid">
-          {sortedProjects.map((project) => (
-            project.external ? (
-              <a
-                key={project.link}
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div className="project-card">
-                  {project.image ? (
-                    <img src={project.image} alt={project.title} width="1200" height="600" />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
-                  )}
-                  <div className="project-overlay">
-                    <div>{project.title} - {project.description}</div>
-                  </div>
-                </div>
-              </a>
-            ) : (
-              <Link
-                key={project.link}
-                to={project.link}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <div className="project-card">
-                  {project.image ? (
-                    <img src={project.image} alt={project.title} width="1200" height="600" />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', background: '#e0e0e0' }} />
-                  )}
-                  <div className="project-overlay">
-                    <div>{project.title} - {project.description}</div>
-                  </div>
-                </div>
-              </Link>
-            )
-          ))}
+          {sortedProjects.map((project) => {
+            const key = project.blogLink || project.link || project.title;
+            return (
+              <ProjectTile
+                key={key}
+                project={project}
+                isExpanded={expandedKey === key}
+                onToggle={() => {
+                  setExpandedKey((current) => (current === key ? null : key));
+                }}
+                onCollapse={() => setExpandedKey(null)}
+              />
+            );
+          })}
         </div>
         <hr className="separator projects-separator" />
         <p>
