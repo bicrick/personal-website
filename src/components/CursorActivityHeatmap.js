@@ -2,15 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import './CursorActivityHeatmap.css';
 
 const PROFILE_URL = 'https://cursor.com/@bicrick';
-const MONTH_LABELS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-const DAY_LABELS = ['', 'M', '', 'W', '', 'F', ''];
-
-function formatDuration(seconds) {
-  if (!seconds || seconds <= 0) return '0h';
-  const hours = seconds / 3600;
-  if (hours >= 10) return `${Math.round(hours)}h`;
-  return `${hours.toFixed(1).replace(/\.0$/, '')}h`;
-}
+const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
 function formatCount(count) {
   if (count >= 1_000_000_000) return `${(count / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}b`;
@@ -28,19 +21,28 @@ function formatDayLabel(iso) {
   });
 }
 
-function buildYearGrid(activityCounts, year) {
+function utcToday() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+}
+
+function buildYtdGrid(activityCounts, year) {
   const byDate = new Map(
     (activityCounts || []).map((row) => [row.date, Number(row.count) || 0])
   );
 
   const jan1 = new Date(Date.UTC(year, 0, 1));
-  const dec31 = new Date(Date.UTC(year, 11, 31));
+  const today = utcToday();
+  const end = today.getUTCFullYear() === year
+    ? today
+    : new Date(Date.UTC(year, 11, 31));
 
+  // Week columns start on Sunday, matching GitHub-style calendars
   const gridStart = new Date(jan1);
   gridStart.setUTCDate(jan1.getUTCDate() - jan1.getUTCDay());
 
-  const gridEnd = new Date(dec31);
-  gridEnd.setUTCDate(dec31.getUTCDate() + (6 - dec31.getUTCDay()));
+  const gridEnd = new Date(end);
+  gridEnd.setUTCDate(end.getUTCDate() + (6 - end.getUTCDay()));
 
   const weeks = [];
   const cursor = new Date(gridStart);
@@ -49,19 +51,27 @@ function buildYearGrid(activityCounts, year) {
     const week = [];
     for (let d = 0; d < 7; d += 1) {
       const iso = cursor.toISOString().slice(0, 10);
-      const inYear = cursor.getUTCFullYear() === year;
+      const inRange = cursor >= jan1 && cursor <= end;
       week.push({
         date: iso,
-        count: inYear ? byDate.get(iso) || 0 : null,
+        count: inRange ? byDate.get(iso) || 0 : null,
         month: cursor.getUTCMonth(),
-        inYear,
+        inRange,
       });
       cursor.setUTCDate(cursor.getUTCDate() + 1);
     }
-    weeks.push(week);
+
+    // Keep only weeks that touch the YTD window
+    if (week.some((day) => day.inRange)) {
+      weeks.push(week);
+    }
   }
 
-  const values = [...byDate.values()].filter((v) => v > 0).sort((a, b) => a - b);
+  const values = [...byDate.entries()]
+    .filter(([date, count]) => count > 0 && date >= `${year}-01-01` && date <= end.toISOString().slice(0, 10))
+    .map(([, count]) => count)
+    .sort((a, b) => a - b);
+
   const q = (p) => {
     if (!values.length) return 1;
     const idx = Math.min(values.length - 1, Math.floor(values.length * p));
@@ -80,9 +90,21 @@ function buildYearGrid(activityCounts, year) {
 
   const monthMarkers = MONTH_LABELS.map((label, monthIndex) => {
     const weekIndex = weeks.findIndex((week) =>
-      week.some((day) => day.inYear && day.month === monthIndex && day.date.endsWith('-01'))
+      week.some((day) => day.inRange && day.month === monthIndex && day.date.endsWith('-01'))
     );
-    return { label, weekIndex: weekIndex === -1 ? null : weekIndex };
+    // Also label months that start mid-grid without a visible 1st in-range cell
+    // (e.g. month begins before jan1 week padding) — prefer first in-range day of month
+    const fallbackIndex = weeks.findIndex((week) =>
+      week.some((day) => day.inRange && day.month === monthIndex)
+    );
+    return {
+      label,
+      weekIndex: weekIndex === -1 ? (fallbackIndex === -1 ? null : fallbackIndex) : weekIndex,
+    };
+  }).filter((month, i, arr) => {
+    if (month.weekIndex == null) return false;
+    // Avoid stacking two labels on the same week column
+    return arr.findIndex((m) => m.weekIndex === month.weekIndex) === i;
   });
 
   return { weeks, levelFor, monthMarkers };
@@ -133,7 +155,7 @@ function CursorActivityHeatmap() {
   }, [data]);
 
   const grid = useMemo(
-    () => buildYearGrid(data?.activityCounts || [], year),
+    () => buildYtdGrid(data?.activityCounts || [], year),
     [data, year]
   );
 
@@ -141,10 +163,8 @@ function CursorActivityHeatmap() {
     return null;
   }
 
-  const { stats } = data;
-
   const showTip = (event, day) => {
-    if (!day.inYear) {
+    if (!day.inRange) {
       setTooltip(null);
       return;
     }
@@ -162,45 +182,25 @@ function CursorActivityHeatmap() {
       href={PROFILE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Cursor activity for @bicrick"
+      aria-label="Cursor token usage for @bicrick"
       onMouseLeave={() => setTooltip(null)}
     >
-      <div className="cursor-activity-stats">
-        <div className="cursor-activity-stat">
-          <span>longest agent</span>
-          <strong>{formatDuration(stats.longestAgentSeconds)}</strong>
-        </div>
-        <div className="cursor-activity-stat">
-          <span>agents</span>
-          <strong>{stats.agents}</strong>
-        </div>
-        <div className="cursor-activity-stat">
-          <span>longest streak</span>
-          <strong>{stats.longestStreak}d</strong>
-        </div>
-        <div className="cursor-activity-stat">
-          <span>current streak</span>
-          <strong>{stats.currentStreak}d</strong>
-        </div>
-      </div>
-
+      <span className="cursor-activity-label">token usage</span>
       <div className="cursor-activity-graph">
         <div className="cursor-activity-months">
           <span className="cursor-activity-gutter" />
           <div
             className="cursor-activity-month-track"
-            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, 1fr)` }}
+            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
           >
-            {grid.monthMarkers.map((month, i) =>
-              month.weekIndex == null ? null : (
-                <span
-                  key={`${month.label}-${i}`}
-                  style={{ gridColumn: month.weekIndex + 1 }}
-                >
-                  {month.label}
-                </span>
-              )
-            )}
+            {grid.monthMarkers.map((month) => (
+              <span
+                key={month.label}
+                style={{ gridColumn: month.weekIndex + 1 }}
+              >
+                {month.label}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -213,7 +213,7 @@ function CursorActivityHeatmap() {
 
           <div
             className="cursor-activity-weeks"
-            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, 1fr)` }}
+            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
           >
             {grid.weeks.map((week, wi) => (
               <div key={`week-${wi}`} className="cursor-activity-week">

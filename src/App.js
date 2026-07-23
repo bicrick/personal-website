@@ -69,7 +69,16 @@ function About() {
           <Navigation />
         </header>
         <section>
-          <h2 className="about-heading">about</h2>
+          <div className="about-header-row">
+            <h2 className="about-heading">about</h2>
+            <div className="about-links">
+              <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
+              <span className="nav-separator">·</span>
+              <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">resume</a>
+              <span className="nav-separator">·</span>
+              <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+            </div>
+          </div>
           <div className="about-pics">
             <img src={`${process.env.PUBLIC_URL}/casual_logo.png`} alt="bicrick" className="about-pic" width="200" height="200" />
             <img src={`${process.env.PUBLIC_URL}/about/img-4149.jpg`} alt="With puppy" className="about-pic" width="200" height="200" />
@@ -79,28 +88,24 @@ function About() {
           </div>
           <div className="about-content">
             <p>
-              engineer in the austin, tx area. studied computer engineering and artificial intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>. currently a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>.
+              I'm an engineer in the Austin, TX area. I studied computer engineering and artificial intelligence at the <a href="https://www.utexas.edu/" target="_blank" rel="noopener noreferrer">University of Texas at Austin</a>, and currently work as a data engineer at <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>.
             </p>
             <p>
-              work spans large-scale ML data prep, pipelines, full-stack analytics dashboards, and cloud infrastructure. experienced on GCP and AWS.
+              My work spans large-scale ML data prep, pipelines, full-stack analytics dashboards, and cloud infrastructure. I'm experienced on GCP and AWS.
             </p>
             <p>
-              generally pulled by what intrigues me, not pushed by what I'm supposed to do. <Link to="/projects">see projects</Link>.
+              I'm generally pulled by what intrigues me, not pushed by what I'm supposed to do. <Link to="/projects">See projects</Link>.
             </p>
             <p>
-              these days I am constantly experimenting with different agentic development workflows. I use <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">Cursor</a> and Claude Code.
+              These days I am constantly experimenting with different agentic development workflows. I use <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">Cursor</a> and Claude Code.
             </p>
-            <CursorActivityHeatmap />
             <p>
-              these days I play a lot of golf (+1 handicap). like puzzle/automation games (factorio, minecraft).
+              These days I play a lot of golf (+1 handicap). I like puzzle and automation games (Factorio, Minecraft).
             </p>
-            <hr className="separator" />
-            <div className="social">
-              <p>github: <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">bicrick</a></p>
-              <p>resume: <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">pdf</a></p>
-              <p>x: <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">patrickbbrown</a></p>
-            </div>
           </div>
+          <footer className="about-footer">
+            <CursorActivityHeatmap />
+          </footer>
         </section>
       </main>
     </div>

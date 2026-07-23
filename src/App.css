@@ -92,8 +92,16 @@ section {
 }
 
 /* About page */
-.about-heading {
+.about-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1em;
+}
+
+.about-heading {
+  margin-bottom: 0;
 }
 
 .about-pics {
@@ -116,6 +124,17 @@ section {
 .about-content {
   font-size: inherit;
   line-height: 1.5;
+}
+
+.about-footer {
+  margin-top: 2.5em;
+}
+
+.about-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Contact page */
