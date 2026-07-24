@@ -1,7 +1,7 @@
 export const PAGE_SEO = {
   '/': {
-    ogTitle: 'bicrick - Patrick Brown | Data Engineer & Software Developer',
-    description: 'Patrick Brown (bicrick) - Data Engineer at H-E-B specializing in large-scale ML data preparation. Pipelines, analytics dashboards, GCP and AWS. Austin, TX.',
+    ogTitle: 'bicrick - Patrick Brown | Full-Stack Engineer',
+    description: 'Patrick Brown (bicrick) - Full-stack engineer shipping apps, data systems, and ML workflows. Currently at H-E-B. Austin, TX.',
     url: 'https://bicrick.com',
   },
   '/about': {

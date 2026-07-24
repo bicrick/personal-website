@@ -15,9 +15,13 @@ export default function HomePage() {
           <div className="home-copy">
             <h2 className="home-heading">Patrick Brown</h2>
             <p className="home-bio">
-              Engineer specializing in large-scale ML data preparation at{' '}
+              Full-stack engineer shipping apps, data systems, and ML workflows.
+              Austin, TX.
+            </p>
+            <p className="home-bio-sub">
+              Currently at{' '}
               <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>
-              . Austin, TX.
+              .
             </p>
             <div className="home-links">
               <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>

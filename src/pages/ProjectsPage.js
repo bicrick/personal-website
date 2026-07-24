@@ -121,6 +121,13 @@ export default function ProjectsPage() {
             <SortDropdown value={sortBy} onChange={setSortBy} />
           </div>
         </div>
+        <p className="projects-intro">
+          These are some of the projects I am proud of. I have much more on my{' '}
+          <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          .
+        </p>
         <div className="projects-grid">
           {sortedProjects.map((project) => {
             const key = project.blogLink || project.link || project.title;

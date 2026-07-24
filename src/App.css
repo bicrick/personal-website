@@ -251,6 +251,13 @@ section {
   margin-bottom: 0;
 }
 
+.projects-intro {
+  margin: 0 0 1.35rem;
+  max-width: 40rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
 .projects-sort {
   display: inline-flex;
   align-items: center;
@@ -430,6 +437,15 @@ section {
   color: var(--ink-soft);
 }
 
+.home-bio-sub {
+  margin: 0.45rem 0 0;
+  width: 100%;
+  max-width: 28rem;
+  font-size: 0.98em;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
 .home-pic {
   width: 100%;
   max-width: 320px;
@@ -505,6 +521,10 @@ section {
   .home-bio {
     max-width: none;
     font-size: 1.05em;
+  }
+
+  .home-bio-sub {
+    max-width: none;
   }
 
   .home-links {

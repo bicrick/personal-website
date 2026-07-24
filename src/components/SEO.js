@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 
 function SEO({ 
   title = "bicrick",
-  description = "Patrick Brown (bicrick) - Data Engineer at H-E-B specializing in large-scale ML data preparation. Pipelines, analytics dashboards, GCP and AWS. Austin, TX.",
-  keywords = "bicrick, Patrick Brown, Data Engineer, ML Data Prep, GCP, AWS, Austin, HEB, UT Austin, AI, Machine Learning",
+  description = "Patrick Brown (bicrick) - Full-stack engineer shipping apps, data systems, and ML workflows. Currently at H-E-B. Austin, TX.",
+  keywords = "bicrick, Patrick Brown, Full-Stack Engineer, ML, Data Systems, GCP, AWS, Austin, HEB, UT Austin, Machine Learning",
   author = "Patrick Brown (bicrick)",
   url = "https://bicrick.com",
   image = "https://bicrick.com/about/headshot.jpg",

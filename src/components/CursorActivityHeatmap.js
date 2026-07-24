@@ -193,6 +193,16 @@ function CursorActivityHeatmap() {
     [data, year]
   );
 
+  const ytdTotal = useMemo(() => {
+    if (!data?.activityCounts?.length) return 0;
+    const start = `${year}-01-01`;
+    const end = utcToday().toISOString().slice(0, 10);
+    return data.activityCounts.reduce((sum, row) => {
+      if (row.date < start || row.date > end) return sum;
+      return sum + (Number(row.count) || 0);
+    }, 0);
+  }, [data, year]);
+
   if (error || !data) {
     return null;
   }
@@ -234,47 +244,48 @@ function CursorActivityHeatmap() {
   };
 
   return (
-    <a
-      ref={rootRef}
-      className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
-      href={PROFILE_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Cursor token usage for @bicrick"
-      onMouseLeave={() => {
-        if (!isCoarse) clearTip();
-      }}
-    >
-      <span className="cursor-activity-label">token usage</span>
-      <div className="cursor-activity-graph">
-        <div className="cursor-activity-months">
-          <span className="cursor-activity-gutter" aria-hidden="true" />
-          <div
-            className="cursor-activity-month-track"
-            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
-          >
-            {grid.monthMarkers.map((month) => (
-              <span
-                key={month.label}
-                style={{ gridColumn: month.weekIndex + 1 }}
-              >
-                {month.label}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="cursor-activity-body">
-          <div className="cursor-activity-days" aria-hidden="true">
-            {DAY_LABELS.map((label, i) => (
-              <span key={`day-${i}`}>{label}</span>
-            ))}
+    <div className="cursor-activity-wrap">
+      <a
+        ref={rootRef}
+        className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
+        href={PROFILE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Cursor token usage for @bicrick"
+        onMouseLeave={() => {
+          if (!isCoarse) clearTip();
+        }}
+      >
+        <span className="cursor-activity-label">token usage</span>
+        <div className="cursor-activity-graph">
+          <div className="cursor-activity-months">
+            <span className="cursor-activity-gutter" aria-hidden="true" />
+            <div
+              className="cursor-activity-month-track"
+              style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
+            >
+              {grid.monthMarkers.map((month) => (
+                <span
+                  key={month.label}
+                  style={{ gridColumn: month.weekIndex + 1 }}
+                >
+                  {month.label}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div
-            className="cursor-activity-weeks"
-            style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
-          >
+          <div className="cursor-activity-body">
+            <div className="cursor-activity-days" aria-hidden="true">
+              {DAY_LABELS.map((label, i) => (
+                <span key={`day-${i}`}>{label}</span>
+              ))}
+            </div>
+
+            <div
+              className="cursor-activity-weeks"
+              style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
+            >
               {grid.weeks.map((week, wi) => (
                 <div key={`week-${wi}`} className="cursor-activity-week">
                   {week.map((day) => {
@@ -309,18 +320,22 @@ function CursorActivityHeatmap() {
               ))}
             </div>
           </div>
-      </div>
+        </div>
 
-      {tooltip && (
-        <span
-          className="cursor-activity-tip"
-          style={{ left: tooltip.x, top: tooltip.y }}
-          role="tooltip"
-        >
-          {tooltip.text}
-        </span>
-      )}
-    </a>
+        {tooltip && (
+          <span
+            className="cursor-activity-tip"
+            style={{ left: tooltip.x, top: tooltip.y }}
+            role="tooltip"
+          >
+            {tooltip.text}
+          </span>
+        )}
+      </a>
+      <p className="cursor-activity-total">
+        So far I have used {formatCount(ytdTotal)} tokens this year.
+      </p>
+    </div>
   );
 }
 
