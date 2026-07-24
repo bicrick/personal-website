@@ -56,12 +56,94 @@
   opacity: 1;
 }
 
+.qwop-replay-model-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
 .qwop-replay-model-name {
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.95);
   line-height: 1.2;
+}
+
+.qwop-replay-model-info {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.qwop-replay-model-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font: inherit;
+  font-size: 0.68rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.qwop-replay-model-info-btn:hover,
+.qwop-replay-model-info-btn:focus-visible,
+.qwop-replay-model-info.is-open .qwop-replay-model-info-btn {
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.65);
+  outline: none;
+}
+
+.qwop-replay-model-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 5;
+  width: min(18.5rem, calc(100vw - 1.7rem));
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #151c27;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.qwop-replay-model-info.is-open .qwop-replay-model-tooltip,
+.qwop-replay-model-info:focus-within .qwop-replay-model-tooltip {
+  display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .qwop-replay-model-info:hover .qwop-replay-model-tooltip {
+    display: block;
+  }
+}
+
+.qwop-replay-model-tooltip-title {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.qwop-replay-model-tooltip p {
+  margin: 0;
 }
 
 .qwop-replay-model-sub {

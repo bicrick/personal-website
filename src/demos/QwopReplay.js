@@ -7,12 +7,14 @@ import {
   formatSeedLine,
   hudStatsForFrame,
   modelLabelFromMeta,
+  QRDQN_INFO,
   sparklinePath,
 } from './qwopReplayHud';
 import './QwopReplay.css';
 
 const SPARK_W = 120;
 const SPARK_H = 28;
+const MODEL_INFO_ID = 'qwop-model-info';
 
 function QwopReplay() {
   const canvasRef = useRef(null);
@@ -22,13 +24,33 @@ function QwopReplay() {
   const speedValueRef = useRef(null);
   const sparkPathRef = useRef(null);
   const distLabelRef = useRef(null);
+  const infoWrapRef = useRef(null);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
+  const [infoOpen, setInfoOpen] = useState(false);
   const [metaHud, setMetaHud] = useState({
     model: 'RL agent',
     seedLine: 'realtime replay',
     recordedLine: 'recorded run · loops',
   });
+
+  useEffect(() => {
+    if (!infoOpen) return undefined;
+    const onPointerDown = (event) => {
+      if (infoWrapRef.current && !infoWrapRef.current.contains(event.target)) {
+        setInfoOpen(false);
+      }
+    };
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setInfoOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [infoOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,7 +150,35 @@ function QwopReplay() {
         aria-hidden={!chromeReady}
       >
         <div className="qwop-replay-model">
-          <div className="qwop-replay-model-name">{metaHud.model}</div>
+          <div className="qwop-replay-model-row">
+            <div className="qwop-replay-model-name">{metaHud.model}</div>
+            <div
+              ref={infoWrapRef}
+              className={`qwop-replay-model-info${infoOpen ? ' is-open' : ''}`}
+            >
+              <button
+                type="button"
+                className="qwop-replay-model-info-btn"
+                aria-label="About this model"
+                aria-expanded={infoOpen}
+                aria-controls={MODEL_INFO_ID}
+                aria-describedby={MODEL_INFO_ID}
+                onClick={() => setInfoOpen((open) => !open)}
+              >
+                i
+              </button>
+              <div
+                id={MODEL_INFO_ID}
+                className="qwop-replay-model-tooltip"
+                role="tooltip"
+              >
+                <strong className="qwop-replay-model-tooltip-title">
+                  {metaHud.model}
+                </strong>
+                <p>{QRDQN_INFO}</p>
+              </div>
+            </div>
+          </div>
           <div className="qwop-replay-model-sub">{metaHud.seedLine}</div>
         </div>
 

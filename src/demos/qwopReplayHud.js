@@ -7,7 +7,7 @@ const SPARK_POINTS = 48;
 export function modelLabelFromMeta(meta = {}) {
   if (meta.model_label) return meta.model_label;
   const file = meta.model_file || '';
-  if (/QRDQN-PROVEN/i.test(file)) return 'QRDQN-PROVEN';
+  if (/QRDQN/i.test(file)) return 'QRDQN';
   const parts = file.split('/').filter(Boolean);
   // Prefer parent folder of model.zip (e.g. data/QRDQN-PROVEN-xxx/model.zip)
   let folder = parts[parts.length - 1] || '';
@@ -16,12 +16,17 @@ export function modelLabelFromMeta(meta = {}) {
   }
   folder = folder.replace(/\.zip$/i, '');
   if (folder) {
-    // Drop trailing training-run ids like -k3jlgned
-    const cleaned = folder.replace(/-[a-z0-9]{6,}$/i, '');
+    // Drop trailing training-run ids like -k3jlgned and variant suffixes like -PROVEN
+    const cleaned = folder
+      .replace(/-[a-z0-9]{6,}$/i, '')
+      .replace(/-(PROVEN|STABLE|SPEED)(-[A-Z0-9]+)*$/i, '');
     return (cleaned || folder).replace(/_/g, '-');
   }
   return 'RL agent';
 }
+
+export const QRDQN_INFO =
+  'Quantile Regression DQN learns a distribution of returns instead of a single Q-value, which helps with noisy QWOP physics. The agent picks from a small discrete set of Q/W/O/P key combinations each step; this replay is a recorded episode from that policy (not live inference).';
 
 export function formatSeedLine(meta = {}) {
   const seed = meta.seed != null ? `seed ${meta.seed}` : null;

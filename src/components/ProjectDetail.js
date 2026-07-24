@@ -30,6 +30,9 @@ function ProjectDetail({
   date,
   linkHref,
   linkLabel,
+  secondaryLinkHref,
+  secondaryLinkLabel,
+  secondaryLinkInternal = false,
   abstract,
   children,
   seoTitle,
@@ -38,6 +41,9 @@ function ProjectDetail({
   seoUrl,
   seoImage,
 }) {
+  const hasPrimary = Boolean(linkHref && linkLabel);
+  const hasSecondary = Boolean(secondaryLinkHref && secondaryLinkLabel);
+
   return (
     <div className="App_mainContainer landing-page">
       <SEO
@@ -61,12 +67,24 @@ function ProjectDetail({
           <header className="project-header">
             <h1 className="project-title">{title}</h1>
             <div className="project-meta">
-              {linkHref && linkLabel && (
+              {hasPrimary && (
                 <a href={linkHref} target="_blank" rel="noopener noreferrer">
                   {linkLabel}
                 </a>
               )}
-              {linkHref && linkLabel && date && (
+              {hasPrimary && hasSecondary && (
+                <span className="project-meta-sep" aria-hidden="true">·</span>
+              )}
+              {hasSecondary && (
+                secondaryLinkInternal ? (
+                  <Link to={secondaryLinkHref}>{secondaryLinkLabel}</Link>
+                ) : (
+                  <a href={secondaryLinkHref} target="_blank" rel="noopener noreferrer">
+                    {secondaryLinkLabel}
+                  </a>
+                )
+              )}
+              {(hasPrimary || hasSecondary) && date && (
                 <span className="project-meta-sep" aria-hidden="true">·</span>
               )}
               {date && <span className="project-date">{date}</span>}

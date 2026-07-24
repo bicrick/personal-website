@@ -9,6 +9,9 @@ function QwopPython() {
       date="February 2026"
       linkHref="https://github.com/bicrick/qwop-python"
       linkLabel="view repo"
+      secondaryLinkHref="/demos/qwop"
+      secondaryLinkLabel="watch demo"
+      secondaryLinkInternal
       abstract="A highly performant headless Gymnasium environment for QWOP: pure Python Box2D, no browser, no chromedriver. Roughly 20x faster training throughput so RL experiments can actually scale."
       seoTitle="qwop-python - Gymnasium QWOP Environment by bicrick"
       seoDescription="qwop-python by bicrick - Pure Python Box2D Gymnasium environment for QWOP. Headless RL training, 20x faster than chromedriver-based alternatives."
@@ -70,6 +73,8 @@ function QwopPython() {
 
       <p>
         <a href="https://github.com/bicrick/qwop-python" target="_blank" rel="noopener noreferrer">check out the repo</a>
+        {' · '}
+        <Link to="/demos/qwop">watch the demo</Link>
       </p>
     </ProjectDetail>
   );
