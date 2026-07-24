@@ -26,7 +26,7 @@ export function modelLabelFromMeta(meta = {}) {
 }
 
 export const QRDQN_INFO =
-  'Quantile Regression DQN learns a distribution of returns instead of a single Q-value, which helps with noisy QWOP physics. The agent picks from a small discrete set of Q/W/O/P key combinations each step; this replay is a recorded episode from that policy (not live inference).';
+  "I trained a QRDQN agent in qwop-python. That means the policy learns a distribution of returns instead of a single Q-value, which helps with QWOP's noisy physics. Each step it picks from a small discrete set of Q/W/O/P key combos. After training it was clearly stronger than my PPO runs on this env, so I kept QRDQN. This page replays a recorded episode from that policy (not live inference).";
 
 export function formatSeedLine(meta = {}) {
   const seed = meta.seed != null ? `seed ${meta.seed}` : null;

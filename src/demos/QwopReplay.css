@@ -152,7 +152,7 @@
   top: calc(100% + 0.4rem);
   left: 0;
   z-index: 5;
-  width: min(18.5rem, calc(100vw - 1.7rem));
+  width: min(22rem, calc(100vw - 1.7rem));
   padding: 0.65rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: #151c27;

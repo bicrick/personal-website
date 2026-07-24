@@ -33,8 +33,9 @@
 .project-choice-panel {
   position: absolute;
   inset: 0;
-  display: flex;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -45,6 +46,12 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+}
+
+.project-choice-row {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .project-choice {
@@ -81,6 +88,17 @@
   border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+.project-choice--solo {
+  flex: 1 1 100%;
+  border-left: 0;
+  background: rgba(33, 35, 45, 0.68);
+}
+
+.project-choice--solo:hover,
+.project-choice--solo:focus-visible {
+  background: rgba(33, 35, 45, 0.84);
+}
+
 .project-choice--app:hover,
 .project-choice--app:focus-visible {
   background: rgba(33, 35, 45, 0.86);
@@ -93,10 +111,59 @@
   outline: none;
 }
 
+.project-choice-meta {
+  flex: 0 0 auto;
+  padding: 0.65rem 0.85rem;
+  background: rgba(20, 22, 28, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.project-choice-meta-title {
+  font-weight: 700;
+}
+
+.project-choice-meta-desc {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
+}
+
 .project-card--choosable.is-expanded {
   z-index: 10;
   transform: scale(1.02);
   filter: drop-shadow(0 10px 20px rgba(33, 35, 45, 0.16));
+}
+
+/* Touch / coarse pointer: keep bottom caption until the choice panel opens */
+.project-overlay--touch.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Desktop: hover reveals choice menu + title; no click required */
+@media (hover: hover) and (pointer: fine) {
+  .project-card--choosable.is-hoverable .project-card-trigger {
+    pointer-events: none;
+  }
+
+  .project-card--choosable.is-hoverable:hover,
+  .project-card--choosable.is-hoverable:focus-within {
+    z-index: 10;
+    transform: scale(1.02);
+    filter: drop-shadow(0 10px 20px rgba(33, 35, 45, 0.16));
+  }
+
+  .project-card--choosable.is-hoverable:hover .project-choice-panel,
+  .project-card--choosable.is-hoverable:focus-within .project-choice-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
 }
 
 .visually-hidden {
@@ -116,6 +183,11 @@
     font-size: 1.15rem;
   }
 
+  .project-choice-meta {
+    font-size: 0.72rem;
+    padding: 0.55rem 0.7rem;
+  }
+
   .project-card--choosable.is-expanded {
     filter: drop-shadow(10px 10px 12px rgba(0, 0, 0, 0.45));
   }
@@ -123,7 +195,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .project-choice-panel,
-  .project-choice {
+  .project-choice,
+  .project-overlay--reveal {
     transition: none;
   }
 }

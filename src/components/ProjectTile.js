@@ -2,6 +2,69 @@ import React, { useEffect, useId, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './ProjectTile.css';
 
+function useFineHover() {
+  const [fineHover, setFineHover] = React.useState(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return false;
+    }
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return undefined;
+    }
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const onChange = () => setFineHover(mq.matches);
+    onChange();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return fineHover;
+}
+
+function ProjectMeta({ title, description }) {
+  return (
+    <div className="project-choice-meta">
+      <span className="project-choice-meta-title">{title}</span>
+      {description ? (
+        <span className="project-choice-meta-desc"> — {description}</span>
+      ) : null}
+    </div>
+  );
+}
+
+function ChoiceLink({
+  to,
+  external,
+  className,
+  tabIndex,
+  onClick,
+  children,
+}) {
+  if (external) {
+    return (
+      <a
+        href={to}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        tabIndex={tabIndex}
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to} className={className} tabIndex={tabIndex} onClick={onClick}>
+      {children}
+    </Link>
+  );
+}
+
 export default function ProjectTile({
   project,
   isExpanded,
@@ -10,14 +73,17 @@ export default function ProjectTile({
 }) {
   const cardRef = useRef(null);
   const panelId = useId();
+  const fineHover = useFineHover();
   const hasApp = Boolean(project.appLink);
   const appLabel = project.appLabel || 'app';
   const blogLink = project.blogLink || project.link;
   const blogIsExternal = Boolean(project.blogExternal || project.external);
   const appIsExternal = /^https?:\/\//i.test(project.appLink || '');
+  const panelOpen = fineHover ? false : isExpanded;
+  const choiceTabIndex = fineHover || isExpanded ? 0 : -1;
 
   useEffect(() => {
-    if (!isExpanded) return undefined;
+    if (!isExpanded || fineHover) return undefined;
 
     const handlePointerDown = (event) => {
       if (cardRef.current && !cardRef.current.contains(event.target)) {
@@ -37,7 +103,7 @@ export default function ProjectTile({
       document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isExpanded, onCollapse]);
+  }, [isExpanded, onCollapse, fineHover]);
 
   const media = project.image ? (
     <img src={project.image} alt={project.title} width="1200" height="600" />
@@ -45,109 +111,73 @@ export default function ProjectTile({
     <div className="project-card-placeholder" aria-hidden="true" />
   );
 
-  const caption = (
-    <div className="project-overlay">
-      <div>
-        {project.title}
-        {' - '}
-        {project.description}
-      </div>
-    </div>
-  );
-
-  if (!hasApp) {
-    if (blogIsExternal) {
-      return (
-        <a
-          href={blogLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-tile-link"
-        >
-          <div className="project-card">
-            {media}
-            {caption}
-          </div>
-        </a>
-      );
-    }
-
-    return (
-      <Link to={blogLink} className="project-tile-link">
-        <div className="project-card">
-          {media}
-          {caption}
-        </div>
-      </Link>
-    );
-  }
-
   return (
     <div
       ref={cardRef}
-      className={`project-card project-card--choosable${isExpanded ? ' is-expanded' : ''}`}
+      className={`project-card project-card--choosable${hasApp ? '' : ' project-card--blog-only'}${panelOpen ? ' is-expanded' : ''}${fineHover ? ' is-hoverable' : ''}`}
+      onMouseLeave={fineHover ? onCollapse : undefined}
     >
       <button
         type="button"
         className="project-card-trigger"
-        aria-expanded={isExpanded}
-        aria-controls={panelId}
-        onClick={() => onToggle()}
+        aria-expanded={fineHover ? undefined : isExpanded}
+        aria-controls={fineHover ? undefined : panelId}
+        aria-haspopup={fineHover ? undefined : 'true'}
+        tabIndex={fineHover ? -1 : 0}
+        onClick={() => {
+          if (!fineHover) onToggle();
+        }}
       >
         {media}
-        {caption}
+        {!fineHover && (
+          <div
+            className={`project-overlay project-overlay--touch${isExpanded ? ' is-hidden' : ''}`}
+            aria-hidden={isExpanded}
+          >
+            <div>
+              {project.title}
+              {' - '}
+              {project.description}
+            </div>
+          </div>
+        )}
         <span className="visually-hidden">
-          {isExpanded ? `Hide options for ${project.title}` : `Choose where to open ${project.title}`}
+          {fineHover
+            ? `${project.title}. Hover for ${hasApp ? `${appLabel} and blog` : 'blog'} options.`
+            : isExpanded
+              ? `Hide options for ${project.title}`
+              : `Choose where to open ${project.title}`}
         </span>
       </button>
 
       <div
         id={panelId}
-        className={`project-choice-panel${isExpanded ? ' is-open' : ''}`}
-        aria-hidden={!isExpanded}
+        className={`project-choice-panel${panelOpen ? ' is-open' : ''}`}
+        aria-hidden={fineHover ? undefined : !isExpanded}
       >
-        {appIsExternal ? (
-          <a
-            href={project.appLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="project-choice project-choice--app"
-            tabIndex={isExpanded ? 0 : -1}
-            onClick={onCollapse}
-          >
-            <span>{appLabel}</span>
-          </a>
-        ) : (
-          <Link
-            to={project.appLink}
-            className="project-choice project-choice--app"
-            tabIndex={isExpanded ? 0 : -1}
-            onClick={onCollapse}
-          >
-            <span>{appLabel}</span>
-          </Link>
-        )}
-        {blogIsExternal ? (
-          <a
-            href={blogLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="project-choice project-choice--blog"
-            tabIndex={isExpanded ? 0 : -1}
-            onClick={onCollapse}
-          >
-            <span>blog</span>
-          </a>
-        ) : (
-          <Link
+        <div className="project-choice-row">
+          {hasApp && (
+            <ChoiceLink
+              to={project.appLink}
+              external={appIsExternal}
+              className="project-choice project-choice--app"
+              tabIndex={choiceTabIndex}
+              onClick={onCollapse}
+            >
+              <span>{appLabel}</span>
+            </ChoiceLink>
+          )}
+          <ChoiceLink
             to={blogLink}
-            className="project-choice project-choice--blog"
-            tabIndex={isExpanded ? 0 : -1}
+            external={blogIsExternal}
+            className={`project-choice project-choice--blog${hasApp ? '' : ' project-choice--solo'}`}
+            tabIndex={choiceTabIndex}
             onClick={onCollapse}
           >
             <span>blog</span>
-          </Link>
-        )}
+          </ChoiceLink>
+        </div>
+        <ProjectMeta title={project.title} description={project.description} />
       </div>
     </div>
   );
