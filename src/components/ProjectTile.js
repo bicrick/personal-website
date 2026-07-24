@@ -11,6 +11,7 @@ export default function ProjectTile({
   const cardRef = useRef(null);
   const panelId = useId();
   const hasApp = Boolean(project.appLink);
+  const appLabel = project.appLabel || 'app';
   const blogLink = project.blogLink || project.link;
   const blogIsExternal = Boolean(project.blogExternal || project.external);
   const appIsExternal = /^https?:\/\//i.test(project.appLink || '');
@@ -114,7 +115,7 @@ export default function ProjectTile({
             tabIndex={isExpanded ? 0 : -1}
             onClick={onCollapse}
           >
-            <span>app</span>
+            <span>{appLabel}</span>
           </a>
         ) : (
           <Link
@@ -123,7 +124,7 @@ export default function ProjectTile({
             tabIndex={isExpanded ? 0 : -1}
             onClick={onCollapse}
           >
-            <span>app</span>
+            <span>{appLabel}</span>
           </Link>
         )}
         {blogIsExternal ? (

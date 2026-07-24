@@ -73,6 +73,7 @@ export default function ProjectsPage() {
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
       blogLink: '/projects/qwop-python',
       appLink: '/demos/qwop',
+      appLabel: 'demo',
       relevanceRank: 1,
       dateRank: 2,
     },

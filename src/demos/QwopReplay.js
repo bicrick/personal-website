@@ -15,19 +15,23 @@ import './QwopReplay.css';
 const SPARK_W = 120;
 const SPARK_H = 28;
 const MODEL_INFO_ID = 'qwop-model-info';
+const PLAYBACK_RATES = [0.5, 1, 2, 4];
+const COURSE_METERS = 100;
 
 function QwopReplay() {
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
   const playerRef = useRef(null);
-  const progressFillRef = useRef(null);
+  const progressInputRef = useRef(null);
   const speedValueRef = useRef(null);
   const sparkPathRef = useRef(null);
   const distLabelRef = useRef(null);
   const infoWrapRef = useRef(null);
+  const scrubbingRef = useRef(false);
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
   const [infoOpen, setInfoOpen] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const [metaHud, setMetaHud] = useState({
     model: 'RL agent',
     seedLine: 'realtime replay',
@@ -77,8 +81,14 @@ function QwopReplay() {
           freezeAtSeek,
           onFrame: ({ index, run }) => {
             const stats = hudStatsForFrame(run, index);
-            if (progressFillRef.current) {
-              progressFillRef.current.style.width = `${(stats.progress * 100).toFixed(2)}%`;
+            if (!scrubbingRef.current && progressInputRef.current) {
+              progressInputRef.current.value = String(
+                Math.max(0, Math.min(COURSE_METERS, stats.distance)).toFixed(1),
+              );
+              progressInputRef.current.style.setProperty(
+                '--qwop-progress',
+                `${(stats.progress * 100).toFixed(2)}%`,
+              );
             }
             if (speedValueRef.current) {
               speedValueRef.current.textContent = `${stats.speed.toFixed(1)} m/s`;
@@ -118,6 +128,53 @@ function QwopReplay() {
 
   const chromeReady = status === 'ready';
 
+  const handlePlaybackRate = (rate) => {
+    setPlaybackRate(rate);
+    playerRef.current?.setPlaybackRate(rate);
+  };
+
+  const handleScrubStart = () => {
+    scrubbingRef.current = true;
+    playerRef.current?.pause();
+  };
+
+  const handleScrub = (event) => {
+    const meters = Number(event.target.value);
+    if (!Number.isFinite(meters)) return;
+    if (progressInputRef.current) {
+      progressInputRef.current.style.setProperty(
+        '--qwop-progress',
+        `${Math.max(0, Math.min(100, (meters / COURSE_METERS) * 100)).toFixed(2)}%`,
+      );
+    }
+    if (distLabelRef.current) {
+      distLabelRef.current.textContent = `${meters.toFixed(1)} m`;
+    }
+    playerRef.current?.seekToDistance(meters);
+  };
+
+  const handleScrubEnd = () => {
+    scrubbingRef.current = false;
+    playerRef.current?.resume();
+  };
+
+  const handleScrubKeyDown = (event) => {
+    if (
+      [
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown',
+        'Home',
+        'End',
+        'PageUp',
+        'PageDown',
+      ].includes(event.key)
+    ) {
+      handleScrubStart();
+    }
+  };
+
   return (
     <div className="qwop-replay">
       <SEO
@@ -129,20 +186,32 @@ function QwopReplay() {
       />
 
       <nav className="qwop-replay-nav" aria-label="Demo navigation">
-        <Link to="/projects/qwop-python" className="qwop-replay-nav-back">
-          ← qwop-python
-        </Link>
-        <span className="qwop-replay-nav-sep" aria-hidden="true">
-          ·
-        </span>
-        <a
-          className="qwop-replay-nav-original"
-          href="https://www.foddy.net/legacy/Athletics.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Play original
-        </a>
+        <div className="qwop-replay-nav-left">
+          <Link to="/projects/qwop-python" className="qwop-replay-nav-back">
+            ← qwop-python
+          </Link>
+          <span className="qwop-replay-nav-sep" aria-hidden="true">
+            ·
+          </span>
+          <a
+            className="qwop-replay-nav-original"
+            href="https://www.foddy.net/legacy/Athletics.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play original
+          </a>
+        </div>
+        <h1 className="qwop-replay-nav-title">
+          QWOP by Bennet Foddy
+          <span className="qwop-replay-nav-title-sep" aria-hidden="true">
+            {' '}
+            |{' '}
+          </span>
+          <span className="qwop-replay-nav-title-sub">
+            RL Agent Trained in qwop-python
+          </span>
+        </h1>
       </nav>
 
       <div
@@ -187,14 +256,29 @@ function QwopReplay() {
             <span ref={distLabelRef}>0.0 m</span>
             <span>100 m</span>
           </div>
-          <div
-            className="qwop-replay-progress"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <div ref={progressFillRef} className="qwop-replay-progress-fill" />
-          </div>
+          <label className="qwop-replay-progress-label">
+            <span className="qwop-sr-only">Scrub timeline</span>
+            <input
+              ref={progressInputRef}
+              className="qwop-replay-progress"
+              type="range"
+              min={0}
+              max={COURSE_METERS}
+              step={0.1}
+              defaultValue={0}
+              aria-valuemin={0}
+              aria-valuemax={COURSE_METERS}
+              aria-label="Scrub run by distance"
+              disabled={!chromeReady}
+              onPointerDown={handleScrubStart}
+              onPointerUp={handleScrubEnd}
+              onPointerCancel={handleScrubEnd}
+              onKeyDown={handleScrubKeyDown}
+              onKeyUp={handleScrubEnd}
+              onChange={handleScrub}
+              onInput={handleScrub}
+            />
+          </label>
         </div>
 
         <div className="qwop-replay-speed">
@@ -216,6 +300,24 @@ function QwopReplay() {
               strokeWidth="1.5"
             />
           </svg>
+          <div
+            className="qwop-replay-rate"
+            role="group"
+            aria-label="Playback speed"
+          >
+            {PLAYBACK_RATES.map((rate) => (
+              <button
+                key={rate}
+                type="button"
+                className={`qwop-replay-rate-btn${playbackRate === rate ? ' is-active' : ''}`}
+                aria-pressed={playbackRate === rate}
+                disabled={!chromeReady}
+                onClick={() => handlePlaybackRate(rate)}
+              >
+                {rate === 1 ? '1x' : `${rate}x`}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

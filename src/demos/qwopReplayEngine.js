@@ -314,27 +314,35 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
   const seekDistance = Number.isFinite(options.seekDistance)
     ? options.seekDistance
     : null;
-  const freezeAtSeek = Boolean(options.freezeAtSeek);
+  let freezeAtSeek = Boolean(options.freezeAtSeek);
   const onFrame = typeof options.onFrame === 'function' ? options.onFrame : null;
 
-  let frameIndex = 0;
-  if (seekDistance != null && assets.run?.distance?.length) {
+  const findFrameForDistance = (meters) => {
+    const distances = assets.run?.distance;
+    if (!distances?.length || !Number.isFinite(meters)) return 0;
     let best = 0;
     let bestDelta = Infinity;
-    for (let i = 0; i < assets.run.distance.length; i += 1) {
-      const delta = Math.abs(assets.run.distance[i] - seekDistance);
+    for (let i = 0; i < distances.length; i += 1) {
+      const delta = Math.abs(distances[i] - meters);
       if (delta < bestDelta) {
         bestDelta = delta;
         best = i;
       }
     }
-    frameIndex = best;
+    return best;
+  };
+
+  let frameIndex = 0;
+  if (seekDistance != null) {
+    frameIndex = findFrameForDistance(seekDistance);
   }
 
   let lastTs = 0;
   let acc = 0;
   let rafId = 0;
   let running = false;
+  let paused = false;
+  let playbackRate = 1;
   let resizeObserver = null;
 
   const stageSize = () => {
@@ -392,9 +400,9 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
     if (!lastTs) lastTs = ts;
     const dt = (ts - lastTs) / 1000;
     lastTs = ts;
-    acc += dt;
 
-    if (!freezeAtSeek) {
+    if (!paused && !freezeAtSeek) {
+      acc += dt * playbackRate;
       while (acc >= assets.run.dt) {
         acc -= assets.run.dt;
         frameIndex += 1;
@@ -409,6 +417,7 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
   const start = () => {
     if (running) return;
     running = true;
+    paused = false;
     resize();
     lastTs = 0;
     acc = 0;
@@ -423,6 +432,7 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
 
   const stop = () => {
     running = false;
+    paused = false;
     window.removeEventListener('resize', resize);
     if (resizeObserver) {
       resizeObserver.disconnect();
@@ -431,10 +441,43 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
     if (rafId) window.cancelAnimationFrame(rafId);
   };
 
+  const pause = () => {
+    paused = true;
+    acc = 0;
+    lastTs = 0;
+  };
+
+  const resume = () => {
+    if (!running) return;
+    freezeAtSeek = false;
+    paused = false;
+    lastTs = 0;
+    acc = 0;
+  };
+
+  const setPlaybackRate = (rate) => {
+    const next = Number(rate);
+    if (!Number.isFinite(next) || next <= 0) return;
+    playbackRate = next;
+  };
+
+  const seekToDistance = (meters) => {
+    freezeAtSeek = false;
+    frameIndex = findFrameForDistance(meters);
+    acc = 0;
+    lastTs = 0;
+    drawFrame(frameIndex);
+  };
+
   return {
     start,
     stop,
+    pause,
+    resume,
+    setPlaybackRate,
+    seekToDistance,
     getFrameIndex: () => frameIndex,
+    getPlaybackRate: () => playbackRate,
     getRun: () => assets.run,
   };
 }
