@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
 
 function QwopPython() {
@@ -15,6 +16,12 @@ function QwopPython() {
       seoUrl="https://bicrick.com/projects/qwop-python"
       seoImage="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
     >
+      <p style={{ marginBottom: '1.25rem' }}>
+        <Link to="/demos/qwop" className="qwop-demo-cta">
+          Watch agent run
+        </Link>
+      </p>
+
       <img
         src={`${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-header.gif`}
         alt="qwop-python"
@@ -24,6 +31,13 @@ function QwopPython() {
       />
       <p className="project-caption">
         A Gymnasium environment for Bennet Foddy&apos;s QWOP: pure Python Box2D, headless by default
+      </p>
+
+      <h2>/ live demo</h2>
+
+      <p>
+        <Link to="/demos/qwop">Watch a recorded agent run</Link> in the browser — no install.
+        A trained policy was rolled offline; the page replays body poses with the custom blue-suit skin.
       </p>
 
       <h2>/ motivations</h2>

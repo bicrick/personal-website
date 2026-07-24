@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import './App.css';
 import Docprep from './projects/Docprep';
 import QwopPython from './projects/QwopPython';
+import QwopReplay from './demos/QwopReplay';
 import GDVisualizer from './projects/GDVisualizer';
 import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/projects/docprep" element={<Docprep />} />
         <Route path="/projects/qwop-python" element={<QwopPython />} />
+        <Route path="/demos/qwop" element={<QwopReplay />} />
         <Route path="/projects/ai-masters" element={<AIMasters />} />
         <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
         <Route path="/projects/notepadable" element={<Notepadable />} />

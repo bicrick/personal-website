@@ -43,6 +43,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://bicrick.com/projects/qwop-python</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bicrick.com/demos/qwop</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gd.bicrick.com</loc>
     <lastmod>2026-01-29</lastmod>
     <changefreq>monthly</changefreq>

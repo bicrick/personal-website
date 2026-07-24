@@ -72,6 +72,7 @@ export default function ProjectsPage() {
       description: 'reinforcement learning gym environment for QWOP',
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-1200x600.png`,
       blogLink: '/projects/qwop-python',
+      appLink: '/demos/qwop',
       relevanceRank: 1,
       dateRank: 2,
     },

@@ -14,6 +14,22 @@
   margin: 0;
 }
 
+.qwop-demo-cta {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.qwop-demo-cta:hover {
+  background: var(--ink);
+  color: #fff;
+}
+
 .project-back {
   display: inline-block;
   margin: 0 0 2.75rem;

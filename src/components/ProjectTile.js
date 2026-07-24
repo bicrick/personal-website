@@ -13,6 +13,7 @@ export default function ProjectTile({
   const hasApp = Boolean(project.appLink);
   const blogLink = project.blogLink || project.link;
   const blogIsExternal = Boolean(project.blogExternal || project.external);
+  const appIsExternal = /^https?:\/\//i.test(project.appLink || '');
 
   useEffect(() => {
     if (!isExpanded) return undefined;
@@ -104,16 +105,27 @@ export default function ProjectTile({
         className={`project-choice-panel${isExpanded ? ' is-open' : ''}`}
         aria-hidden={!isExpanded}
       >
-        <a
-          href={project.appLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="project-choice project-choice--app"
-          tabIndex={isExpanded ? 0 : -1}
-          onClick={onCollapse}
-        >
-          <span>app</span>
-        </a>
+        {appIsExternal ? (
+          <a
+            href={project.appLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="project-choice project-choice--app"
+            tabIndex={isExpanded ? 0 : -1}
+            onClick={onCollapse}
+          >
+            <span>app</span>
+          </a>
+        ) : (
+          <Link
+            to={project.appLink}
+            className="project-choice project-choice--app"
+            tabIndex={isExpanded ? 0 : -1}
+            onClick={onCollapse}
+          >
+            <span>app</span>
+          </Link>
+        )}
         {blogIsExternal ? (
           <a
             href={blogLink}
