@@ -5,24 +5,32 @@
 
 const ASSET_BASE = `${process.env.PUBLIC_URL}/demos/qwop`;
 // Bust CDN/browser cache when swapping trajectories or atlas assets
-const ASSET_VERSION = '20260723i';
+const ASSET_VERSION = '20260723j';
 const CAMERA_HORIZONTAL_OFFSET = -14;
 const INITIAL_CAMERA_Y = -200;
 const TRACK_CENTER_Y = 10.74275;
 const GAME_WIDTH = 640;
 const GAME_HEIGHT = 400;
 const TRACK_TILE_WIDTH = 640;
+// JS/pygame startingLine world X (pixels); marker scaled to 37x77
+const START_LINE_WORLD_X = 90;
+const LANE_MARKER_W = 37;
+const LANE_MARKER_H = 77;
+const SAND_PIT_AT = 20000; // jump landing zone (world pixels)
 
 // UISprites.json frame indices (match qwop-python renderer)
 const UI_FRAME = {
   calves: 1,
+  sandBoard: 16,
+  startingLine: 17,
+  thighs: 18,
+  sandPit: 24,
   oUp: 10,
   oDown: 11,
   pUp: 12,
   pDown: 13,
   qUp: 14,
   qDown: 15,
-  thighs: 18,
   wUp: 19,
   wDown: 20,
 };
@@ -57,20 +65,36 @@ function stretchSprintbg(source) {
   return c;
 }
 
-function tileUnderground(source) {
-  // Match pygame _tile_texture to 640 x texture.height
+function tileTexture(source, width, height) {
   const c = document.createElement('canvas');
-  c.width = TRACK_TILE_WIDTH;
-  c.height = source.height;
+  c.width = width;
+  c.height = height;
   const ctx = c.getContext('2d');
-  for (let x = 0; x < c.width; x += source.width) {
-    ctx.drawImage(source, x, 0);
+  for (let y = 0; y < height; y += source.height) {
+    for (let x = 0; x < width; x += source.width) {
+      ctx.drawImage(source, x, y);
+    }
   }
   return c;
 }
 
+function tileUnderground(source) {
+  // Match pygame _tile_texture to 640 x texture.height
+  return tileTexture(source, TRACK_TILE_WIDTH, source.height);
+}
+
 export async function loadQwopDemoAssets() {
-  const [run, atlasJson, atlas, undergroundSrc, sprintbgSrc, uiJson, uiAtlas] = await Promise.all([
+  const [
+    run,
+    atlasJson,
+    atlas,
+    undergroundSrc,
+    sprintbgSrc,
+    uiJson,
+    uiAtlas,
+    sandSrc,
+    sandtapeSrc,
+  ] = await Promise.all([
     loadJson(assetUrl('best-run.json')),
     loadJson(assetUrl('playercolor.json')),
     loadImage(assetUrl('playercolor.png')),
@@ -78,6 +102,8 @@ export async function loadQwopDemoAssets() {
     loadImage(assetUrl('sprintbg.jpg')),
     loadJson(assetUrl('UISprites.json')),
     loadImage(assetUrl('UISprites.png')),
+    loadImage(assetUrl('sand.png')),
+    loadImage(assetUrl('sandtape.png')),
   ]);
 
   return {
@@ -88,6 +114,8 @@ export async function loadQwopDemoAssets() {
     sprintbg: stretchSprintbg(sprintbgSrc),
     uiFrames: uiJson.frames,
     uiAtlas,
+    sandTiled: tileTexture(sandSrc, 2000, 25),
+    sandtapeTiled: tileTexture(sandtapeSrc, 2000, 14),
   };
 }
 
@@ -105,6 +133,66 @@ function blitUiFrame(ctx, uiAtlas, uiFrames, frameIdx, x, y) {
     fr.w,
     fr.h,
   );
+}
+
+function drawLaneMarkers(ctx, assets, cameraX, trackTopY, worldScale) {
+  // Match pygame _draw_lane_markers: Starting_Line frame 17, scaled 37x77
+  const { uiAtlas, uiFrames, run } = assets;
+  if (!uiAtlas || !uiFrames || uiFrames.length <= UI_FRAME.startingLine) return;
+
+  const fr = uiFrames[UI_FRAME.startingLine].frame;
+  const blitY = Math.round(trackTopY - LANE_MARKER_H);
+
+  const drawMarker = (worldX) => {
+    const screenX = worldX - cameraX;
+    if (screenX + LANE_MARKER_W <= 0 || screenX >= GAME_WIDTH) return;
+    ctx.drawImage(
+      uiAtlas,
+      fr.x,
+      fr.y,
+      fr.w,
+      fr.h,
+      Math.round(screenX),
+      blitY,
+      LANE_MARKER_W,
+      LANE_MARKER_H,
+    );
+  };
+
+  drawMarker(START_LINE_WORLD_X);
+
+  // Best/hs line at recorded final distance (same formula as JS: metres * 10 * worldScale)
+  const bestMeters = Number(run?.meta?.final_distance);
+  if (Number.isFinite(bestMeters) && bestMeters > 0) {
+    drawMarker(bestMeters * 10 * worldScale);
+  }
+}
+
+function drawSandPit(ctx, assets, cameraX, cameraY) {
+  // Match pygame _draw_sand_pit (only when camera near ~1000 m)
+  if (!(cameraX > SAND_PIT_AT - 500 && cameraX < SAND_PIT_AT + 2100)) return;
+
+  const { sandTiled, sandtapeTiled, uiAtlas, uiFrames } = assets;
+  const toScreen = (wx, wy) => [wx - cameraX, wy - cameraY];
+
+  if (sandtapeTiled) {
+    const [sx, sy] = toScreen(SAND_PIT_AT - 84, 160);
+    ctx.drawImage(sandtapeTiled, Math.round(sx), Math.round(sy));
+  }
+  if (sandTiled) {
+    const [sx, sy] = toScreen(SAND_PIT_AT - 6, 176);
+    ctx.drawImage(sandTiled, Math.round(sx), Math.round(sy));
+  }
+  if (uiAtlas && uiFrames && uiFrames.length > UI_FRAME.sandPit) {
+    const fr = uiFrames[UI_FRAME.sandPit].frame;
+    const [sx, sy] = toScreen(SAND_PIT_AT, 188.5);
+    ctx.drawImage(uiAtlas, fr.x, fr.y, fr.w, fr.h, Math.round(sx), Math.round(sy), fr.w, fr.h);
+  }
+  if (uiAtlas && uiFrames && uiFrames.length > UI_FRAME.sandBoard) {
+    const fr = uiFrames[UI_FRAME.sandBoard].frame;
+    const [sx, sy] = toScreen(SAND_PIT_AT - 183, 155);
+    ctx.drawImage(uiAtlas, fr.x, fr.y, fr.w, fr.h, Math.round(sx), Math.round(sy), fr.w, fr.h);
+  }
 }
 
 function drawKeyIndicators(ctx, assets, keys) {
@@ -160,6 +248,13 @@ function drawGameFrame(ctx, assets, index) {
       Math.round(screenY - segmentH / 2),
     );
   }
+
+  // 2b. Start line + best line (UISprites Starting_Line)
+  const trackTopY = trackCenterYPx - segmentH / 2 - cameraY;
+  drawLaneMarkers(ctx, assets, cameraX, trackTopY, worldScale);
+
+  // 2c. Sand pit (~1000 m) — assets loaded; visible only if a run reaches it
+  drawSandPit(ctx, assets, cameraX, cameraY);
 
   // 3. Body parts in depth order (already encoded in run.parts).
   // Atlas frame sizes match physics boxes (half*2*worldScale); prefer atlas pixels.
