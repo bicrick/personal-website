@@ -34,10 +34,8 @@ export function formatSeedLine(meta = {}) {
   return bits.join(' · ');
 }
 
-export function formatRecordedLine(meta = {}) {
-  const dist = Number(meta.final_distance);
-  if (!Number.isFinite(dist)) return 'recorded run · loops';
-  return `~${dist.toFixed(1)} m recorded · loops`;
+export function formatRecordedLine() {
+  return 'Recorded agent run · loops';
 }
 
 export function hudStatsForFrame(run, frameIndex) {

@@ -35,7 +35,7 @@ function QwopReplay() {
   const [metaHud, setMetaHud] = useState({
     model: 'RL agent',
     seedLine: 'realtime replay',
-    recordedLine: 'recorded run · loops',
+    recordedLine: 'Recorded agent run · loops',
   });
 
   useEffect(() => {
@@ -72,7 +72,7 @@ function QwopReplay() {
         setMetaHud({
           model: modelLabelFromMeta(meta),
           seedLine: formatSeedLine(meta),
-          recordedLine: formatRecordedLine(meta),
+          recordedLine: formatRecordedLine(),
         });
 
         const player = createQwopReplayPlayer(canvasRef.current, assets, {
@@ -334,6 +334,13 @@ function QwopReplay() {
           <div className="qwop-replay-status qwop-replay-status-error">{error}</div>
         )}
       </div>
+
+      <section
+        className={`qwop-replay-about${chromeReady ? ' is-ready' : ''}`}
+        aria-label="About this agent"
+      >
+        <p>{QRDQN_INFO}</p>
+      </section>
 
       <footer className={`qwop-replay-footer${chromeReady ? ' is-ready' : ''}`}>
         {metaHud.recordedLine}
