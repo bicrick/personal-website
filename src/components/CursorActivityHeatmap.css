@@ -23,6 +23,7 @@
   --ca-4: #2563eb;
   --ca-gap: 3px;
   --ca-gutter: 28px;
+  --ca-label-gap: 6px;
 
   display: flex;
   flex-direction: column;
@@ -49,12 +50,22 @@
   color: var(--ca-mute);
   font-size: 0.78rem;
   line-height: 1;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .cursor-activity:hover .cursor-activity-label,
 .cursor-activity:focus-visible .cursor-activity-label {
   color: var(--ca-blue);
+}
+
+/* Touch: hide the chart title until the user taps a day */
+.cursor-activity.is-coarse .cursor-activity-label {
+  opacity: 0;
+}
+
+.cursor-activity.is-coarse.is-armed .cursor-activity-label,
+.cursor-activity.is-coarse:focus-visible .cursor-activity-label {
+  opacity: 1;
 }
 
 .cursor-activity-graph {
@@ -64,6 +75,7 @@
 .cursor-activity-months {
   display: flex;
   align-items: flex-end;
+  gap: var(--ca-label-gap);
   margin-bottom: 0.3rem;
   width: 100%;
 }
@@ -81,27 +93,34 @@
   color: var(--ca-mute);
   font-size: 0.68rem;
   line-height: 1;
+  overflow: visible;
 }
 
 .cursor-activity-month-track span {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
+  overflow: visible;
+  justify-self: start;
 }
 
 .cursor-activity-body {
+  position: relative;
   display: flex;
-  gap: 6px;
   width: 100%;
-  align-items: stretch;
+  align-items: flex-start;
+  /* Reserve space for day labels; labels are out of flow so body height
+     comes only from the week columns (keeps Mon/Wed/Fri on the dot rows). */
+  padding-left: calc(var(--ca-gutter) + var(--ca-label-gap));
 }
 
 .cursor-activity-days {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
   display: grid;
-  grid-template-rows: repeat(7, 1fr);
+  grid-template-rows: repeat(7, minmax(0, 1fr));
   gap: var(--ca-gap);
   width: var(--ca-gutter);
-  flex: 0 0 var(--ca-gutter);
   color: var(--ca-mute);
   font-size: 0.62rem;
   line-height: 1;
@@ -111,6 +130,7 @@
   display: flex;
   align-items: center;
   min-height: 0;
+  overflow: hidden;
 }
 
 .cursor-activity-weeks {
@@ -118,6 +138,7 @@
   gap: var(--ca-gap);
   flex: 1;
   min-width: 0;
+  width: 100%;
   align-items: start;
 }
 
@@ -221,10 +242,7 @@
   .cursor-activity {
     --ca-gap: 2px;
     --ca-gutter: 20px;
-  }
-
-  .cursor-activity-body {
-    gap: 4px;
+    --ca-label-gap: 4px;
   }
 
   .cursor-activity-label {

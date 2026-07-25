@@ -129,18 +129,6 @@ export default function ProjectTile({
         }}
       >
         {media}
-        {!fineHover && (
-          <div
-            className={`project-overlay project-overlay--touch${isExpanded ? ' is-hidden' : ''}`}
-            aria-hidden={isExpanded}
-          >
-            <div>
-              {project.title}
-              {' - '}
-              {project.description}
-            </div>
-          </div>
-        )}
         <span className="visually-hidden">
           {fineHover
             ? `${project.title}. Hover for ${hasApp ? `${appLabel} and blog` : 'blog'} options.`
