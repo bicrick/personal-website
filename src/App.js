@@ -9,6 +9,7 @@ import QwopReplay from './demos/QwopReplay';
 import GDVisualizer from './projects/GDVisualizer';
 import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
+import GolfIncremental from './projects/GolfIncremental';
 import SiteLayout from './components/SiteLayout';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -25,6 +26,7 @@ function App() {
         <Route path="/projects/ai-masters" element={<AIMasters />} />
         <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
         <Route path="/projects/notepadable" element={<Notepadable />} />
+        <Route path="/projects/golf-incremental" element={<GolfIncremental />} />
         <Route element={<SiteLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />

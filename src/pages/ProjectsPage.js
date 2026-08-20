@@ -59,13 +59,23 @@ export default function ProjectsPage() {
 
   const projects = [
     {
+      title: 'range rat',
+      description: 'golf incremental about rats and cheese',
+      image: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-1200x600.jpg`,
+      blogLink: '/projects/golf-incremental',
+      appLink: 'https://golf.bicrick.com',
+      appLabel: 'play',
+      relevanceRank: 1,
+      dateRank: 1,
+    },
+    {
       title: 'notepadable',
       description: 'text editor encoded in the URL',
       image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`,
       blogLink: '/projects/notepadable',
       appLink: 'https://notepadable.com',
-      relevanceRank: 4,
-      dateRank: 1,
+      relevanceRank: 5,
+      dateRank: 2,
     },
     {
       title: 'qwop-python',
@@ -74,8 +84,8 @@ export default function ProjectsPage() {
       blogLink: '/projects/qwop-python',
       appLink: '/demos/qwop',
       appLabel: 'demo',
-      relevanceRank: 1,
-      dateRank: 2,
+      relevanceRank: 2,
+      dateRank: 3,
     },
     {
       title: 'gd-visualizer',
@@ -83,16 +93,16 @@ export default function ProjectsPage() {
       image: `${process.env.PUBLIC_URL}/images/gd-visualizer/gd-visualizer-1200x600.png`,
       blogLink: '/projects/gd-visualizer',
       appLink: 'https://gd.bicrick.com',
-      relevanceRank: 2,
-      dateRank: 3,
+      relevanceRank: 3,
+      dateRank: 4,
     },
     {
       title: 'artificial intelligence masters',
       description: 'coursework and takeaways',
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
       blogLink: '/projects/ai-masters',
-      relevanceRank: 3,
-      dateRank: 5,
+      relevanceRank: 4,
+      dateRank: 6,
     },
     {
       title: 'docprep',
@@ -100,8 +110,8 @@ export default function ProjectsPage() {
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
       blogLink: '/projects/docprep',
       appLink: 'https://docprep.site',
-      relevanceRank: 5,
-      dateRank: 4,
+      relevanceRank: 6,
+      dateRank: 5,
     },
   ];
 
