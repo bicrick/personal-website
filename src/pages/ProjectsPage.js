@@ -60,7 +60,7 @@ export default function ProjectsPage() {
   const projects = [
     {
       title: 'range rat',
-      description: 'golf incremental about rats and cheese',
+      description: 'golf incremental, built with agents',
       image: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-1200x600.jpg`,
       blogLink: '/projects/golf-incremental',
       appLink: 'https://golf.bicrick.com',
