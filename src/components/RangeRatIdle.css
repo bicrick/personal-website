@@ -12,9 +12,21 @@
 
 .range-rat-sprite-frame {
   flex: 0 0 auto;
-  background-repeat: no-repeat;
+  position: relative;
+  width: 260px;
+  height: 260px;
+  overflow: hidden;
+}
+
+.range-rat-sprite-sheet,
+.project-article .range-rat-sprite-sheet {
+  display: block;
+  width: 1300px;
+  max-width: none;
+  height: 1040px;
+  margin: 0;
+  border: 0;
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
 .range-rat-idle-sheet {
