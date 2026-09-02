@@ -7,7 +7,6 @@ import { useFadeNavigate } from './PageTransition';
 import './NextPageFooter.css';
 
 const FILL_DELTA = 360;
-const BOTTOM_SLACK = 24;
 const TAKEOVER_PX = 96;
 const IDLE_MS = 180;
 const COLLAPSE_MS = 420;
