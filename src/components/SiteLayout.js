@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import PageTransition, { FadeNavigateProvider, useFadeNavigate } from './PageTransition';
 import NextPageFooter from './NextPageFooter';
 import { PAGE_SEO, normalizePagePath } from '../constants/pages';
+import { SITE_SCROLL_ID, scrollPageToTop } from '../utils/pageScroll';
 
 function Navigation() {
   const { pathname } = useLocation();
@@ -75,8 +76,17 @@ function SiteChrome() {
   const currentPath = normalizePagePath(pathname);
   const seo = PAGE_SEO[currentPath] || PAGE_SEO['/'];
 
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.add('site-scroll-lock');
+    return () => {
+      root.classList.remove('site-scroll-lock');
+      scrollPageToTop();
+    };
+  }, []);
+
   return (
-    <div className="App_mainContainer landing-page">
+    <div id={SITE_SCROLL_ID} className="App_mainContainer landing-page">
       <SEO
         ogTitle={seo.ogTitle}
         description={seo.description}

@@ -2,36 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getNextLandingPage } from '../constants/sections';
 import { normalizePagePath } from '../constants/pages';
+import { getScrollState, isPageScrollLocked, snapToPageBottom } from '../utils/pageScroll';
 import { useFadeNavigate } from './PageTransition';
 import './NextPageFooter.css';
 
 const FILL_DELTA = 360;
-const BOTTOM_SLACK = 16;
+const BOTTOM_SLACK = 24;
+const TAKEOVER_PX = 96;
 const IDLE_MS = 180;
 const COLLAPSE_MS = 420;
-
-function getScrollState() {
-  const el = document.scrollingElement || document.documentElement;
-  const scrollTop = el.scrollTop;
-  const maxScroll = Math.max(0, el.scrollHeight - el.clientHeight);
-  return {
-    el,
-    scrollTop,
-    maxScroll,
-    remaining: maxScroll - scrollTop,
-  };
-}
-
-function snapToPageBottom() {
-  const { el, maxScroll, scrollTop } = getScrollState();
-  if (scrollTop < maxScroll) {
-    el.scrollTop = maxScroll;
-  }
-}
-
-function isBodyScrollLocked() {
-  return document.body.style.overflow === 'hidden';
-}
 
 export default function NextPageFooter() {
   const { pathname } = useLocation();
@@ -58,8 +37,6 @@ export default function NextPageFooter() {
   }, [currentPath]);
 
   useEffect(() => {
-    if (!nextPage) return undefined;
-
     const stopCollapse = () => {
       if (collapseFrameRef.current != null) {
         window.cancelAnimationFrame(collapseFrameRef.current);
@@ -138,25 +115,26 @@ export default function NextPageFooter() {
     const consumeTowardNextPage = (delta, fillScale) => {
       if (delta === 0) return false;
 
-      const { remaining } = getScrollState();
+      const { el, remaining } = getScrollState();
       const reversingProgress = delta < 0 && progressRef.current > 0;
-      const pullingPastBottom = delta > 0 && remaining <= BOTTOM_SLACK;
-      const wouldOvershoot = delta > 0 && delta > remaining;
+      const nearBottom = remaining <= TAKEOVER_PX;
 
       if (reversingProgress) {
-        bump(delta / fillScale);
-        return true;
+        if (nextPage) bump(delta / fillScale);
+        return Boolean(nextPage);
       }
 
-      if (pullingPastBottom) {
-        snapToPageBottom();
-        bump(delta / fillScale);
-        return true;
-      }
-
-      if (wouldOvershoot) {
-        snapToPageBottom();
-        bump((delta - Math.max(0, remaining)) / fillScale);
+      if (delta > 0 && nearBottom) {
+        const applied = Math.min(Math.max(0, remaining), delta);
+        if (applied > 0) {
+          el.scrollTop += applied;
+        } else {
+          snapToPageBottom();
+        }
+        const leftover = delta - applied;
+        if (leftover > 0 && nextPage) {
+          bump(leftover / fillScale);
+        }
         return true;
       }
 
@@ -164,7 +142,7 @@ export default function NextPageFooter() {
     };
 
     const onWheel = (event) => {
-      if (navigatingRef.current || isBodyScrollLocked()) return;
+      if (navigatingRef.current || isPageScrollLocked()) return;
       if (consumeTowardNextPage(event.deltaY, FILL_DELTA)) {
         event.preventDefault();
       }
@@ -177,7 +155,7 @@ export default function NextPageFooter() {
     };
 
     const onTouchMove = (event) => {
-      if (touchStartY == null || navigatingRef.current || isBodyScrollLocked()) return;
+      if (touchStartY == null || navigatingRef.current || isPageScrollLocked()) return;
       if (event.touches.length !== 1) return;
       const currentY = event.touches[0].clientY;
       const delta = touchStartY - currentY;
@@ -194,7 +172,7 @@ export default function NextPageFooter() {
       }
     };
 
-    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('wheel', onWheel, { passive: false, capture: true });
     document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
     document.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
     document.addEventListener('touchend', onTouchEnd, { passive: true, capture: true });
@@ -203,7 +181,7 @@ export default function NextPageFooter() {
     return () => {
       clearIdle();
       stopCollapse();
-      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('wheel', onWheel, { capture: true });
       document.removeEventListener('touchstart', onTouchStart, { capture: true });
       document.removeEventListener('touchmove', onTouchMove, { capture: true });
       document.removeEventListener('touchend', onTouchEnd, { capture: true });

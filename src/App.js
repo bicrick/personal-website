@@ -11,6 +11,7 @@ import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
 import GolfIncremental from './projects/GolfIncremental';
 import SiteLayout from './components/SiteLayout';
+import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
@@ -19,6 +20,7 @@ import ContactPage from './pages/ContactPage';
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route path="/projects/docprep" element={<Docprep />} />
         <Route path="/projects/qwop-python" element={<QwopPython />} />

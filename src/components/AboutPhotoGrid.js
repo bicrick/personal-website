@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useState } from 'react';
+import { lockPageScroll } from '../utils/pageScroll';
 import './AboutPhotoGrid.css';
 
 const PHOTOS = [
@@ -24,12 +25,11 @@ function AboutPhotoGrid() {
       }
     };
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const unlockPageScroll = lockPageScroll();
     window.addEventListener('keydown', onKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      unlockPageScroll();
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [activeIndex]);

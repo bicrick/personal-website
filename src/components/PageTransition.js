@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { scrollPageToTop } from '../utils/pageScroll';
 import './PageTransition.css';
 
 export const FADE_MS = 320;
@@ -44,7 +45,7 @@ export function FadeNavigateProvider({ children }) {
 
     if (prefersReducedMotion()) {
       navigate(to);
-      window.scrollTo(0, 0);
+      scrollPageToTop();
       return;
     }
 
@@ -56,7 +57,7 @@ export function FadeNavigateProvider({ children }) {
       pendingRef.current = null;
       if (target) {
         navigate(target);
-        window.scrollTo(0, 0);
+        scrollPageToTop();
       }
       setPhase('entering');
       requestAnimationFrame(() => {
