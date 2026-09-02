@@ -2,6 +2,8 @@ import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
 import RangeRatEmbed from '../components/RangeRatEmbed';
 import RangeRatIdle from '../components/RangeRatIdle';
+import RangeRatYawn from '../components/RangeRatYawn';
+import RangeRatPlaylist from '../components/RangeRatPlaylist';
 
 function GolfIncremental() {
   return (
@@ -69,6 +71,8 @@ function GolfIncremental() {
         . I used both to help me make the assets for this game. Each of these have simple API based MCP servers that allow coding agents to create assets autonomously, but in my experience these never worked very well.
       </p>
 
+      <RangeRatYawn />
+
       <p>
         I actually made my own tool after getting tired of paying for{' '}
         <a href="https://www.pixellab.ai/" target="_blank" rel="noopener noreferrer">
@@ -93,6 +97,8 @@ function GolfIncremental() {
         </a>
         {' '}helped me create the music for this game. I didn&apos;t realize how much fun it would be. Music really helps you ground the game&apos;s artstyle and overall feel. If the music is off the game is off. With Suno I was able to create the music I wanted (8-bit, chiptune, adventure) and iterate from existing songs. Please listen to the music in the game it was so much fun to make.
       </p>
+
+      <RangeRatPlaylist />
 
       <h2>/ wrap up</h2>
 

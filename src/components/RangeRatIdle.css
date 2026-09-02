@@ -10,7 +10,7 @@
   flex-wrap: wrap;
 }
 
-.range-rat-idle {
+.range-rat-sprite-frame {
   flex: 0 0 auto;
   background-repeat: no-repeat;
   image-rendering: pixelated;
