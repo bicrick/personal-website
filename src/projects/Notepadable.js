@@ -16,8 +16,8 @@ function Notepadable() {
       seoImage="https://bicrick.com/images/notepadable/notepadable-logo.png"
     >
       <img
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`}
-        alt="notepadable"
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`}
+        alt="notepadable logo"
         width="1200"
         height="600"
         style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '0 auto 0.5rem' }}
@@ -36,6 +36,17 @@ function Notepadable() {
       
       <p>
         I wanted a way to share text without uploading it anywhere. Paste a note, copy a link, send it. The recipient gets exactly what you wrote. No accounts, no servers, no database. The idea is simple: put the document in the URL hash so it never touches the server.
+      </p>
+
+      <img
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`}
+        alt="notepadable editor running in the browser"
+        width="1200"
+        height="600"
+        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '1.5rem auto 0.5rem' }}
+      />
+      <p className="project-caption">
+        the editor running in the browser — document lives in the URL
       </p>
 
       <h2>/ the solution</h2>

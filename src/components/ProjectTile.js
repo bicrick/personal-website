@@ -70,6 +70,7 @@ export default function ProjectTile({
   isExpanded,
   onToggle,
   onCollapse,
+  hideMeta = false,
 }) {
   const cardRef = useRef(null);
   const panelId = useId();
@@ -110,11 +111,12 @@ export default function ProjectTile({
   ) : (
     <div className="project-card-placeholder" aria-hidden="true" />
   );
+  const fitContain = project.imageFit === 'contain';
 
   return (
     <div
       ref={cardRef}
-      className={`project-card project-card--choosable${hasApp ? '' : ' project-card--blog-only'}${panelOpen ? ' is-expanded' : ''}${fineHover ? ' is-hoverable' : ''}`}
+      className={`project-card project-card--choosable${hasApp ? '' : ' project-card--blog-only'}${panelOpen ? ' is-expanded' : ''}${fineHover ? ' is-hoverable' : ''}${fitContain ? ' project-card--contain' : ''}`}
       onMouseLeave={fineHover ? onCollapse : undefined}
     >
       <button
@@ -165,7 +167,9 @@ export default function ProjectTile({
             <span>blog</span>
           </ChoiceLink>
         </div>
-        <ProjectMeta title={project.title} description={project.description} />
+        {!hideMeta && (
+          <ProjectMeta title={project.title} description={project.description} />
+        )}
       </div>
     </div>
   );

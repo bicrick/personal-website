@@ -1,7 +1,7 @@
 export const PAGE_SEO = {
   '/': {
-    ogTitle: 'bicrick - Patrick Brown | Full-Stack Engineer',
-    description: 'Patrick Brown (bicrick) - Full-stack engineer shipping apps, data systems, and ML workflows. Currently at H-E-B. Austin, TX.',
+    ogTitle: 'bicrick - Patrick Brown | Agent-First Engineer',
+    description: 'Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.',
     url: 'https://bicrick.com',
   },
   '/about': {

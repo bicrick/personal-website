@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 
 function SEO({ 
   title = "bicrick",
-  description = "Patrick Brown (bicrick) - Full-stack engineer shipping apps, data systems, and ML workflows. Currently at H-E-B. Austin, TX.",
-  keywords = "bicrick, Patrick Brown, Full-Stack Engineer, ML, Data Systems, GCP, AWS, Austin, HEB, UT Austin, Machine Learning",
+  description = "Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.",
+  keywords = "bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin",
   author = "Patrick Brown (bicrick)",
   url = "https://bicrick.com",
   image = "https://bicrick.com/about/headshot.jpg",

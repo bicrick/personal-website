@@ -3,7 +3,8 @@ import './RangeRatEmbed.css';
 
 const PLAY_HREF = 'https://golf.bicrick.com';
 const EMBED_ORIGIN = 'https://golf.bicrick.com';
-const EMBED_SRC = `${EMBED_ORIGIN}/?embed=1&muted=1`;
+const EMBED_SRC_MUTED = `${EMBED_ORIGIN}/?embed=1&muted=1`;
+const EMBED_SRC_LIVE = `${EMBED_ORIGIN}/?embed=1&muted=0`;
 const POSTER = `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-1200x600.jpg`;
 const SET_MUTED_TYPE = 'range-rat-set-muted';
 const EMBED_READY_TYPE = 'range-rat-embed-ready';
@@ -43,8 +44,10 @@ function SpeakerIcon({ muted }) {
 function RangeRatEmbed() {
   const frameRef = useRef(null);
   const mutedRef = useRef(true);
+  const canRemoteMuteRef = useRef(false);
   const [loaded, setLoaded] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [frameEpoch, setFrameEpoch] = useState(0);
 
   const syncMute = useCallback((nextMuted) => {
     mutedRef.current = nextMuted;
@@ -59,6 +62,7 @@ function RangeRatEmbed() {
       if (event.data?.type !== EMBED_READY_TYPE) {
         return;
       }
+      canRemoteMuteRef.current = true;
       postEmbedMuted(frameRef.current, mutedRef.current);
     }
     window.addEventListener('message', onMessage);
@@ -75,7 +79,13 @@ function RangeRatEmbed() {
     event.stopPropagation();
     const nextMuted = !muted;
     setMuted(nextMuted);
-    syncMute(nextMuted);
+    mutedRef.current = nextMuted;
+    if (canRemoteMuteRef.current) {
+      syncMute(nextMuted);
+      return;
+    }
+    setLoaded(false);
+    setFrameEpoch((epoch) => epoch + 1);
   };
 
   return (
@@ -90,13 +100,14 @@ function RangeRatEmbed() {
           hidden={loaded}
         />
         <iframe
+          key={frameEpoch}
           ref={frameRef}
           className="range-rat-embed-frame"
-          src={EMBED_SRC}
+          src={muted ? EMBED_SRC_MUTED : EMBED_SRC_LIVE}
           title="Range Rat"
           loading="eager"
           tabIndex={-1}
-          allow="autoplay"
+          allow={muted ? "autoplay 'none'" : 'autoplay'}
           onLoad={handleFrameLoad}
         />
         <a

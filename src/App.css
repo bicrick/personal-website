@@ -384,6 +384,16 @@ section {
   object-fit: cover;
 }
 
+.project-card--contain {
+  /* Match notepadable-header.gif (800×533) so the full editor shows without letterboxing */
+  aspect-ratio: 800 / 533;
+  background: #f0f0f0;
+}
+
+.project-card--contain img {
+  object-fit: cover;
+}
+
 .project-overlay {
   position: absolute;
   bottom: 0;

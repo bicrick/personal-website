@@ -9,7 +9,7 @@ function GDVisualizer() {
       date="November 2025"
       linkHref="https://gd.bicrick.com"
       linkLabel="try here"
-      abstract="An interactive 3D tool for watching optimizers race down loss landscapes, so you can see why SGD, Adam, and momentum find different solutions, and test new ideas before burning GPU time."
+      abstract="An interactive 3D tool for comparing ML optimizers on the same loss landscape, so you can see why different algorithms and hyperparameters land in different minima."
       seoTitle="GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick"
       seoDescription="GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React."
       seoKeywords="bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js"

@@ -15,7 +15,7 @@ export default function HomePage() {
           <div className="home-copy">
             <h2 className="home-heading">Patrick Brown</h2>
             <p className="home-bio">
-              Full-stack engineer shipping apps, data systems, and ML workflows.
+              Agent-first engineer specializing in machine learning.
               Austin, TX.
             </p>
             <p className="home-bio-sub">

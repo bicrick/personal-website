@@ -1,0 +1,197 @@
+.project-timeline {
+  --timeline-spine: 32px;
+  --timeline-node: 8px;
+  --timeline-gap: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 1rem;
+}
+
+.project-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background-image: radial-gradient(#b3b8c2 1px, transparent 1.2px);
+  background-size: 2px 6px;
+  background-repeat: repeat-y;
+  pointer-events: none;
+}
+
+.project-timeline-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--timeline-spine) minmax(0, 1fr);
+  grid-template-areas: "media spine copy";
+  column-gap: var(--timeline-gap);
+  align-items: center;
+}
+
+.project-timeline-row.is-flip {
+  grid-template-areas: "copy spine media";
+}
+
+.project-timeline-row:hover,
+.project-timeline-row:has(.is-expanded) {
+  z-index: 10;
+}
+
+.project-timeline-media {
+  grid-area: media;
+  min-width: 0;
+}
+
+.project-timeline-spine {
+  grid-area: spine;
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-timeline-node {
+  display: block;
+  width: var(--timeline-node);
+  height: var(--timeline-node);
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--paper);
+  z-index: 1;
+}
+
+.project-timeline-connector {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  width: calc(50% + var(--timeline-gap));
+  height: 1px;
+  background: #b3b8c2;
+}
+
+.project-timeline-row.is-flip .project-timeline-connector {
+  right: auto;
+  left: 50%;
+}
+
+.project-timeline-copy {
+  grid-area: copy;
+  min-width: 0;
+  padding-inline: 8px;
+}
+
+.project-timeline-row.is-flip .project-timeline-copy {
+  text-align: right;
+}
+
+.project-timeline-copy-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-timeline-copy-link:after {
+  display: none;
+}
+
+.project-timeline-title {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.project-timeline-date {
+  margin: 8px 0 0;
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--ink-muted);
+}
+
+.project-timeline-desc {
+  margin: 8px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.project-timeline-copy-link:hover .project-timeline-title,
+.project-timeline-copy-link:focus-visible .project-timeline-title {
+  color: var(--link);
+}
+
+.project-timeline-copy-link:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+}
+
+/* Timeline images sit with the diagram, not the tile-grid shadow. */
+.project-timeline .project-card {
+  filter: none;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+
+.project-timeline .project-card:hover,
+.project-timeline .project-card--choosable.is-expanded,
+.project-timeline .project-card--choosable.is-hoverable:hover,
+.project-timeline .project-card--choosable.is-hoverable:focus-within {
+  filter: none;
+  transform: none;
+}
+
+@media (max-width: 800px) {
+  .project-timeline {
+    --timeline-spine: 24px;
+    --timeline-gap: 12px;
+    gap: 24px;
+    padding-left: 4px;
+  }
+
+  .project-timeline::before {
+    left: calc(4px + (var(--timeline-spine) / 2));
+    transform: none;
+  }
+
+  .project-timeline-row,
+  .project-timeline-row.is-flip {
+    grid-template-columns: var(--timeline-spine) minmax(0, 1fr);
+    grid-template-areas:
+      "spine media"
+      "spine copy";
+    row-gap: 12px;
+  }
+
+  .project-timeline-row.is-flip .project-timeline-copy {
+    text-align: left;
+  }
+
+  .project-timeline-connector {
+    display: none;
+  }
+
+  .project-timeline-copy {
+    padding-inline: 4px 0;
+  }
+
+  .project-timeline-title {
+    font-size: 0.98rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-timeline .project-card,
+  .project-timeline .project-card:hover {
+    transition: none;
+  }
+}
