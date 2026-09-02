@@ -1,30 +1,110 @@
 const HANDLE = 'bicrick';
 const PROFILE_URL = `https://cursor.com/@${HANDLE}`;
+const HANDLE_NEEDLE = `"handle":"${HANDLE}"`;
 
-function extractProfile(html) {
+function sliceBalancedObject(text, start) {
+  if (text[start] !== '{') return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i += 1) {
+    const ch = text[i];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = true;
+    } else if (ch === '{') {
+      depth += 1;
+    } else if (ch === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        return text.slice(start, i + 1);
+      }
+    }
+  }
+
+  return null;
+}
+
+function profileFromObject(parsed) {
+  if (!parsed || typeof parsed !== 'object') return null;
+  const profile = parsed.handle === HANDLE ? parsed : parsed.profile;
+  if (profile?.handle === HANDLE && Array.isArray(profile.activityCounts)) {
+    return profile;
+  }
+  return null;
+}
+
+function findProfileInText(text) {
+  let from = 0;
+
+  while (from < text.length) {
+    const handleAt = text.indexOf(HANDLE_NEEDLE, from);
+    if (handleAt === -1) return null;
+
+    let start = handleAt;
+    while (start >= 0) {
+      start = text.lastIndexOf('{', start);
+      if (start === -1) break;
+
+      const blob = sliceBalancedObject(text, start);
+      if (blob) {
+        try {
+          const profile = profileFromObject(JSON.parse(blob));
+          if (profile) return profile;
+        } catch (_) {
+          // keep walking outward
+        }
+      }
+
+      start -= 1;
+    }
+
+    from = handleAt + HANDLE_NEEDLE.length;
+  }
+
+  return null;
+}
+
+function collectFlightStrings(html) {
+  const strings = [];
   const pushPattern = /self\.__next_f\.push\(\[1,(.*?)\]\)\s*<\/script>/gs;
   let match;
 
   while ((match = pushPattern.exec(html)) !== null) {
     try {
       const decoded = JSON.parse(match[1]);
-      if (typeof decoded !== 'string') continue;
-      if (!decoded.includes('"activityCounts"') || !decoded.includes(`"handle":"${HANDLE}"`)) {
-        continue;
-      }
-
-      const colon = decoded.indexOf(':');
-      if (colon === -1) continue;
-
-      const data = JSON.parse(decoded.slice(colon + 1));
-      const profile = data?.[3]?.profile;
-      if (profile?.handle === HANDLE) {
-        return profile;
+      if (typeof decoded === 'string') {
+        strings.push(decoded);
       }
     } catch (_) {
-      // try next push payload
+      // skip malformed push payloads
     }
   }
+
+  return strings;
+}
+
+function extractProfile(html) {
+  for (const flight of collectFlightStrings(html)) {
+    const profile = findProfileInText(flight);
+    if (profile) return profile;
+  }
+
+  const fromHtml = findProfileInText(html);
+  if (fromHtml) return fromHtml;
 
   throw new Error('profile payload not found');
 }
@@ -88,3 +168,6 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+
+module.exports.extractProfile = extractProfile;
+module.exports.toPublicPayload = toPublicPayload;

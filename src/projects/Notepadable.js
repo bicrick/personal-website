@@ -1,5 +1,6 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import NotepadableEmbed from '../components/NotepadableEmbed';
 
 function Notepadable() {
   return (
@@ -15,16 +16,7 @@ function Notepadable() {
       seoUrl="https://bicrick.com/projects/notepadable"
       seoImage="https://bicrick.com/images/notepadable/notepadable-logo.png"
     >
-      <img
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-logo.png`}
-        alt="notepadable logo"
-        width="1200"
-        height="600"
-        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '0 auto 0.5rem' }}
-      />
-      <p className="project-caption">
-        A minimalist text editor that encodes your entire document into the URL
-      </p>
+      <NotepadableEmbed />
 
       <h2>/ inspired by</h2>
       
@@ -38,17 +30,6 @@ function Notepadable() {
         I wanted a way to share text without uploading it anywhere. Paste a note, copy a link, send it. The recipient gets exactly what you wrote. No accounts, no servers, no database. The idea is simple: put the document in the URL hash so it never touches the server.
       </p>
 
-      <img
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`}
-        alt="notepadable editor running in the browser"
-        width="1200"
-        height="600"
-        style={{ width: '66.67%', maxWidth: '100%', display: 'block', margin: '1.5rem auto 0.5rem' }}
-      />
-      <p className="project-caption">
-        the editor running in the browser — document lives in the URL
-      </p>
-
       <h2>/ the solution</h2>
       
       <p>
@@ -56,14 +37,14 @@ function Notepadable() {
       </p>
 
       <img 
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-compression-pipeline.png`} 
-        alt="Flow from input text through dictionary lookup, variable-length encoding, bitstream packing, to compressed base64 output" 
-        width="3892"
-        height="5032"
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-encoding.gif`} 
+        alt="Animation of the sentence The cat is happy tokenized, dictionary-encoded with 12-bit indices, packed with a version header, and lz-string compressed into a notepadable URL"
+        width="960"
+        height="540"
         style={{ width: '100%', height: 'auto', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
-        Hybrid compression: dictionary lookup, variable-length codes, bit packing, then onward to lz-string and URL-safe encoding
+      <p className="project-caption">
+        a sentence becomes a URL: tokenize, 12-bit dictionary codes, bit packing, then lz-string
       </p>
 
       <p>

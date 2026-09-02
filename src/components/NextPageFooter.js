@@ -6,14 +6,27 @@ import { useFadeNavigate } from './PageTransition';
 import './NextPageFooter.css';
 
 const FILL_DELTA = 360;
-const BOTTOM_SLACK = 8;
+const BOTTOM_SLACK = 16;
 const IDLE_MS = 180;
 const COLLAPSE_MS = 420;
 
-function isAtPageBottom() {
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  if (maxScroll <= BOTTOM_SLACK) return true;
-  return window.scrollY >= maxScroll - BOTTOM_SLACK;
+function getScrollState() {
+  const el = document.scrollingElement || document.documentElement;
+  const scrollTop = el.scrollTop;
+  const maxScroll = Math.max(0, el.scrollHeight - el.clientHeight);
+  return {
+    el,
+    scrollTop,
+    maxScroll,
+    remaining: maxScroll - scrollTop,
+  };
+}
+
+function snapToPageBottom() {
+  const { el, maxScroll, scrollTop } = getScrollState();
+  if (scrollTop < maxScroll) {
+    el.scrollTop = maxScroll;
+  }
 }
 
 function isBodyScrollLocked() {
@@ -122,13 +135,38 @@ export default function NextPageFooter() {
       }
     };
 
+    const consumeTowardNextPage = (delta, fillScale) => {
+      if (delta === 0) return false;
+
+      const { remaining } = getScrollState();
+      const reversingProgress = delta < 0 && progressRef.current > 0;
+      const pullingPastBottom = delta > 0 && remaining <= BOTTOM_SLACK;
+      const wouldOvershoot = delta > 0 && delta > remaining;
+
+      if (reversingProgress) {
+        bump(delta / fillScale);
+        return true;
+      }
+
+      if (pullingPastBottom) {
+        snapToPageBottom();
+        bump(delta / fillScale);
+        return true;
+      }
+
+      if (wouldOvershoot) {
+        snapToPageBottom();
+        bump((delta - Math.max(0, remaining)) / fillScale);
+        return true;
+      }
+
+      return false;
+    };
+
     const onWheel = (event) => {
       if (navigatingRef.current || isBodyScrollLocked()) return;
-      if (!isAtPageBottom()) return;
-
-      if (event.deltaY > 0 || (event.deltaY < 0 && progressRef.current > 0)) {
+      if (consumeTowardNextPage(event.deltaY, FILL_DELTA)) {
         event.preventDefault();
-        bump(event.deltaY / FILL_DELTA);
       }
     };
 
@@ -140,12 +178,12 @@ export default function NextPageFooter() {
 
     const onTouchMove = (event) => {
       if (touchStartY == null || navigatingRef.current || isBodyScrollLocked()) return;
-      if (!isAtPageBottom()) return;
+      if (event.touches.length !== 1) return;
       const currentY = event.touches[0].clientY;
       const delta = touchStartY - currentY;
       touchStartY = currentY;
-      if (delta > 0 || (delta < 0 && progressRef.current > 0)) {
-        bump(delta / (FILL_DELTA * 0.55));
+      if (consumeTowardNextPage(delta, FILL_DELTA * 0.55)) {
+        event.preventDefault();
       }
     };
 
@@ -157,17 +195,19 @@ export default function NextPageFooter() {
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    document.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
+    document.addEventListener('touchmove', onTouchMove, { passive: false, capture: true });
+    document.addEventListener('touchend', onTouchEnd, { passive: true, capture: true });
+    document.addEventListener('touchcancel', onTouchEnd, { passive: true, capture: true });
 
     return () => {
       clearIdle();
       stopCollapse();
       window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
+      document.removeEventListener('touchstart', onTouchStart, { capture: true });
+      document.removeEventListener('touchmove', onTouchMove, { capture: true });
+      document.removeEventListener('touchend', onTouchEnd, { capture: true });
+      document.removeEventListener('touchcancel', onTouchEnd, { capture: true });
     };
   }, [nextPage, navigateWithFade]);
 

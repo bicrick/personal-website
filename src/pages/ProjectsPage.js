@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import ProjectTile from '../components/ProjectTile';
 import ProjectTimeline from '../components/ProjectTimeline';
 
+const SHOW_PROJECT_VIEW_SELECTOR = false;
+
 function getDefaultView() {
+  if (!SHOW_PROJECT_VIEW_SELECTOR) {
+    return 'timeline';
+  }
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
     return 'timeline';
   }
@@ -134,7 +139,7 @@ export default function ProjectsPage() {
       description: 'msoffice plaintext extractor',
       timelineDescription:
         'Extract clean plaintext from Microsoft Office docs. Built for feeding documents into LLM workflows.',
-      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.gif`,
       blogLink: '/projects/docprep',
       appLink: 'https://docprep.site',
       relevanceRank: 6,
@@ -154,10 +159,12 @@ export default function ProjectsPage() {
       <div className="page-section-inner">
         <div className="projects-header-row">
           <h2 className="projects-heading">selected projects</h2>
-          <div className="projects-sort">
-            <span>view</span>
-            <ViewDropdown value={viewMode} onChange={setViewMode} />
-          </div>
+          {SHOW_PROJECT_VIEW_SELECTOR ? (
+            <div className="projects-sort">
+              <span>view</span>
+              <ViewDropdown value={viewMode} onChange={setViewMode} />
+            </div>
+          ) : null}
         </div>
         <p className="projects-intro">
           These are some of the projects I am proud of. I have much more on my{' '}
