@@ -128,7 +128,7 @@ export default function ProjectsPage() {
       description: 'coursework and takeaways',
       timelineDescription:
         'Notes and takeaways from the UT Austin MSAI program. Coursework highlights across the degree.',
-      image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`,
+      image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`,
       blogLink: '/projects/ai-masters',
       relevanceRank: 4,
       dateRank: 6,

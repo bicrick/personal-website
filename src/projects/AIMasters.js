@@ -13,13 +13,13 @@ function AIMasters() {
       seoDescription="UT Austin Master's in Artificial Intelligence by bicrick (Patrick Brown). Data curation, supervised and unsupervised learning, model-building pipeline, PyTorch, LLM basics, and reinforcement learning."
       seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"
       seoUrl="https://bicrick.com/projects/ai-masters"
-      seoImage="https://bicrick.com/images/ai-masters/ut-msai-1200x600.png"
+      seoImage="https://bicrick.com/images/ai-masters/ut-water.gif"
     >
       <img
-        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-msai-1200x600.png`}
+        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`}
         alt="UT Austin MSAI"
         width="1200"
-        height="600"
+        height="675"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
       <p className="project-caption">
