@@ -8,10 +8,12 @@ function GolfIncremental() {
       date="August 2026"
       linkHref="https://golf.bicrick.com"
       linkLabel="play"
-      abstract="I built a small golf incremental in Godot with coding agents. Logic and music were easy. Pixel sprites were not."
-      seoTitle="Range Rat - a small golf incremental"
-      seoDescription="Patrick Brown on building Range Rat with Godot and coding agents. Game logic and Suno music were easy. Pixel sprites were the hard part."
-      seoKeywords="bicrick, Patrick Brown, Range Rat, Godot, pixel art, sprites, Suno, golf incremental"
+      secondaryLinkHref="https://github.com/bicrick/golf_incremental"
+      secondaryLinkLabel="repo"
+      abstract="I built a 2.5d golfing video game using coding agents and gen-ai assets (music, art)."
+      seoTitle="Range Rat - a 2.5d golf incremental"
+      seoDescription="I built a 2.5d golfing video game using coding agents and gen-ai assets (music, art). Play Range Rat at golf.bicrick.com."
+      seoKeywords="bicrick, Patrick Brown, Range Rat, Godot, pixel art, sprites, Suno, MCPixel, golf incremental, coding agents"
       seoUrl="https://bicrick.com/projects/golf-incremental"
       seoImage="https://bicrick.com/images/golf-incremental/range-rat-1200x600.jpg"
     >
@@ -20,7 +22,7 @@ function GolfIncremental() {
         alt="Range Rat title screen"
         width="1024"
         height="512"
-        style={{ width: '100%', marginBottom: '0.5rem' }}
+        style={{ width: '100%' }}
       />
       <p className="project-caption">
         Range Rat. Play it at golf.bicrick.com.
@@ -29,58 +31,94 @@ function GolfIncremental() {
       <h2>/ play</h2>
 
       <p>
-        I built Range Rat in Godot with coding agents. It&apos;s a driving-range
-        incremental: swing, pick up balls, hire a crew. The browser build is at{' '}
-        <a href="https://golf.bicrick.com" target="_blank" rel="noopener noreferrer">
-          golf.bicrick.com
+        The game is live at{' '}
+        <a href="https://golf.bicrick.com" target="_blank" rel="noopener noreferrer">golf.bicrick.com</a>.
+        It&apos;s easy to play. If you are on mobile make sure you turn off your ringer so you can hear the music.
+      </p>
+
+      <h2>/ the inspiration</h2>
+
+      <p>
+        This game kind of spawned out of a youtube binge session. There is this guy,{' '}
+        <a href="https://www.youtube.com/@DangerouslyFunny" target="_blank" rel="noopener noreferrer">
+          Dangerously Funny
         </a>
-        . Click once to unlock audio, then swing.
-      </p>
-
-      <h2>/ what was easy</h2>
-
-      <p>
-        Game logic was straightforward. Godot and GDScript are a good surface
-        for agents. Incremental rules, pickups, cameras, a web export. You
-        describe a loop, get a scene, run a verify script, iterate. Cursor
-        agents wrote most of it.
+        , who makes incremental brainrot content. I was watching his videos and figured, &quot;Hey I can make one of these....&quot;
       </p>
 
       <p>
-        Music was easy too. I used Suno, kept the tracks that felt right, and
-        moved on.
+        I initially wanted to make something more stimulating. Something obnoxiously dopamine-maxxing with tons of stimulus. After experimenting with different art styles, I ended up doing something a bit more calming.
       </p>
 
-      <h2>/ sprites</h2>
+      <h2>/ tools - engine</h2>
 
       <p>
-        Pixel sprites were the painful part. Size, placement, animation. Getting
-        a sprite that belongs in the world still means a pipeline.
+        The most important aspect of the game is what it runs on. After doing some research, it was clear Godot was the answer. Godot would be the engine powering the game. I could build the .gd scripts using Cursor.
       </p>
 
+      <h2>/ tools - sprites</h2>
+
       <p>
-        I started with GPT Image, then a pile of other tools, just to get
-        something into the game. Generate a still. Crop, resize, slice a sheet.
-        Drop it on a node. Run the game. Notice the golfer is two tiles too tall
-        or the ball snaps on frame three. Start over.
+        The sprites were challenging to make. Pixel art is different than most genai art. Most genai art is not actually very discrete or atomic in nature. Things often don&apos;t have extremely clean lines. Especially when prompted to make pixel art, these tools will create things that approximate pixel art, but when you look closely the pixels are synthetic. They aren&apos;t &apos;real&apos; pixels, but some are more rectangular, and they are not uniform.
       </p>
 
       <p>
-        Models can make a picture. They can&apos;t really see the running game.
-        They don&apos;t iterate on a GIF or a sprite sheet that is already in
-        the scene. They don&apos;t know if a pickup is floating or an idle
-        cycle pops.
+        There are a few tools that exist online to try to make this process easier, notably{' '}
+        <a href="https://www.pixellab.ai/" target="_blank" rel="noopener noreferrer">
+          Pixellab
+        </a>
+        {' '}and{' '}
+        <a href="https://retrodiffusion.ai/app" target="_blank" rel="noopener noreferrer">
+          Retro Diffusion
+        </a>
+        . I used both to help me make the assets for this game. Each of these have simple API based MCP servers that allow coding agents to create assets autonomously, but in my experience these never worked very well.
       </p>
 
       <p>
-        That&apos;s the friction if you want people to make small games without
-        a pipeline. Logic and a vibe track are already there. Art is not.
+        I actually made my own tool after getting tired of paying for{' '}
+        <a href="https://www.pixellab.ai/" target="_blank" rel="noopener noreferrer">
+          Pixellab
+        </a>
+        {' '}and{' '}
+        <a href="https://retrodiffusion.ai/app" target="_blank" rel="noopener noreferrer">
+          Retro Diffusion
+        </a>
+        {' '}and ended up creating{' '}
+        <a href="https://github.com/bicrick/MCPixel" target="_blank" rel="noopener noreferrer">
+          MCPixel
+        </a>
+        . The pipeline involves taking an asset from GPT-Image 2 and then using math to estimate how the original image &apos;intended&apos; for its pixel values to look. Then we draw a grid over our image using these new estimated pixel values to actually extract a real, low-resolution image from these high res outputs from GPT image. Although my tools had a reduced suite of tools, it was still useful for asset generation of the simple 2d sprites. (No animations)
+      </p>
+
+      <h2>/ tools - music</h2>
+
+      <p>
+        <a href="https://suno.ai/" target="_blank" rel="noopener noreferrer">
+          Suno
+        </a>
+        {' '}helped me create the music for this game. I didn&apos;t realize how much fun it would be. Music really helps you ground the game&apos;s artstyle and overall feel. If the music is off the game is off. With Suno I was able to create the music I wanted (8-bit, chiptune, adventure) and iterate from existing songs. Please listen to the music in the game it was so much fun to make.
+      </p>
+
+      <h2>/ wrap up</h2>
+
+      <p>
+        We are still in the beginning stages of agentic game dev. I want to see a future where everything can be handled by agents, and the developer is really abstracted from a lot of the menial tasks of development.
       </p>
 
       <p>
-        <a href="https://golf.bicrick.com" target="_blank" rel="noopener noreferrer">play Range Rat</a>
-        {' | '}
-        <a href="https://github.com/bicrick/golf_incremental" target="_blank" rel="noopener noreferrer">see the repo</a>
+        At almost every step, I would have to hop in manually for touch ups. I had to learn how to use Godot&apos;s IDE to place assets manually within the world. Often times you would deal with bugs where it would be impossible for a coding agent to understand unless they could physically see the 3d world that the game was being played in.
+      </p>
+
+      <p>
+        Asset generation is clunky. The models don&apos;t see very well, so it&apos;s hard to iterate on designs agentically when the api suite is so limited. In terms of prompting, I wish the models had the capacity to select their own regions for inpainting.
+      </p>
+
+      <p>
+        Overall we are very far from a world where these agents can fully create games autonomously. (I am not talking about shitty browser games in 3js){' '}
+        <a href="https://golf.bicrick.com" target="_blank" rel="noopener noreferrer">
+          Go check it out
+        </a>
+        ...
       </p>
     </ProjectDetail>
   );

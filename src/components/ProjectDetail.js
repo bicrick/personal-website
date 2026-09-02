@@ -55,7 +55,7 @@ function ProjectDetail({
       />
       <StructuredData />
       <header className="App_header landing-nav">
-        <div className="App_mainColumn landing-nav-inner project-nav-inner">
+        <div className="App_mainColumn landing-nav-inner">
           <Navigation />
         </div>
       </header>

@@ -32,6 +32,10 @@ html {
   height: 100%;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Quiet stippled paper texture across the landing shell */
 body {
   background-color: var(--paper);
