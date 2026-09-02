@@ -1,0 +1,32 @@
+.range-rat-idle-figure {
+  margin: 28px 0 24px;
+}
+
+.range-rat-idle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.range-rat-idle {
+  flex: 0 0 auto;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.range-rat-idle-sheet {
+  width: min(100%, 390px);
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--rule);
+  background: rgba(33, 35, 45, 0.03);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.range-rat-idle-figure figcaption {
+  margin-top: 10px;
+}

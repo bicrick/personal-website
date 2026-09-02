@@ -1,5 +1,7 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import RangeRatEmbed from '../components/RangeRatEmbed';
+import RangeRatIdle from '../components/RangeRatIdle';
 
 function GolfIncremental() {
   return (
@@ -17,16 +19,7 @@ function GolfIncremental() {
       seoUrl="https://bicrick.com/projects/golf-incremental"
       seoImage="https://bicrick.com/images/golf-incremental/range-rat-1200x600.jpg"
     >
-      <img
-        src={`${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-1200x600.jpg`}
-        alt="Range Rat title screen"
-        width="1024"
-        height="512"
-        style={{ width: '100%' }}
-      />
-      <p className="project-caption">
-        Range Rat. Play it at golf.bicrick.com.
-      </p>
+      <RangeRatEmbed />
 
       <h2>/ play</h2>
 
@@ -61,6 +54,8 @@ function GolfIncremental() {
       <p>
         The sprites were challenging to make. Pixel art is different than most genai art. Most genai art is not actually very discrete or atomic in nature. Things often don&apos;t have extremely clean lines. Especially when prompted to make pixel art, these tools will create things that approximate pixel art, but when you look closely the pixels are synthetic. They aren&apos;t &apos;real&apos; pixels, but some are more rectangular, and they are not uniform.
       </p>
+
+      <RangeRatIdle />
 
       <p>
         There are a few tools that exist online to try to make this process easier, notably{' '}
