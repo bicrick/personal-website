@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import PageTransition, { FadeNavigateProvider, useFadeNavigate } from './PageTransition';
+import NextPageFooter from './NextPageFooter';
 import { PAGE_SEO, normalizePagePath } from '../constants/pages';
 
 function Navigation() {
@@ -93,6 +94,7 @@ function SiteChrome() {
           <Outlet />
         </PageTransition>
       </main>
+      <NextPageFooter />
     </div>
   );
 }
