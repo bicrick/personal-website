@@ -99,7 +99,10 @@ section {
 .about-pic {
   width: 200px;
   height: 200px;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
 .about-content {
@@ -109,17 +112,46 @@ section {
 
 .separator {
   border: none;
-  border-top: 1px solid #ddd;
-  margin: 40px 0;
+  border-top: 1px solid #eee;
+  margin: 32px 0 24px 0;
 }
 
-.social {
-  margin-top: 40px;
-  font-size: inherit;
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
 }
 
-.social p {
-  margin-bottom: 0.28em;
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #21232d;
+  font-size: 0.95em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.social-links a:after {
+  display: none;
+}
+
+.social-links svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 /* Projects page */
@@ -193,7 +225,10 @@ section {
 .home-pic {
   width: 200px;
   height: 200px;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
 .home-heading {
