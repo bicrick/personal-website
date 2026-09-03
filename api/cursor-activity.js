@@ -136,7 +136,8 @@ function toPublicPayload(profile) {
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+  res.setHeader('CDN-Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();

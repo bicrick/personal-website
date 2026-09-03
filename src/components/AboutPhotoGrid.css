@@ -1,8 +1,8 @@
 .about-pics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: var(--block-gap) 0;
+  gap: 8px;
+  margin: 32px 0 20px;
   width: 100%;
 }
 
@@ -12,20 +12,13 @@
   padding: 0;
   margin: 0;
   border: 1px solid var(--rule, #e8e8e6);
-  border-radius: 2px;
+  border-radius: 0;
   background: #f0f0f0;
   cursor: pointer;
   aspect-ratio: 1;
   overflow: hidden;
   min-width: 0;
   line-height: 0;
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.about-pic-button:hover,
-.about-pic-button:focus-visible {
-  border-color: #d4d4d1;
-  box-shadow: 0 8px 20px rgba(33, 35, 45, 0.1);
 }
 
 .about-pic-button:focus-visible {
@@ -39,13 +32,6 @@
   aspect-ratio: 1;
   object-fit: cover;
   display: block;
-  transition: transform 0.35s ease, opacity 0.2s ease;
-}
-
-.about-pic-button:hover .about-pic,
-.about-pic-button:focus-visible .about-pic {
-  transform: scale(1.03);
-  opacity: 0.96;
 }
 
 .about-lightbox {
@@ -113,17 +99,7 @@
   .about-pics {
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
-    margin: 2.25rem 0;
-  }
-
-  .about-pic-button:hover,
-  .about-pic-button:focus-visible {
-    box-shadow: none;
-  }
-
-  .about-pic-button:hover .about-pic,
-  .about-pic-button:focus-visible .about-pic {
-    transform: none;
+    margin: 24px 0 20px;
   }
 
   .about-lightbox {
@@ -133,16 +109,5 @@
   .about-lightbox-image {
     max-width: 95vw;
     max-height: 85vh;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-pic {
-    transition: none;
-  }
-
-  .about-pic-button:hover .about-pic,
-  .about-pic-button:focus-visible .about-pic {
-    transform: none;
   }
 }

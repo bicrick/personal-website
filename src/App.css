@@ -241,13 +241,6 @@ section {
   color: inherit;
 }
 
-/* Contact page */
-.contact-content {
-  color: var(--ink-soft);
-  font-size: 1.05em;
-  line-height: 1.65;
-}
-
 .separator {
   border: none;
   border-top: 1px solid var(--rule);

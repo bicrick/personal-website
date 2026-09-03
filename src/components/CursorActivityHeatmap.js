@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './CursorActivityHeatmap.css';
 
 const PROFILE_URL = 'https://cursor.com/@bicrick';
+const TIME_ZONE = 'America/Chicago';
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
@@ -13,29 +14,48 @@ function formatCount(count) {
 }
 
 function formatDayLabel(iso) {
-  const date = new Date(`${iso}T00:00:00Z`);
+  const date = new Date(`${iso}T12:00:00Z`);
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    timeZone: 'UTC',
+    timeZone: TIME_ZONE,
   });
 }
 
-function utcToday() {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+/** Calendar "today" in Central Time as a UTC midnight Date for that YYYY-MM-DD. */
+function centralToday() {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+
+  const get = (type) => parts.find((part) => part.type === type)?.value;
+  const year = Number(get('year'));
+  const month = Number(get('month'));
+  const day = Number(get('day'));
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function centralTodayIso() {
+  return centralToday().toISOString().slice(0, 10);
 }
 
 function buildYtdGrid(activityCounts, year) {
+  const today = centralToday();
+  const todayIso = today.toISOString().slice(0, 10);
   const byDate = new Map(
-    (activityCounts || []).map((row) => [row.date, Number(row.count) || 0])
+    (activityCounts || [])
+      .filter((row) => row.date <= todayIso)
+      .map((row) => [row.date, Number(row.count) || 0])
   );
 
   const jan1 = new Date(Date.UTC(year, 0, 1));
-  const today = utcToday();
   const end = today.getUTCFullYear() === year
     ? today
     : new Date(Date.UTC(year, 11, 31));
+  const endIso = end.toISOString().slice(0, 10);
 
   // Week columns start on Sunday, matching GitHub-style calendars
   const gridStart = new Date(jan1);
@@ -68,7 +88,7 @@ function buildYtdGrid(activityCounts, year) {
   }
 
   const values = [...byDate.entries()]
-    .filter(([date, count]) => count > 0 && date >= `${year}-01-01` && date <= end.toISOString().slice(0, 10))
+    .filter(([date, count]) => count > 0 && date >= `${year}-01-01` && date <= endIso)
     .map(([, count]) => count)
     .sort((a, b) => a - b);
 
@@ -185,7 +205,7 @@ function CursorActivityHeatmap() {
     if (data?.activityCounts?.length) {
       return Number(data.activityCounts[data.activityCounts.length - 1].date.slice(0, 4));
     }
-    return new Date().getUTCFullYear();
+    return centralToday().getUTCFullYear();
   }, [data]);
 
   const grid = useMemo(
@@ -196,7 +216,7 @@ function CursorActivityHeatmap() {
   const ytdTotal = useMemo(() => {
     if (!data?.activityCounts?.length) return 0;
     const start = `${year}-01-01`;
-    const end = utcToday().toISOString().slice(0, 10);
+    const end = centralTodayIso();
     return data.activityCounts.reduce((sum, row) => {
       if (row.date < start || row.date > end) return sum;
       return sum + (Number(row.count) || 0);

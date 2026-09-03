@@ -1,43 +1,87 @@
+/* Match project-article Substack measure + type rhythm (728 / 20 / 32). */
 .page-section.about-page {
-  padding-top: var(--page-pad-top);
-  padding-bottom: var(--page-pad-bottom);
+  max-width: 728px;
+  margin: 0 auto;
+  padding-top: 32px;
+  padding-bottom: 80px;
+  font-size: 20px;
 }
 
-.about-compose {
-  display: flex;
-  flex-direction: column;
+.about-article {
   width: 100%;
 }
 
-.about-lead {
-  width: 100%;
+.about-article p a {
+  display: inline;
 }
 
-.about-notes {
-  width: 100%;
+.about-header {
+  margin-bottom: 32px;
+}
+
+.page-section.about-page .about-heading {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-size: 32px;
+  line-height: 36px;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.about-article h2 {
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 20px;
+  color: var(--ink-muted);
+  margin: 40px 0 12px;
+}
+
+.about-article h2:first-of-type {
+  margin-top: 0;
+}
+
+.about-article p {
+  margin: 0 0 20px;
+  line-height: 32px;
+  color: var(--ink-soft);
+  font-size: 20px;
+}
+
+.about-figure {
+  margin: 32px 0 20px;
 }
 
 .about-heatmap {
-  margin: 1.75rem 0 2.25rem;
   width: 100%;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 0;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 760px) {
   .page-section.about-page {
-    padding-bottom: 3rem;
+    max-width: 100%;
+    padding-top: 24px;
+    padding-bottom: 56px;
+    font-size: 18px;
   }
 
-  .about-heading {
-    font-size: 1.7rem;
-    margin-bottom: 1.15rem;
+  .page-section.about-page .about-heading {
+    font-size: 32px;
+    line-height: 36px;
+    margin-bottom: 12px;
   }
 
-  .about-lead,
-  .about-notes {
-    font-size: inherit;
+  .about-article h2 {
+    font-size: 15px;
+    margin: 32px 0 12px;
   }
 
-  .about-heatmap {
-    margin: 1.5rem 0 2rem;
+  .about-article p {
+    font-size: 18px;
+    line-height: 28.8px;
   }
 }
