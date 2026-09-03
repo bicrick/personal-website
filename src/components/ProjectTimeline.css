@@ -154,7 +154,7 @@
   .project-timeline {
     --timeline-spine: 24px;
     --timeline-gap: 12px;
-    gap: 24px;
+    gap: 64px;
     padding-left: 4px;
   }
 
@@ -182,6 +182,7 @@
 
   .project-timeline-copy {
     padding-inline: 4px 0;
+    padding-bottom: 4px;
   }
 
   .project-timeline-title {
