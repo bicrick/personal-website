@@ -17,13 +17,15 @@ function QwopPython() {
       abstract={
         <>
           <a href="https://www.foddy.net/legacy/Athletics.html" target="_blank" rel="noopener noreferrer">QWOP</a>
-          {' '}is Bennet Foddy&apos;s browser game, and it is extremely hard. I stink at it, so I decided to beat the world record with ML instead. I built a gym in pure Python so I could train in a massively parallelized fashion, then used an autonomous{' '}
+          {' '}is Bennet Foddy&apos;s browser game, and it is extremely hard. I wanted the world record, so I decided to beat it with ML. I built a gym in pure Python so I could train in a massively parallelized fashion, then used an autonomous{' '}
           <a href="https://cursor.com/docs/grok-bot" target="_blank" rel="noopener noreferrer">grok bot</a>
-          {' '}research loop to hunt the recipe and transferred the policy to the real browser game. Final time: 45.167 seconds, under kurodo1916&apos;s human 45.530.
+          {' '}research loop to hunt the recipe and transferred the policy to the real browser game. Final time: 45.167 seconds, under the world record{' '}
+          <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">45.530</a>
+          .
         </>
       }
       seoTitle="qwop-python - beat the HTML5 QWOP world record with RL - bicrick"
-      seoDescription="qwop-python by bicrick: beat the human HTML5 QWOP record at 45.167 seconds with a parallel Python Box2D gym and flex-gait PPO."
+      seoDescription="qwop-python by bicrick: beat the HTML5 QWOP world record at 45.167 seconds with a parallel Python Box2D gym and flex-gait PPO."
       seoKeywords="bicrick, Patrick Brown, qwop-python, QWOP, world record, Gymnasium, reinforcement learning, Box2D, PPO, HTML5, grok bot"
       seoUrl="https://bicrick.com/projects/qwop-python"
       seoImage="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
@@ -33,7 +35,9 @@ function QwopPython() {
       <h2>/ the goal</h2>
 
       <p>
-        Beat the official clock on kurodo1916&apos;s 45.530s.
+        Beat the official clock:{' '}
+        <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">45.530s</a>
+        . That time (kurodo1916) was the record among humans and RL agents alike. Faster than everyone. Until this.
       </p>
 
       <p>
@@ -45,7 +49,11 @@ function QwopPython() {
       <h2>/ the gym</h2>
 
       <p>
-        So I forked the idea into <code>qwop-python</code>: the same gym shape (body-state obs, Q/W/O/P actions), reimplemented in pure Python + Box2D, headless, no browser. Many envs in parallel on one machine, ~10k+ it/s. That is what made massively parallel training actually possible.
+        So I forked the idea into <code>qwop-python</code>: the same gym shape (body-state obs, Q/W/O/P actions), reimplemented in pure Python + Box2D, headless, no browser. The original game is a minified JS blob. I used coding agents to pull <code>QWOP.min.js</code> apart (physics, loop, input, rendering) and rebuild those pieces in Python.
+      </p>
+
+      <p>
+        Browser gyms sat around 100–500 it/s. A single Python env hit about 10,000 it/s; four in parallel about 40,000. Call it 100× on one process, a few hundred times faster once you scale. That is what made massively parallel training actually possible.
       </p>
 
       <p>
