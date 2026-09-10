@@ -13,14 +13,16 @@ function SEO({
   imageHeight = 630,
   type = 'website',
   ogTitle,
+  seoTitle,
 }) {
   const displayTitle = 'bicrick';
-  const seoTitle = ogTitle || title;
+  const cardTitle = ogTitle || title;
+  const searchTitle = seoTitle || cardTitle;
 
   return (
     <Helmet>
       <title>{displayTitle}</title>
-      <meta name="title" content={seoTitle} />
+      <meta name="title" content={searchTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
@@ -28,7 +30,7 @@ function SEO({
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
-      <meta property="og:title" content={seoTitle} />
+      <meta property="og:title" content={cardTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
       <meta property="og:image:secure_url" content={image} />
@@ -39,7 +41,7 @@ function SEO({
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={url} />
-      <meta name="twitter:title" content={seoTitle} />
+      <meta name="twitter:title" content={cardTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
       <meta name="twitter:image:alt" content={imageAlt} />

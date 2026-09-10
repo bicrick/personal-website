@@ -21,6 +21,7 @@ export function assetUrl(imagePath) {
 export function decoratePageSeo(path, row) {
   return {
     ogTitle: row.ogTitle,
+    seoTitle: row.seoTitle || row.ogTitle,
     description: row.description,
     keywords: row.keywords,
     url: pageUrl(path),

@@ -19,6 +19,7 @@ function pageUrl(route) {
 function decorate(route, row) {
   return {
     ogTitle: row.ogTitle,
+    seoTitle: row.seoTitle || row.ogTitle,
     description: row.description,
     keywords: row.keywords,
     url: pageUrl(route),
@@ -46,7 +47,7 @@ function upsertLink(html, rel, href) {
 
 function applySeo(html, seo) {
   let next = html;
-  next = upsertMeta(next, 'name', 'title', seo.ogTitle);
+  next = upsertMeta(next, 'name', 'title', seo.seoTitle);
   next = upsertMeta(next, 'name', 'description', seo.description);
   next = upsertMeta(next, 'name', 'keywords', seo.keywords);
   next = upsertLink(next, 'canonical', seo.url);
