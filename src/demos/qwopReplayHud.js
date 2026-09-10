@@ -6,27 +6,32 @@ const SPARK_POINTS = 48;
 
 export function modelLabelFromMeta(meta = {}) {
   if (meta.model_label) return meta.model_label;
-  const file = meta.model_file || '';
-  if (/QRDQN/i.test(file)) return 'QRDQN';
-  const parts = file.split('/').filter(Boolean);
-  // Prefer parent folder of model.zip (e.g. data/QRDQN-PROVEN-xxx/model.zip)
+  const file = meta.model_file || meta.model || '';
+  if (/PPO|early1|model_118M|earlysurv/i.test(file)) return 'PPO early1';
+  const parts = String(file).split('/').filter(Boolean);
   let folder = parts[parts.length - 1] || '';
   if (/^model\.zip$/i.test(folder) && parts.length >= 2) {
     folder = parts[parts.length - 2];
   }
   folder = folder.replace(/\.zip$/i, '');
   if (folder) {
-    // Drop trailing training-run ids like -k3jlgned and variant suffixes like -PROVEN
     const cleaned = folder
       .replace(/-[a-z0-9]{6,}$/i, '')
       .replace(/-(PROVEN|STABLE|SPEED)(-[A-Z0-9]+)*$/i, '');
     return (cleaned || folder).replace(/_/g, '-');
   }
-  return 'RL agent';
+  return 'PPO early1';
 }
 
-export const QRDQN_INFO =
-  "I trained a QRDQN agent in qwop-python. That means the policy learns a distribution of returns instead of a single Q-value, which helps with QWOP's noisy physics. Each step it picks from a small discrete set of Q/W/O/P key combos. After training it was clearly stronger than my PPO runs on this env, so I kept QRDQN. This page replays a recorded episode from that policy (not live inference).";
+/** HUD / about copy for the early1 WR-hunt demo recording. */
+export const PPO_EARLY1_INFO =
+  "I trained a PPO agent in qwop-python on the early1 flex-gait + EarlySurvival line (model_118M). This replay is a ~43.7s Python finish (settle_spawn off — dive-start highlight). The same policy line, spectated on official browser physics with settle spawn, produced the 45.167 HUD keep that beat the human HTML5 WR of 45.530. Pose replay only — not live inference.";
+
+export const AGENT_INFO = PPO_EARLY1_INFO;
+
+export function agentInfoFromMeta(_meta = {}) {
+  return PPO_EARLY1_INFO;
+}
 
 export function formatSeedLine(meta = {}) {
   const seed = meta.seed != null ? `seed ${meta.seed}` : null;
@@ -34,8 +39,13 @@ export function formatSeedLine(meta = {}) {
   return bits.join(' · ');
 }
 
-export function formatRecordedLine() {
-  return 'Recorded agent run · loops';
+export function formatRecordedLine(meta = {}) {
+  const t = meta.final_time ?? meta.score_time_seconds;
+  const timeBit =
+    typeof t === 'number' && Number.isFinite(t)
+      ? `~${t.toFixed(1)}s Python`
+      : '~43.7s Python';
+  return `Recorded PPO early1 · ${timeBit} highlight · browser WR 45.167 HUD · loops`;
 }
 
 export function hudStatsForFrame(run, frameIndex) {

@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { createQwopReplayPlayer, loadQwopDemoAssets } from './qwopReplayEngine';
 import {
+  agentInfoFromMeta,
   formatRecordedLine,
   formatSeedLine,
   hudStatsForFrame,
   modelLabelFromMeta,
-  QRDQN_INFO,
   sparklinePath,
 } from './qwopReplayHud';
 import './QwopReplay.css';
@@ -35,7 +35,8 @@ function QwopReplay() {
   const [metaHud, setMetaHud] = useState({
     model: 'RL agent',
     seedLine: 'realtime replay',
-    recordedLine: 'Recorded agent run · loops',
+    recordedLine: 'Recorded agent run · WR hunt pose replay · loops',
+    info: agentInfoFromMeta({}),
   });
 
   useEffect(() => {
@@ -72,7 +73,8 @@ function QwopReplay() {
         setMetaHud({
           model: modelLabelFromMeta(meta),
           seedLine: formatSeedLine(meta),
-          recordedLine: formatRecordedLine(),
+          recordedLine: formatRecordedLine(meta),
+          info: agentInfoFromMeta(meta),
         });
 
         const player = createQwopReplayPlayer(canvasRef.current, assets, {
@@ -178,9 +180,9 @@ function QwopReplay() {
   return (
     <div className="qwop-replay">
       <SEO
-        ogTitle="qwop-python agent run - bicrick"
-        description="Watch a trained RL agent run in qwop-python — pose replay of a recorded episode, no install."
-        keywords="bicrick, qwop-python, QWOP, reinforcement learning, demo"
+        ogTitle="qwop-python WR agent run - bicrick"
+        description="Watch a qwop-python PPO early1 pose replay (~43.7s Python highlight). Same line scored 45.167 HUD on official browser physics, beating the human WR of 45.530."
+        keywords="bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo"
         url="https://bicrick.com/demos/qwop"
         image="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
       />
@@ -209,7 +211,7 @@ function QwopReplay() {
             |{' '}
           </span>
           <span className="qwop-replay-nav-title-sub">
-            RL Agent Trained in qwop-python
+            RL agent · qwop-python WR hunt
           </span>
         </h1>
       </nav>
@@ -244,7 +246,7 @@ function QwopReplay() {
                 <strong className="qwop-replay-model-tooltip-title">
                   {metaHud.model}
                 </strong>
-                <p>{QRDQN_INFO}</p>
+                <p>{metaHud.info}</p>
               </div>
             </div>
           </div>
@@ -339,7 +341,7 @@ function QwopReplay() {
         className={`qwop-replay-about${chromeReady ? ' is-ready' : ''}`}
         aria-label="About this agent"
       >
-        <p>{QRDQN_INFO}</p>
+        <p>{metaHud.info}</p>
       </section>
 
       <footer className={`qwop-replay-footer${chromeReady ? ' is-ready' : ''}`}>
