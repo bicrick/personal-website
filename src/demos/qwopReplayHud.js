@@ -6,9 +6,10 @@ const SPARK_POINTS = 48;
 
 export function modelLabelFromMeta(meta = {}) {
   if (meta.model_label) return meta.model_label;
-  const file = meta.model_file || '';
+  const file = meta.model_file || meta.model || '';
   if (/QRDQN/i.test(file)) return 'QRDQN';
-  const parts = file.split('/').filter(Boolean);
+  if (/PPO|early1|model_118M|earlysurv/i.test(file)) return 'PPO early1';
+  const parts = String(file).split('/').filter(Boolean);
   // Prefer parent folder of model.zip (e.g. data/QRDQN-PROVEN-xxx/model.zip)
   let folder = parts[parts.length - 1] || '';
   if (/^model\.zip$/i.test(folder) && parts.length >= 2) {
@@ -25,8 +26,28 @@ export function modelLabelFromMeta(meta = {}) {
   return 'RL agent';
 }
 
+/** Default copy for the WR-era PPO early1 story (and when meta has no algo hint). */
+export const PPO_EARLY1_INFO =
+  "I trained a PPO agent in qwop-python on the early1 flex-gait + EarlySurvival line (model_118M). Python finishes land around ~44s user/time; the same policy, spectated on official browser physics with settle spawn, produced the 45.167 HUD keep that beat the human HTML5 WR of 45.530. This page replays a recorded episode (not live inference) — swap best-run.json for the early1 pose trajectory when it lands.";
+
+/** Legacy QRDQN blurb kept for older trajectories that still set model_label/file to QRDQN. */
 export const QRDQN_INFO =
-  "I trained a QRDQN agent in qwop-python. That means the policy learns a distribution of returns instead of a single Q-value, which helps with QWOP's noisy physics. Each step it picks from a small discrete set of Q/W/O/P key combos. After training it was clearly stronger than my PPO runs on this env, so I kept QRDQN. This page replays a recorded episode from that policy (not live inference).";
+  "I trained a QRDQN agent in qwop-python. That means the policy learns a distribution of returns instead of a single Q-value, which helps with QWOP's noisy physics. Each step it picks from a small discrete set of Q/W/O/P key combos. This page replays a recorded episode from that policy (not live inference). The WR keep used a later PPO early1 line on official browser physics — see the qwop-python writeup.";
+
+/** @deprecated Prefer agentInfoFromMeta — kept as alias for the WR-era default. */
+export const AGENT_INFO = PPO_EARLY1_INFO;
+
+export function agentInfoFromMeta(meta = {}) {
+  const label = modelLabelFromMeta(meta);
+  const blob = `${meta.model_file || ''} ${meta.model || ''} ${meta.source || ''} ${label}`;
+  if (/QRDQN/i.test(blob) && !/PPO|early1|118M/i.test(blob)) {
+    return QRDQN_INFO;
+  }
+  if (/PPO|early1|118M|earlysurv/i.test(blob)) {
+    return PPO_EARLY1_INFO;
+  }
+  return PPO_EARLY1_INFO;
+}
 
 export function formatSeedLine(meta = {}) {
   const seed = meta.seed != null ? `seed ${meta.seed}` : null;
@@ -34,8 +55,15 @@ export function formatSeedLine(meta = {}) {
   return bits.join(' · ');
 }
 
-export function formatRecordedLine() {
-  return 'Recorded agent run · loops';
+export function formatRecordedLine(meta = {}) {
+  const label = modelLabelFromMeta(meta);
+  if (/PPO|early1/i.test(label) || /PPO|early1|118M/i.test(meta.model_file || '')) {
+    return 'Recorded PPO early1 run · ~44s Python / 45.167 HUD WR story · loops';
+  }
+  if (/QRDQN/i.test(label) || /QRDQN/i.test(meta.model_file || '')) {
+    return 'Recorded QRDQN agent run · loops';
+  }
+  return 'Recorded agent run · WR hunt pose replay · loops';
 }
 
 export function hudStatsForFrame(run, frameIndex) {
