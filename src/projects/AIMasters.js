@@ -9,11 +9,6 @@ function AIMasters() {
       linkHref="https://cdso.utexas.edu/msai"
       linkLabel="see program info"
       abstract="A high-level tour of what I picked up in UT Austin's AI master's. Data curation and feature selection. Supervised and unsupervised learning. The full pipeline of building a model end to end. Hands-on PyTorch for classical ML, deep learning, and transformers. LLM basics. Reinforcement learning."
-      seoTitle="UT Austin AI Masters - Coursework by bicrick"
-      seoDescription="UT Austin Master's in Artificial Intelligence by bicrick (Patrick Brown). Data curation, supervised and unsupervised learning, model-building pipeline, PyTorch, LLM basics, and reinforcement learning."
-      seoKeywords="bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence"
-      seoUrl="https://bicrick.com/projects/ai-masters"
-      seoImage="https://bicrick.com/images/ai-masters/ut-water.gif"
     >
       <img
         src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`}

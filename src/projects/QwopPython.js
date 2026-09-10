@@ -24,11 +24,6 @@ function QwopPython() {
           .
         </>
       }
-      seoTitle="qwop-python - beat the HTML5 QWOP world record with RL - bicrick"
-      seoDescription="qwop-python by bicrick: beat the HTML5 QWOP world record at 45.167 seconds with a parallel Python Box2D gym and flex-gait PPO."
-      seoKeywords="bicrick, Patrick Brown, qwop-python, QWOP, world record, Gymnasium, reinforcement learning, Box2D, PPO, HTML5, grok bot"
-      seoUrl="https://bicrick.com/projects/qwop-python"
-      seoImage="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
     >
       <QwopPreviewEmbed />
 

@@ -10,11 +10,6 @@ function Notepadable() {
       linkHref="https://notepadable.com"
       linkLabel="try here"
       abstract="A text editor that lives entirely in the URL. Share a link, share the doc. No server, no accounts, no upload. The document is the URL."
-      seoTitle="notepadable - URL-Encoded Text Editor by bicrick"
-      seoDescription="notepadable by bicrick (Patrick Brown) - Minimalist text editor that encodes your document into the URL. No server, no database. Share a link, share the doc. Built with TypeScript and CodeMirror 6."
-      seoKeywords="bicrick, Patrick Brown, notepadable, text editor, URL encoding, markdown, PWA, CodeMirror, TypeScript"
-      seoUrl="https://bicrick.com/projects/notepadable"
-      seoImage="https://bicrick.com/images/notepadable/notepadable-logo.png"
     >
       <NotepadableEmbed />
 

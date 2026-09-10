@@ -4,7 +4,7 @@ import SEO from './SEO';
 import StructuredData from './StructuredData';
 import PageTransition, { FadeNavigateProvider, useFadeNavigate } from './PageTransition';
 import NextPageFooter from './NextPageFooter';
-import { PAGE_SEO, normalizePagePath } from '../constants/pages';
+import { getPageSeo, normalizePagePath } from '../constants/pages';
 import { SITE_SCROLL_ID, scrollPageToTop } from '../utils/pageScroll';
 
 function Navigation() {
@@ -74,7 +74,7 @@ function Navigation() {
 function SiteChrome() {
   const { pathname } = useLocation();
   const currentPath = normalizePagePath(pathname);
-  const seo = PAGE_SEO[currentPath] || PAGE_SEO['/'];
+  const seo = getPageSeo(currentPath);
 
   useLayoutEffect(() => {
     const root = document.documentElement;
@@ -87,12 +87,7 @@ function SiteChrome() {
 
   return (
     <div id={SITE_SCROLL_ID} className="App_mainContainer landing-page">
-      <SEO
-        ogTitle={seo.ogTitle}
-        description={seo.description}
-        url={seo.url}
-        keywords={seo.keywords}
-      />
+      <SEO {...seo} />
       <StructuredData />
       <header className="App_header landing-nav">
         <div className="App_mainColumn landing-nav-inner">

@@ -1,0 +1,112 @@
+{
+  "/": {
+    "ogTitle": "bicrick - Patrick Brown | Agent-First Engineer",
+    "description": "Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.",
+    "keywords": "bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin",
+    "imagePath": "/og/home-1200x630.jpg",
+    "imageAlt": "Patrick Brown, agent-first engineer",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
+  "/about": {
+    "ogTitle": "About bicrick - Patrick Brown | Data Engineer",
+    "description": "About Patrick Brown (bicrick) - Data Engineer at H-E-B focused on large-scale ML data prep, pipelines, analytics dashboards, and cloud infrastructure on GCP and AWS. UT Austin AI Masters. Austin, TX.",
+    "keywords": "bicrick, Patrick Brown, About, Data Engineer, ML Data Prep, GCP, AWS, Austin, HEB, UT Austin, AI Masters",
+    "imagePath": "/og/about-1200x630.jpg",
+    "imageAlt": "Patrick Brown with his dog",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
+  "/projects": {
+    "ogTitle": "Projects by bicrick - Software Development Portfolio",
+    "description": "Software projects by bicrick (Patrick Brown) - Range Rat, qwop-python, notepadable, gd-visualizer, docprep, and UT Austin AI Masters coursework.",
+    "keywords": "bicrick, Patrick Brown, Projects, Portfolio, Software Development, docprep, AI, Machine Learning",
+    "imagePath": "/og/projects-1200x630.jpg",
+    "imageAlt": "Project thumbnails from bicrick",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
+  "/contact": {
+    "ogTitle": "Contact bicrick - Patrick Brown",
+    "description": "Contact Patrick Brown (bicrick) — email patrickbrownai@gmail.com",
+    "keywords": "bicrick, Patrick Brown, Contact, Email",
+    "imagePath": "/og/contact-1200x630.jpg",
+    "imageAlt": "Contact Patrick Brown at patrickbrownai@gmail.com",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
+  "/projects/qwop-python": {
+    "ogTitle": "qwop-python - beat the HTML5 QWOP world record with RL - bicrick",
+    "description": "qwop-python by bicrick: beat the HTML5 QWOP world record at 45.167 seconds with a parallel Python Box2D gym and flex-gait PPO.",
+    "keywords": "bicrick, Patrick Brown, qwop-python, QWOP, world record, Gymnasium, reinforcement learning, Box2D, PPO, HTML5, grok bot",
+    "imagePath": "/images/qwop-python/qwop-python-1200x600.png",
+    "imageAlt": "QWOP runner on the starting line",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/demos/qwop": {
+    "ogTitle": "qwop-python PPO agent run - bicrick",
+    "description": "Watch a qwop-python PPO pose replay. Same policy line scored 45.167s on official browser physics, beating the human WR of 45.530s.",
+    "keywords": "bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo",
+    "imagePath": "/images/qwop-python/qwop-python-1200x600.png",
+    "imageAlt": "QWOP runner on the starting line",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/projects/notepadable": {
+    "ogTitle": "notepadable - URL-Encoded Text Editor by bicrick",
+    "description": "notepadable by bicrick (Patrick Brown) - Minimalist text editor that encodes your document into the URL. No server, no database. Share a link, share the doc. Built with TypeScript and CodeMirror 6.",
+    "keywords": "bicrick, Patrick Brown, notepadable, text editor, URL encoding, markdown, PWA, CodeMirror, TypeScript",
+    "imagePath": "/images/notepadable/notepadable-1200x600.png",
+    "imageAlt": "notepadable: your text, encoded in the URL",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/projects/golf-incremental": {
+    "ogTitle": "Range Rat - a 2.5d golf incremental",
+    "description": "I built a 2.5d golfing video game using coding agents and gen-ai assets (music, art). Play Range Rat at golf.bicrick.com.",
+    "keywords": "bicrick, Patrick Brown, Range Rat, Godot, pixel art, sprites, Suno, MCPixel, golf incremental, coding agents",
+    "imagePath": "/images/golf-incremental/range-rat-1200x600.jpg",
+    "imageAlt": "Range Rat title screen",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/projects/gd-visualizer": {
+    "ogTitle": "GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick",
+    "description": "GD Visualizer by bicrick (Patrick Brown) - Interactive 3D tool to compare optimizer performance (SGD, Adam, Momentum) across different loss landscapes. Built with Three.js and React.",
+    "keywords": "bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js",
+    "imagePath": "/images/gd-visualizer/gd-visualizer-1200x600.png",
+    "imageAlt": "3D loss landscape with Batch and Adam optimizer paths",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/projects/docprep": {
+    "ogTitle": "docprep - Microsoft Office Plaintext Extractor by bicrick",
+    "description": "docprep by bicrick (Patrick Brown) - Desktop application that extracts Microsoft Office documents into plaintext for AI-ready document processing. Built with PyWebView and React.",
+    "keywords": "bicrick, Patrick Brown, docprep, Microsoft Office, plaintext extractor, AI documents, PyWebView, React",
+    "imagePath": "/images/docprep/docprep-1200x600.png",
+    "imageAlt": "docprep: make your documents AI-ready",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  },
+  "/projects/ai-masters": {
+    "ogTitle": "UT Austin AI Masters - Coursework by bicrick",
+    "description": "UT Austin Master's in Artificial Intelligence by bicrick (Patrick Brown). Data curation, supervised and unsupervised learning, model-building pipeline, PyTorch, LLM basics, and reinforcement learning.",
+    "keywords": "bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence",
+    "imagePath": "/images/ai-masters/ut-msai-1200x600.png",
+    "imageAlt": "UT Austin Tower",
+    "imageWidth": 1200,
+    "imageHeight": 600,
+    "type": "article"
+  }
+}

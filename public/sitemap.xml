@@ -55,6 +55,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://bicrick.com/projects/notepadable</loc>
+    <lastmod>2026-03-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bicrick.com/demos/qwop</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { getPageSeo } from '../constants/pages';
 import { createQwopReplayPlayer, loadQwopDemoAssets } from './qwopReplayEngine';
 import {
   agentInfoFromMeta,
@@ -192,13 +193,7 @@ function QwopReplay() {
 
   return (
     <div className="qwop-replay App_mainContainer landing-page">
-      <SEO
-        ogTitle="qwop-python PPO agent run - bicrick"
-        description="Watch a qwop-python PPO pose replay. Same policy line scored 45.167s on official browser physics, beating the human WR of 45.530s."
-        keywords="bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo"
-        url="https://bicrick.com/demos/qwop"
-        image="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
-      />
+      <SEO {...getPageSeo('/demos/qwop')} />
 
       <header className="App_header landing-nav">
         <div className="App_mainColumn landing-nav-inner">

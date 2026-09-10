@@ -15,11 +15,6 @@ function GolfIncremental() {
       secondaryLinkHref="https://github.com/bicrick/golf_incremental"
       secondaryLinkLabel="repo"
       abstract="I built a 2.5d golfing video game using coding agents and gen-ai assets (music, art)."
-      seoTitle="Range Rat - a 2.5d golf incremental"
-      seoDescription="I built a 2.5d golfing video game using coding agents and gen-ai assets (music, art). Play Range Rat at golf.bicrick.com."
-      seoKeywords="bicrick, Patrick Brown, Range Rat, Godot, pixel art, sprites, Suno, MCPixel, golf incremental, coding agents"
-      seoUrl="https://bicrick.com/projects/golf-incremental"
-      seoImage="https://bicrick.com/images/golf-incremental/range-rat-1200x600.jpg"
     >
       <RangeRatEmbed />
 

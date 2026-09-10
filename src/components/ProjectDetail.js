@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './ProjectDetail.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
+import { getPageSeo } from '../constants/pages';
 
 function Navigation() {
   const { pathname } = useLocation();
@@ -35,24 +36,15 @@ function ProjectDetail({
   secondaryLinkInternal = false,
   abstract,
   children,
-  seoTitle,
-  seoDescription,
-  seoKeywords,
-  seoUrl,
-  seoImage,
 }) {
+  const { pathname } = useLocation();
+  const seo = getPageSeo(pathname);
   const hasPrimary = Boolean(linkHref && linkLabel);
   const hasSecondary = Boolean(secondaryLinkHref && secondaryLinkLabel);
 
   return (
     <div className="App_mainContainer landing-page">
-      <SEO
-        ogTitle={seoTitle || `${title} - bicrick`}
-        description={seoDescription || `${title} project by bicrick (Patrick Brown)`}
-        keywords={seoKeywords || `bicrick, Patrick Brown, ${title}, Project`}
-        url={seoUrl || `https://bicrick.com/projects/${String(title).toLowerCase().replace(/\s+/g, '-')}`}
-        image={seoImage || 'https://bicrick.com/casual_logo.png'}
-      />
+      <SEO {...seo} />
       <StructuredData />
       <header className="App_header landing-nav">
         <div className="App_mainColumn landing-nav-inner">

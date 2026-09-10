@@ -8,7 +8,7 @@ function StructuredData() {
     "name": "Patrick Brown",
     "alternateName": "bicrick",
     "url": "https://bicrick.com",
-    "image": "https://bicrick.com/about/headshot.jpg",
+    "image": "https://www.bicrick.com/og/home-1200x630.jpg",
     "email": "mailto:patrickbrownai@gmail.com",
     "jobTitle": "Data Engineer",
     "worksFor": {
