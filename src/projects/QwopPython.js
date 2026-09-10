@@ -40,7 +40,8 @@ function QwopPython() {
 
       <p>
         <Link to="/demos/qwop">Watch a recorded agent run</Link> in the browser — no install.
-        A trained policy was rolled offline; the page replays body poses with the custom blue-suit skin.
+        The demo replays a ~43.7s Python early1 finish (pose trajectory from <code>model_118M</code>);
+        the official browser WR keep was 45.167 HUD under the human 45.530.
       </p>
 
       <h2>/ part 1 — creating qwop-python</h2>

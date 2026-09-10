@@ -28,7 +28,7 @@ export function modelLabelFromMeta(meta = {}) {
 
 /** Default copy for the WR-era PPO early1 story (and when meta has no algo hint). */
 export const PPO_EARLY1_INFO =
-  "I trained a PPO agent in qwop-python on the early1 flex-gait + EarlySurvival line (model_118M). Python finishes land around ~44s user/time; the same policy, spectated on official browser physics with settle spawn, produced the 45.167 HUD keep that beat the human HTML5 WR of 45.530. This page replays a recorded episode (not live inference) — swap best-run.json for the early1 pose trajectory when it lands.";
+  "I trained a PPO agent in qwop-python on the early1 flex-gait + EarlySurvival line (model_118M). This replay is a ~43.7s Python finish (settle_spawn off — dive-start highlight). The same policy line, spectated on official browser physics with settle spawn, produced the 45.167 HUD keep that beat the human HTML5 WR of 45.530. Pose replay only — not live inference.";
 
 /** Legacy QRDQN blurb kept for older trajectories that still set model_label/file to QRDQN. */
 export const QRDQN_INFO =
@@ -57,8 +57,13 @@ export function formatSeedLine(meta = {}) {
 
 export function formatRecordedLine(meta = {}) {
   const label = modelLabelFromMeta(meta);
+  const t = meta.final_time ?? meta.score_time_seconds;
+  const timeBit =
+    typeof t === 'number' && Number.isFinite(t)
+      ? `~${t.toFixed(1)}s Python`
+      : '~43.7s Python';
   if (/PPO|early1/i.test(label) || /PPO|early1|118M/i.test(meta.model_file || '')) {
-    return 'Recorded PPO early1 run · ~44s Python / 45.167 HUD WR story · loops';
+    return `Recorded PPO early1 · ${timeBit} highlight · browser WR 45.167 HUD · loops`;
   }
   if (/QRDQN/i.test(label) || /QRDQN/i.test(meta.model_file || '')) {
     return 'Recorded QRDQN agent run · loops';

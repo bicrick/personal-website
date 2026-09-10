@@ -6,7 +6,7 @@
 const ASSET_BASE = `${process.env.PUBLIC_URL}/demos/qwop`;
 // Bust CDN/browser cache when swapping trajectories or atlas assets.
 // When replacing public/demos/qwop/best-run.json (e.g. early1 WR pose), bump this string.
-const ASSET_VERSION = '20260723j';
+const ASSET_VERSION = '20260910a';
 const CAMERA_HORIZONTAL_OFFSET = -14;
 const INITIAL_CAMERA_Y = -200;
 const TRACK_CENTER_Y = 10.74275;

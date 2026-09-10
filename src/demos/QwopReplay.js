@@ -181,7 +181,7 @@ function QwopReplay() {
     <div className="qwop-replay">
       <SEO
         ogTitle="qwop-python WR agent run - bicrick"
-        description="Watch a qwop-python agent pose replay — PPO early1 ~44s Python finishes; 45.167 HUD on official browser beat the human WR of 45.530."
+        description="Watch a qwop-python PPO early1 pose replay (~43.7s Python highlight). Same line scored 45.167 HUD on official browser physics, beating the human WR of 45.530."
         keywords="bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo"
         url="https://bicrick.com/demos/qwop"
         image="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
