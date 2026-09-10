@@ -100,10 +100,11 @@ export default function ProjectsPage() {
     },
     {
       title: 'qwop-python',
-      description: 'HTML5 QWOP WR via parallel RL gym',
+      description: 'QWOP gym in pure Python + grok bot',
       timelineDescription:
-        'Pure Python Box2D Gym for QWOP, then a GCP WR hunt that beat the human HTML5 record at 45.167 HUD.',
+        'A QWOP gym written in pure Python, used with an autonomous grok bot research loop to achieve a world record of 45.167 seconds.',
       image: `${process.env.PUBLIC_URL}/images/qwop-python/qwop-python-25-35.gif`,
+      livePreview: 'qwop',
       blogLink: '/projects/qwop-python',
       appLink: '/demos/qwop',
       appLabel: 'demo',

@@ -1,0 +1,72 @@
+.qwop-preview-embed {
+  margin: 0 0 20px;
+}
+
+.qwop-preview-embed-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 640 / 400;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #0a0e14;
+}
+
+.qwop-preview-embed-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.qwop-preview-embed-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
+.qwop-preview-embed-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.qwop-preview-embed-hit:after {
+  display: none;
+}
+
+.qwop-preview-embed-hit-label {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 0.35rem 0.65rem;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  background: rgba(251, 251, 250, 0.9);
+  border: 1px solid var(--rule);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.qwop-preview-embed-stage:hover .qwop-preview-embed-hit-label,
+.qwop-preview-embed-stage:focus-within .qwop-preview-embed-hit-label {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .qwop-preview-embed-hit-label {
+    opacity: 1;
+  }
+}
+
+.qwop-preview-embed figcaption {
+  margin-top: 8px;
+}

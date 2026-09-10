@@ -1,0 +1,95 @@
+{
+  "parts": [
+    "leftCalf",
+    "leftFoot",
+    "leftThigh",
+    "leftArm",
+    "leftForearm",
+    "torso",
+    "head",
+    "rightArm",
+    "rightCalf",
+    "rightThigh",
+    "rightFoot",
+    "rightForearm"
+  ],
+  "partSizes": {
+    "leftCalf": {
+      "halfWidth": 2.5,
+      "halfHeight": 0.75
+    },
+    "leftFoot": {
+      "halfWidth": 1.35,
+      "halfHeight": 0.675
+    },
+    "leftThigh": {
+      "halfWidth": 2.525,
+      "halfHeight": 1.0
+    },
+    "leftArm": {
+      "halfWidth": 1.85,
+      "halfHeight": 0.625
+    },
+    "leftForearm": {
+      "halfWidth": 1.75,
+      "halfHeight": 0.55
+    },
+    "torso": {
+      "halfWidth": 3.275,
+      "halfHeight": 1.425
+    },
+    "head": {
+      "halfWidth": 1.075,
+      "halfHeight": 1.325
+    },
+    "rightArm": {
+      "halfWidth": 1.95,
+      "halfHeight": 0.75
+    },
+    "rightCalf": {
+      "halfWidth": 2.5,
+      "halfHeight": 0.75
+    },
+    "rightThigh": {
+      "halfWidth": 2.65,
+      "halfHeight": 1.0
+    },
+    "rightFoot": {
+      "halfWidth": 1.35,
+      "halfHeight": 0.725
+    },
+    "rightForearm": {
+      "halfWidth": 2.225,
+      "halfHeight": 0.675
+    }
+  },
+  "frameIndex": {
+    "leftCalf": 5,
+    "leftFoot": 6,
+    "leftThigh": 3,
+    "leftArm": 4,
+    "leftForearm": 2,
+    "torso": 0,
+    "head": 1,
+    "rightArm": 8,
+    "rightCalf": 9,
+    "rightThigh": 11,
+    "rightFoot": 10,
+    "rightForearm": 7
+  },
+  "dt": 0.03333333333333333,
+  "worldScale": 20,
+  "meta_example": {
+    "model_file": "data/QRDQN-PROVEN-k3jlgned/model.zip",
+    "seed": 10047,
+    "final_distance": 99.69379425048828,
+    "final_time": 7.1572265625,
+    "is_success": false,
+    "frame_count": 2146,
+    "source": "qwop-wr-live-qrdqn-proven",
+    "action_repeat": 4,
+    "playback_dt": 0.03333333333333333,
+    "score_time_seconds": 7.1572265625,
+    "model_label": "QRDQN"
+  }
+}

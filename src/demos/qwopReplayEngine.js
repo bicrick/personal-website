@@ -6,7 +6,7 @@
 const ASSET_BASE = `${process.env.PUBLIC_URL}/demos/qwop`;
 // Bust CDN/browser cache when swapping trajectories or atlas assets.
 // When replacing public/demos/qwop/best-run.json (e.g. early1 WR pose), bump this string.
-const ASSET_VERSION = '20260910a';
+const ASSET_VERSION = '20260910b';
 const CAMERA_HORIZONTAL_OFFSET = -14;
 const INITIAL_CAMERA_Y = -200;
 const TRACK_CENTER_Y = 10.74275;
@@ -120,6 +120,29 @@ export async function loadQwopDemoAssets() {
   };
 }
 
+/** Mid-stride loop for project tiles: small JSON slice, no HUD/key sprites. */
+export async function loadQwopPreviewAssets() {
+  const [run, atlasJson, atlas, undergroundSrc, sprintbgSrc] = await Promise.all([
+    loadJson(assetUrl('preview-stride.json')),
+    loadJson(assetUrl('playercolor.json')),
+    loadImage(assetUrl('playercolor.png')),
+    loadImage(assetUrl('underground.png')),
+    loadImage(assetUrl('sprintbg.jpg')),
+  ]);
+
+  return {
+    run,
+    frames: atlasJson.frames,
+    atlas,
+    underground: tileUnderground(undergroundSrc),
+    sprintbg: stretchSprintbg(sprintbgSrc),
+    uiFrames: null,
+    uiAtlas: null,
+    sandTiled: null,
+    sandtapeTiled: null,
+  };
+}
+
 function blitUiFrame(ctx, uiAtlas, uiFrames, frameIdx, x, y) {
   if (!uiAtlas || !uiFrames || frameIdx == null || frameIdx >= uiFrames.length) return;
   const fr = uiFrames[frameIdx].frame;
@@ -224,7 +247,8 @@ function cameraForPose(pose, parts, worldScale) {
   };
 }
 
-function drawGameFrame(ctx, assets, index) {
+function drawGameFrame(ctx, assets, index, options = {}) {
+  const hideChrome = Boolean(options.hideChrome);
   const { run, frames, atlas, underground, sprintbg } = assets;
   const pose = run.poses[index];
   const keys = run.keys[index];
@@ -247,15 +271,19 @@ function drawGameFrame(ctx, assets, index) {
       underground,
       Math.round(screenX - segmentW / 2),
       Math.round(screenY - segmentH / 2),
+      segmentW,
+      segmentH,
     );
   }
 
-  // 2b. Start line + best line (UISprites Starting_Line)
-  const trackTopY = trackCenterYPx - segmentH / 2 - cameraY;
-  drawLaneMarkers(ctx, assets, cameraX, trackTopY, worldScale);
+  if (!hideChrome) {
+    // 2b. Start line + best line (UISprites Starting_Line)
+    const trackTopY = trackCenterYPx - segmentH / 2 - cameraY;
+    drawLaneMarkers(ctx, assets, cameraX, trackTopY, worldScale);
 
-  // 2c. Sand pit (~1000 m) — assets loaded; visible only if a run reaches it
-  drawSandPit(ctx, assets, cameraX, cameraY);
+    // 2c. Sand pit (~1000 m) — assets loaded; visible only if a run reaches it
+    drawSandPit(ctx, assets, cameraX, cameraY);
+  }
 
   // 3. Body parts in depth order (already encoded in run.parts).
   // Atlas frame sizes match physics boxes (half*2*worldScale); prefer atlas pixels.
@@ -290,18 +318,20 @@ function drawGameFrame(ctx, assets, index) {
     ctx.restore();
   }
 
-  // 4. Original Q/W/O/P key sprites (top corners) + THIGHS / CALVES labels
-  drawKeyIndicators(ctx, assets, keys);
+  if (!hideChrome) {
+    // 4. Original Q/W/O/P key sprites (top corners) + THIGHS / CALVES labels
+    drawKeyIndicators(ctx, assets, keys);
 
-  // 5. Distance HUD (centered top, like original score)
-  const label = `${(run.distance[index] || 0).toFixed(1)} metres`;
-  ctx.font = 'bold 28px Verdana, Geneva, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.fillStyle = 'rgba(0,0,0,0.45)';
-  ctx.fillText(label, GAME_WIDTH / 2 + 2, 16);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(label, GAME_WIDTH / 2, 14);
+    // 5. Distance HUD (centered top, like original score)
+    const label = `${(run.distance[index] || 0).toFixed(1)} metres`;
+    ctx.font = 'bold 28px Verdana, Geneva, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillText(label, GAME_WIDTH / 2 + 2, 16);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(label, GAME_WIDTH / 2, 14);
+  }
 }
 
 export function createQwopReplayPlayer(canvas, assets, options = {}) {
@@ -317,6 +347,9 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
     : null;
   let freezeAtSeek = Boolean(options.freezeAtSeek);
   const onFrame = typeof options.onFrame === 'function' ? options.onFrame : null;
+  const hideChrome = Boolean(options.hideChrome);
+  const drawOpts = hideChrome ? { hideChrome: true } : {};
+  const fitCover = options.fit === 'cover';
 
   const findFrameForDistance = (meters) => {
     const distances = assets.run?.distance;
@@ -364,12 +397,16 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
 
   const present = () => {
     const { width, height } = stageSize();
-    const scale = Math.min(width / GAME_WIDTH, height / GAME_HEIGHT);
+    const scale = fitCover
+      ? Math.max(width / GAME_WIDTH, height / GAME_HEIGHT)
+      : Math.min(width / GAME_WIDTH, height / GAME_HEIGHT);
     const w = GAME_WIDTH * scale;
     const h = GAME_HEIGHT * scale;
     const x = (width - w) / 2;
     // Top-bias leftover letterbox so chrome sits tight above the game on tall phones
-    const y = Math.max(0, (height - h) * 0.12);
+    const y = fitCover
+      ? (height - h) / 2
+      : Math.max(0, (height - h) * 0.12);
 
     ctx.fillStyle = '#0a0e14';
     ctx.fillRect(0, 0, width, height);
@@ -391,7 +428,7 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
 
   const drawFrame = (index) => {
     gameCtx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-    drawGameFrame(gameCtx, assets, index);
+    drawGameFrame(gameCtx, assets, index, drawOpts);
     present();
     emitFrame(index);
   };

@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import QwopTilePreview from './QwopTilePreview';
 import './ProjectTile.css';
 
 function useFineHover() {
@@ -106,7 +107,9 @@ export default function ProjectTile({
     };
   }, [isExpanded, onCollapse, fineHover]);
 
-  const media = project.image ? (
+  const media = project.livePreview === 'qwop' ? (
+    <QwopTilePreview title={project.title} />
+  ) : project.image ? (
     <img src={project.image} alt={project.title} width="1200" height="600" />
   ) : (
     <div className="project-card-placeholder" aria-hidden="true" />

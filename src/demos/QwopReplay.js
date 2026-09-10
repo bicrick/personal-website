@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { createQwopReplayPlayer, loadQwopDemoAssets } from './qwopReplayEngine';
 import {
@@ -8,23 +8,45 @@ import {
   formatSeedLine,
   hudStatsForFrame,
   modelLabelFromMeta,
-  sparklinePath,
 } from './qwopReplayHud';
 import './QwopReplay.css';
 
-const SPARK_W = 120;
-const SPARK_H = 28;
 const MODEL_INFO_ID = 'qwop-model-info';
 const PLAYBACK_RATES = [0.5, 1, 2, 4];
 const COURSE_METERS = 100;
+
+function DemoNav() {
+  const { pathname } = useLocation();
+  const linkClass = (path) => (
+    pathname === path || (path === '/projects' && pathname.startsWith('/projects/'))
+      ? 'nav-link is-active'
+      : 'nav-link'
+  );
+
+  return (
+    <div className="nav">
+      <Link to="/" className={linkClass('/')}>bicrick</Link>
+      <span className="nav-separator">·</span>
+      <Link to="/about" className={linkClass('/about')}>about</Link>
+      <span className="nav-separator">·</span>
+      <Link
+        to="/projects"
+        className={linkClass('/projects')}
+        aria-current={pathname.startsWith('/projects') || pathname.startsWith('/demos/') ? 'page' : undefined}
+      >
+        projects
+      </Link>
+      <span className="nav-separator">·</span>
+      <Link to="/contact" className={linkClass('/contact')}>contact</Link>
+    </div>
+  );
+}
 
 function QwopReplay() {
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
   const playerRef = useRef(null);
   const progressInputRef = useRef(null);
-  const speedValueRef = useRef(null);
-  const sparkPathRef = useRef(null);
   const distLabelRef = useRef(null);
   const infoWrapRef = useRef(null);
   const scrubbingRef = useRef(false);
@@ -33,9 +55,9 @@ function QwopReplay() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [metaHud, setMetaHud] = useState({
-    model: 'RL agent',
+    model: 'PPO',
     seedLine: 'realtime replay',
-    recordedLine: 'Recorded agent run · WR hunt pose replay · loops',
+    recordedLine: 'Recorded PPO pose replay · loops',
     info: agentInfoFromMeta({}),
   });
 
@@ -92,17 +114,8 @@ function QwopReplay() {
                 `${(stats.progress * 100).toFixed(2)}%`,
               );
             }
-            if (speedValueRef.current) {
-              speedValueRef.current.textContent = `${stats.speed.toFixed(1)} m/s`;
-            }
             if (distLabelRef.current) {
               distLabelRef.current.textContent = `${stats.distance.toFixed(1)} m`;
-            }
-            if (sparkPathRef.current) {
-              sparkPathRef.current.setAttribute(
-                'd',
-                sparklinePath(stats.spark, SPARK_W, SPARK_H),
-              );
             }
           },
         });
@@ -178,130 +191,109 @@ function QwopReplay() {
   };
 
   return (
-    <div className="qwop-replay">
+    <div className="qwop-replay App_mainContainer landing-page">
       <SEO
-        ogTitle="qwop-python WR agent run - bicrick"
-        description="Watch a qwop-python PPO early1 pose replay (~43.7s Python highlight). Same line scored 45.167 HUD on official browser physics, beating the human WR of 45.530."
+        ogTitle="qwop-python PPO agent run - bicrick"
+        description="Watch a qwop-python PPO pose replay. Same policy line scored 45.167s on official browser physics, beating the human WR of 45.530s."
         keywords="bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo"
         url="https://bicrick.com/demos/qwop"
         image="https://bicrick.com/images/qwop-python/qwop-python-1200x600.png"
       />
 
-      <nav className="qwop-replay-nav" aria-label="Demo navigation">
-        <div className="qwop-replay-nav-left">
-          <Link to="/projects/qwop-python" className="qwop-replay-nav-back">
-            ← qwop-python
-          </Link>
-          <span className="qwop-replay-nav-sep" aria-hidden="true">
-            ·
-          </span>
-          <a
-            className="qwop-replay-nav-original"
-            href="https://www.foddy.net/legacy/Athletics.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Play original
-          </a>
+      <header className="App_header landing-nav">
+        <div className="App_mainColumn landing-nav-inner">
+          <DemoNav />
         </div>
-        <h1 className="qwop-replay-nav-title">
-          QWOP by Bennet Foddy
-          <span className="qwop-replay-nav-title-sep" aria-hidden="true">
-            {' '}
-            |{' '}
-          </span>
-          <span className="qwop-replay-nav-title-sub">
-            RL agent · qwop-python WR hunt
-          </span>
-        </h1>
-      </nav>
+      </header>
 
-      <div
-        className={`qwop-replay-telemetry${chromeReady ? ' is-ready' : ''}`}
-        aria-hidden={!chromeReady}
-      >
-        <div className="qwop-replay-model">
-          <div className="qwop-replay-model-row">
-            <div className="qwop-replay-model-name">{metaHud.model}</div>
-            <div
-              ref={infoWrapRef}
-              className={`qwop-replay-model-info${infoOpen ? ' is-open' : ''}`}
+      <main className="qwop-replay-main">
+        <div className="qwop-replay-toolbar">
+          <div className="qwop-replay-toolbar-left">
+            <Link to="/projects/qwop-python" className="qwop-replay-back">
+              ← qwop-python
+            </Link>
+            <span className="qwop-replay-sep" aria-hidden="true">·</span>
+            <a
+              className="qwop-replay-original"
+              href="https://www.foddy.net/legacy/Athletics.html"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <button
-                type="button"
-                className="qwop-replay-model-info-btn"
-                aria-label="About this model"
-                aria-expanded={infoOpen}
-                aria-controls={MODEL_INFO_ID}
-                aria-describedby={MODEL_INFO_ID}
-                onClick={() => setInfoOpen((open) => !open)}
-              >
-                i
-              </button>
+              Play original
+            </a>
+          </div>
+
+          <div
+            className={`qwop-replay-model${chromeReady ? ' is-ready' : ''}`}
+            aria-hidden={!chromeReady}
+          >
+            <div className="qwop-replay-model-row">
+              <div className="qwop-replay-model-name">{metaHud.model}</div>
               <div
-                id={MODEL_INFO_ID}
-                className="qwop-replay-model-tooltip"
-                role="tooltip"
+                ref={infoWrapRef}
+                className={`qwop-replay-model-info${infoOpen ? ' is-open' : ''}`}
               >
-                <strong className="qwop-replay-model-tooltip-title">
-                  {metaHud.model}
-                </strong>
-                <p>{metaHud.info}</p>
+                <button
+                  type="button"
+                  className="qwop-replay-model-info-btn"
+                  aria-label="About this model"
+                  aria-expanded={infoOpen}
+                  aria-controls={MODEL_INFO_ID}
+                  aria-describedby={MODEL_INFO_ID}
+                  onClick={() => setInfoOpen((open) => !open)}
+                >
+                  i
+                </button>
+                <div
+                  id={MODEL_INFO_ID}
+                  className="qwop-replay-model-tooltip"
+                  role="tooltip"
+                >
+                  <strong className="qwop-replay-model-tooltip-title">
+                    {metaHud.model}
+                  </strong>
+                  <p>{metaHud.info}</p>
+                </div>
               </div>
             </div>
+            <div className="qwop-replay-model-sub">{metaHud.seedLine}</div>
           </div>
-          <div className="qwop-replay-model-sub">{metaHud.seedLine}</div>
         </div>
 
-        <div className="qwop-replay-progress-wrap">
-          <div className="qwop-replay-progress-meta">
-            <span ref={distLabelRef}>0.0 m</span>
-            <span>100 m</span>
+        <div
+          className={`qwop-replay-controls${chromeReady ? ' is-ready' : ''}`}
+          aria-hidden={!chromeReady}
+        >
+          <div className="qwop-replay-progress-wrap">
+            <div className="qwop-replay-progress-meta">
+              <span ref={distLabelRef}>0.0 m</span>
+              <span>100 m</span>
+            </div>
+            <label className="qwop-replay-progress-label">
+              <span className="qwop-sr-only">Scrub timeline</span>
+              <input
+                ref={progressInputRef}
+                className="qwop-replay-progress"
+                type="range"
+                min={0}
+                max={COURSE_METERS}
+                step={0.1}
+                defaultValue={0}
+                aria-valuemin={0}
+                aria-valuemax={COURSE_METERS}
+                aria-label="Scrub run by distance"
+                disabled={!chromeReady}
+                onPointerDown={handleScrubStart}
+                onPointerUp={handleScrubEnd}
+                onPointerCancel={handleScrubEnd}
+                onKeyDown={handleScrubKeyDown}
+                onKeyUp={handleScrubEnd}
+                onChange={handleScrub}
+                onInput={handleScrub}
+              />
+            </label>
           </div>
-          <label className="qwop-replay-progress-label">
-            <span className="qwop-sr-only">Scrub timeline</span>
-            <input
-              ref={progressInputRef}
-              className="qwop-replay-progress"
-              type="range"
-              min={0}
-              max={COURSE_METERS}
-              step={0.1}
-              defaultValue={0}
-              aria-valuemin={0}
-              aria-valuemax={COURSE_METERS}
-              aria-label="Scrub run by distance"
-              disabled={!chromeReady}
-              onPointerDown={handleScrubStart}
-              onPointerUp={handleScrubEnd}
-              onPointerCancel={handleScrubEnd}
-              onKeyDown={handleScrubKeyDown}
-              onKeyUp={handleScrubEnd}
-              onChange={handleScrub}
-              onInput={handleScrub}
-            />
-          </label>
-        </div>
 
-        <div className="qwop-replay-speed">
-          <div ref={speedValueRef} className="qwop-replay-speed-value">
-            0.0 m/s
-          </div>
-          <svg
-            className="qwop-replay-spark"
-            width={SPARK_W}
-            height={SPARK_H}
-            viewBox={`0 0 ${SPARK_W} ${SPARK_H}`}
-            aria-hidden="true"
-          >
-            <path
-              ref={sparkPathRef}
-              d=""
-              fill="none"
-              stroke="rgba(120, 180, 220, 0.9)"
-              strokeWidth="1.5"
-            />
-          </svg>
           <div
             className="qwop-replay-rate"
             role="group"
@@ -321,32 +313,32 @@ function QwopReplay() {
             ))}
           </div>
         </div>
-      </div>
 
-      <div ref={stageRef} className="qwop-replay-stage">
-        <canvas
-          ref={canvasRef}
-          className="qwop-replay-canvas"
-          aria-label="QWOP agent replay"
-        />
-        {status === 'loading' && (
-          <div className="qwop-replay-status">loading agent run…</div>
-        )}
-        {status === 'error' && (
-          <div className="qwop-replay-status qwop-replay-status-error">{error}</div>
-        )}
-      </div>
+        <div ref={stageRef} className="qwop-replay-stage">
+          <canvas
+            ref={canvasRef}
+            className="qwop-replay-canvas"
+            aria-label="QWOP agent replay"
+          />
+          {status === 'loading' && (
+            <div className="qwop-replay-status">loading agent run…</div>
+          )}
+          {status === 'error' && (
+            <div className="qwop-replay-status qwop-replay-status-error">{error}</div>
+          )}
+        </div>
 
-      <section
-        className={`qwop-replay-about${chromeReady ? ' is-ready' : ''}`}
-        aria-label="About this agent"
-      >
-        <p>{metaHud.info}</p>
-      </section>
+        <section
+          className={`qwop-replay-about${chromeReady ? ' is-ready' : ''}`}
+          aria-label="About this agent"
+        >
+          <p>{metaHud.info}</p>
+        </section>
 
-      <footer className={`qwop-replay-footer${chromeReady ? ' is-ready' : ''}`}>
-        {metaHud.recordedLine}
-      </footer>
+        <footer className={`qwop-replay-footer${chromeReady ? ' is-ready' : ''}`}>
+          {metaHud.recordedLine}
+        </footer>
+      </main>
     </div>
   );
 }
