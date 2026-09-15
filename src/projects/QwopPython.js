@@ -17,9 +17,9 @@ function QwopPython() {
       abstract={
         <>
           <a href="https://www.foddy.net/legacy/Athletics.html" target="_blank" rel="noopener noreferrer">QWOP</a>
-          {' '}is Bennet Foddy&apos;s browser game, and it is extremely hard. I wanted the world record, so I decided to beat it with ML. I built a gym in pure Python so I could train in a massively parallelized fashion, then used an autonomous{' '}
+          {' '}is Bennet Foddy&apos;s browser game, and it is extremely hard. I wanted the world record, so I decided to try and beat it with machine learning. I built a highly performant gym in pure Python so I could train in parallel, then used an autonomous{' '}
           <a href="https://cursor.com/docs/grok-bot" target="_blank" rel="noopener noreferrer">grok bot</a>
-          {' '}research loop to hunt the recipe and transferred the policy to the real browser game. Final time: 45.167 seconds, under the world record{' '}
+          {' '}research loop to shape rewards and hunt hyperparameters without a human checking in. After transferring the Python-learned policy to the real browser game I achieved a final time of 45.167 seconds, ~0.4 seconds under the world record of{' '}
           <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">45.530</a>
           .
         </>
@@ -30,57 +30,74 @@ function QwopPython() {
       <h2>/ the goal</h2>
 
       <p>
-        Beat the official clock:{' '}
-        <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">45.530s</a>
-        . That time (kurodo1916) was the record among humans and RL agents alike. Faster than everyone. Until this.
+        <a href="https://www.speedrun.com/qwop/runs/y9vk0k2m" target="_blank" rel="noopener noreferrer">45.530</a>
+        {' '}is the record on speedrun.com, held by{' '}
+        <a href="https://www.speedrun.com/users/kurodo1916" target="_blank" rel="noopener noreferrer">kurodo1916</a>
+        . This is the record amongst both humans and RL agents.
       </p>
 
       <p>
-        QWOP gyms already existed. I started from{' '}
-        <a href="https://github.com/smanolloff/qwop-gym" target="_blank" rel="noopener noreferrer">Simeon Manolov&apos;s qwop-gym</a>
-        {' '}(smanolloff), which wraps the real browser game for RL. The interface was solid, but it drove Chrome through chromedriver. That is slow, hard to parallelize, and a poor use of compute when you need to sweep recipes at scale. A few hundred iterations per second sustained was not going to cut it for a WR hunt.
+        QWOP has been played by RL agents for the better part of 5 years. In that span of time, agents have taken first place on the leaderboard, and kurodo1916 has taken it back.
       </p>
 
       <h2>/ the gym</h2>
 
       <p>
-        So I forked the idea into <code>qwop-python</code>: the same gym shape (body-state obs, Q/W/O/P actions), reimplemented in pure Python + Box2D, headless, no browser. The original game is a minified JS blob. I used coding agents to pull <code>QWOP.min.js</code> apart (physics, loop, input, rendering) and rebuild those pieces in Python.
+        Given the game&apos;s simplistic controls, this game is a perfect candidate for reinforcement learning. Many QWOP gyms already exist today. I started with{' '}
+        <a href="https://github.com/smanolloff/qwop-gym" target="_blank" rel="noopener noreferrer">Simeon Manolov&apos;s qwop-gym</a>
+        , which wraps the real browser game for RL. The interface was solid, but the core game loop was driven through a browser-based Chrome driver. Running the env full bore on my M2 MacBook Pro, I could get around 100–500 it/s. The base game runs at 30fps, so this is only 15× faster than realtime for training (for one environment!). I would need a much more performant gym.
       </p>
 
       <p>
-        Browser gyms sat around 100–500 it/s. A single Python env hit about 10,000 it/s; four in parallel about 40,000. Call it 100× on one process, a few hundred times faster once you scale. That is what made massively parallel training actually possible.
+        So I forked the existing{' '}
+        <a href="https://github.com/smanolloff/qwop-gym" target="_blank" rel="noopener noreferrer">smanolloff gym</a>
+        {' '}into <code>qwop-python</code>: the same gym shape (body-state observations, Q/W/O/P actions) but reimplemented the core game in pure Python + Box2D. The game can run headless with no Chrome driver. Because the original game is a minified JS blob, I used coding agents to pull <code>QWOP.min.js</code> apart (physics, loop, input, rendering) and rebuild those pieces in Python. This is something that would not have been possible without the use of AI agents. The min.js sat at about 550KB — over 13,000 lines once you unpack it — with no variable names or anything.
       </p>
 
       <p>
-        Everything trained in Python. Because the gym was a close 1:1 of the original JS physics, the learned policy transferred to the official browser game without a separate stack. Train in Python, prove it on Foddy&apos;s page.
+        After constructing my new gym, a single Python env hit about 10,000 it/s; four in parallel about 40,000 it/s. Call it 100× on one process, and a few hundred times faster once you scale. This is what made massive parallel training actually possible.
       </p>
 
       <h2>/ the research loop</h2>
 
       <p>
-        With the gym up, I ran about a day and a half of training and hunting on GCP (spot VMs, GCS, TensorBoard). I did not want to live in the loop of constantly checking runs, editing configs, and hand-tuning hyperparameters. I wanted an agentic research loop that could own that work. That is how I landed on{' '}
+        I stood up a few VMs on GCP to run my training. Because I did not want to live in the loop of hyperparameter grid-search hell, I wanted to try an agent research loop that could handle that part of the work for me. Originally trying{' '}
+        <a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener noreferrer">Andrej Karpathy&apos;s auto-research tool</a>
+        , I found that there were better tools at my disposal. That is how I landed on{' '}
         <a href="https://cursor.com/docs/grok-bot" target="_blank" rel="noopener noreferrer">grok bot</a>
         .
       </p>
 
       <p>
-        I put it to use with a routine every 15 minutes: check the farm, kill plateaus, swap hyperparameters, enqueue the next experiment, keep spectate pointed at good checkpoints. It directed almost all of the training. I checked in intermittently, mostly watching TensorBoard, while it ran the loop.
+        I stood up a routine that would check in on the farm every 15 minutes. It would kill policies that have clearly plateaued, swap hyperparameters, and enqueue the next experiment. While it directed almost all of the training, I checked in intermittently, mostly watching TensorBoard while it ran the loop.
       </p>
 
-      <h2>/ the gait</h2>
+      <h2>/ imitation learning</h2>
 
       <p>
-        The gait itself came from studying Kurodo&apos;s WR video. Literal key replay faceplanted, but a flexible QO→WP cycle stuck. Flex-gait + early-survival PPO got us serious finishes; grok bot kept continuing the good line instead of reseeding plateaus.
-      </p>
-
-      <h2>/ the record</h2>
-
-      <p>
-        Transfer was another issue to conquer. Because we built the game in Python, there were slight mathematical differences in certain mechanics versus the browser. Parity was very close, but those gaps still showed up, mostly at the start. A lot of runs would faceplant right away. So I did a separate fine-tune focused on the opening. After that, a lot more runs made it past the first 4, 5, 10 meters, times started dropping, and after enough tries on Foddy&apos;s page we hit a world-record 45.167s, under 45.530 by about a third of a second.
+        Virgin PPO policies quickly converge on reliable, slow strategies that complete runs, but are nowhere near the world record. In order to achieve the world record, we would have to imitate the bounding strides found in the world record. I spun up a tool to extract in-game key logging based on the world record video from{' '}
+        <a href="https://www.youtube.com/watch?v=4g9x7QJYx0M" target="_blank" rel="noopener noreferrer">kurodo1916</a>
+        . Literally trying to imitate the keypresses face planted, but a more flexible, hyperparameter-tunable metric for imitation eventually allowed the agent to really learn the shape of the gait-cycle, as opposed to imitating it directly.
       </p>
 
       <p>
-        Below I&apos;ve embedded a YouTube video of the actual world record run.
+        I used Stable-Baselines3 PPO with the usual knobs (clipped updates, GAE). Body-state observations, discrete Q/W/O/P. Reward mostly for covering ground and not wasting time, plus light gait shaping. Details live in the{' '}
+        <a href="https://github.com/bicrick/qwop-python/tree/main/docs/wr-hunt" target="_blank" rel="noopener noreferrer">repo docs</a>
+        . Honestly grok bot handled most of the reward shaping.
+      </p>
+
+      <p>
+        After learning to imitate the world record, and putting down about 36 hours of training in GCP, I was consistently getting runs well below the world record within my simulator.
+      </p>
+
+      <h2>/ the transfer</h2>
+
+      <p>
+        Because we built the game in Python, there were slight mathematical differences in our game versus the browser. Parity was very close, but those gaps still showed up, mostly at the start. When I moved my Python-trained policy to the real game, runs would faceplant right away. So I did a separate fine-tune focused on the opening. After that, more runs made it past the start, and times started dropping. After enough attempts I finally achieved a world-record 45.167s, under 45.530 by about a third of a second.
+      </p>
+
+      <p>
+        You can watch the world record run below.
       </p>
 
       <ProjectYoutubeEmbed
@@ -90,24 +107,17 @@ function QwopPython() {
       />
 
       <p>
-        I also have a <Link to="/demos/qwop">live demo</Link> where you can mess around with a recording from the Python environment (same run as the preview at the top).
-      </p>
-
-      <h2>/ how it learned</h2>
-
-      <p>
-        Stable-Baselines3 PPO with the usual knobs (clipped updates, GAE). Body-state observations, discrete Q/W/O/P. Reward mostly for covering ground and not wasting time, plus light gait shaping. Details live in the{' '}
-        <a href="https://github.com/bicrick/qwop-python/tree/main/docs/wr-hunt" target="_blank" rel="noopener noreferrer">repo docs</a>.
+        I also have a <Link to="/demos/qwop">live demo</Link> where you can mess around with a recording from the Python gym.
       </p>
 
       <h2>/ conclusions</h2>
 
       <p>
-        The gym mattered. The recipe mattered. What changed the project was grok bot. I gave it a hard goal (beat HTML5 QWOP) and it ran the farm: 15-minute check-ins, plateaus, hyperparams, next jobs. I stopped living on the layer where I micromanaged every run. A high-level AI was directing policy RL while I peeked at TensorBoard when I felt like it.
+        What surprised me most about this project was the way the world record was achieved. We now live in a world where a cron-driven agent can periodically check in on training, tune hyperparameters, and enqueue the next job. It&apos;s like having another abstract layer on top of your training. I stopped living on the layer where I had to micromanage every run. A high-level AI was directing the policy while I watched TensorBoard for updates.
       </p>
 
       <p>
-        If that&apos;s the world we&apos;re heading into, autonomous research loops like this aren&apos;t a gimmick. They&apos;re how you hunt a record. Fast gym, honest browser clock, and an AI that never gets bored of the 15-minute loop. grok bot was that layer here, and it was wild to watch.
+        Research loops like these are not a gimmick. This is how you build RSI.
       </p>
 
       <p>
