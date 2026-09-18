@@ -147,6 +147,52 @@ function useCoarsePointer() {
   return coarse;
 }
 
+function HeatmapGraph({ grid, renderDot }) {
+  return (
+    <div className="cursor-activity-graph">
+      <div className="cursor-activity-months">
+        <span className="cursor-activity-gutter" aria-hidden="true" />
+        <div
+          className="cursor-activity-month-track"
+          style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
+        >
+          {grid.monthMarkers.map((month) => (
+            <span
+              key={month.label}
+              style={{ gridColumn: month.weekIndex + 1 }}
+            >
+              {month.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="cursor-activity-body">
+        <div className="cursor-activity-days" aria-hidden="true">
+          {DAY_LABELS.map((label, i) => (
+            <span key={`day-${i}`}>{label}</span>
+          ))}
+        </div>
+
+        <div
+          className="cursor-activity-weeks"
+          style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
+        >
+          {grid.weeks.map((week, wi) => (
+            <div
+              key={`week-${wi}`}
+              className="cursor-activity-week"
+              style={{ '--ice-delay': `${wi * 55}ms` }}
+            >
+              {week.map((day) => renderDot(day))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CursorActivityHeatmap() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
@@ -223,9 +269,11 @@ function CursorActivityHeatmap() {
     }, 0);
   }, [data, year]);
 
-  if (error || !data) {
+  if (error) {
     return null;
   }
+
+  const isLoading = !data;
 
   const placeTip = (event, day) => {
     if (!day.inRange) {
@@ -263,97 +311,82 @@ function CursorActivityHeatmap() {
     setArmedDate(day.date);
   };
 
-  return (
-    <div className="cursor-activity-wrap">
-      <a
-        ref={rootRef}
-        className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
-        href={PROFILE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Cursor token usage for @bicrick"
-        onMouseLeave={() => {
+  const renderDot = (day) => {
+    const level = grid.levelFor(day.count);
+    const isArmed = armedDate === day.date;
+
+    return (
+      <span
+        key={day.date}
+        data-date={day.date}
+        className={[
+          'cursor-activity-dot',
+          `level-${level < 0 ? 'empty' : level}`,
+          isArmed ? 'is-armed' : '',
+        ].filter(Boolean).join(' ')}
+        onMouseEnter={(event) => {
+          if (!isLoading && !isCoarse) placeTip(event, day);
+        }}
+        onMouseMove={(event) => {
+          if (!isLoading && !isCoarse) placeTip(event, day);
+        }}
+        onFocus={(event) => {
+          if (!isLoading && !isCoarse) placeTip(event, day);
+        }}
+        onBlur={() => {
           if (!isCoarse) clearTip();
         }}
-      >
-        <span className="cursor-activity-label">token usage</span>
-        <div className="cursor-activity-graph">
-          <div className="cursor-activity-months">
-            <span className="cursor-activity-gutter" aria-hidden="true" />
-            <div
-              className="cursor-activity-month-track"
-              style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
-            >
-              {grid.monthMarkers.map((month) => (
-                <span
-                  key={month.label}
-                  style={{ gridColumn: month.weekIndex + 1 }}
-                >
-                  {month.label}
-                </span>
-              ))}
-            </div>
-          </div>
+        onClick={(event) => {
+          if (!isLoading) handleDotClick(event, day);
+        }}
+      />
+    );
+  };
 
-          <div className="cursor-activity-body">
-            <div className="cursor-activity-days" aria-hidden="true">
-              {DAY_LABELS.map((label, i) => (
-                <span key={`day-${i}`}>{label}</span>
-              ))}
-            </div>
-
-            <div
-              className="cursor-activity-weeks"
-              style={{ gridTemplateColumns: `repeat(${grid.weeks.length}, minmax(0, 1fr))` }}
-            >
-              {grid.weeks.map((week, wi) => (
-                <div key={`week-${wi}`} className="cursor-activity-week">
-                  {week.map((day) => {
-                    const level = grid.levelFor(day.count);
-                    const isArmed = armedDate === day.date;
-                    return (
-                      <span
-                        key={day.date}
-                        data-date={day.date}
-                        className={[
-                          'cursor-activity-dot',
-                          `level-${level < 0 ? 'empty' : level}`,
-                          isArmed ? 'is-armed' : '',
-                        ].filter(Boolean).join(' ')}
-                        onMouseEnter={(event) => {
-                          if (!isCoarse) placeTip(event, day);
-                        }}
-                        onMouseMove={(event) => {
-                          if (!isCoarse) placeTip(event, day);
-                        }}
-                        onFocus={(event) => {
-                          if (!isCoarse) placeTip(event, day);
-                        }}
-                        onBlur={() => {
-                          if (!isCoarse) clearTip();
-                        }}
-                        onClick={(event) => handleDotClick(event, day)}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
+  return (
+    <div className={`cursor-activity-wrap${isLoading ? '' : ' is-ready'}`}>
+      {isLoading ? (
+        <div
+          className="cursor-activity is-loading"
+          aria-busy="true"
+          aria-label="Loading token usage"
+        >
+          <span className="cursor-activity-label">token usage</span>
+          <HeatmapGraph grid={grid} renderDot={renderDot} />
         </div>
-
-        {tooltip && (
-          <span
-            className="cursor-activity-tip"
-            style={{ left: tooltip.x, top: tooltip.y }}
-            role="tooltip"
-          >
-            {tooltip.text}
-          </span>
-        )}
-      </a>
+      ) : (
+        <a
+          ref={rootRef}
+          className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
+          href={PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Cursor token usage for @bicrick"
+          onMouseLeave={() => {
+            if (!isCoarse) clearTip();
+          }}
+        >
+          <span className="cursor-activity-label">token usage</span>
+          <HeatmapGraph grid={grid} renderDot={renderDot} />
+          {tooltip && (
+            <span
+              className="cursor-activity-tip"
+              style={{ left: tooltip.x, top: tooltip.y }}
+              role="tooltip"
+            >
+              {tooltip.text}
+            </span>
+          )}
+        </a>
+      )}
       <p className="cursor-activity-total">
-        So far I have used {formatCount(ytdTotal)} tokens this year.
+        So far I have used{' '}
+        {isLoading ? (
+          <span className="cursor-activity-total-ice" aria-hidden="true" />
+        ) : (
+          formatCount(ytdTotal)
+        )}{' '}
+        tokens this year.
       </p>
     </div>
   );
