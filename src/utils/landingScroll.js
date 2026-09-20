@@ -10,8 +10,8 @@ function prefersReducedMotion() {
 
 function easeChapterProgress(t) {
   const clamped = Math.max(0, Math.min(1, t));
-  // Ease-in: stays soft longer, clarifies late — avoids a mid-gutter POP
-  return clamped ** 1.85;
+  // Mild ease-out — clarifies a bit sooner without snapping
+  return 1 - ((1 - clamped) ** 1.35);
 }
 
 export function getStickyNavHeight() {
@@ -26,13 +26,13 @@ export function getChapterGutterPx() {
     const height = breakEl.getBoundingClientRect().height;
     if (height > 0) return height;
   }
-  return Math.round(window.innerHeight * 0.48);
+  return Math.round(window.innerHeight * 0.4);
 }
 
-/** Scroll distance over which blur → focus runs (longer than the visible gutter). */
+/** Scroll distance over which blur → focus runs (a bit longer than the gutter). */
 export function getChapterFocusPx() {
   const gutter = getChapterGutterPx();
-  return Math.max(gutter * 1.75, Math.round(window.innerHeight * 0.72));
+  return Math.max(gutter * 1.15, Math.round(window.innerHeight * 0.48));
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {

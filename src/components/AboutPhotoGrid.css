@@ -4,26 +4,8 @@
   gap: 8px;
   margin: 32px 0 20px;
   width: 100%;
-}
-
-.about-pic-button {
-  display: block;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  border: 1px solid var(--rule);
-  border-radius: 0;
-  background: var(--card-wash);
-  cursor: pointer;
-  aspect-ratio: 1;
-  overflow: hidden;
-  min-width: 0;
-  line-height: 0;
-}
-
-.about-pic-button:focus-visible {
-  outline: 2px solid var(--link);
-  outline-offset: 2px;
+  pointer-events: none;
+  user-select: none;
 }
 
 .about-pic {
@@ -32,67 +14,10 @@
   aspect-ratio: 1;
   object-fit: cover;
   display: block;
-}
-
-.about-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2.5rem 1.25rem 1.25rem;
-  background: rgba(20, 24, 32, 0.88);
-  cursor: pointer;
-}
-
-.about-lightbox-title {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.about-lightbox-close {
-  position: absolute;
-  top: 0.85rem;
-  right: 1rem;
-  z-index: 1;
-  padding: 0.35rem 0.5rem;
-  border: 0;
-  background: transparent;
-  color: #fff;
-  font: inherit;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  opacity: 0.85;
-}
-
-.about-lightbox-close:hover,
-.about-lightbox-close:focus-visible {
-  opacity: 1;
-  outline: none;
-}
-
-.about-lightbox-close:focus-visible {
-  box-shadow: 0 0 0 2px var(--link);
-}
-
-.about-lightbox-image {
-  max-width: 95vw;
-  max-height: 90vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  cursor: default;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  min-width: 0;
+  border: 1px solid var(--rule);
+  background: var(--card-wash);
+  pointer-events: none;
 }
 
 @media (max-width: 768px) {
@@ -100,14 +25,5 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     margin: 24px 0 20px;
-  }
-
-  .about-lightbox {
-    padding: 3rem 0.75rem 0.75rem;
-  }
-
-  .about-lightbox-image {
-    max-width: 95vw;
-    max-height: 85vh;
   }
 }

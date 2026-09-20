@@ -1,5 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
-import { lockPageScroll } from '../utils/pageScroll';
+import React from 'react';
 import './AboutPhotoGrid.css';
 
 const PHOTOS = [
@@ -11,81 +10,21 @@ const PHOTOS = [
   { src: `${process.env.PUBLIC_URL}/about/img-4643.gif`, alt: 'Track race' },
 ];
 
-function AboutPhotoGrid() {
-  const [activeIndex, setActiveIndex] = useState(null);
-  const titleId = useId();
-  const activePhoto = activeIndex != null ? PHOTOS[activeIndex] : null;
-
-  useEffect(() => {
-    if (activeIndex == null) return undefined;
-
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setActiveIndex(null);
-      }
-    };
-
-    const unlockPageScroll = lockPageScroll();
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      unlockPageScroll();
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [activeIndex]);
-
+export default function AboutPhotoGrid() {
   return (
-    <>
-      <div className="about-pics">
-        {PHOTOS.map((photo, index) => (
-          <button
-            key={photo.src}
-            type="button"
-            className="about-pic-button"
-            onClick={() => setActiveIndex(index)}
-            aria-label={`View larger: ${photo.alt}`}
-          >
-            <img
-              src={photo.src}
-              alt={photo.alt}
-              className="about-pic"
-              width="400"
-              height="400"
-              loading="lazy"
-            />
-          </button>
-        ))}
-      </div>
-
-      {activePhoto && (
-        <div
-          className="about-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          onClick={() => setActiveIndex(null)}
-        >
-          <p id={titleId} className="about-lightbox-title">
-            {activePhoto.alt}
-          </p>
-          <button
-            type="button"
-            className="about-lightbox-close"
-            onClick={() => setActiveIndex(null)}
-            aria-label="Close photo preview"
-          >
-            Close
-          </button>
-          <img
-            src={activePhoto.src}
-            alt={activePhoto.alt}
-            className="about-lightbox-image"
-            onClick={(event) => event.stopPropagation()}
-          />
-        </div>
-      )}
-    </>
+    <div className="about-pics">
+      {PHOTOS.map((photo) => (
+        <img
+          key={photo.src}
+          src={photo.src}
+          alt={photo.alt}
+          className="about-pic"
+          width="400"
+          height="400"
+          loading="lazy"
+          draggable={false}
+        />
+      ))}
+    </div>
   );
 }
-
-export default AboutPhotoGrid;

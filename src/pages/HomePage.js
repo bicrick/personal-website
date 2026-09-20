@@ -17,6 +17,7 @@ export default function HomePage() {
             className="home-pic"
             width="320"
             height="320"
+            draggable={false}
           />
           <div className="home-copy">
             <TypewriterHeading as="h2" className="home-heading">

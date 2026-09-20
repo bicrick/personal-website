@@ -165,11 +165,7 @@ h2 {
   opacity: 0.5;
 }
 
-/* Keep the title rule out of the blurred chapter preview */
-.page-section[data-chapter]:not(.is-chapter-drawn):not(.is-chapter-settled) :is(.home-heading, .about-heading, .projects-heading, .contact-heading)::after {
-  opacity: 0;
-}
-
+/* Hide typed title letters in the blurred preview; keep the grey rule */
 .page-section[data-chapter]:not(.is-chapter-drawn):not(.is-chapter-settled) .typewriter-heading-live {
   opacity: 0;
 }
@@ -615,6 +611,8 @@ section {
   border: 1px solid var(--rule);
   border-radius: 2px;
   box-shadow: 0 12px 32px var(--shadow);
+  pointer-events: none;
+  user-select: none;
 }
 
 .home-links {
