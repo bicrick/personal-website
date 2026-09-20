@@ -56,27 +56,6 @@
   margin-bottom: 32px;
 }
 
-.project-title {
-  font-family: var(--font-pixel);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  font-size: 32px;
-  line-height: 36px;
-  margin: 0 0 12px;
-  color: var(--ink);
-}
-
-.project-title::after {
-  content: "";
-  display: block;
-  width: 2.75rem;
-  height: 3px;
-  margin-top: 10px;
-  background-image: radial-gradient(var(--stipple-rule) 1px, transparent 1.2px);
-  background-size: 6px 3px;
-  background-repeat: repeat-x;
-}
-
 .project-meta {
   display: flex;
   flex-wrap: wrap;
@@ -263,11 +242,6 @@
 
   .project-back {
     margin-bottom: 20px;
-  }
-
-  .project-title {
-    font-size: 32px;
-    line-height: 36px;
   }
 
   .project-abstract p,

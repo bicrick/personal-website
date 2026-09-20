@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import './CursorActivityHeatmap.css';
 
 const PROFILE_URL = 'https://cursor.com/@bicrick';
@@ -281,15 +282,21 @@ function CursorActivityHeatmap() {
       return;
     }
     const rect = event.currentTarget.getBoundingClientRect();
-    const pad = 8;
+    const pad = 10;
+    const estimatedWidth = 92;
+    const estimatedHeight = 28;
+    const gap = 8;
     const x = Math.min(
-      Math.max(rect.left + rect.width / 2, pad + 40),
-      window.innerWidth - pad - 40
+      Math.max(rect.left + rect.width / 2, pad + estimatedWidth / 2),
+      window.innerWidth - pad - estimatedWidth / 2
     );
+    const spaceAbove = rect.top - pad;
+    const below = spaceAbove < estimatedHeight + gap;
     setTooltip({
       text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}`,
       x,
-      y: rect.top,
+      y: below ? rect.bottom : rect.top,
+      below,
       date: day.date,
     });
   };
@@ -368,15 +375,17 @@ function CursorActivityHeatmap() {
         >
           <span className="cursor-activity-label">token usage</span>
           <HeatmapGraph grid={grid} renderDot={renderDot} />
-          {tooltip && (
-            <span
-              className="cursor-activity-tip"
-              style={{ left: tooltip.x, top: tooltip.y }}
-              role="tooltip"
-            >
-              {tooltip.text}
-            </span>
-          )}
+          {tooltip
+            && createPortal(
+              <span
+                className={`cursor-activity-tip${tooltip.below ? ' is-below' : ''}`}
+                style={{ left: tooltip.x, top: tooltip.y }}
+                role="tooltip"
+              >
+                {tooltip.text}
+              </span>,
+              document.body
+            )}
         </a>
       )}
       <p className={`cursor-activity-total${isLoading ? ' is-ice' : ''}`}>

@@ -54,48 +54,25 @@ export default function useLandingSection() {
     }, ms);
   }, []);
 
-  const applyCurrentClass = useCallback((id, { animate = true } = {}) => {
-    const reduced = prefersReducedMotion();
+  const applyCurrentClass = useCallback((id) => {
     document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-      const isCurrent = el.getAttribute('data-chapter') === id;
-      el.classList.toggle('is-chapter-current', isCurrent);
-      el.classList.remove('is-chapter-pending');
-
-      if (!isCurrent) {
-        el.classList.remove('is-chapter-drawn', 'is-chapter-settled');
-        return;
-      }
-
-      if (!animate || reduced) {
-        el.classList.remove('is-chapter-drawn');
-        el.classList.add('is-chapter-settled');
-        return;
-      }
-
-      // Retrigger one-shot title type-in
-      el.classList.remove('is-chapter-settled', 'is-chapter-drawn');
-      el.classList.add('is-chapter-pending');
-      // Force reflow so the draw animation can replay
-      // eslint-disable-next-line no-unused-expressions
-      el.offsetWidth;
-      el.classList.remove('is-chapter-pending');
-      el.classList.add('is-chapter-drawn');
+      el.classList.toggle('is-chapter-current', el.getAttribute('data-chapter') === id);
     });
   }, []);
 
-  const commitActive = useCallback((id, { syncUrl = true, animate = true } = {}) => {
+  const commitActive = useCallback((id, { syncUrl = true } = {}) => {
     if (!id) return;
 
     const changed = id !== activeIdRef.current;
     if (changed) {
       activeIdRef.current = id;
       setActiveId(id);
-      applyCurrentClass(id, { animate });
+      applyCurrentClass(id);
     } else {
-      // Initial mount starts with matching id — apply classes once (may animate)
+      // Initial mount starts with matching id — apply current once
       const el = document.querySelector(`.page-section[data-chapter="${id}"]`);
       if (el && !el.classList.contains('is-chapter-current')) {
-        applyCurrentClass(id, { animate });
+        applyCurrentClass(id);
       }
     }
 
@@ -111,7 +88,7 @@ export default function useLandingSection() {
     if (!page) return;
 
     markProgrammatic(prefersReducedMotion() ? 120 : 700);
-    setChapterInkImmediate(id);
+    setChapterInkImmediate(id, { replay: true });
     commitActive(id, { syncUrl: false });
 
     const current = normalizePagePath(window.location.pathname);
@@ -133,15 +110,14 @@ export default function useLandingSection() {
 
     if (syncOnly) {
       // URL followed the scroll; do not move the viewport
-      commitActive(page.id, { syncUrl: false, animate: true });
+      commitActive(page.id, { syncUrl: false });
       updateChapterInkFromScroll(page.id);
       return;
     }
 
     markProgrammatic(prefersReducedMotion() ? 80 : 200);
     setChapterInkImmediate(page.id);
-    // Type the chapter title on first paint too
-    commitActive(page.id, { syncUrl: false, animate: true });
+    commitActive(page.id, { syncUrl: false });
 
     const shouldJump = !didInitRef.current
       || Boolean(location.state?.landingNavigate)

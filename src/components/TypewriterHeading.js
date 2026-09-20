@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import './TypewriterHeading.css';
 
 const STEP_MS = 48;
-const CARET_HOLD_MS = 720;
+const CARET_HOLD_MS = 1600;
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
@@ -27,6 +27,7 @@ export default function TypewriterHeading({
   const timersRef = useRef([]);
   const [shown, setShown] = useState(() => (prefersReducedMotion() ? text.length : 0));
   const [caret, setCaret] = useState(false);
+  const [typing, setTyping] = useState(false);
 
   const clearTimers = () => {
     timersRef.current.forEach((id) => window.clearTimeout(id));
@@ -37,12 +38,14 @@ export default function TypewriterHeading({
     clearTimers();
     setShown(text.length);
     setCaret(withCaret);
+    setTyping(false);
   };
 
   const hide = () => {
     clearTimers();
     setShown(0);
     setCaret(false);
+    setTyping(false);
   };
 
   const play = () => {
@@ -54,9 +57,11 @@ export default function TypewriterHeading({
 
     setShown(0);
     setCaret(true);
+    setTyping(true);
 
     const tick = (index) => {
       if (index >= text.length) {
+        setTyping(false);
         const hide = window.setTimeout(() => setCaret(false), CARET_HOLD_MS);
         timersRef.current.push(hide);
         return;
@@ -76,8 +81,8 @@ export default function TypewriterHeading({
   useLayoutEffect(() => {
     const section = hostRef.current?.closest('[data-chapter]');
     if (!section) {
-      showAll(false);
-      return undefined;
+      play();
+      return () => clearTimers();
     }
 
     let last = 'boot';
@@ -113,17 +118,19 @@ export default function TypewriterHeading({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
-  const classes = ['typewriter-heading', className].filter(Boolean).join(' ');
+  const classes = ['typewriter-heading', 'page-title', className].filter(Boolean).join(' ');
 
   return (
     <Tag ref={hostRef} className={classes} aria-label={text}>
       <span className="typewriter-heading-sizer" aria-hidden="true">
         {text}
-        <span className="typewriter-heading-caret is-spacer">|</span>
+        <span className="typewriter-heading-caret is-spacer" />
       </span>
       <span className="typewriter-heading-live" aria-hidden="true">
         {text.slice(0, shown)}
-        {caret ? <span className="typewriter-heading-caret">|</span> : null}
+        {caret ? (
+          <span className={`typewriter-heading-caret${typing ? ' is-typing' : ''}`} />
+        ) : null}
       </span>
     </Tag>
   );

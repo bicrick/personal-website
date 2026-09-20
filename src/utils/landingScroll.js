@@ -2,6 +2,10 @@ import { getLandingPageById } from '../constants/sections';
 
 export const CHAPTER_INK_MIN = 0;
 export const CHAPTER_INK_MAX = 1;
+/** Ink at which blur is gone (chapter top at mid-viewport). */
+export const CHAPTER_SHARP_ON = 0.99;
+/** Drop below this before a return visit can type again. */
+export const CHAPTER_SHARP_OFF = 0.55;
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
@@ -56,19 +60,69 @@ export function scrollToLandingSection(id, { behavior } = {}) {
   }
 }
 
-export function setChapterInkImmediate(activeId) {
+/**
+ * One-shot type-in when a chapter first goes sharp; reset when it blurs away.
+ * Nav current/settled is separate — this is the mid-viewport trigger.
+ */
+export function applyChapterPlayFromInk(el, ink, { forceReplay = false } = {}) {
+  const reduced = prefersReducedMotion();
+  const isSharp = ink >= CHAPTER_SHARP_ON;
+  const isFaded = ink <= CHAPTER_SHARP_OFF;
+  const drawn = el.classList.contains('is-chapter-drawn');
+  const settled = el.classList.contains('is-chapter-settled');
+
+  if (isFaded) {
+    if (drawn || settled || !el.classList.contains('is-chapter-pending')) {
+      el.classList.remove('is-chapter-drawn', 'is-chapter-settled');
+      el.classList.add('is-chapter-pending');
+    }
+    return;
+  }
+
+  if (!isSharp) return;
+
+  if (reduced) {
+    el.classList.remove('is-chapter-pending', 'is-chapter-drawn');
+    el.classList.add('is-chapter-settled');
+    return;
+  }
+
+  if (!forceReplay && (drawn || settled)) return;
+
+  if (forceReplay) {
+    el.classList.remove('is-chapter-settled', 'is-chapter-drawn');
+    el.classList.add('is-chapter-pending');
+    window.requestAnimationFrame(() => {
+      if (!el.isConnected) return;
+      el.classList.remove('is-chapter-pending');
+      el.classList.add('is-chapter-drawn');
+    });
+    return;
+  }
+
+  el.classList.remove('is-chapter-pending');
+  el.classList.add('is-chapter-drawn');
+}
+
+export function setChapterInkImmediate(activeId, { replay = false } = {}) {
   const pages = document.querySelectorAll('.page-section[data-chapter]');
   pages.forEach((el) => {
     const id = el.getAttribute('data-chapter');
-    const ink = id === activeId ? CHAPTER_INK_MAX : CHAPTER_INK_MIN;
+    const isActive = id === activeId;
+    const ink = isActive ? CHAPTER_INK_MAX : CHAPTER_INK_MIN;
     el.style.setProperty('--chapter-ink', String(ink));
+    applyChapterPlayFromInk(el, ink, { forceReplay: replay && isActive });
   });
+}
+
+function getChapterFocusEnd(navH) {
+  // Sharp once the chapter top reaches mid-viewport, not only when pinned to the nav
+  return Math.max(navH, Math.round(window.innerHeight * 0.5));
 }
 
 function arrivalProgress(el, navH, focusPx) {
   const top = el.getBoundingClientRect().top;
-  // Fully sharp once the chapter top meets the sticky nav (home at rest included)
-  const end = navH;
+  const end = getChapterFocusEnd(navH);
   const start = end + focusPx;
   if (top >= start) return 0;
   if (top <= end) return 1;
@@ -110,7 +164,9 @@ export function updateChapterInkFromScroll() {
       t = Math.max(t, 0.92);
     }
 
-    el.style.setProperty('--chapter-ink', String(easeChapterProgress(t)));
+    const ink = easeChapterProgress(t);
+    el.style.setProperty('--chapter-ink', String(ink));
+    applyChapterPlayFromInk(el, ink);
   });
 }
 

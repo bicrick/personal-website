@@ -59,7 +59,7 @@ body {
   margin: 0;
   position: fixed;
   top: calc(var(--nav-pad-y) + env(safe-area-inset-top));
-  right: calc(max(0px, (100vw - var(--measure)) / 2) + var(--shell-pad));
+  right: max(var(--shell-pad), calc((100vw - var(--measure)) / 2 + var(--shell-pad)));
   z-index: 80;
   display: grid;
   place-items: center;
@@ -138,11 +138,7 @@ h2 {
 }
 
 /* Shared page title recipe — Geist Pixel + static subtitle rule */
-.page-title,
-.home-heading,
-.about-heading,
-.projects-heading,
-.contact-heading {
+.page-title {
   font-family: var(--font-pixel);
   font-weight: 400;
   letter-spacing: 0.01em;
@@ -155,7 +151,7 @@ h2 {
   max-width: 100%;
 }
 
-:is(.page-title, .home-heading, .about-heading, .projects-heading, .contact-heading)::after {
+.page-title::after {
   content: "";
   display: block;
   width: 100%;
@@ -163,6 +159,15 @@ h2 {
   margin-top: 0.65rem;
   background-color: var(--ink-muted);
   opacity: 0.5;
+}
+
+/* About / contact / project blogs share the article title size */
+.about-page .page-title,
+.contact-page .page-title,
+.project-detail .page-title {
+  font-size: 32px;
+  line-height: 36px;
+  margin: 0 0 12px;
 }
 
 /* Hide typed title letters in the blurred preview; keep the grey rule */
@@ -270,10 +275,7 @@ section {
   will-change: transform, filter, opacity;
 }
 
-.page-section[data-chapter] .home-heading,
-.page-section[data-chapter] .about-heading,
-.page-section[data-chapter] .projects-heading,
-.page-section[data-chapter] .contact-heading {
+.page-section[data-chapter] .page-title {
   letter-spacing: calc(0.01em + ((1 - var(--chapter-ink)) * 0.03em));
 }
 
@@ -341,10 +343,7 @@ section {
     will-change: opacity;
   }
 
-  .page-section[data-chapter] .home-heading,
-  .page-section[data-chapter] .about-heading,
-  .page-section[data-chapter] .projects-heading,
-  .page-section[data-chapter] .contact-heading {
+  .page-section[data-chapter] .page-title {
     letter-spacing: 0.01em;
   }
 
@@ -651,10 +650,7 @@ section {
     padding-bottom: 3rem;
   }
 
-  .page-title,
-  .about-heading,
-  .projects-heading,
-  .contact-heading {
+  .projects-heading {
     font-size: 1.7rem;
     margin-bottom: 1.15rem;
   }

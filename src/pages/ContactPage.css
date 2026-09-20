@@ -20,16 +20,6 @@
   margin-bottom: 32px;
 }
 
-.page-section.contact-page .contact-heading {
-  font-family: var(--font-pixel);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  font-size: 32px;
-  line-height: 36px;
-  margin: 0 0 12px;
-  color: var(--ink);
-}
-
 .contact-article h2 {
   font-family: var(--font-pixel);
   font-size: 15px;
@@ -86,12 +76,6 @@
     padding-top: 24px;
     padding-bottom: 56px;
     font-size: 18px;
-  }
-
-  .page-section.contact-page .contact-heading {
-    font-size: 32px;
-    line-height: 36px;
-    margin-bottom: 12px;
   }
 
   .contact-article h2 {

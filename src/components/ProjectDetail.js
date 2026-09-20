@@ -4,6 +4,7 @@ import './ProjectDetail.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import LandingNavBar from './LandingNavBar';
+import TypewriterHeading from './TypewriterHeading';
 import { getPageSeo } from '../constants/pages';
 
 function Navigation() {
@@ -56,7 +57,7 @@ function ProjectDetail({
             ← projects
           </Link>
           <header className="project-header">
-            <h1 className="project-title">{title}</h1>
+            <TypewriterHeading as="h1">{title}</TypewriterHeading>
             <div className="project-meta">
               {hasPrimary && (
                 <a href={linkHref} target="_blank" rel="noopener noreferrer">
