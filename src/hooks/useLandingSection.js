@@ -165,18 +165,44 @@ export default function useLandingSection() {
       if (programmaticRef.current) clearProgrammatic();
     };
 
-    // iOS often skips window scroll during the gesture — scrub ink on touch too
+    // iOS often skips window scroll during the gesture. Keep a rAF pump
+    // running while a finger is down so ink scrubs with the page.
+    let touching = false;
+    let touchRaf = null;
+    const pumpTouch = () => {
+      touchRaf = null;
+      tick();
+      if (touching) touchRaf = window.requestAnimationFrame(pumpTouch);
+    };
+    const onTouchStart = () => {
+      onUserScrollIntent();
+      touching = true;
+      if (touchRaf == null) touchRaf = window.requestAnimationFrame(pumpTouch);
+    };
     const onTouchMove = () => {
       onUserScrollIntent();
+      if (!touching) onTouchStart();
+      else onScroll();
+    };
+    const onTouchEnd = () => {
+      touching = false;
       onScroll();
     };
 
     tick();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true });
+    const scrollOpts = { passive: true };
+    const touchOpts = { passive: true, capture: true };
+    const scroller = document.scrollingElement || document.documentElement;
+    window.addEventListener('scroll', onScroll, scrollOpts);
+    document.addEventListener('scroll', onScroll, scrollOpts);
+    scroller.addEventListener('scroll', onScroll, scrollOpts);
+    document.body.addEventListener('scroll', onScroll, scrollOpts);
     window.addEventListener('resize', onScroll);
-    window.addEventListener('wheel', onUserScrollIntent, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('wheel', onUserScrollIntent, scrollOpts);
+    document.addEventListener('touchstart', onTouchStart, touchOpts);
+    document.addEventListener('touchmove', onTouchMove, touchOpts);
+    document.addEventListener('touchend', onTouchEnd, touchOpts);
+    document.addEventListener('touchcancel', onTouchEnd, touchOpts);
     const viewport = window.visualViewport;
     viewport?.addEventListener('scroll', onScroll);
     viewport?.addEventListener('resize', onScroll);
@@ -184,11 +210,18 @@ export default function useLandingSection() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('scroll', onScroll);
+      scroller.removeEventListener('scroll', onScroll);
+      document.body.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       window.removeEventListener('wheel', onUserScrollIntent);
-      window.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchstart', onTouchStart, touchOpts);
+      document.removeEventListener('touchmove', onTouchMove, touchOpts);
+      document.removeEventListener('touchend', onTouchEnd, touchOpts);
+      document.removeEventListener('touchcancel', onTouchEnd, touchOpts);
       viewport?.removeEventListener('scroll', onScroll);
       viewport?.removeEventListener('resize', onScroll);
+      touching = false;
+      if (touchRaf != null) window.cancelAnimationFrame(touchRaf);
       if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);
       if (programTimerRef.current) clearTimeout(programTimerRef.current);
     };

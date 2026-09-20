@@ -18,6 +18,17 @@ function getViewportHeight() {
   return window.innerHeight;
 }
 
+/** iOS often leaves window.scrollY at 0 while body / visualViewport actually move. */
+export function getScrollY() {
+  const visual = window.visualViewport;
+  const fromVisual = typeof visual?.pageTop === 'number' ? visual.pageTop : 0;
+  const fromWin = window.scrollY || window.pageYOffset || 0;
+  const fromRoot = document.documentElement?.scrollTop || 0;
+  const fromBody = document.body?.scrollTop || 0;
+  const fromSe = document.scrollingElement?.scrollTop || 0;
+  return Math.max(fromVisual, fromWin, fromRoot, fromBody, fromSe);
+}
+
 function paintChapterInk(el, ink, slide = 1 - ink, originY = 4) {
   el.style.setProperty('--chapter-ink', String(ink));
   el.style.setProperty('--chapter-slide', String(slide));
@@ -44,7 +55,7 @@ function getLayoutRect(el) {
     top += node.offsetTop;
     node = node.offsetParent;
   }
-  top -= window.scrollY || document.documentElement.scrollTop || 0;
+  top -= getScrollY();
   const height = el.offsetHeight;
   return { top, bottom: top + height, height };
 }
@@ -83,10 +94,10 @@ export function scrollToLandingSection(id, { behavior } = {}) {
   const reduced = prefersReducedMotion();
   const scrollBehavior = reduced ? 'auto' : (behavior || 'smooth');
   const navH = getStickyNavHeight();
-  const top = window.scrollY + getLayoutRect(el).top - navH;
+  const top = getScrollY() + getLayoutRect(el).top - navH;
   const maxScroll = Math.max(
     0,
-    (document.scrollingElement || document.documentElement).scrollHeight - window.innerHeight,
+    (document.scrollingElement || document.documentElement).scrollHeight - getViewportHeight(),
   );
   const target = Math.max(0, Math.min(top, maxScroll));
 
@@ -191,10 +202,11 @@ export function updateChapterInkFromScroll() {
   const sections = Array.from(document.querySelectorAll('.page-section[data-chapter]'));
   const maxScroll = Math.max(
     0,
-    (document.scrollingElement || document.documentElement).scrollHeight - window.innerHeight,
+    (document.scrollingElement || document.documentElement).scrollHeight - getViewportHeight(),
   );
-  const nearBottom = window.scrollY >= maxScroll - 8;
-  const atPageTop = window.scrollY <= 16;
+  const scrollY = getScrollY();
+  const nearBottom = scrollY >= maxScroll - 8;
+  const atPageTop = scrollY <= 16;
   const layouts = sections.map((el) => getLayoutRect(el));
   const arrives = layouts.map((rect) => arrivalProgress(rect, navH, focusPx));
 
