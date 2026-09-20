@@ -1,6 +1,6 @@
 .chapter-break {
-  /* Quiet pause between chapters; focus scrub is ~1.15× this height */
-  min-height: 38vh;
+  /* Thin seam — outgoing/incoming slides clear each other */
+  min-height: 3vh;
   box-sizing: border-box;
   pointer-events: none;
   user-select: none;
@@ -8,12 +8,12 @@
 
 @media (max-width: 800px) {
   .chapter-break {
-    min-height: 38vh;
+    min-height: 2.5vh;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .chapter-break {
-    min-height: 14vh;
+    min-height: 2vh;
   }
 }

@@ -18,23 +18,41 @@ function getViewportHeight() {
   return window.innerHeight;
 }
 
-function paintChapterInk(el, ink) {
+function paintChapterInk(el, ink, slide = 1 - ink, originY = 4) {
   el.style.setProperty('--chapter-ink', String(ink));
-  // Set filter in JS so WebKit/iOS repaints when the custom property changes
+  el.style.setProperty('--chapter-slide', String(slide));
+  el.style.setProperty('--chapter-origin-y', `${originY}%`);
+  // Drop compositing when sharp so photos stay at native resolution
   if (prefersReducedMotion() || ink >= 0.995) {
-    el.style.filter = 'none';
-    el.style.webkitFilter = 'none';
+    el.classList.remove('is-chapter-turning');
+    el.style.filter = '';
+    el.style.webkitFilter = '';
     return;
   }
-  const blur = `${((1 - ink) * 6).toFixed(2)}px`;
+  el.classList.add('is-chapter-turning');
+  // Set filter in JS so WebKit/iOS repaints when the custom property changes
+  const blur = `${((1 - ink) * 14).toFixed(2)}px`;
   el.style.filter = `blur(${blur})`;
   el.style.webkitFilter = `blur(${blur})`;
 }
 
+/** Viewport rect ignoring chapter scale/blur so measurements cannot feed back. */
+function getLayoutRect(el) {
+  let top = 0;
+  let node = el;
+  while (node) {
+    top += node.offsetTop;
+    node = node.offsetParent;
+  }
+  top -= window.scrollY || document.documentElement.scrollTop || 0;
+  const height = el.offsetHeight;
+  return { top, bottom: top + height, height };
+}
+
 function easeChapterProgress(t) {
   const clamped = Math.max(0, Math.min(1, t));
-  // Mild ease-out — clarifies a bit sooner without snapping
-  return 1 - ((1 - clamped) ** 1.35);
+  // Stay far back, then rush into place near mid-viewport
+  return clamped ** 1.8;
 }
 
 export function getStickyNavHeight() {
@@ -65,7 +83,7 @@ export function scrollToLandingSection(id, { behavior } = {}) {
   const reduced = prefersReducedMotion();
   const scrollBehavior = reduced ? 'auto' : (behavior || 'smooth');
   const navH = getStickyNavHeight();
-  const top = window.scrollY + el.getBoundingClientRect().top - navH;
+  const top = window.scrollY + getLayoutRect(el).top - navH;
   const maxScroll = Math.max(
     0,
     (document.scrollingElement || document.documentElement).scrollHeight - window.innerHeight,
@@ -129,7 +147,7 @@ export function setChapterInkImmediate(activeId, { replay = false } = {}) {
     const id = el.getAttribute('data-chapter');
     const isActive = id === activeId;
     const ink = isActive ? CHAPTER_INK_MAX : CHAPTER_INK_MIN;
-    paintChapterInk(el, ink);
+    paintChapterInk(el, ink, isActive ? 0 : 1);
     applyChapterPlayFromInk(el, ink, { forceReplay: replay && isActive });
   });
 }
@@ -139,13 +157,26 @@ function getChapterFocusEnd(navH) {
   return Math.max(navH, Math.round(getViewportHeight() * 0.5));
 }
 
-function arrivalProgress(el, navH, focusPx) {
-  const top = el.getBoundingClientRect().top;
+function arrivalProgress(rect, navH, focusPx) {
   const end = getChapterFocusEnd(navH);
   const start = end + focusPx;
-  if (top >= start) return 0;
-  if (top <= end) return 1;
-  return 1 - ((top - end) / focusPx);
+  if (rect.top >= start) return 0;
+  if (rect.top <= end) return 1;
+  return 1 - ((rect.top - end) / focusPx);
+}
+
+/**
+ * How far this chapter has scrolled off the top, over one viewport.
+ * 0 = still a full screen of it; 1 = gone. Mirrors arrival so the exit
+ * is the same curve running backwards.
+ */
+function leaveProgress(rect, navH) {
+  const viewH = getViewportHeight();
+  const remaining = rect.bottom - navH;
+  const span = Math.max(1, viewH - navH);
+  if (remaining >= span - 8) return 0;
+  if (remaining <= 0) return 1;
+  return 1 - remaining / span;
 }
 
 export function updateChapterInkFromScroll() {
@@ -164,31 +195,39 @@ export function updateChapterInkFromScroll() {
   );
   const nearBottom = window.scrollY >= maxScroll - 8;
   const atPageTop = window.scrollY <= 16;
-  const activeId = resolveActiveLandingId();
+  const layouts = sections.map((el) => getLayoutRect(el));
+  const arrives = layouts.map((rect) => arrivalProgress(rect, navH, focusPx));
 
   sections.forEach((el, index) => {
-    const id = el.getAttribute('data-chapter');
-    const arrive = arrivalProgress(el, navH, focusPx);
+    const rect = layouts[index];
+    const arrive = arrives[index];
+    const nextArrive = arrives[index + 1] ?? 0;
+    const leave = leaveProgress(rect, navH);
     const next = sections[index + 1];
-    const nextArrive = next ? arrivalProgress(next, navH, focusPx) : 0;
-    let t = Math.max(0, Math.min(1, arrive * (1 - nextArrive * 0.85)));
-
-    // Home (and any settled chapter flush to the nav) must be fully sharp — no residual blur
-    const top = el.getBoundingClientRect().top;
     const viewH = getViewportHeight();
-    if (top >= viewH - 8) {
-      // Still below the fold — stay distant so mobile cannot pre-sharpen
-      t = 0;
-    } else if (atPageTop && index === 0) {
-      t = 1;
-    } else if (id === activeId && top <= navH + 20) {
-      t = 1;
-    } else if (!next && nearBottom) {
-      t = Math.max(t, 0.92);
+    const mid = viewH * 0.5;
+    const ownsMid = rect.top <= mid && rect.bottom >= mid;
+    let ink = easeChapterProgress(arrive);
+    // Stay fully sharp while this chapter owns the middle of the screen.
+    // Pairing to the next slide too early fries photos on long pages.
+    if (!ownsMid) {
+      ink = Math.min(ink, 1 - easeChapterProgress(leave));
+      if (next) {
+        ink = Math.min(ink, 1 - easeChapterProgress(nextArrive));
+      }
     }
 
-    const ink = easeChapterProgress(t);
-    paintChapterInk(el, ink);
+    if (rect.top >= viewH - 8) {
+      ink = 0;
+    } else if (atPageTop && index === 0) {
+      ink = 1;
+    } else if (!next && nearBottom) {
+      ink = Math.max(ink, 0.92);
+    }
+
+    const leaving = !ownsMid && (leave > 0 || (Boolean(next) && nextArrive > 0 && arrive >= 0.999));
+    const slide = leaving ? 0 : (1 - ink);
+    paintChapterInk(el, ink, slide, leaving ? 92 : 4);
     applyChapterPlayFromInk(el, ink);
   });
 }
@@ -201,7 +240,7 @@ export function resolveActiveLandingId() {
   let activeId = 'home';
 
   document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-    const rect = el.getBoundingClientRect();
+    const rect = getLayoutRect(el);
     if (rect.top <= probeY && rect.bottom > navH) {
       activeId = el.getAttribute('data-chapter') || activeId;
     }
