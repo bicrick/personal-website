@@ -205,16 +205,16 @@ export function updateChapterInkFromScroll() {
     const leave = leaveProgress(rect, navH);
     const next = sections[index + 1];
     const viewH = getViewportHeight();
-    const mid = viewH * 0.5;
-    const ownsMid = rect.top <= mid && rect.bottom >= mid;
     let ink = easeChapterProgress(arrive);
-    // Stay fully sharp while this chapter owns the middle of the screen.
-    // Pairing to the next slide too early fries photos on long pages.
-    if (!ownsMid) {
-      ink = Math.min(ink, 1 - easeChapterProgress(leave));
-      if (next) {
-        ink = Math.min(ink, 1 - easeChapterProgress(nextArrive));
-      }
+    const leaveEase = easeChapterProgress(leave);
+    ink = Math.min(ink, 1 - leaveEase);
+    if (next) {
+      const nextEase = easeChapterProgress(nextArrive);
+      // Tall chapters (about) only pair to the next slide as they actually
+      // leave. A boolean mid-screen gate made short pages pop out.
+      const tall = rect.height > viewH * 1.15;
+      const pair = nextEase * (tall ? leaveEase : 1);
+      ink = Math.min(ink, 1 - pair);
     }
 
     if (rect.top >= viewH - 8) {
@@ -225,7 +225,7 @@ export function updateChapterInkFromScroll() {
       ink = Math.max(ink, 0.92);
     }
 
-    const leaving = !ownsMid && (leave > 0 || (Boolean(next) && nextArrive > 0 && arrive >= 0.999));
+    const leaving = leave > 0 || (Boolean(next) && nextArrive > 0 && arrive >= 0.999);
     const slide = leaving ? 0 : (1 - ink);
     paintChapterInk(el, ink, slide, leaving ? 92 : 4);
     applyChapterPlayFromInk(el, ink);
