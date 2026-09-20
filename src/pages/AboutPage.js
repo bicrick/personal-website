@@ -23,7 +23,7 @@ export default function AboutPage() {
           <h1 className="about-heading">about</h1>
         </header>
 
-        <h2>/ work</h2>
+        <h2 id="work">/ work</h2>
         <p>
           I&apos;m an engineer in the Austin, TX area. I studied computer engineering and artificial
           intelligence at the{' '}
@@ -41,7 +41,7 @@ export default function AboutPage() {
           Kinesis), full-stack analytics dashboards, and cloud infrastructure on GCP and AWS.
         </p>
 
-        <h2>/ how I build</h2>
+        <h2 id="build">/ how I build</h2>
         <p>
           I am constantly experimenting with different agentic development workflows. I use{' '}
           <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
@@ -55,7 +55,7 @@ export default function AboutPage() {
           </div>
         </figure>
 
-        <h2>/ outside</h2>
+        <h2 id="outside">/ outside</h2>
         <p>
           I play a lot of golf (+2 handicap). I like puzzle and automation games (Factorio,
           Minecraft). I love being outside and in the sun.

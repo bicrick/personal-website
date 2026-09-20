@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './ProjectDetail.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
+import LandingNavBar from './LandingNavBar';
 import { getPageSeo } from '../constants/pages';
 
 function Navigation() {
@@ -46,11 +47,9 @@ function ProjectDetail({
     <div className="App_mainContainer landing-page">
       <SEO {...seo} />
       <StructuredData />
-      <header className="App_header landing-nav">
-        <div className="App_mainColumn landing-nav-inner">
-          <Navigation />
-        </div>
-      </header>
+      <LandingNavBar>
+        <Navigation />
+      </LandingNavBar>
       <main className="App_mainColumn landing project-detail">
         <article className="project-article">
           <Link to="/projects" className="project-back">

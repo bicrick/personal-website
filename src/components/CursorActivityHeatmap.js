@@ -379,14 +379,8 @@ function CursorActivityHeatmap() {
           )}
         </a>
       )}
-      <p className="cursor-activity-total">
-        So far I have used{' '}
-        {isLoading ? (
-          <span className="cursor-activity-total-ice" aria-hidden="true" />
-        ) : (
-          formatCount(ytdTotal)
-        )}{' '}
-        tokens this year.
+      <p className={`cursor-activity-total${isLoading ? ' is-ice' : ''}`}>
+        So far I have used {isLoading ? 'x' : formatCount(ytdTotal)} tokens this year.
       </p>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
+import LandingNavBar from './LandingNavBar';
 import PageTransition, { FadeNavigateProvider, useFadeNavigate } from './PageTransition';
 import NextPageFooter from './NextPageFooter';
 import { getPageSeo, normalizePagePath } from '../constants/pages';
@@ -89,11 +90,9 @@ function SiteChrome() {
     <div id={SITE_SCROLL_ID} className="App_mainContainer landing-page">
       <SEO {...seo} />
       <StructuredData />
-      <header className="App_header landing-nav">
-        <div className="App_mainColumn landing-nav-inner">
-          <Navigation />
-        </div>
-      </header>
+      <LandingNavBar>
+        <Navigation />
+      </LandingNavBar>
       <main className="App_mainColumn landing">
         <PageTransition>
           <Outlet />

@@ -14,22 +14,8 @@
   line-height: 1.45;
 }
 
-.cursor-activity-total-ice {
-  display: inline-block;
-  width: 2.35em;
-  height: 0.68em;
-  margin: 0 0.08em 0.16em;
-  vertical-align: middle;
-  background:
-    linear-gradient(
-      100deg,
-      rgba(186, 214, 238, 0.18) 18%,
-      rgba(226, 240, 255, 0.55) 48%,
-      rgba(168, 206, 236, 0.26) 78%
-    );
-  background-size: 220% 100%;
-  box-shadow: inset 0 0 0 1px rgba(132, 176, 212, 0.4);
-  animation: ice-sheen 2.6s ease-in-out infinite;
+.cursor-activity-total.is-ice {
+  color: #9aa6b4;
 }
 
 .cursor-activity {
@@ -225,12 +211,6 @@
   color: inherit;
 }
 
-.cursor-activity.is-loading .cursor-activity-label,
-.cursor-activity.is-loading .cursor-activity-month-track,
-.cursor-activity.is-loading .cursor-activity-days {
-  color: #b7c6d4;
-}
-
 .cursor-activity.is-loading .cursor-activity-weeks {
   position: relative;
 }
@@ -238,15 +218,13 @@
 .cursor-activity.is-loading .cursor-activity-weeks::after {
   content: "";
   position: absolute;
-  inset: -4px -8px;
+  inset: -2px -6px;
   background: linear-gradient(
     105deg,
     transparent 0%,
-    transparent 36%,
-    rgba(186, 218, 245, 0.16) 46%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(168, 206, 236, 0.2) 54%,
-    transparent 64%,
+    transparent 40%,
+    rgba(207, 224, 242, 0.22) 50%,
+    transparent 60%,
     transparent 100%
   );
   background-size: 220% 100%;
@@ -255,8 +233,7 @@
 }
 
 .cursor-activity.is-loading .cursor-activity-dot:not(.level-empty) {
-  background: rgba(186, 214, 238, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(132, 176, 212, 0.42);
+  background: #e4eaf1;
   animation: ice-frost 2.8s ease-in-out infinite;
   animation-delay: var(--ice-delay, 0ms);
 }
@@ -268,12 +245,10 @@
 @keyframes ice-frost {
   0%,
   100% {
-    background: rgba(186, 214, 238, 0.1);
-    box-shadow: inset 0 0 0 1px rgba(132, 176, 212, 0.32);
+    background: #e7edf3;
   }
   50% {
-    background: rgba(160, 204, 236, 0.34);
-    box-shadow: inset 0 0 0 1px rgba(104, 164, 210, 0.58);
+    background: #d5e3f2;
   }
 }
 
@@ -298,7 +273,6 @@
 @media (prefers-reduced-motion: reduce) {
   .cursor-activity.is-loading .cursor-activity-dot:not(.level-empty),
   .cursor-activity.is-loading .cursor-activity-weeks::after,
-  .cursor-activity-total-ice,
   .cursor-activity-wrap.is-ready .cursor-activity {
     animation: none;
   }

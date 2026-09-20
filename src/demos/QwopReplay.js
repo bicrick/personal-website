@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
+import LandingNavBar from '../components/LandingNavBar';
 import { getPageSeo } from '../constants/pages';
 import { createQwopReplayPlayer, loadQwopDemoAssets } from './qwopReplayEngine';
 import {
@@ -195,11 +196,9 @@ function QwopReplay() {
     <div className="qwop-replay App_mainContainer landing-page">
       <SEO {...getPageSeo('/demos/qwop')} />
 
-      <header className="App_header landing-nav">
-        <div className="App_mainColumn landing-nav-inner">
-          <DemoNav />
-        </div>
-      </header>
+      <LandingNavBar>
+        <DemoNav />
+      </LandingNavBar>
 
       <main className="qwop-replay-main">
         <div className="qwop-replay-toolbar">
