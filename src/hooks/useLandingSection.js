@@ -165,17 +165,30 @@ export default function useLandingSection() {
       if (programmaticRef.current) clearProgrammatic();
     };
 
+    // iOS often skips window scroll during the gesture — scrub ink on touch too
+    const onTouchMove = () => {
+      onUserScrollIntent();
+      onScroll();
+    };
+
     tick();
     window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     window.addEventListener('wheel', onUserScrollIntent, { passive: true });
-    window.addEventListener('touchmove', onUserScrollIntent, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    const viewport = window.visualViewport;
+    viewport?.addEventListener('scroll', onScroll);
+    viewport?.addEventListener('resize', onScroll);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
       window.removeEventListener('wheel', onUserScrollIntent);
-      window.removeEventListener('touchmove', onUserScrollIntent);
+      window.removeEventListener('touchmove', onTouchMove);
+      viewport?.removeEventListener('scroll', onScroll);
+      viewport?.removeEventListener('resize', onScroll);
       if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);
       if (programTimerRef.current) clearTimeout(programTimerRef.current);
     };

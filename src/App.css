@@ -3,6 +3,12 @@
   box-sizing: border-box;
 }
 
+@property --chapter-ink {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
 :root {
   --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --font-pixel: 'Geist Pixel Square', 'Geist', monospace;
@@ -137,28 +143,18 @@ h2 {
   margin-bottom: 0.83em;
 }
 
-/* Shared page title recipe — Geist Pixel + static subtitle rule */
+/* Shared page title recipe — Geist Pixel, no underline */
 .page-title {
   font-family: var(--font-pixel);
   font-weight: 400;
   letter-spacing: 0.01em;
   font-size: clamp(1.65rem, 3vw, 2rem);
   line-height: 1.2;
-  margin: 0 0 1.35rem;
-  /* Shrink-wrap so the rule matches the title text width */
+  /* Sit a little lower so dropping the old rule does not leave a hole */
+  margin: 0.7rem 0 0.85rem;
   display: block;
   width: fit-content;
   max-width: 100%;
-}
-
-.page-title::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 2px;
-  margin-top: 0.65rem;
-  background-color: var(--ink-muted);
-  opacity: 0.5;
 }
 
 /* About / contact / project blogs share the article title size */
@@ -167,10 +163,10 @@ h2 {
 .project-detail .page-title {
   font-size: 32px;
   line-height: 36px;
-  margin: 0 0 12px;
+  margin: 0.75rem 0 0.35rem;
 }
 
-/* Hide typed title letters in the blurred preview; keep the grey rule */
+/* Hide typed title letters in the blurred preview */
 .page-section[data-chapter]:not(.is-chapter-drawn):not(.is-chapter-settled) .typewriter-heading-live {
   opacity: 0;
 }
@@ -270,6 +266,7 @@ section {
   transform:
     translate3d(0, calc((1 - var(--chapter-ink)) * 0.55rem), 0)
     scale(calc(0.96 + (var(--chapter-ink) * 0.04)));
+  -webkit-filter: blur(calc((1 - var(--chapter-ink)) * 6px));
   filter: blur(calc((1 - var(--chapter-ink)) * 6px));
   opacity: calc(0.5 + (var(--chapter-ink) * 0.5));
   will-change: transform, filter, opacity;
@@ -336,6 +333,7 @@ section {
   .page-section {
     opacity: calc(0.4 + (var(--chapter-ink) * 0.6));
     transform: none;
+    -webkit-filter: none;
     filter: none;
   }
 
@@ -579,7 +577,7 @@ section {
 .home-heading {
   font-size: clamp(2.15rem, 4vw, 2.85rem);
   line-height: 1.12;
-  margin: 0 0 1rem;
+  margin: 0.35rem 0 0.85rem;
 }
 
 .home-bio {
@@ -645,7 +643,8 @@ section {
 
   .page-section.home-section {
     justify-content: flex-start;
-    min-height: 0;
+    /* Keep a full-viewport first chapter so about stays below the fold */
+    min-height: calc(100dvh - 4.5rem);
     padding-top: clamp(1.5rem, 6vh, 2.5rem);
     padding-bottom: 3rem;
   }

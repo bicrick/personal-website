@@ -12,6 +12,25 @@ function prefersReducedMotion() {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function getViewportHeight() {
+  const visual = window.visualViewport?.height;
+  if (typeof visual === 'number' && visual > 0) return visual;
+  return window.innerHeight;
+}
+
+function paintChapterInk(el, ink) {
+  el.style.setProperty('--chapter-ink', String(ink));
+  // Set filter in JS so WebKit/iOS repaints when the custom property changes
+  if (prefersReducedMotion() || ink >= 0.995) {
+    el.style.filter = 'none';
+    el.style.webkitFilter = 'none';
+    return;
+  }
+  const blur = `${((1 - ink) * 6).toFixed(2)}px`;
+  el.style.filter = `blur(${blur})`;
+  el.style.webkitFilter = `blur(${blur})`;
+}
+
 function easeChapterProgress(t) {
   const clamped = Math.max(0, Math.min(1, t));
   // Mild ease-out — clarifies a bit sooner without snapping
@@ -30,13 +49,13 @@ export function getChapterGutterPx() {
     const height = breakEl.getBoundingClientRect().height;
     if (height > 0) return height;
   }
-  return Math.round(window.innerHeight * 0.4);
+  return Math.round(getViewportHeight() * 0.4);
 }
 
 /** Scroll distance over which blur → focus runs (a bit longer than the gutter). */
 export function getChapterFocusPx() {
   const gutter = getChapterGutterPx();
-  return Math.max(gutter * 1.15, Math.round(window.innerHeight * 0.48));
+  return Math.max(gutter * 1.15, Math.round(getViewportHeight() * 0.48));
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {
@@ -110,14 +129,14 @@ export function setChapterInkImmediate(activeId, { replay = false } = {}) {
     const id = el.getAttribute('data-chapter');
     const isActive = id === activeId;
     const ink = isActive ? CHAPTER_INK_MAX : CHAPTER_INK_MIN;
-    el.style.setProperty('--chapter-ink', String(ink));
+    paintChapterInk(el, ink);
     applyChapterPlayFromInk(el, ink, { forceReplay: replay && isActive });
   });
 }
 
 function getChapterFocusEnd(navH) {
   // Sharp once the chapter top reaches mid-viewport, not only when pinned to the nav
-  return Math.max(navH, Math.round(window.innerHeight * 0.5));
+  return Math.max(navH, Math.round(getViewportHeight() * 0.5));
 }
 
 function arrivalProgress(el, navH, focusPx) {
@@ -156,7 +175,11 @@ export function updateChapterInkFromScroll() {
 
     // Home (and any settled chapter flush to the nav) must be fully sharp — no residual blur
     const top = el.getBoundingClientRect().top;
-    if (atPageTop && index === 0) {
+    const viewH = getViewportHeight();
+    if (top >= viewH - 8) {
+      // Still below the fold — stay distant so mobile cannot pre-sharpen
+      t = 0;
+    } else if (atPageTop && index === 0) {
       t = 1;
     } else if (id === activeId && top <= navH + 20) {
       t = 1;
@@ -165,7 +188,7 @@ export function updateChapterInkFromScroll() {
     }
 
     const ink = easeChapterProgress(t);
-    el.style.setProperty('--chapter-ink', String(ink));
+    paintChapterInk(el, ink);
     applyChapterPlayFromInk(el, ink);
   });
 }
@@ -174,7 +197,7 @@ export function resolveActiveLandingId() {
   // Probe below the sticky nav so a chapter counts as active once its
   // title/content is in the upper reading band — not only when flush to the nav.
   const navH = getStickyNavHeight();
-  const probeY = navH + Math.min(140, Math.round(window.innerHeight * 0.22));
+  const probeY = navH + Math.min(140, Math.round(getViewportHeight() * 0.22));
   let activeId = 'home';
 
   document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
