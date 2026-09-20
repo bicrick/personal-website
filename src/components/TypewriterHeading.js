@@ -109,9 +109,11 @@ export default function TypewriterHeading({
     sync();
     const observer = new MutationObserver(sync);
     observer.observe(section, { attributes: true, attributeFilter: ['class'] });
+    section.addEventListener('chapterplay', play);
 
     return () => {
       observer.disconnect();
+      section.removeEventListener('chapterplay', play);
       clearTimers();
     };
     // text is the only input that should rebuild the printer

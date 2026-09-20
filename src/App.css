@@ -654,7 +654,8 @@ section {
 
   .page-section.home-section {
     justify-content: center;
-    /* Full viewport plus a little extra so about starts fully distant */
+    /* Full viewport so about starts distant; vh first for older iOS */
+    min-height: 100vh;
     min-height: 100svh;
     min-height: 100dvh;
     padding-top: 0;

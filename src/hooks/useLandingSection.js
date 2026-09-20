@@ -107,11 +107,14 @@ export default function useLandingSection() {
 
     const page = getLandingPage(path);
     const syncOnly = Boolean(location.state?.landingScrollSync);
+    const explicitNav = Boolean(location.state?.landingNavigate);
+    const alreadyThere = didInitRef.current && resolveActiveLandingId() === page.id;
 
-    if (syncOnly) {
-      // URL followed the scroll; do not move the viewport
+    // URL followed the finger, or iOS dropped router state — never snap ink.
+    if (syncOnly || (didInitRef.current && !explicitNav) || alreadyThere) {
       commitActive(page.id, { syncUrl: false });
-      updateChapterInkFromScroll(page.id);
+      updateChapterInkFromScroll();
+      didInitRef.current = true;
       return;
     }
 
@@ -120,7 +123,7 @@ export default function useLandingSection() {
     commitActive(page.id, { syncUrl: false });
 
     const shouldJump = !didInitRef.current
-      || Boolean(location.state?.landingNavigate)
+      || explicitNav
       || page.id !== resolveActiveLandingId();
 
     didInitRef.current = true;
@@ -129,12 +132,8 @@ export default function useLandingSection() {
       scrollToLandingSection(page.id, { behavior: 'auto' });
       window.requestAnimationFrame(() => {
         scrollToLandingSection(page.id, { behavior: 'auto' });
-        setChapterInkImmediate(page.id);
+        updateChapterInkFromScroll();
       });
-      window.setTimeout(() => {
-        scrollToLandingSection(page.id, { behavior: 'auto' });
-        setChapterInkImmediate(page.id);
-      }, 120);
     }
   }, [path, location.state, commitActive, markProgrammatic]);
 
@@ -165,28 +164,49 @@ export default function useLandingSection() {
       if (programmaticRef.current) clearProgrammatic();
     };
 
-    // iOS often skips window scroll during the gesture. Keep a rAF pump
-    // running while a finger is down so ink scrubs with the page.
+    // iOS skips window scroll during the swipe and through momentum.
+    // Keep a rAF pump running until the page actually stops moving.
     let touching = false;
     let touchRaf = null;
+    let lastY = -1;
+    let stillFrames = 0;
     const pumpTouch = () => {
       touchRaf = null;
       tick();
-      if (touching) touchRaf = window.requestAnimationFrame(pumpTouch);
+      const y = document.scrollingElement?.scrollTop || window.scrollY || 0;
+      if (touching) {
+        lastY = y;
+        stillFrames = 0;
+        touchRaf = window.requestAnimationFrame(pumpTouch);
+        return;
+      }
+      if (Math.abs(y - lastY) > 0.5) {
+        lastY = y;
+        stillFrames = 0;
+        touchRaf = window.requestAnimationFrame(pumpTouch);
+        return;
+      }
+      stillFrames += 1;
+      if (stillFrames < 10) {
+        touchRaf = window.requestAnimationFrame(pumpTouch);
+      }
+    };
+    const startPump = () => {
+      if (touchRaf == null) touchRaf = window.requestAnimationFrame(pumpTouch);
     };
     const onTouchStart = () => {
       onUserScrollIntent();
       touching = true;
-      if (touchRaf == null) touchRaf = window.requestAnimationFrame(pumpTouch);
+      startPump();
     };
     const onTouchMove = () => {
       onUserScrollIntent();
-      if (!touching) onTouchStart();
-      else onScroll();
+      touching = true;
+      startPump();
     };
     const onTouchEnd = () => {
       touching = false;
-      onScroll();
+      startPump();
     };
 
     tick();
@@ -206,6 +226,7 @@ export default function useLandingSection() {
     const viewport = window.visualViewport;
     viewport?.addEventListener('scroll', onScroll);
     viewport?.addEventListener('resize', onScroll);
+    window.addEventListener('scrollend', onScroll);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
@@ -220,6 +241,7 @@ export default function useLandingSection() {
       document.removeEventListener('touchcancel', onTouchEnd, touchOpts);
       viewport?.removeEventListener('scroll', onScroll);
       viewport?.removeEventListener('resize', onScroll);
+      window.removeEventListener('scrollend', onScroll);
       touching = false;
       if (touchRaf != null) window.cancelAnimationFrame(touchRaf);
       if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);

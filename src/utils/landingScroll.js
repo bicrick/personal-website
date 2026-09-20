@@ -20,35 +20,55 @@ function getViewportHeight() {
 
 /** iOS often leaves window.scrollY at 0 while body / visualViewport actually move. */
 export function getScrollY() {
-  const visual = window.visualViewport;
-  const fromVisual = typeof visual?.pageTop === 'number' ? visual.pageTop : 0;
-  const fromWin = window.scrollY || window.pageYOffset || 0;
-  const fromRoot = document.documentElement?.scrollTop || 0;
-  const fromBody = document.body?.scrollTop || 0;
-  const fromSe = document.scrollingElement?.scrollTop || 0;
-  return Math.max(fromVisual, fromWin, fromRoot, fromBody, fromSe);
+  const win = window.scrollY || window.pageYOffset || 0;
+  const se = document.scrollingElement?.scrollTop || 0;
+  const root = document.documentElement?.scrollTop || 0;
+  const body = document.body?.scrollTop || 0;
+  const classic = Math.max(win, se, root, body);
+  const pageTop = window.visualViewport?.pageTop;
+  if (typeof pageTop === 'number' && pageTop > 0) {
+    if (classic === 0 || Math.abs(pageTop - classic) < 80) {
+      return Math.max(classic, pageTop);
+    }
+  }
+  return classic;
 }
 
 function paintChapterInk(el, ink, slide = 1 - ink, originY = 4) {
   el.style.setProperty('--chapter-ink', String(ink));
   el.style.setProperty('--chapter-slide', String(slide));
   el.style.setProperty('--chapter-origin-y', `${originY}%`);
-  // Drop compositing when sharp so photos stay at native resolution
+  // WebKit often skips CSS-var transforms/filters; paint them here.
   if (prefersReducedMotion() || ink >= 0.995) {
     el.classList.remove('is-chapter-turning');
     el.style.filter = '';
     el.style.webkitFilter = '';
+    el.style.transform = '';
+    el.style.opacity = '';
     return;
   }
   el.classList.add('is-chapter-turning');
-  // Set filter in JS so WebKit/iOS repaints when the custom property changes
-  const blur = `${((1 - ink) * 14).toFixed(2)}px`;
-  el.style.filter = `blur(${blur})`;
-  el.style.webkitFilter = `blur(${blur})`;
+  const blur = ((1 - ink) * 14).toFixed(2);
+  const scale = (0.52 + ink * 0.48).toFixed(4);
+  const rise = (slide * 3.25).toFixed(3);
+  el.style.filter = `blur(${blur}px)`;
+  el.style.webkitFilter = `blur(${blur}px)`;
+  el.style.transformOrigin = `50% ${originY}%`;
+  el.style.transform = `translate3d(0, ${rise}rem, 0) scale(${scale})`;
+  el.style.opacity = String((0.06 + ink * 0.94).toFixed(3));
 }
 
 /** Viewport rect ignoring chapter scale/blur so measurements cannot feed back. */
 function getLayoutRect(el) {
+  const height = el.offsetHeight;
+  const id = el.getAttribute('data-chapter');
+  const probe = id
+    ? document.querySelector(`[data-chapter-anchor="${id}"]`)
+    : null;
+  if (probe) {
+    const top = probe.getBoundingClientRect().top;
+    return { top, bottom: top + height, height };
+  }
   let top = 0;
   let node = el;
   while (node) {
@@ -56,7 +76,6 @@ function getLayoutRect(el) {
     node = node.offsetParent;
   }
   top -= getScrollY();
-  const height = el.offsetHeight;
   return { top, bottom: top + height, height };
 }
 
@@ -144,12 +163,14 @@ export function applyChapterPlayFromInk(el, ink, { forceReplay = false } = {}) {
       if (!el.isConnected) return;
       el.classList.remove('is-chapter-pending');
       el.classList.add('is-chapter-drawn');
+      el.dispatchEvent(new Event('chapterplay'));
     });
     return;
   }
 
   el.classList.remove('is-chapter-pending');
   el.classList.add('is-chapter-drawn');
+  el.dispatchEvent(new Event('chapterplay'));
 }
 
 export function setChapterInkImmediate(activeId, { replay = false } = {}) {
