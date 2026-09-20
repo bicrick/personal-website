@@ -7,7 +7,7 @@
   font-family: var(--font-sans);
   background-color: var(--paper);
   background-image:
-    radial-gradient(rgba(33, 35, 45, 0.05) 0.55px, transparent 0.6px);
+    radial-gradient(var(--stipple) 0.55px, transparent 0.6px);
   background-size: 3.5px 3.5px;
 }
 
@@ -137,7 +137,7 @@
   line-height: 1.5;
   text-align: left;
   overflow-wrap: break-word;
-  box-shadow: 0 8px 24px rgba(33, 35, 45, 0.12);
+  box-shadow: 0 8px 24px var(--shadow);
 }
 
 .qwop-replay-model-info.is-open .qwop-replay-model-tooltip,
@@ -245,14 +245,14 @@
     90deg,
     var(--ink) 0%,
     var(--ink) var(--qwop-progress),
-    rgba(33, 35, 45, 0.08) var(--qwop-progress)
+    var(--ink-faint) var(--qwop-progress)
   );
 }
 
 .qwop-replay-progress::-moz-range-track {
   height: 6px;
   border: 1px solid var(--rule);
-  background: rgba(33, 35, 45, 0.08);
+  background: var(--ink-faint);
 }
 
 .qwop-replay-progress::-moz-range-progress {
@@ -269,7 +269,7 @@
   border: 1px solid var(--ink);
   border-radius: 50%;
   background: var(--paper);
-  box-shadow: 0 1px 3px rgba(33, 35, 45, 0.15);
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .qwop-replay-progress::-moz-range-thumb {
@@ -278,7 +278,7 @@
   border: 1px solid var(--ink);
   border-radius: 50%;
   background: var(--paper);
-  box-shadow: 0 1px 3px rgba(33, 35, 45, 0.15);
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .qwop-replay-rate {
@@ -305,12 +305,12 @@
 
 .qwop-replay-rate-btn:hover:not(:disabled),
 .qwop-replay-rate-btn:focus-visible {
-  background: rgba(33, 35, 45, 0.06);
+  background: var(--code-wash);
   outline: none;
 }
 
 .qwop-replay-rate-btn.is-active {
-  color: #fff;
+  color: var(--paper);
   background: var(--ink);
   border-color: var(--ink);
 }
@@ -372,7 +372,7 @@
   color: #c45c4a;
   max-width: 80%;
   text-align: center;
-  background: rgba(251, 251, 250, 0.92);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
   padding: 0.6rem 0.85rem;
 }
 

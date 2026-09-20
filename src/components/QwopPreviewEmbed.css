@@ -50,7 +50,7 @@
   font-size: 13px;
   letter-spacing: 0.03em;
   color: var(--ink);
-  background: rgba(251, 251, 250, 0.9);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
   border: 1px solid var(--rule);
   opacity: 0;
   transition: opacity 0.15s ease;

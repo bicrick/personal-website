@@ -66,7 +66,12 @@ function ContactList({ items }) {
 
 export default function ContactPage() {
   return (
-    <section className="page-section contact-page" aria-label="contact">
+    <section
+      id="contact"
+      data-chapter="contact"
+      className="page-section contact-page"
+      aria-label="contact"
+    >
       <article className="contact-article">
         <header className="contact-header">
           <h1 className="contact-heading">contact</h1>

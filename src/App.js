@@ -11,15 +11,13 @@ import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
 import GolfIncremental from './projects/GolfIncremental';
 import SiteLayout from './components/SiteLayout';
+import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import ProjectsPage from './pages/ProjectsPage';
-import ContactPage from './pages/ContactPage';
 
 function App() {
   return (
     <>
+      <ThemeToggle />
       <ScrollToTop />
       <Routes>
         <Route path="/projects/docprep" element={<Docprep />} />
@@ -29,11 +27,12 @@ function App() {
         <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
         <Route path="/projects/notepadable" element={<Notepadable />} />
         <Route path="/projects/golf-incremental" element={<GolfIncremental />} />
+        {/* SiteLayout owns continuous landing content; child routes are path markers only */}
         <Route element={<SiteLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/" element={null} />
+          <Route path="/about" element={null} />
+          <Route path="/projects" element={null} />
+          <Route path="/contact" element={null} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -44,7 +44,7 @@ function AIMasters() {
               height="300"
               style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
             />
-            <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
+            <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
               Base Mario Kart image
             </p>
           </div>
@@ -56,7 +56,7 @@ function AIMasters() {
               height="300"
               style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
             />
-            <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
+            <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
               Predicted depth map
             </p>
           </div>
@@ -81,7 +81,7 @@ function AIMasters() {
           height="600"
           style={{ width: '75%', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
         />
-        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
+        <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
           Memory footprint comparison: QLoRA achieves 4.5x compression while 4-bit quantization reaches 6.3x reduction
         </p>
         <p style={{ marginBottom: '0.75rem' }}>
@@ -104,7 +104,7 @@ function AIMasters() {
           height="600"
           style={{ width: '100%', marginBottom: '0.5rem' }}
         />
-        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
+        <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
           Adding positional encodings teaches the model where to look. Instead of treating input as a bag of characters, it learns to attend precisely to previous positions containing the same character.
         </p>
         <p style={{ marginBottom: '0.75rem' }}>

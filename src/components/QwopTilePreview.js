@@ -9,7 +9,7 @@ import './QwopTilePreview.css';
  * Live mid-stride pose loop for project tiles.
  * Uses a small JSON slice (~132KB) and no HUD/key chrome.
  */
-function QwopTilePreview({ title = 'qwop-python' }) {
+function QwopTilePreview({ title = 'qwop-python', playbackRate = 1.5 }) {
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
@@ -28,6 +28,7 @@ function QwopTilePreview({ title = 'qwop-python' }) {
           stageEl: stageRef.current,
           hideChrome: true,
           fit: 'cover',
+          playbackRate,
         });
         playerRef.current = player;
 
@@ -69,7 +70,7 @@ function QwopTilePreview({ title = 'qwop-python' }) {
         playerRef.current = null;
       }
     };
-  }, []);
+  }, [playbackRate]);
 
   return (
     <div ref={stageRef} className="qwop-tile-preview">

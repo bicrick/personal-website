@@ -1,0 +1,49 @@
+:root {
+  color-scheme: light;
+  --ink: #21232d;
+  --ink-soft: #2a2d38;
+  --ink-muted: #5a5e6b;
+  --link: #2563eb;
+  --link-soft: rgba(37, 99, 235, 0.2);
+  --paper: #fbfbfa;
+  --rule: #e8e8e6;
+  --stipple: rgba(33, 35, 45, 0.05);
+  --stipple-nav: rgba(33, 35, 45, 0.035);
+  --stipple-rule: #b3b8c2;
+  --surface: #ffffff;
+  --surface-hover: #eef2fb;
+  --control-border: #dddddd;
+  --control-muted: #666666;
+  --card-wash: #f0f0f0;
+  --shadow: rgba(33, 35, 45, 0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.4);
+  --on-ink: #ffffff;
+  --code-wash: rgba(33, 35, 45, 0.05);
+  --ink-faint: rgba(33, 35, 45, 0.08);
+  --separator-muted: #9aa0ad;
+}
+
+html.is-dark {
+  color-scheme: dark;
+  --ink: #ecece6;
+  --ink-soft: #c6c7cc;
+  --ink-muted: #8b8e97;
+  --link: #6b9eff;
+  --link-soft: rgba(107, 158, 255, 0.28);
+  --paper: #14151a;
+  --rule: #2c2e36;
+  --stipple: rgba(255, 255, 255, 0.045);
+  --stipple-nav: rgba(255, 255, 255, 0.03);
+  --stipple-rule: #6d717c;
+  --surface: #1c1d23;
+  --surface-hover: #243044;
+  --control-border: #3a3c44;
+  --control-muted: #9aa0ad;
+  --card-wash: #22232a;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --shadow-strong: rgba(0, 0, 0, 0.55);
+  --on-ink: #14151a;
+  --code-wash: rgba(255, 255, 255, 0.06);
+  --ink-faint: rgba(255, 255, 255, 0.08);
+  --separator-muted: #6d717c;
+}

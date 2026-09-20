@@ -2,22 +2,27 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import AboutPhotoGrid from '../components/AboutPhotoGrid';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
-import { useFadeNavigate } from '../components/PageTransition';
+import { useLandingNav } from '../hooks/landingNavContext';
 import './AboutPage.css';
 
 export default function AboutPage() {
-  const { navigateWithFade } = useFadeNavigate();
+  const { scrollToSection } = useLandingNav();
 
   const goToProjects = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
       return;
     }
     event.preventDefault();
-    navigateWithFade('/projects');
+    scrollToSection('projects');
   };
 
   return (
-    <section className="page-section about-page" aria-label="about">
+    <section
+      id="about"
+      data-chapter="about"
+      className="page-section about-page"
+      aria-label="about"
+    >
       <article className="about-article">
         <header className="about-header">
           <h1 className="about-heading">about</h1>

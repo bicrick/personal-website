@@ -1,0 +1,18 @@
+.chapter-break {
+  min-height: 22vh;
+  box-sizing: border-box;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 800px) {
+  .chapter-break {
+    min-height: 16vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-break {
+    min-height: 12vh;
+  }
+}

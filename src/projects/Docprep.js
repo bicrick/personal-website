@@ -52,7 +52,7 @@ function Docprep() {
         height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
         Docprep mirrors your file tree structure while extracting documents into plain text, dramatically reducing file sizes and making content AI-readable
       </p>
 

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './fonts.css';
+import './theme.css';
 import './index.css';
 import 'katex/dist/katex.min.css';
 import App from './App';

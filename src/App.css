@@ -6,18 +6,13 @@
 :root {
   --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --font-pixel: 'Geist Pixel Square', 'Geist', monospace;
-  --ink: #21232d;
-  --ink-soft: #2a2d38;
-  --ink-muted: #5a5e6b;
-  --link: #2563eb;
-  --paper: #fbfbfa;
-  --rule: #e8e8e6;
   /* Shared reading column (projects width is the site default) */
   --measure: 56rem;
   --shell-pad: 1.25rem;
   --page-pad-top: 2rem;
   --page-pad-bottom: 4rem;
   --block-gap: 2.75rem;
+  --nav-pad-y: 1rem;
 }
 
 body,
@@ -33,22 +28,79 @@ html {
 }
 
 html {
+  background-color: var(--paper);
   scrollbar-gutter: stable;
   overscroll-behavior-y: none;
 }
 
 /* Quiet stippled paper texture across the landing shell */
-body {
+body,
+#root {
   background-color: var(--paper);
   background-image:
-    radial-gradient(rgba(33, 35, 45, 0.05) 0.55px, transparent 0.6px);
+    radial-gradient(var(--stipple) 0.55px, transparent 0.6px);
   background-size: 3.5px 3.5px;
+}
+
+body {
   overscroll-behavior-y: none;
+}
+
+#root {
+  min-height: 100%;
+}
+
+.theme-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: calc(var(--nav-pad-y) + env(safe-area-inset-top));
+  right: calc(max(0px, (100vw - var(--measure)) / 2) + var(--shell-pad));
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  width: 1.65em;
+  height: 1.65em;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--link);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+}
+
+.theme-toggle:focus,
+.theme-toggle:focus-visible,
+.theme-toggle:active {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: var(--link);
+}
+
+.theme-toggle.is-dot::after {
+  content: "";
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 /* Links - global styles */
 a {
-  color: #2563eb;
+  color: var(--link);
   display: inline-block;
   text-decoration: none;
   position: relative;
@@ -67,7 +119,7 @@ a:after {
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #2563eb;
+  background-color: var(--link);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.2s ease-in-out;
@@ -85,7 +137,7 @@ h2 {
   margin-bottom: 0.83em;
 }
 
-/* Shared page title recipe — Geist Pixel + stipple rule */
+/* Shared page title recipe — Geist Pixel + full-width subtitle rule */
 .page-title,
 .home-heading,
 .about-heading,
@@ -97,6 +149,10 @@ h2 {
   font-size: clamp(1.65rem, 3vw, 2rem);
   line-height: 1.2;
   margin: 0 0 1.35rem;
+  /* Shrink-wrap so the rule matches the title text width */
+  display: block;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .page-title::after,
@@ -106,12 +162,86 @@ h2 {
 .contact-heading::after {
   content: "";
   display: block;
-  width: 2.75rem;
-  height: 3px;
-  margin-top: 0.55rem;
-  background-image: radial-gradient(#b3b8c2 1px, transparent 1.2px);
-  background-size: 6px 3px;
-  background-repeat: repeat-x;
+  width: 100%;
+  height: 2px;
+  margin-top: 0.65rem;
+  background-color: var(--ink-muted);
+  opacity: 0.5;
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Chapter titles: rule starts empty and draws under the text */
+.page-section[data-chapter] .home-heading::after,
+.page-section[data-chapter] .about-heading::after,
+.page-section[data-chapter] .projects-heading::after,
+.page-section[data-chapter] .contact-heading::after {
+  transform: scaleX(0);
+  opacity: 0.35;
+}
+
+.page-section[data-chapter].is-chapter-pending .home-heading::after,
+.page-section[data-chapter].is-chapter-pending .about-heading::after,
+.page-section[data-chapter].is-chapter-pending .projects-heading::after,
+.page-section[data-chapter].is-chapter-pending .contact-heading::after {
+  transform: scaleX(0);
+  opacity: 0.35;
+  animation: none;
+}
+
+.page-section[data-chapter].is-chapter-settled .home-heading::after,
+.page-section[data-chapter].is-chapter-settled .about-heading::after,
+.page-section[data-chapter].is-chapter-settled .projects-heading::after,
+.page-section[data-chapter].is-chapter-settled .contact-heading::after {
+  transform: scaleX(1);
+  opacity: 0.5;
+  animation: none;
+}
+
+.page-section[data-chapter].is-chapter-drawn .home-heading::after,
+.page-section[data-chapter].is-chapter-drawn .about-heading::after,
+.page-section[data-chapter].is-chapter-drawn .projects-heading::after,
+.page-section[data-chapter].is-chapter-drawn .contact-heading::after {
+  animation: chapter-rule-load 1.05s cubic-bezier(0.45, 0.05, 0.2, 1) forwards;
+}
+
+/* Slow subtitle draw — ease-in then steady finish, no snap */
+@keyframes chapter-rule-load {
+  0% {
+    transform: scaleX(0);
+    opacity: 0.28;
+  }
+  15% {
+    transform: scaleX(0.08);
+    opacity: 0.38;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-section[data-chapter] .home-heading::after,
+  .page-section[data-chapter] .about-heading::after,
+  .page-section[data-chapter] .projects-heading::after,
+  .page-section[data-chapter] .contact-heading::after,
+  .page-section[data-chapter].is-chapter-pending .home-heading::after,
+  .page-section[data-chapter].is-chapter-pending .about-heading::after,
+  .page-section[data-chapter].is-chapter-pending .projects-heading::after,
+  .page-section[data-chapter].is-chapter-pending .contact-heading::after,
+  .page-section[data-chapter].is-chapter-settled .home-heading::after,
+  .page-section[data-chapter].is-chapter-settled .about-heading::after,
+  .page-section[data-chapter].is-chapter-settled .projects-heading::after,
+  .page-section[data-chapter].is-chapter-settled .contact-heading::after,
+  .page-section[data-chapter].is-chapter-drawn .home-heading::after,
+  .page-section[data-chapter].is-chapter-drawn .about-heading::after,
+  .page-section[data-chapter].is-chapter-drawn .projects-heading::after,
+  .page-section[data-chapter].is-chapter-drawn .contact-heading::after {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
 }
 
 /* Prose reading style */
@@ -147,25 +277,6 @@ p {
   min-height: 100%;
 }
 
-html.site-scroll-lock,
-html.site-scroll-lock body,
-html.site-scroll-lock #root {
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
-}
-
-html.site-scroll-lock .App_mainContainer.landing-page {
-  height: 100%;
-  max-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-anchor: none;
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
-}
-
 .App_mainColumn {
   width: 100%;
   max-width: var(--measure);
@@ -178,6 +289,8 @@ html.site-scroll-lock .App_mainContainer.landing-page {
   max-width: var(--measure);
   margin: 0 auto;
   padding: 0 var(--shell-pad) var(--shell-pad);
+  /* Extra room so the last chapter can settle under the sticky nav */
+  padding-bottom: max(4rem, 55vh);
 }
 
 section {
@@ -193,9 +306,9 @@ section {
   /* Solid paper tone with a whisper of stipple so content never shows through */
   background-color: var(--paper);
   background-image:
-    radial-gradient(rgba(33, 35, 45, 0.035) 0.5px, transparent 0.6px);
+    radial-gradient(var(--stipple-nav) 0.5px, transparent 0.6px);
   background-size: 3.5px 3.5px;
-  padding: 0.85rem 0;
+  padding: var(--nav-pad-y) 0;
   border-bottom: 1px solid var(--rule);
 }
 
@@ -203,7 +316,7 @@ section {
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 0 var(--shell-pad);
+  padding: 0 max(var(--shell-pad), calc(1.15rem + env(safe-area-inset-right) + 1.6em)) 0 var(--shell-pad);
 }
 
 .page-section {
@@ -213,11 +326,98 @@ section {
   align-items: stretch;
   padding: var(--page-pad-top) 0 var(--page-pad-bottom);
   box-sizing: border-box;
+  scroll-margin-top: 4.75rem;
+  --chapter-ink: 1;
+  /* Rise + fade only — no blur (blur muddied title rules and felt mushy) */
+  opacity: calc(0.48 + (var(--chapter-ink) * 0.52));
+  transform: translate3d(0, calc((1 - var(--chapter-ink)) * 1rem), 0);
+}
+
+.page-section[data-chapter] {
+  will-change: opacity, transform;
+}
+
+.page-section[data-chapter] .home-heading,
+.page-section[data-chapter] .about-heading,
+.page-section[data-chapter] .projects-heading,
+.page-section[data-chapter] .contact-heading {
+  letter-spacing: calc(0.01em + ((1 - var(--chapter-ink)) * 0.06em));
 }
 
 .page-section-inner {
   width: 100%;
   text-align: left;
+}
+
+/* Sliding active underline — replaces per-link ::after for landing nav */
+.nav {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: var(--link);
+  transform: translateX(0);
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, width;
+}
+
+.nav-indicator.is-ready {
+  transition:
+    transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+
+.nav .nav-link:after {
+  /* Hover still draws; active state is the sliding indicator */
+  bottom: 0;
+}
+
+.nav .nav-link.is-active:after {
+  transform: scaleX(0);
+}
+
+.nav .nav-link:hover:after {
+  transform: scaleX(1);
+}
+
+.nav .nav-link.is-active:hover:after {
+  transform: scaleX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-section {
+    opacity: calc(0.35 + (var(--chapter-ink) * 0.65));
+    transform: none;
+  }
+
+  .page-section[data-chapter] {
+    will-change: opacity;
+  }
+
+  .page-section[data-chapter] .home-heading,
+  .page-section[data-chapter] .about-heading,
+  .page-section[data-chapter] .projects-heading,
+  .page-section[data-chapter] .contact-heading {
+    letter-spacing: 0.01em;
+  }
+
+  .nav-indicator,
+  .nav-indicator.is-ready {
+    transition: none;
+  }
 }
 
 .nav-link.is-active:after {
@@ -226,15 +426,7 @@ section {
 
 /* Header and Navigation */
 .App_header {
-  padding: 1rem 0;
-}
-
-.nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  padding: var(--nav-pad-y) 0;
 }
 
 .nav-separator {
@@ -280,7 +472,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #666;
+  color: var(--control-muted);
   font-size: 0.9rem;
 }
 
@@ -293,10 +485,10 @@ section {
   align-items: center;
   gap: 0.5rem;
   min-width: 7rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--control-border);
   border-radius: 4px;
-  background: #fff;
-  color: #21232d;
+  background: var(--surface);
+  color: var(--ink);
   font: inherit;
   justify-content: space-between;
   padding: 0.28rem 0.6rem;
@@ -306,15 +498,15 @@ section {
 
 .sort-dropdown-button:hover,
 .sort-dropdown-button:focus {
-  border-color: #2563eb;
-  outline: 2px solid rgba(37, 99, 235, 0.2);
+  border-color: var(--link);
+  outline: 2px solid var(--link-soft);
 }
 
 .sort-dropdown-caret {
   width: 0.42rem;
   height: 0.42rem;
-  border-right: 1.5px solid #666;
-  border-bottom: 1.5px solid #666;
+  border-right: 1.5px solid var(--control-muted);
+  border-bottom: 1.5px solid var(--control-muted);
   transform: translateY(-0.1rem) rotate(45deg);
 }
 
@@ -325,18 +517,18 @@ section {
   z-index: 20;
   min-width: 100%;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: 1px solid var(--control-border);
   border-radius: 4px;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  background: var(--surface);
+  box-shadow: 0 8px 20px var(--shadow);
 }
 
 .sort-dropdown-option {
   display: block;
   width: 100%;
   border: 0;
-  background: #fff;
-  color: #21232d;
+  background: var(--surface);
+  color: var(--ink);
   font: inherit;
   text-align: left;
   padding: 0.35rem 0.6rem;
@@ -346,7 +538,7 @@ section {
 .sort-dropdown-option:hover,
 .sort-dropdown-option:focus,
 .sort-dropdown-option.active {
-  background: #f0f4ff;
+  background: var(--surface-hover);
   outline: none;
 }
 
@@ -378,15 +570,15 @@ section {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: #f0f0f0;
-  filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.4));
+  background: var(--card-wash);
+  filter: drop-shadow(10px 10px 10px var(--shadow-strong));
   border-radius: 4px;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .project-card:hover {
   transform: scale(1.02);
-  filter: drop-shadow(10px 10px 12px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(10px 10px 12px var(--shadow-strong));
 }
 
 .project-card img {
@@ -402,7 +594,7 @@ section {
 .project-card--contain {
   /* Match notepadable-header.gif (800×533) so the full editor shows without letterboxing */
   aspect-ratio: 800 / 533;
-  background: #f0f0f0;
+  background: var(--card-wash);
 }
 
 .project-card--contain img {
@@ -484,7 +676,7 @@ section {
   object-position: center 20%;
   border: 1px solid var(--rule);
   border-radius: 2px;
-  box-shadow: 0 12px 32px rgba(33, 35, 45, 0.1);
+  box-shadow: 0 12px 32px var(--shadow);
 }
 
 .home-links {
@@ -499,7 +691,7 @@ section {
 }
 
 .home-links .nav-separator {
-  color: #9aa0ad;
+  color: var(--separator-muted);
 }
 
 /* Mobile */
@@ -539,7 +731,7 @@ section {
   .home-pic {
     width: min(200px, 55vw);
     max-width: none;
-    box-shadow: 0 8px 22px rgba(33, 35, 45, 0.09);
+    box-shadow: 0 8px 22px var(--shadow);
   }
 
   .home-heading {

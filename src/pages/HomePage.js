@@ -2,7 +2,12 @@ import React from 'react';
 
 export default function HomePage() {
   return (
-    <section className="page-section home-section" aria-label="home">
+    <section
+      id="home"
+      data-chapter="home"
+      className="page-section home-section"
+      aria-label="home"
+    >
       <div className="page-section-inner home-inner">
         <div className="home-compose">
           <img

@@ -32,7 +32,7 @@
 
 .qwop-demo-cta:hover {
   background: var(--ink);
-  color: #fff;
+  color: var(--paper);
 }
 
 .project-back {
@@ -72,7 +72,7 @@
   width: 2.75rem;
   height: 3px;
   margin-top: 10px;
-  background-image: radial-gradient(#b3b8c2 1px, transparent 1.2px);
+  background-image: radial-gradient(var(--stipple-rule) 1px, transparent 1.2px);
   background-size: 6px 3px;
   background-repeat: repeat-x;
 }
@@ -178,7 +178,7 @@
 }
 
 .project-article code {
-  background: rgba(33, 35, 45, 0.05);
+  background: var(--code-wash);
   padding: 0.15em 0.35em;
   border-radius: 2px;
   font-family: 'Courier New', monospace;
@@ -186,7 +186,7 @@
 }
 
 .project-article pre {
-  background: rgba(33, 35, 45, 0.04);
+  background: var(--code-wash);
   padding: 1rem;
   border-radius: 0;
   border: 1px solid var(--rule);
@@ -215,7 +215,7 @@
   padding-bottom: 56.25%;
   height: 0;
   border: 1px solid var(--rule);
-  background: rgba(33, 35, 45, 0.04);
+  background: var(--code-wash);
   overflow: hidden;
 }
 

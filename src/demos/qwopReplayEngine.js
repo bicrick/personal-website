@@ -376,7 +376,8 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
   let rafId = 0;
   let running = false;
   let paused = false;
-  let playbackRate = 1;
+  const initialRate = Number(options.playbackRate);
+  let playbackRate = Number.isFinite(initialRate) && initialRate > 0 ? initialRate : 1;
   let resizeObserver = null;
 
   const stageSize = () => {

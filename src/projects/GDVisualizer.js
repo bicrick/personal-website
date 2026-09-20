@@ -92,7 +92,7 @@ function GDVisualizer() {
             height="600"
             style={{ width: '100%', marginBottom: '0.5rem' }}
           />
-          <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
+          <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
             Gaussian Wells: adjustable depth, width, and number of local minima
           </p>
         </div>
@@ -104,7 +104,7 @@ function GDVisualizer() {
             height="600"
             style={{ width: '100%', marginBottom: '0.5rem' }}
           />
-          <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
+          <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
             Ackley: highly corrugated surface with deep central minimum
           </p>
         </div>
@@ -123,7 +123,7 @@ function GDVisualizer() {
         height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
         Comparing Batch GD, Momentum GD, Adam, and SGD on Gaussian Wells
       </p>
 
@@ -159,7 +159,7 @@ function GDVisualizer() {
           alt="Rolling wheel physics" 
           style={{ width: '500px', maxWidth: '100%', display: 'block', marginBottom: '0.5rem' }}
         />
-        <p style={{ fontStyle: 'italic', color: '#666', fontSize: '0.9rem', textAlign: 'center', margin: 0, lineHeight: 1.2 }}>
+        <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.9rem', textAlign: 'center', margin: 0, lineHeight: 1.2 }}>
           Hanging wheel exhibiting gyroscopic stability
         </p>
       </div>
@@ -191,7 +191,7 @@ function GDVisualizer() {
         <BlockMath math="\text{speed} = \frac{L}{I}" />
       </div>
 
-      <p style={{ marginLeft: '2rem', fontSize: '0.9rem', color: '#555' }}>
+      <p style={{ marginLeft: '2rem', fontSize: '0.9rem', color: 'var(--ink-muted)' }}>
         Where <InlineMath math="L" /> is angular momentum, <InlineMath math="\beta" /> is momentum decay, <InlineMath math="g_{\parallel}" /> is the gradient component parallel to velocity, <InlineMath math="g_{\perp}" /> is the gradient component perpendicular to velocity, <InlineMath math="\hat{\mathbf{v}}" /> is the velocity direction, <InlineMath math="R = I(1 + L)" /> is gyroscopic resistance, and <InlineMath math="I" /> is moment of inertia.
       </p>
 
@@ -216,7 +216,7 @@ function GDVisualizer() {
         height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
-      <p style={{ fontStyle: 'italic', color: '#666', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
+      <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>
         Wheel optimizer spiraling around the local minima (learning rate: 0.001, β: 0.98, I: 10.0)
       </p>
 

@@ -156,7 +156,12 @@ export default function ProjectsPage() {
   ));
 
   return (
-    <section className="page-section" aria-label="projects">
+    <section
+      id="projects"
+      data-chapter="projects"
+      className="page-section"
+      aria-label="projects"
+    >
       <div className="page-section-inner">
         <div className="projects-header-row">
           <h2 className="projects-heading">selected projects</h2>

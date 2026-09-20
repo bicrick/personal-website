@@ -34,7 +34,7 @@
   height: auto;
   margin: 0;
   border: 1px solid var(--rule);
-  background: rgba(33, 35, 45, 0.03);
+  background: var(--code-wash);
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
