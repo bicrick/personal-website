@@ -1,4 +1,5 @@
 import React from 'react';
+import TypewriterHeading from '../components/TypewriterHeading';
 
 export default function HomePage() {
   return (
@@ -18,7 +19,9 @@ export default function HomePage() {
             height="320"
           />
           <div className="home-copy">
-            <h2 className="home-heading">Patrick Brown</h2>
+            <TypewriterHeading as="h2" className="home-heading">
+              Patrick Brown
+            </TypewriterHeading>
             <p className="home-bio">
               Agent-first engineer specializing in machine learning.
               Austin, TX.

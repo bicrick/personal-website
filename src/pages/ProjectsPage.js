@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TypewriterHeading from '../components/TypewriterHeading';
 import ProjectTile from '../components/ProjectTile';
 import ProjectTimeline from '../components/ProjectTimeline';
 
@@ -164,7 +165,9 @@ export default function ProjectsPage() {
     >
       <div className="page-section-inner">
         <div className="projects-header-row">
-          <h2 className="projects-heading">selected projects</h2>
+          <TypewriterHeading as="h2" className="projects-heading">
+            selected projects
+          </TypewriterHeading>
           {SHOW_PROJECT_VIEW_SELECTOR ? (
             <div className="projects-sort">
               <span>view</span>

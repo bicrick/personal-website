@@ -1,5 +1,6 @@
 .chapter-break {
-  min-height: 22vh;
+  /* Quiet pause between chapters; focus scrub spans ~1.75× this height */
+  min-height: 48vh;
   box-sizing: border-box;
   pointer-events: none;
   user-select: none;
@@ -7,12 +8,12 @@
 
 @media (max-width: 800px) {
   .chapter-break {
-    min-height: 16vh;
+    min-height: 36vh;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .chapter-break {
-    min-height: 12vh;
+    min-height: 14vh;
   }
 }

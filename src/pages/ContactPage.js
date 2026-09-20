@@ -1,4 +1,5 @@
 import React from 'react';
+import TypewriterHeading from '../components/TypewriterHeading';
 import './ContactPage.css';
 
 const WRITE = [
@@ -74,7 +75,9 @@ export default function ContactPage() {
     >
       <article className="contact-article">
         <header className="contact-header">
-          <h1 className="contact-heading">contact</h1>
+          <TypewriterHeading as="h1" className="contact-heading">
+            contact
+          </TypewriterHeading>
         </header>
 
         <p>Email is the fastest way to reach me.</p>

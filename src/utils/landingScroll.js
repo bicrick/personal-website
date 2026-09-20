@@ -8,9 +8,10 @@ function prefersReducedMotion() {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function easeOutProgress(t) {
+function easeChapterProgress(t) {
   const clamped = Math.max(0, Math.min(1, t));
-  return 1 - ((1 - clamped) ** 2.4);
+  // Ease-in: stays soft longer, clarifies late — avoids a mid-gutter POP
+  return clamped ** 1.85;
 }
 
 export function getStickyNavHeight() {
@@ -25,7 +26,13 @@ export function getChapterGutterPx() {
     const height = breakEl.getBoundingClientRect().height;
     if (height > 0) return height;
   }
-  return Math.round(window.innerHeight * 0.22);
+  return Math.round(window.innerHeight * 0.48);
+}
+
+/** Scroll distance over which blur → focus runs (longer than the visible gutter). */
+export function getChapterFocusPx() {
+  const gutter = getChapterGutterPx();
+  return Math.max(gutter * 1.75, Math.round(window.innerHeight * 0.72));
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {
@@ -58,43 +65,52 @@ export function setChapterInkImmediate(activeId) {
   });
 }
 
-function arrivalProgress(el, navH, gutterPx) {
+function arrivalProgress(el, navH, focusPx) {
   const top = el.getBoundingClientRect().top;
-  if (top >= navH + gutterPx) return 0;
-  if (top <= navH) return 1;
-  return 1 - ((top - navH) / gutterPx);
+  // Fully sharp once the chapter top meets the sticky nav (home at rest included)
+  const end = navH;
+  const start = end + focusPx;
+  if (top >= start) return 0;
+  if (top <= end) return 1;
+  return 1 - ((top - end) / focusPx);
 }
 
-export function updateChapterInkFromScroll(activeId) {
+export function updateChapterInkFromScroll() {
   if (prefersReducedMotion()) {
+    const activeId = resolveActiveLandingId();
     setChapterInkImmediate(activeId);
     return;
   }
 
   const navH = getStickyNavHeight();
-  const gutterPx = Math.max(1, getChapterGutterPx());
+  const focusPx = Math.max(1, getChapterFocusPx());
   const sections = Array.from(document.querySelectorAll('.page-section[data-chapter]'));
   const maxScroll = Math.max(
     0,
     (document.scrollingElement || document.documentElement).scrollHeight - window.innerHeight,
   );
   const nearBottom = window.scrollY >= maxScroll - 8;
+  const atPageTop = window.scrollY <= 16;
+  const activeId = resolveActiveLandingId();
 
   sections.forEach((el, index) => {
     const id = el.getAttribute('data-chapter');
-    const arrive = arrivalProgress(el, navH, gutterPx);
+    const arrive = arrivalProgress(el, navH, focusPx);
     const next = sections[index + 1];
-    const nextArrive = next ? arrivalProgress(next, navH, gutterPx) : 0;
-    let t = Math.max(0, Math.min(1, arrive * (1 - nextArrive)));
+    const nextArrive = next ? arrivalProgress(next, navH, focusPx) : 0;
+    let t = Math.max(0, Math.min(1, arrive * (1 - nextArrive * 0.85)));
 
-    // Current chapter is always fully present (nav jumps / deep links included).
-    if (id === activeId) {
+    // Home (and any settled chapter flush to the nav) must be fully sharp — no residual blur
+    const top = el.getBoundingClientRect().top;
+    if (atPageTop && index === 0) {
+      t = 1;
+    } else if (id === activeId && top <= navH + 20) {
       t = 1;
     } else if (!next && nearBottom) {
-      t = 1;
+      t = Math.max(t, 0.92);
     }
 
-    el.style.setProperty('--chapter-ink', String(easeOutProgress(t)));
+    el.style.setProperty('--chapter-ink', String(easeChapterProgress(t)));
   });
 }
 

@@ -137,7 +137,7 @@ h2 {
   margin-bottom: 0.83em;
 }
 
-/* Shared page title recipe — Geist Pixel + full-width subtitle rule */
+/* Shared page title recipe — Geist Pixel + static subtitle rule */
 .page-title,
 .home-heading,
 .about-heading,
@@ -155,11 +155,7 @@ h2 {
   max-width: 100%;
 }
 
-.page-title::after,
-.home-heading::after,
-.about-heading::after,
-.projects-heading::after,
-.contact-heading::after {
+:is(.page-title, .home-heading, .about-heading, .projects-heading, .contact-heading)::after {
   content: "";
   display: block;
   width: 100%;
@@ -167,81 +163,15 @@ h2 {
   margin-top: 0.65rem;
   background-color: var(--ink-muted);
   opacity: 0.5;
-  transform: scaleX(1);
-  transform-origin: left center;
 }
 
-/* Chapter titles: rule starts empty and draws under the text */
-.page-section[data-chapter] .home-heading::after,
-.page-section[data-chapter] .about-heading::after,
-.page-section[data-chapter] .projects-heading::after,
-.page-section[data-chapter] .contact-heading::after {
-  transform: scaleX(0);
-  opacity: 0.35;
+/* Keep the title rule out of the blurred chapter preview */
+.page-section[data-chapter]:not(.is-chapter-drawn):not(.is-chapter-settled) :is(.home-heading, .about-heading, .projects-heading, .contact-heading)::after {
+  opacity: 0;
 }
 
-.page-section[data-chapter].is-chapter-pending .home-heading::after,
-.page-section[data-chapter].is-chapter-pending .about-heading::after,
-.page-section[data-chapter].is-chapter-pending .projects-heading::after,
-.page-section[data-chapter].is-chapter-pending .contact-heading::after {
-  transform: scaleX(0);
-  opacity: 0.35;
-  animation: none;
-}
-
-.page-section[data-chapter].is-chapter-settled .home-heading::after,
-.page-section[data-chapter].is-chapter-settled .about-heading::after,
-.page-section[data-chapter].is-chapter-settled .projects-heading::after,
-.page-section[data-chapter].is-chapter-settled .contact-heading::after {
-  transform: scaleX(1);
-  opacity: 0.5;
-  animation: none;
-}
-
-.page-section[data-chapter].is-chapter-drawn .home-heading::after,
-.page-section[data-chapter].is-chapter-drawn .about-heading::after,
-.page-section[data-chapter].is-chapter-drawn .projects-heading::after,
-.page-section[data-chapter].is-chapter-drawn .contact-heading::after {
-  animation: chapter-rule-load 1.05s cubic-bezier(0.45, 0.05, 0.2, 1) forwards;
-}
-
-/* Slow subtitle draw — ease-in then steady finish, no snap */
-@keyframes chapter-rule-load {
-  0% {
-    transform: scaleX(0);
-    opacity: 0.28;
-  }
-  15% {
-    transform: scaleX(0.08);
-    opacity: 0.38;
-  }
-  100% {
-    transform: scaleX(1);
-    opacity: 0.5;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-section[data-chapter] .home-heading::after,
-  .page-section[data-chapter] .about-heading::after,
-  .page-section[data-chapter] .projects-heading::after,
-  .page-section[data-chapter] .contact-heading::after,
-  .page-section[data-chapter].is-chapter-pending .home-heading::after,
-  .page-section[data-chapter].is-chapter-pending .about-heading::after,
-  .page-section[data-chapter].is-chapter-pending .projects-heading::after,
-  .page-section[data-chapter].is-chapter-pending .contact-heading::after,
-  .page-section[data-chapter].is-chapter-settled .home-heading::after,
-  .page-section[data-chapter].is-chapter-settled .about-heading::after,
-  .page-section[data-chapter].is-chapter-settled .projects-heading::after,
-  .page-section[data-chapter].is-chapter-settled .contact-heading::after,
-  .page-section[data-chapter].is-chapter-drawn .home-heading::after,
-  .page-section[data-chapter].is-chapter-drawn .about-heading::after,
-  .page-section[data-chapter].is-chapter-drawn .projects-heading::after,
-  .page-section[data-chapter].is-chapter-drawn .contact-heading::after {
-    animation: none;
-    transform: scaleX(1);
-    opacity: 0.5;
-  }
+.page-section[data-chapter]:not(.is-chapter-drawn):not(.is-chapter-settled) .typewriter-heading-live {
+  opacity: 0;
 }
 
 /* Prose reading style */
@@ -289,8 +219,8 @@ p {
   max-width: var(--measure);
   margin: 0 auto;
   padding: 0 var(--shell-pad) var(--shell-pad);
-  /* Extra room so the last chapter can settle under the sticky nav */
-  padding-bottom: max(4rem, 55vh);
+  /* Modest end pad — just enough air after contact, not a half-viewport void */
+  padding-bottom: clamp(2.5rem, 10vh, 4.5rem);
 }
 
 section {
@@ -328,20 +258,27 @@ section {
   box-sizing: border-box;
   scroll-margin-top: 4.75rem;
   --chapter-ink: 1;
-  /* Rise + fade only — no blur (blur muddied title rules and felt mushy) */
-  opacity: calc(0.48 + (var(--chapter-ink) * 0.52));
-  transform: translate3d(0, calc((1 - var(--chapter-ink)) * 1rem), 0);
 }
 
+/*
+  Chapter turn — text sits off in the distance, then zooms subtly into focus.
+  Scrubbed by --chapter-ink over a long scroll span (no snap-to-sharp on active).
+*/
 .page-section[data-chapter] {
-  will-change: opacity, transform;
+  transform-origin: 50% 10%;
+  transform:
+    translate3d(0, calc((1 - var(--chapter-ink)) * 0.55rem), 0)
+    scale(calc(0.96 + (var(--chapter-ink) * 0.04)));
+  filter: blur(calc((1 - var(--chapter-ink)) * 6px));
+  opacity: calc(0.5 + (var(--chapter-ink) * 0.5));
+  will-change: transform, filter, opacity;
 }
 
 .page-section[data-chapter] .home-heading,
 .page-section[data-chapter] .about-heading,
 .page-section[data-chapter] .projects-heading,
 .page-section[data-chapter] .contact-heading {
-  letter-spacing: calc(0.01em + ((1 - var(--chapter-ink)) * 0.06em));
+  letter-spacing: calc(0.01em + ((1 - var(--chapter-ink)) * 0.03em));
 }
 
 .page-section-inner {
@@ -399,8 +336,9 @@ section {
 
 @media (prefers-reduced-motion: reduce) {
   .page-section {
-    opacity: calc(0.35 + (var(--chapter-ink) * 0.65));
+    opacity: calc(0.4 + (var(--chapter-ink) * 0.6));
     transform: none;
+    filter: none;
   }
 
   .page-section[data-chapter] {

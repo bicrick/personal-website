@@ -72,7 +72,7 @@ export default function useLandingSection() {
         return;
       }
 
-      // Retrigger one-shot load-in underline
+      // Retrigger one-shot title type-in
       el.classList.remove('is-chapter-settled', 'is-chapter-drawn');
       el.classList.add('is-chapter-pending');
       // Force reflow so the draw animation can replay
@@ -92,10 +92,10 @@ export default function useLandingSection() {
       setActiveId(id);
       applyCurrentClass(id, { animate });
     } else {
-      // Initial mount starts with matching id — still need resting classes once
+      // Initial mount starts with matching id — apply classes once (may animate)
       const el = document.querySelector(`.page-section[data-chapter="${id}"]`);
       if (el && !el.classList.contains('is-chapter-current')) {
-        applyCurrentClass(id, { animate: false });
+        applyCurrentClass(id, { animate });
       }
     }
 
@@ -140,7 +140,8 @@ export default function useLandingSection() {
 
     markProgrammatic(prefersReducedMotion() ? 80 : 200);
     setChapterInkImmediate(page.id);
-    commitActive(page.id, { syncUrl: false, animate: !didInitRef.current ? false : true });
+    // Type the chapter title on first paint too
+    commitActive(page.id, { syncUrl: false, animate: true });
 
     const shouldJump = !didInitRef.current
       || Boolean(location.state?.landingNavigate)

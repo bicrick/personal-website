@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TypewriterHeading from '../components/TypewriterHeading';
 import AboutPhotoGrid from '../components/AboutPhotoGrid';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import { useLandingNav } from '../hooks/landingNavContext';
@@ -25,7 +26,9 @@ export default function AboutPage() {
     >
       <article className="about-article">
         <header className="about-header">
-          <h1 className="about-heading">about</h1>
+          <TypewriterHeading as="h1" className="about-heading">
+            about
+          </TypewriterHeading>
         </header>
 
         <h2 id="work">/ work</h2>

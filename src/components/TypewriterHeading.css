@@ -1,0 +1,42 @@
+.typewriter-heading {
+  position: relative;
+}
+
+.typewriter-heading-sizer {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.typewriter-heading-live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+}
+
+.typewriter-heading-caret {
+  display: inline-block;
+  margin-left: 0.06em;
+  color: currentColor;
+  font-weight: 400;
+  animation: typewriter-caret 0.64s step-end infinite;
+}
+
+.typewriter-heading-caret.is-spacer {
+  animation: none;
+}
+
+@keyframes typewriter-caret {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-heading-caret {
+    animation: none;
+    display: none;
+  }
+}
