@@ -623,6 +623,10 @@ section {
     --block-gap: 2.25rem;
   }
 
+  .App_mainColumn.landing {
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .page-section {
     justify-content: flex-start;
     padding: var(--page-pad-top) 0 var(--page-pad-bottom);

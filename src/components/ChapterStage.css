@@ -27,6 +27,12 @@
     min-height: 100dvh;
   }
 
+  /* Contact is short — do not leave a blank viewport under the last links. */
+  .chapter-stage:last-child {
+    min-height: 0;
+    contain-intrinsic-size: auto 0;
+  }
+
   .chapter-arrive,
   .page-section[data-chapter] {
     transform: none;
