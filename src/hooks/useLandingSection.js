@@ -13,8 +13,10 @@ import {
   resolveActiveLandingId,
   scrollToLandingSection,
   setCurrentChapter,
+  settleChaptersPlain,
 } from '../utils/landingScroll';
 import { initChapterMotion } from '../utils/chapterMotion';
+import { watchChapterMode } from '../utils/chapterMode';
 
 /** Band the nav tracks: a chapter is "current" while it holds the mid screen. */
 const NAV_BAND = '-45% 0px -10% 0px';
@@ -89,11 +91,23 @@ export default function useLandingSection() {
     requestAnimationFrame(() => scrollToLandingSection(id));
   }, [commitActive, markProgrammatic, navigate]);
 
-  // Scroll-linked chapter motion. Set up once for the life of the landing page.
+  // Desktop: scroll-scrubbed arrive/leave. Mobile: static chapters.
   useEffect(() => {
     if (!isLandingPath(path)) return undefined;
-    const teardown = initChapterMotion();
-    return () => teardown();
+    let teardown = () => {};
+    const stopWatch = watchChapterMode((motion) => {
+      teardown();
+      if (motion) {
+        teardown = initChapterMotion();
+      } else {
+        settleChaptersPlain();
+        teardown = () => {};
+      }
+    });
+    return () => {
+      stopWatch();
+      teardown();
+    };
     // Chapters are static for the whole landing route, so this runs once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -159,6 +173,11 @@ export default function useLandingSection() {
 
     const sections = chapterSections();
     if (!sections.length) return undefined;
+
+    if (document.documentElement.classList.contains('is-simple-chapters')) {
+      settleChaptersPlain();
+      return undefined;
+    }
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {

@@ -1,4 +1,5 @@
 import { animate, scroll } from 'motion';
+import { usesChapterMotion } from './chapterMode';
 
 /**
  * Motion only hands an animation to a native ViewTimeline when its offset
@@ -53,7 +54,7 @@ function clear(el) {
  */
 export function initChapterMotion() {
   const stages = Array.from(document.querySelectorAll('.chapter-stage'));
-  if (!stages.length) return () => {};
+  if (!stages.length || !usesChapterMotion()) return () => {};
 
   const parts = stages.map((stage) => ({
     stage,

@@ -19,3 +19,29 @@
 .page-section[data-chapter] {
   transform-origin: 50% 0%;
 }
+
+@media (max-width: 800px) {
+  .chapter-stage {
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .chapter-arrive,
+  .page-section[data-chapter] {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+html.is-simple-chapters .chapter-arrive,
+html.is-simple-chapters .page-section[data-chapter] {
+  transform: none;
+  opacity: 1;
+}
+
+html.is-simple-chapters .chapter-stage {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+}

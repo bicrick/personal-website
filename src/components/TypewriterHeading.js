@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { usesChapterMotion } from '../utils/chapterMode';
 import './TypewriterHeading.css';
 
 const STEP_MS = 48;
@@ -25,7 +26,9 @@ export default function TypewriterHeading({
   const text = String(children ?? '').replace(/\s+/g, ' ').trim();
   const hostRef = useRef(null);
   const timersRef = useRef([]);
-  const [shown, setShown] = useState(() => (prefersReducedMotion() ? text.length : 0));
+  const [shown, setShown] = useState(() => (
+    prefersReducedMotion() || !usesChapterMotion() ? text.length : 0
+  ));
   const [caret, setCaret] = useState(false);
   const [typing, setTyping] = useState(false);
 
@@ -50,7 +53,7 @@ export default function TypewriterHeading({
 
   const play = () => {
     clearTimers();
-    if (prefersReducedMotion()) {
+    if (prefersReducedMotion() || !usesChapterMotion()) {
       showAll(false);
       return;
     }
@@ -79,6 +82,11 @@ export default function TypewriterHeading({
   };
 
   useLayoutEffect(() => {
+    if (!usesChapterMotion()) {
+      showAll(false);
+      return () => clearTimers();
+    }
+
     const section = hostRef.current?.closest('[data-chapter]');
     if (!section) {
       play();

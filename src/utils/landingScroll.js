@@ -1,4 +1,5 @@
 import { getLandingPageById } from '../constants/sections';
+import { usesChapterMotion } from './chapterMode';
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
@@ -76,9 +77,21 @@ export function setCurrentChapter(activeId) {
   });
 }
 
+/** Static chapters: no pending titles, no leftover motion styles. */
+export function settleChaptersPlain() {
+  document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
+    el.classList.remove('is-chapter-pending', 'is-chapter-drawn');
+    el.classList.add('is-chapter-settled');
+  });
+  document.querySelectorAll('.chapter-arrive, .page-section[data-chapter]').forEach((el) => {
+    el.style.opacity = '';
+    el.style.transform = '';
+  });
+}
+
 /** Chapter reached the reading band — let its title type itself in. */
 export function playChapterTitle(section) {
-  if (prefersReducedMotion()) {
+  if (prefersReducedMotion() || !usesChapterMotion()) {
     section.classList.remove('is-chapter-pending', 'is-chapter-drawn');
     section.classList.add('is-chapter-settled');
     return;
@@ -90,14 +103,14 @@ export function playChapterTitle(section) {
 
 /** Chapter left the band — arm it so a return visit types again. */
 export function resetChapterTitle(section) {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !usesChapterMotion()) return;
   section.classList.remove('is-chapter-drawn', 'is-chapter-settled');
   section.classList.add('is-chapter-pending');
 }
 
 /** Nav click on the chapter you are already reading should retype it. */
 export function replayChapterTitle(section) {
-  if (!section || prefersReducedMotion()) return;
+  if (!section || prefersReducedMotion() || !usesChapterMotion()) return;
   resetChapterTitle(section);
   window.requestAnimationFrame(() => {
     if (section.isConnected) playChapterTitle(section);

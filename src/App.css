@@ -165,6 +165,16 @@ h2 {
   opacity: 0;
 }
 
+@media (max-width: 800px) {
+  .page-section[data-chapter] .typewriter-heading-live {
+    opacity: 1;
+  }
+}
+
+html.is-simple-chapters .page-section[data-chapter] .typewriter-heading-live {
+  opacity: 1;
+}
+
 /* Prose reading style */
 .page-prose {
   color: var(--ink-soft);
@@ -618,7 +628,7 @@ section {
 
   .page-section.home-section {
     justify-content: center;
-    /* Full viewport so about starts distant; vh first for older iOS */
+    /* Own screen so about does not sit on the first page */
     min-height: 100vh;
     min-height: 100svh;
     min-height: 100dvh;

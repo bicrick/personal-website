@@ -48,3 +48,15 @@
     display: none;
   }
 }
+
+@media (max-width: 800px) {
+  .typewriter-heading-caret {
+    animation: none;
+    display: none;
+  }
+}
+
+html.is-simple-chapters .typewriter-heading-caret {
+  animation: none;
+  display: none;
+}
