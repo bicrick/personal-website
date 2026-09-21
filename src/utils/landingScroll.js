@@ -1,10 +1,10 @@
 import { getLandingPageById } from '../constants/sections';
-import { usesChapterMotion } from './chapterMode';
+import { prefersReducedMotion } from './chapterMode';
 
-function prefersReducedMotion() {
-  return typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+/** Same insets the current-chapter observer uses: mid-screen reading slice. */
+export const READING_BAND_ROOT_MARGIN = '-45% 0px -10% 0px';
+const READING_BAND_TOP = 0.45;
+const READING_BAND_BOTTOM_INSET = 0.10;
 
 function getViewportHeight() {
   const visual = window.visualViewport?.height;
@@ -25,6 +25,20 @@ export function getStickyNavHeight() {
 function getStageRect(section) {
   const stage = section.closest('.chapter-stage') || section;
   return stage.getBoundingClientRect();
+}
+
+function getReadingBand() {
+  const viewH = getViewportHeight();
+  return {
+    top: viewH * READING_BAND_TOP,
+    bottom: viewH * (1 - READING_BAND_BOTTOM_INSET),
+  };
+}
+
+export function chapterOwnsReadingBand(section) {
+  const rect = getStageRect(section);
+  const { top, bottom } = getReadingBand();
+  return rect.top < bottom && rect.bottom > top;
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {
@@ -48,23 +62,15 @@ export function scrollToLandingSection(id, { behavior } = {}) {
   }
 }
 
-/**
- * Which chapter owns the reading band right now. Used for the initial paint
- * and deep links; ongoing tracking runs off an IntersectionObserver instead.
- */
+/** Earliest chapter whose stage intersects the reading band. */
 export function resolveActiveLandingId() {
-  const navH = getStickyNavHeight();
-  const probeY = navH + Math.min(140, Math.round(getViewportHeight() * 0.22));
-  let activeId = 'home';
-
-  document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-    const rect = getStageRect(el);
-    if (rect.top <= probeY && rect.bottom > navH) {
-      activeId = el.getAttribute('data-chapter') || activeId;
+  const sections = document.querySelectorAll('.page-section[data-chapter]');
+  for (const el of sections) {
+    if (chapterOwnsReadingBand(el)) {
+      return getLandingPageById(el.getAttribute('data-chapter'))?.id || 'home';
     }
-  });
-
-  return getLandingPageById(activeId)?.id || 'home';
+  }
+  return 'home';
 }
 
 /** Mark which chapter the nav is pointing at. */
@@ -77,42 +83,10 @@ export function setCurrentChapter(activeId) {
   });
 }
 
-/** Static chapters: no pending titles, no leftover motion styles. */
+/** Clear leftover Motion inline styles when phones drop the scrub. */
 export function settleChaptersPlain() {
-  document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-    el.classList.remove('is-chapter-pending', 'is-chapter-drawn');
-    el.classList.add('is-chapter-settled');
-  });
   document.querySelectorAll('.chapter-arrive, .page-section[data-chapter]').forEach((el) => {
     el.style.opacity = '';
     el.style.transform = '';
-  });
-}
-
-/** Chapter reached the reading band — let its title type itself in. */
-export function playChapterTitle(section) {
-  if (prefersReducedMotion() || !usesChapterMotion()) {
-    section.classList.remove('is-chapter-pending', 'is-chapter-drawn');
-    section.classList.add('is-chapter-settled');
-    return;
-  }
-  if (section.classList.contains('is-chapter-drawn')) return;
-  section.classList.remove('is-chapter-pending', 'is-chapter-settled');
-  section.classList.add('is-chapter-drawn');
-}
-
-/** Chapter left the band — arm it so a return visit types again. */
-export function resetChapterTitle(section) {
-  if (prefersReducedMotion() || !usesChapterMotion()) return;
-  section.classList.remove('is-chapter-drawn', 'is-chapter-settled');
-  section.classList.add('is-chapter-pending');
-}
-
-/** Nav click on the chapter you are already reading should retype it. */
-export function replayChapterTitle(section) {
-  if (!section || prefersReducedMotion() || !usesChapterMotion()) return;
-  resetChapterTitle(section);
-  window.requestAnimationFrame(() => {
-    if (section.isConnected) playChapterTitle(section);
   });
 }

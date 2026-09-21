@@ -1,5 +1,5 @@
 import { animate, scroll } from 'motion';
-import { usesChapterMotion } from './chapterMode';
+import { prefersReducedMotion, usesChapterMotion } from './chapterMode';
 
 /**
  * Motion only hands an animation to a native ViewTimeline when its offset
@@ -27,11 +27,6 @@ const FAR_OPACITY = 0.08;
  */
 const ARRIVE_TIMES = [0, 0.7, 1];
 const LEAVE_TIMES = [0, 0.35, 1];
-
-function prefersReducedMotion() {
-  return typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
 
 function clear(el) {
   if (!el) return;

@@ -6,11 +6,18 @@
 export const CHAPTER_MOTION_QUERY = '(hover: hover) and (pointer: fine) and (min-width: 801px)';
 export const REDUCE_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
+export function prefersReducedMotion() {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    return false;
+  }
+  return window.matchMedia(REDUCE_MOTION_QUERY).matches;
+}
+
 export function usesChapterMotion() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
     return false;
   }
-  if (window.matchMedia(REDUCE_MOTION_QUERY).matches) {
+  if (prefersReducedMotion()) {
     return false;
   }
   return window.matchMedia(CHAPTER_MOTION_QUERY).matches;

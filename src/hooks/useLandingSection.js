@@ -7,35 +7,22 @@ import {
 } from '../constants/sections';
 import { normalizePagePath } from '../constants/pages';
 import {
-  playChapterTitle,
-  replayChapterTitle,
-  resetChapterTitle,
+  READING_BAND_ROOT_MARGIN,
   resolveActiveLandingId,
   scrollToLandingSection,
   setCurrentChapter,
   settleChaptersPlain,
 } from '../utils/landingScroll';
 import { initChapterMotion } from '../utils/chapterMotion';
-import { watchChapterMode } from '../utils/chapterMode';
-
-/** Band the nav tracks: a chapter is "current" while it holds the mid screen. */
-const NAV_BAND = '-45% 0px -10% 0px';
-/** Thin line at the point a chapter finishes arriving and goes sharp. */
-const TITLE_LINE = '-45% 0px -50% 0px';
-
-function prefersReducedMotion() {
-  return typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+import { prefersReducedMotion, watchChapterMode } from '../utils/chapterMode';
 
 function chapterSections() {
   return Array.from(document.querySelectorAll('.page-section[data-chapter]'));
 }
 
 /**
- * Keeps landing URL, active nav, and title playback in sync with scroll.
- * The chapter motion itself is scrubbed by Motion off the scroll timeline —
- * nothing here runs per frame.
+ * Keeps landing URL, active nav, and titles in sync with one reading band.
+ * Chapter motion is scrubbed by Motion off the scroll timeline.
  */
 export default function useLandingSection() {
   const location = useLocation();
@@ -43,6 +30,7 @@ export default function useLandingSection() {
   const path = normalizePagePath(location.pathname);
   const initialPage = getLandingPage(path);
   const [activeId, setActiveId] = useState(initialPage.id);
+  const [titleGen, setTitleGen] = useState(0);
 
   const activeIdRef = useRef(activeId);
   const programmaticRef = useRef(false);
@@ -80,9 +68,10 @@ export default function useLandingSection() {
     const page = LANDING_PAGES.find((entry) => entry.id === id);
     if (!page) return;
 
+    const sameChapter = id === activeIdRef.current;
     markProgrammatic(prefersReducedMotion() ? 120 : 700);
     commitActive(id, { syncUrl: false });
-    replayChapterTitle(document.querySelector(`.page-section[data-chapter="${id}"]`));
+    if (sameChapter) setTitleGen((gen) => gen + 1);
 
     if (normalizePagePath(window.location.pathname) !== page.path) {
       navigate(page.path, { replace, state: { landingNavigate: true } });
@@ -91,7 +80,6 @@ export default function useLandingSection() {
     requestAnimationFrame(() => scrollToLandingSection(id));
   }, [commitActive, markProgrammatic, navigate]);
 
-  // Desktop: scroll-scrubbed arrive/leave. Mobile: static chapters.
   useEffect(() => {
     if (!isLandingPath(path)) return undefined;
     let teardown = () => {};
@@ -112,7 +100,6 @@ export default function useLandingSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Deep link / return from a writeup: place the matching chapter.
   useLayoutEffect(() => {
     if (!isLandingPath(path)) return;
 
@@ -120,7 +107,6 @@ export default function useLandingSection() {
     const syncOnly = Boolean(location.state?.landingScrollSync);
     const explicitNav = Boolean(location.state?.landingNavigate);
 
-    // URL followed the scroll, or the router replayed state — do not jump.
     if (syncOnly || (didInitRef.current && !explicitNav)) {
       commitActive(page.id, { syncUrl: false });
       didInitRef.current = true;
@@ -134,11 +120,9 @@ export default function useLandingSection() {
 
     if (first || explicitNav || page.id !== resolveActiveLandingId()) {
       scrollToLandingSection(page.id, { behavior: 'auto' });
-      requestAnimationFrame(() => scrollToLandingSection(page.id, { behavior: 'auto' }));
     }
   }, [path, location.state, commitActive, markProgrammatic]);
 
-  // Nav + URL tracking. Fires on band crossings, not every frame.
   useEffect(() => {
     if (!isLandingPath(path)) return undefined;
 
@@ -153,7 +137,6 @@ export default function useLandingSection() {
         else inBand.delete(id);
       });
 
-      // Earliest chapter still holding the band is the one being read.
       const next = sections
         .map((el) => el.getAttribute('data-chapter'))
         .find((id) => inBand.has(id));
@@ -161,34 +144,11 @@ export default function useLandingSection() {
       if (next && !programmaticRef.current) {
         commitActive(next, { syncUrl: true });
       }
-    }, { rootMargin: NAV_BAND });
+    }, { rootMargin: READING_BAND_ROOT_MARGIN });
 
     sections.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [path, commitActive]);
-
-  // Title type-in, keyed to the moment a chapter finishes arriving.
-  useEffect(() => {
-    if (!isLandingPath(path)) return undefined;
-
-    const sections = chapterSections();
-    if (!sections.length) return undefined;
-
-    if (document.documentElement.classList.contains('is-simple-chapters')) {
-      settleChaptersPlain();
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) playChapterTitle(entry.target);
-        else resetChapterTitle(entry.target);
-      });
-    }, { rootMargin: TITLE_LINE });
-
-    sections.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [path]);
 
   useEffect(() => () => {
     if (programTimerRef.current) clearTimeout(programTimerRef.current);
@@ -196,6 +156,7 @@ export default function useLandingSection() {
 
   return {
     activeId,
+    titleGen,
     scrollToSection,
   };
 }

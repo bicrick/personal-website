@@ -153,8 +153,8 @@ function SiteChrome() {
 }
 
 /**
- * SiteLayout keeps one LandingPage mounted for all landing URLs so scroll
- * state, ink, and chapter focus survive / → /about → /projects transitions.
+ * SiteLayout keeps one landing tree mounted for all landing URLs so scroll
+ * position and the current chapter survive / → /about → /projects transitions.
  */
 export default function SiteLayout() {
   return <SiteChrome />;

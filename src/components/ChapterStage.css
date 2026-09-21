@@ -39,9 +39,3 @@ html.is-simple-chapters .page-section[data-chapter] {
   transform: none;
   opacity: 1;
 }
-
-html.is-simple-chapters .chapter-stage {
-  min-height: 100vh;
-  min-height: 100svh;
-  min-height: 100dvh;
-}

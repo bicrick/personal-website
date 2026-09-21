@@ -1,21 +1,13 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { usesChapterMotion } from '../utils/chapterMode';
+import { useLandingNav } from '../hooks/landingNavContext';
+import { prefersReducedMotion, usesChapterMotion } from '../utils/chapterMode';
 import './TypewriterHeading.css';
 
 const STEP_MS = 48;
 const CARET_HOLD_MS = 1600;
 
-function prefersReducedMotion() {
-  return typeof window !== 'undefined'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function readPlayState(section) {
-  if (!section) return 'idle';
-  if (section.classList.contains('is-chapter-settled')) return 'settled';
-  if (section.classList.contains('is-chapter-drawn')) return 'play';
-  if (section.classList.contains('is-chapter-pending')) return 'reset';
-  return 'idle';
+function chapterIdFrom(node) {
+  return node?.closest('[data-chapter]')?.getAttribute('data-chapter') ?? null;
 }
 
 export default function TypewriterHeading({
@@ -24,6 +16,7 @@ export default function TypewriterHeading({
   children,
 }) {
   const text = String(children ?? '').replace(/\s+/g, ' ').trim();
+  const { activeId, titleGen } = useLandingNav();
   const hostRef = useRef(null);
   const timersRef = useRef([]);
   const [shown, setShown] = useState(() => (
@@ -65,8 +58,8 @@ export default function TypewriterHeading({
     const tick = (index) => {
       if (index >= text.length) {
         setTyping(false);
-        const hide = window.setTimeout(() => setCaret(false), CARET_HOLD_MS);
-        timersRef.current.push(hide);
+        const hideCaret = window.setTimeout(() => setCaret(false), CARET_HOLD_MS);
+        timersRef.current.push(hideCaret);
         return;
       }
 
@@ -82,49 +75,21 @@ export default function TypewriterHeading({
   };
 
   useLayoutEffect(() => {
-    if (!usesChapterMotion()) {
+    if (!usesChapterMotion() || prefersReducedMotion()) {
       showAll(false);
       return () => clearTimers();
     }
 
-    const section = hostRef.current?.closest('[data-chapter]');
-    if (!section) {
+    const chapterId = chapterIdFrom(hostRef.current);
+    if (!chapterId || chapterId === activeId) {
       play();
-      return () => clearTimers();
+    } else {
+      hide();
     }
 
-    let last = 'boot';
-
-    const sync = () => {
-      const state = readPlayState(section);
-      if (state === last) return;
-      last = state;
-
-      if (state === 'play') {
-        play();
-        return;
-      }
-
-      if (state === 'settled') {
-        showAll(false);
-        return;
-      }
-
-      // Idle / reset / first paint: keep the title blank in the blurred preview
-      hide();
-    };
-
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(section, { attributes: true, attributeFilter: ['class'] });
-
-    return () => {
-      observer.disconnect();
-      clearTimers();
-    };
-    // text is the only input that should rebuild the printer
+    return () => clearTimers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text]);
+  }, [activeId, titleGen, text]);
 
   const classes = ['typewriter-heading', 'page-title', className].filter(Boolean).join(' ');
 

@@ -12,10 +12,6 @@
   }
 }
 
-html.is-simple-chapters .chapter-break {
-  min-height: 12vh;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .chapter-break {
     min-height: 2vh;
