@@ -3,18 +3,6 @@
   box-sizing: border-box;
 }
 
-@property --chapter-ink {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 1;
-}
-
-@property --chapter-slide {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0;
-}
-
 :root {
   --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   --font-pixel: 'Geist Pixel Square', 'Geist', monospace;
@@ -260,34 +248,16 @@ section {
   padding: var(--page-pad-top) 0 var(--page-pad-bottom);
   box-sizing: border-box;
   scroll-margin-top: 4.75rem;
-  --chapter-ink: 1;
 }
 
 /*
-  Chapter turn — incoming page sits far back in Z, then slides forward into place.
-  Scrubbed by --chapter-ink; no snap-to-sharp on active.
+  Chapter turn — incoming page sits far back in Z, then comes forward into
+  place and recedes again on the way out. Scrubbed off scroll position by
+  Motion (see ChapterStage), which animates only opacity and transform so the
+  work stays on the compositor. No blur: animating a blur radius over a
+  full-page layer forces a re-raster every frame and is what made this
+  unusable on phones.
 */
-.page-section[data-chapter] {
-  transform-origin: 50% var(--chapter-origin-y, 4%);
-}
-
-/*
-  Only composite while a chapter is turning. A live filter/scale on a
-  long page (about photos) rasterizes the whole section and fries images.
-*/
-.page-section[data-chapter].is-chapter-turning {
-  transform:
-    translate3d(0, calc(var(--chapter-slide) * 3.25rem), 0)
-    scale(calc(0.52 + (var(--chapter-ink) * 0.48)));
-  -webkit-filter: blur(calc((1 - var(--chapter-ink)) * 14px));
-  filter: blur(calc((1 - var(--chapter-ink)) * 14px));
-  opacity: calc(0.06 + (var(--chapter-ink) * 0.94));
-  will-change: transform, filter, opacity;
-}
-
-.page-section[data-chapter] .page-title {
-  letter-spacing: calc(0.01em + ((1 - var(--chapter-ink)) * 0.08em));
-}
 
 .page-section-inner {
   width: 100%;
@@ -343,17 +313,9 @@ section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-section,
-  .page-section[data-chapter].is-chapter-turning {
-    opacity: calc(0.4 + (var(--chapter-ink) * 0.6));
+  .page-section[data-chapter] {
+    opacity: 1;
     transform: none;
-    -webkit-filter: none;
-    filter: none;
-    will-change: auto;
-  }
-
-  .page-section[data-chapter] .page-title {
-    letter-spacing: 0.01em;
   }
 
   .nav-indicator,
@@ -523,7 +485,8 @@ section {
   filter: drop-shadow(10px 10px 12px var(--shadow-strong));
 }
 
-.project-card img {
+.project-card img,
+.project-card video {
   position: absolute;
   top: 0;
   left: 0;
@@ -534,12 +497,13 @@ section {
 }
 
 .project-card--contain {
-  /* Match notepadable-header.gif (800×533) so the full editor shows without letterboxing */
-  aspect-ratio: 800 / 533;
+  /* Match notepadable-header (800×532) so the full editor shows without letterboxing */
+  aspect-ratio: 800 / 532;
   background: var(--card-wash);
 }
 
-.project-card--contain img {
+.project-card--contain img,
+.project-card--contain video {
   object-fit: cover;
 }
 

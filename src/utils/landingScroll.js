@@ -1,12 +1,5 @@
 import { getLandingPageById } from '../constants/sections';
 
-export const CHAPTER_INK_MIN = 0;
-export const CHAPTER_INK_MAX = 1;
-/** Ink at which blur is gone (chapter top at mid-viewport). */
-export const CHAPTER_SHARP_ON = 0.99;
-/** Drop below this before a return visit can type again. */
-export const CHAPTER_SHARP_OFF = 0.55;
-
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,102 +11,29 @@ function getViewportHeight() {
   return window.innerHeight;
 }
 
-/** iOS often leaves window.scrollY at 0 while body / visualViewport actually move. */
-export function getScrollY() {
-  const win = window.scrollY || window.pageYOffset || 0;
-  const se = document.scrollingElement?.scrollTop || 0;
-  const root = document.documentElement?.scrollTop || 0;
-  const body = document.body?.scrollTop || 0;
-  const classic = Math.max(win, se, root, body);
-  const pageTop = window.visualViewport?.pageTop;
-  if (typeof pageTop === 'number' && pageTop > 0) {
-    if (classic === 0 || Math.abs(pageTop - classic) < 80) {
-      return Math.max(classic, pageTop);
-    }
-  }
-  return classic;
-}
-
-function paintChapterInk(el, ink, slide = 1 - ink, originY = 4) {
-  el.style.setProperty('--chapter-ink', String(ink));
-  el.style.setProperty('--chapter-slide', String(slide));
-  el.style.setProperty('--chapter-origin-y', `${originY}%`);
-  // WebKit often skips CSS-var transforms/filters; paint them here.
-  if (prefersReducedMotion() || ink >= 0.995) {
-    el.classList.remove('is-chapter-turning');
-    el.style.filter = '';
-    el.style.webkitFilter = '';
-    el.style.transform = '';
-    el.style.opacity = '';
-    return;
-  }
-  el.classList.add('is-chapter-turning');
-  const blur = ((1 - ink) * 14).toFixed(2);
-  const scale = (0.52 + ink * 0.48).toFixed(4);
-  const rise = (slide * 3.25).toFixed(3);
-  el.style.filter = `blur(${blur}px)`;
-  el.style.webkitFilter = `blur(${blur}px)`;
-  el.style.transformOrigin = `50% ${originY}%`;
-  el.style.transform = `translate3d(0, ${rise}rem, 0) scale(${scale})`;
-  el.style.opacity = String((0.06 + ink * 0.94).toFixed(3));
-}
-
-/** Viewport rect ignoring chapter scale/blur so measurements cannot feed back. */
-function getLayoutRect(el) {
-  const height = el.offsetHeight;
-  const id = el.getAttribute('data-chapter');
-  const probe = id
-    ? document.querySelector(`[data-chapter-anchor="${id}"]`)
-    : null;
-  if (probe) {
-    const top = probe.getBoundingClientRect().top;
-    return { top, bottom: top + height, height };
-  }
-  let top = 0;
-  let node = el;
-  while (node) {
-    top += node.offsetTop;
-    node = node.offsetParent;
-  }
-  top -= getScrollY();
-  return { top, bottom: top + height, height };
-}
-
-function easeChapterProgress(t) {
-  const clamped = Math.max(0, Math.min(1, t));
-  // Stay far back, then rush into place near mid-viewport
-  return clamped ** 1.8;
-}
-
 export function getStickyNavHeight() {
   const nav = document.querySelector('.landing-nav');
   if (!nav) return 72;
   return Math.ceil(nav.getBoundingClientRect().height);
 }
 
-export function getChapterGutterPx() {
-  const breakEl = document.querySelector('[data-chapter-break]');
-  if (breakEl) {
-    const height = breakEl.getBoundingClientRect().height;
-    if (height > 0) return height;
-  }
-  return Math.round(getViewportHeight() * 0.4);
-}
-
-/** Scroll distance over which blur → focus runs (a bit longer than the gutter). */
-export function getChapterFocusPx() {
-  const gutter = getChapterGutterPx();
-  return Math.max(gutter * 1.15, Math.round(getViewportHeight() * 0.48));
+/**
+ * Chapter position measured from its untransformed stage wrapper, so the
+ * arrival animation's scale never feeds back into the reading.
+ */
+function getStageRect(section) {
+  const stage = section.closest('.chapter-stage') || section;
+  return stage.getBoundingClientRect();
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  const reduced = prefersReducedMotion();
-  const scrollBehavior = reduced ? 'auto' : (behavior || 'smooth');
+  const scrollBehavior = prefersReducedMotion() ? 'auto' : (behavior || 'smooth');
   const navH = getStickyNavHeight();
-  const top = getScrollY() + getLayoutRect(el).top - navH;
+  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  const top = scrollY + getStageRect(el).top - navH;
   const maxScroll = Math.max(
     0,
     (document.scrollingElement || document.documentElement).scrollHeight - getViewportHeight(),
@@ -128,156 +48,58 @@ export function scrollToLandingSection(id, { behavior } = {}) {
 }
 
 /**
- * One-shot type-in when a chapter first goes sharp; reset when it blurs away.
- * Nav current/settled is separate — this is the mid-viewport trigger.
+ * Which chapter owns the reading band right now. Used for the initial paint
+ * and deep links; ongoing tracking runs off an IntersectionObserver instead.
  */
-export function applyChapterPlayFromInk(el, ink, { forceReplay = false } = {}) {
-  const reduced = prefersReducedMotion();
-  const isSharp = ink >= CHAPTER_SHARP_ON;
-  const isFaded = ink <= CHAPTER_SHARP_OFF;
-  const drawn = el.classList.contains('is-chapter-drawn');
-  const settled = el.classList.contains('is-chapter-settled');
-
-  if (isFaded) {
-    if (drawn || settled || !el.classList.contains('is-chapter-pending')) {
-      el.classList.remove('is-chapter-drawn', 'is-chapter-settled');
-      el.classList.add('is-chapter-pending');
-    }
-    return;
-  }
-
-  if (!isSharp) return;
-
-  if (reduced) {
-    el.classList.remove('is-chapter-pending', 'is-chapter-drawn');
-    el.classList.add('is-chapter-settled');
-    return;
-  }
-
-  if (!forceReplay && (drawn || settled)) return;
-
-  if (forceReplay) {
-    el.classList.remove('is-chapter-settled', 'is-chapter-drawn');
-    el.classList.add('is-chapter-pending');
-    window.requestAnimationFrame(() => {
-      if (!el.isConnected) return;
-      el.classList.remove('is-chapter-pending');
-      el.classList.add('is-chapter-drawn');
-      el.dispatchEvent(new Event('chapterplay'));
-    });
-    return;
-  }
-
-  el.classList.remove('is-chapter-pending');
-  el.classList.add('is-chapter-drawn');
-  el.dispatchEvent(new Event('chapterplay'));
-}
-
-export function setChapterInkImmediate(activeId, { replay = false } = {}) {
-  const pages = document.querySelectorAll('.page-section[data-chapter]');
-  pages.forEach((el) => {
-    const id = el.getAttribute('data-chapter');
-    const isActive = id === activeId;
-    const ink = isActive ? CHAPTER_INK_MAX : CHAPTER_INK_MIN;
-    paintChapterInk(el, ink, isActive ? 0 : 1);
-    applyChapterPlayFromInk(el, ink, { forceReplay: replay && isActive });
-  });
-}
-
-function getChapterFocusEnd(navH) {
-  // Sharp once the chapter top reaches mid-viewport, not only when pinned to the nav
-  return Math.max(navH, Math.round(getViewportHeight() * 0.5));
-}
-
-function arrivalProgress(rect, navH, focusPx) {
-  const end = getChapterFocusEnd(navH);
-  const start = end + focusPx;
-  if (rect.top >= start) return 0;
-  if (rect.top <= end) return 1;
-  return 1 - ((rect.top - end) / focusPx);
-}
-
-/**
- * How far this chapter has scrolled off the top, over one viewport.
- * 0 = still a full screen of it; 1 = gone. Mirrors arrival so the exit
- * is the same curve running backwards.
- */
-function leaveProgress(rect, navH) {
-  const viewH = getViewportHeight();
-  const remaining = rect.bottom - navH;
-  const span = Math.max(1, viewH - navH);
-  if (remaining >= span - 8) return 0;
-  if (remaining <= 0) return 1;
-  return 1 - remaining / span;
-}
-
-export function updateChapterInkFromScroll() {
-  if (prefersReducedMotion()) {
-    const activeId = resolveActiveLandingId();
-    setChapterInkImmediate(activeId);
-    return;
-  }
-
-  const navH = getStickyNavHeight();
-  const focusPx = Math.max(1, getChapterFocusPx());
-  const sections = Array.from(document.querySelectorAll('.page-section[data-chapter]'));
-  const maxScroll = Math.max(
-    0,
-    (document.scrollingElement || document.documentElement).scrollHeight - getViewportHeight(),
-  );
-  const scrollY = getScrollY();
-  const nearBottom = scrollY >= maxScroll - 8;
-  const atPageTop = scrollY <= 16;
-  const layouts = sections.map((el) => getLayoutRect(el));
-  const arrives = layouts.map((rect) => arrivalProgress(rect, navH, focusPx));
-
-  sections.forEach((el, index) => {
-    const rect = layouts[index];
-    const arrive = arrives[index];
-    const nextArrive = arrives[index + 1] ?? 0;
-    const leave = leaveProgress(rect, navH);
-    const next = sections[index + 1];
-    const viewH = getViewportHeight();
-    let ink = easeChapterProgress(arrive);
-    const leaveEase = easeChapterProgress(leave);
-    ink = Math.min(ink, 1 - leaveEase);
-    if (next) {
-      const nextEase = easeChapterProgress(nextArrive);
-      // Tall chapters (about) only pair to the next slide as they actually
-      // leave. A boolean mid-screen gate made short pages pop out.
-      const tall = rect.height > viewH * 1.15;
-      const pair = nextEase * (tall ? leaveEase : 1);
-      ink = Math.min(ink, 1 - pair);
-    }
-
-    if (rect.top >= viewH - 8) {
-      ink = 0;
-    } else if (atPageTop && index === 0) {
-      ink = 1;
-    } else if (!next && nearBottom) {
-      ink = Math.max(ink, 0.92);
-    }
-
-    const leaving = leave > 0 || (Boolean(next) && nextArrive > 0 && arrive >= 0.999);
-    const slide = leaving ? 0 : (1 - ink);
-    paintChapterInk(el, ink, slide, leaving ? 92 : 4);
-    applyChapterPlayFromInk(el, ink);
-  });
-}
-
 export function resolveActiveLandingId() {
-  // Probe below the sticky nav so a chapter counts as active once its
-  // title/content is in the upper reading band — not only when flush to the nav.
   const navH = getStickyNavHeight();
   const probeY = navH + Math.min(140, Math.round(getViewportHeight() * 0.22));
   let activeId = 'home';
 
   document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-    const rect = getLayoutRect(el);
+    const rect = getStageRect(el);
     if (rect.top <= probeY && rect.bottom > navH) {
       activeId = el.getAttribute('data-chapter') || activeId;
     }
   });
 
   return getLandingPageById(activeId)?.id || 'home';
+}
+
+/** Mark which chapter the nav is pointing at. */
+export function setCurrentChapter(activeId) {
+  document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
+    el.classList.toggle(
+      'is-chapter-current',
+      el.getAttribute('data-chapter') === activeId,
+    );
+  });
+}
+
+/** Chapter reached the reading band — let its title type itself in. */
+export function playChapterTitle(section) {
+  if (prefersReducedMotion()) {
+    section.classList.remove('is-chapter-pending', 'is-chapter-drawn');
+    section.classList.add('is-chapter-settled');
+    return;
+  }
+  if (section.classList.contains('is-chapter-drawn')) return;
+  section.classList.remove('is-chapter-pending', 'is-chapter-settled');
+  section.classList.add('is-chapter-drawn');
+}
+
+/** Chapter left the band — arm it so a return visit types again. */
+export function resetChapterTitle(section) {
+  if (prefersReducedMotion()) return;
+  section.classList.remove('is-chapter-drawn', 'is-chapter-settled');
+  section.classList.add('is-chapter-pending');
+}
+
+/** Nav click on the chapter you are already reading should retype it. */
+export function replayChapterTitle(section) {
+  if (!section || prefersReducedMotion()) return;
+  resetChapterTitle(section);
+  window.requestAnimationFrame(() => {
+    if (section.isConnected) playChapterTitle(section);
+  });
 }

@@ -7,20 +7,33 @@ import {
 } from '../constants/sections';
 import { normalizePagePath } from '../constants/pages';
 import {
+  playChapterTitle,
+  replayChapterTitle,
+  resetChapterTitle,
   resolveActiveLandingId,
   scrollToLandingSection,
-  setChapterInkImmediate,
-  updateChapterInkFromScroll,
+  setCurrentChapter,
 } from '../utils/landingScroll';
+import { initChapterMotion } from '../utils/chapterMotion';
+
+/** Band the nav tracks: a chapter is "current" while it holds the mid screen. */
+const NAV_BAND = '-45% 0px -10% 0px';
+/** Thin line at the point a chapter finishes arriving and goes sharp. */
+const TITLE_LINE = '-45% 0px -50% 0px';
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function chapterSections() {
+  return Array.from(document.querySelectorAll('.page-section[data-chapter]'));
+}
+
 /**
- * Keeps landing URL, active nav, chapter ink, and heading underline in sync
- * with continuous scroll. LandingPage stays mounted across / /about /projects /contact.
+ * Keeps landing URL, active nav, and title playback in sync with scroll.
+ * The chapter motion itself is scrubbed by Motion off the scroll timeline —
+ * nothing here runs per frame.
  */
 export default function useLandingSection() {
   const location = useLocation();
@@ -32,20 +45,11 @@ export default function useLandingSection() {
   const activeIdRef = useRef(activeId);
   const programmaticRef = useRef(false);
   const programTimerRef = useRef(null);
-  const rafRef = useRef(null);
   const didInitRef = useRef(false);
 
   activeIdRef.current = activeId;
 
-  const clearProgrammatic = useCallback(() => {
-    programmaticRef.current = false;
-    if (programTimerRef.current) {
-      clearTimeout(programTimerRef.current);
-      programTimerRef.current = null;
-    }
-  }, []);
-
-  const markProgrammatic = useCallback((ms = 900) => {
+  const markProgrammatic = useCallback((ms = 700) => {
     programmaticRef.current = true;
     if (programTimerRef.current) clearTimeout(programTimerRef.current);
     programTimerRef.current = setTimeout(() => {
@@ -54,200 +58,122 @@ export default function useLandingSection() {
     }, ms);
   }, []);
 
-  const applyCurrentClass = useCallback((id) => {
-    document.querySelectorAll('.page-section[data-chapter]').forEach((el) => {
-      el.classList.toggle('is-chapter-current', el.getAttribute('data-chapter') === id);
-    });
-  }, []);
-
   const commitActive = useCallback((id, { syncUrl = true } = {}) => {
     if (!id) return;
 
-    const changed = id !== activeIdRef.current;
-    if (changed) {
+    if (id !== activeIdRef.current) {
       activeIdRef.current = id;
       setActiveId(id);
-      applyCurrentClass(id);
-    } else {
-      // Initial mount starts with matching id — apply current once
-      const el = document.querySelector(`.page-section[data-chapter="${id}"]`);
-      if (el && !el.classList.contains('is-chapter-current')) {
-        applyCurrentClass(id);
-      }
     }
+    setCurrentChapter(id);
 
     if (!syncUrl || programmaticRef.current) return;
     const page = LANDING_PAGES.find((entry) => entry.id === id);
     if (!page) return;
     if (normalizePagePath(window.location.pathname) === page.path) return;
     navigate(page.path, { replace: true, state: { landingScrollSync: true } });
-  }, [applyCurrentClass, navigate]);
+  }, [navigate]);
 
   const scrollToSection = useCallback((id, { replace = false } = {}) => {
     const page = LANDING_PAGES.find((entry) => entry.id === id);
     if (!page) return;
 
     markProgrammatic(prefersReducedMotion() ? 120 : 700);
-    setChapterInkImmediate(id, { replay: true });
     commitActive(id, { syncUrl: false });
+    replayChapterTitle(document.querySelector(`.page-section[data-chapter="${id}"]`));
 
-    const current = normalizePagePath(window.location.pathname);
-    if (current !== page.path) {
+    if (normalizePagePath(window.location.pathname) !== page.path) {
       navigate(page.path, { replace, state: { landingNavigate: true } });
     }
 
-    requestAnimationFrame(() => {
-      scrollToLandingSection(id);
-    });
+    requestAnimationFrame(() => scrollToLandingSection(id));
   }, [commitActive, markProgrammatic, navigate]);
 
-  // Deep link / writeup return / explicit nav: place the matching chapter
+  // Scroll-linked chapter motion. Set up once for the life of the landing page.
+  useEffect(() => {
+    if (!isLandingPath(path)) return undefined;
+    const teardown = initChapterMotion();
+    return () => teardown();
+    // Chapters are static for the whole landing route, so this runs once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Deep link / return from a writeup: place the matching chapter.
   useLayoutEffect(() => {
     if (!isLandingPath(path)) return;
 
     const page = getLandingPage(path);
     const syncOnly = Boolean(location.state?.landingScrollSync);
     const explicitNav = Boolean(location.state?.landingNavigate);
-    const alreadyThere = didInitRef.current && resolveActiveLandingId() === page.id;
 
-    // URL followed the finger, or iOS dropped router state — never snap ink.
-    if (syncOnly || (didInitRef.current && !explicitNav) || alreadyThere) {
+    // URL followed the scroll, or the router replayed state — do not jump.
+    if (syncOnly || (didInitRef.current && !explicitNav)) {
       commitActive(page.id, { syncUrl: false });
-      updateChapterInkFromScroll();
       didInitRef.current = true;
       return;
     }
 
-    markProgrammatic(prefersReducedMotion() ? 80 : 200);
-    setChapterInkImmediate(page.id);
+    const first = !didInitRef.current;
+    didInitRef.current = true;
+    markProgrammatic(prefersReducedMotion() ? 80 : 400);
     commitActive(page.id, { syncUrl: false });
 
-    const shouldJump = !didInitRef.current
-      || explicitNav
-      || page.id !== resolveActiveLandingId();
-
-    didInitRef.current = true;
-
-    if (shouldJump) {
+    if (first || explicitNav || page.id !== resolveActiveLandingId()) {
       scrollToLandingSection(page.id, { behavior: 'auto' });
-      window.requestAnimationFrame(() => {
-        scrollToLandingSection(page.id, { behavior: 'auto' });
-        updateChapterInkFromScroll();
-      });
+      requestAnimationFrame(() => scrollToLandingSection(page.id, { behavior: 'auto' }));
     }
   }, [path, location.state, commitActive, markProgrammatic]);
 
-  // Scroll listener: ink scrub + active section
+  // Nav + URL tracking. Fires on band crossings, not every frame.
   useEffect(() => {
     if (!isLandingPath(path)) return undefined;
 
-    const tick = () => {
-      rafRef.current = null;
-      const nextId = resolveActiveLandingId();
-      updateChapterInkFromScroll(nextId);
+    const sections = chapterSections();
+    if (!sections.length) return undefined;
 
-      if (!programmaticRef.current && nextId !== activeIdRef.current) {
-        commitActive(nextId, { syncUrl: true });
-      } else if (programmaticRef.current) {
-        // Still keep ink in sync while a programmatic scroll settles
-        updateChapterInkFromScroll(activeIdRef.current);
+    const inBand = new Set();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.getAttribute('data-chapter');
+        if (entry.isIntersecting) inBand.add(id);
+        else inBand.delete(id);
+      });
+
+      // Earliest chapter still holding the band is the one being read.
+      const next = sections
+        .map((el) => el.getAttribute('data-chapter'))
+        .find((id) => inBand.has(id));
+
+      if (next && !programmaticRef.current) {
+        commitActive(next, { syncUrl: true });
       }
-    };
+    }, { rootMargin: NAV_BAND });
 
-    const onScroll = () => {
-      if (rafRef.current != null) return;
-      rafRef.current = window.requestAnimationFrame(tick);
-    };
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [path, commitActive]);
 
-    // Any real user scroll cancels the post-click lock so the nav can track again
-    const onUserScrollIntent = () => {
-      if (programmaticRef.current) clearProgrammatic();
-    };
+  // Title type-in, keyed to the moment a chapter finishes arriving.
+  useEffect(() => {
+    if (!isLandingPath(path)) return undefined;
 
-    // iOS skips window scroll during the swipe and through momentum.
-    // Keep a rAF pump running until the page actually stops moving.
-    let touching = false;
-    let touchRaf = null;
-    let lastY = -1;
-    let stillFrames = 0;
-    const pumpTouch = () => {
-      touchRaf = null;
-      tick();
-      const y = document.scrollingElement?.scrollTop || window.scrollY || 0;
-      if (touching) {
-        lastY = y;
-        stillFrames = 0;
-        touchRaf = window.requestAnimationFrame(pumpTouch);
-        return;
-      }
-      if (Math.abs(y - lastY) > 0.5) {
-        lastY = y;
-        stillFrames = 0;
-        touchRaf = window.requestAnimationFrame(pumpTouch);
-        return;
-      }
-      stillFrames += 1;
-      if (stillFrames < 10) {
-        touchRaf = window.requestAnimationFrame(pumpTouch);
-      }
-    };
-    const startPump = () => {
-      if (touchRaf == null) touchRaf = window.requestAnimationFrame(pumpTouch);
-    };
-    const onTouchStart = () => {
-      onUserScrollIntent();
-      touching = true;
-      startPump();
-    };
-    const onTouchMove = () => {
-      onUserScrollIntent();
-      touching = true;
-      startPump();
-    };
-    const onTouchEnd = () => {
-      touching = false;
-      startPump();
-    };
+    const sections = chapterSections();
+    if (!sections.length) return undefined;
 
-    tick();
-    const scrollOpts = { passive: true };
-    const touchOpts = { passive: true, capture: true };
-    const scroller = document.scrollingElement || document.documentElement;
-    window.addEventListener('scroll', onScroll, scrollOpts);
-    document.addEventListener('scroll', onScroll, scrollOpts);
-    scroller.addEventListener('scroll', onScroll, scrollOpts);
-    document.body.addEventListener('scroll', onScroll, scrollOpts);
-    window.addEventListener('resize', onScroll);
-    window.addEventListener('wheel', onUserScrollIntent, scrollOpts);
-    document.addEventListener('touchstart', onTouchStart, touchOpts);
-    document.addEventListener('touchmove', onTouchMove, touchOpts);
-    document.addEventListener('touchend', onTouchEnd, touchOpts);
-    document.addEventListener('touchcancel', onTouchEnd, touchOpts);
-    const viewport = window.visualViewport;
-    viewport?.addEventListener('scroll', onScroll);
-    viewport?.addEventListener('resize', onScroll);
-    window.addEventListener('scrollend', onScroll);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) playChapterTitle(entry.target);
+        else resetChapterTitle(entry.target);
+      });
+    }, { rootMargin: TITLE_LINE });
 
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      document.removeEventListener('scroll', onScroll);
-      scroller.removeEventListener('scroll', onScroll);
-      document.body.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      window.removeEventListener('wheel', onUserScrollIntent);
-      document.removeEventListener('touchstart', onTouchStart, touchOpts);
-      document.removeEventListener('touchmove', onTouchMove, touchOpts);
-      document.removeEventListener('touchend', onTouchEnd, touchOpts);
-      document.removeEventListener('touchcancel', onTouchEnd, touchOpts);
-      viewport?.removeEventListener('scroll', onScroll);
-      viewport?.removeEventListener('resize', onScroll);
-      window.removeEventListener('scrollend', onScroll);
-      touching = false;
-      if (touchRaf != null) window.cancelAnimationFrame(touchRaf);
-      if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);
-      if (programTimerRef.current) clearTimeout(programTimerRef.current);
-    };
-  }, [path, commitActive, clearProgrammatic]);
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [path]);
+
+  useEffect(() => () => {
+    if (programTimerRef.current) clearTimeout(programTimerRef.current);
+  }, []);
 
   return {
     activeId,

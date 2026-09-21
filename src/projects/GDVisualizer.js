@@ -1,5 +1,6 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import LoopingVideo from '../components/LoopingVideo';
 import { InlineMath, BlockMath } from 'react-katex';
 
 function GDVisualizer() {
@@ -116,9 +117,9 @@ function GDVisualizer() {
 
       <h2>/ testing it</h2>
 
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`} 
-        alt="Testing Four Base Optimizers" 
+      <LoopingVideo
+        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.mp4`}
+        poster={`${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it-poster.jpg`}
         width="1200"
         height="600"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
@@ -154,9 +155,11 @@ function GDVisualizer() {
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1.5rem', marginBottom: '2rem' }}>
-        <img 
-          src={`${process.env.PUBLIC_URL}/images/gd-visualizer/bike-wheel.gif`} 
-          alt="Rolling wheel physics" 
+        <LoopingVideo
+          src={`${process.env.PUBLIC_URL}/images/gd-visualizer/bike-wheel.mp4`}
+          poster={`${process.env.PUBLIC_URL}/images/gd-visualizer/bike-wheel-poster.jpg`}
+          width="320"
+          height="240"
           style={{ width: '500px', maxWidth: '100%', display: 'block', marginBottom: '0.5rem' }}
         />
         <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.9rem', textAlign: 'center', margin: 0, lineHeight: 1.2 }}>
@@ -209,11 +212,11 @@ function GDVisualizer() {
 
       <h2>/ wheel optimizer results</h2>
 
-      <img 
-        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/loop.gif`} 
-        alt="Wheel Optimizer Spiral" 
-        width="1200"
-        height="600"
+      <LoopingVideo
+        src={`${process.env.PUBLIC_URL}/images/gd-visualizer/loop.mp4`}
+        poster={`${process.env.PUBLIC_URL}/images/gd-visualizer/loop-poster.jpg`}
+        width="1280"
+        height="640"
         style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0.5rem' }}
       />
       <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', marginBottom: '2rem', fontSize: '0.9rem', textAlign: 'center' }}>

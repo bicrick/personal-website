@@ -4,7 +4,7 @@ import AboutPage from './AboutPage';
 import ProjectsPage from './ProjectsPage';
 import ContactPage from './ContactPage';
 import ChapterBreak from '../components/ChapterBreak';
-import ChapterAnchor from '../components/ChapterAnchor';
+import ChapterStage from '../components/ChapterStage';
 import useLandingSection from '../hooks/useLandingSection';
 import { LandingNavContext } from '../hooks/landingNavContext';
 
@@ -22,17 +22,13 @@ export function LandingProvider({ children }) {
 export function LandingSections() {
   return (
     <>
-      <ChapterAnchor id="home" />
-      <HomePage />
+      <ChapterStage><HomePage /></ChapterStage>
       <ChapterBreak />
-      <ChapterAnchor id="about" />
-      <AboutPage />
+      <ChapterStage><AboutPage /></ChapterStage>
       <ChapterBreak />
-      <ChapterAnchor id="projects" />
-      <ProjectsPage />
+      <ChapterStage><ProjectsPage /></ChapterStage>
       <ChapterBreak />
-      <ChapterAnchor id="contact" />
-      <ContactPage />
+      <ChapterStage><ContactPage /></ChapterStage>
     </>
   );
 }

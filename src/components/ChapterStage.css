@@ -1,0 +1,21 @@
+.chapter-stage {
+  display: block;
+  position: relative;
+  /*
+    Skip rendering chapters nowhere near the viewport. The projects chapter is
+    ~2600px tall and about carries a 273-cell heatmap, none of which needs
+    rastering until you approach it. `auto` remembers the real height after
+    first render so the scrollbar stays put.
+  */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100vh;
+}
+
+.chapter-arrive {
+  display: block;
+  transform-origin: 50% 18%;
+}
+
+.page-section[data-chapter] {
+  transform-origin: 50% 0%;
+}
