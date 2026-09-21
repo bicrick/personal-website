@@ -160,7 +160,7 @@ h2 {
   margin: 0.75rem 0 0.35rem;
 }
 
-/* Keep incoming chapter titles blank until that chapter is current. */
+/* Blank until that chapter arrives, then the typewriter fills it in. */
 @media (hover: hover) and (pointer: fine) and (min-width: 801px) {
   html:not(.is-simple-chapters) .page-section[data-chapter]:not(.is-chapter-current) .typewriter-heading-live {
     opacity: 0;

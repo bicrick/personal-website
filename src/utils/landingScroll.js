@@ -1,10 +1,11 @@
 import { getLandingPageById } from '../constants/sections';
 import { prefersReducedMotion } from './chapterMode';
 
-/** Same insets the current-chapter observer uses: mid-screen reading slice. */
-export const READING_BAND_ROOT_MARGIN = '-45% 0px -10% 0px';
-const READING_BAND_TOP = 0.45;
-const READING_BAND_BOTTOM_INSET = 0.10;
+/**
+ * A chapter arrives when its top crosses this line. Titles type here,
+ * and the nav underline moves with them.
+ */
+export const ARRIVAL_LINE = 0.38;
 
 function getViewportHeight() {
   const visual = window.visualViewport?.height;
@@ -27,18 +28,8 @@ function getStageRect(section) {
   return stage.getBoundingClientRect();
 }
 
-function getReadingBand() {
-  const viewH = getViewportHeight();
-  return {
-    top: viewH * READING_BAND_TOP,
-    bottom: viewH * (1 - READING_BAND_BOTTOM_INSET),
-  };
-}
-
-export function chapterOwnsReadingBand(section) {
-  const rect = getStageRect(section);
-  const { top, bottom } = getReadingBand();
-  return rect.top < bottom && rect.bottom > top;
+function arrivalY() {
+  return getViewportHeight() * ARRIVAL_LINE;
 }
 
 export function scrollToLandingSection(id, { behavior } = {}) {
@@ -62,15 +53,31 @@ export function scrollToLandingSection(id, { behavior } = {}) {
   }
 }
 
-/** Earliest chapter whose stage intersects the reading band. */
+/** Chapter whose top has reached the arrival line. The last one, at the bottom. */
 export function resolveActiveLandingId() {
-  const sections = document.querySelectorAll('.page-section[data-chapter]');
+  const sections = [...document.querySelectorAll('.page-section[data-chapter]')];
+  if (!sections.length) return 'home';
+
+  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  const maxScroll = Math.max(
+    0,
+    (document.scrollingElement || document.documentElement).scrollHeight - getViewportHeight(),
+  );
+  if (maxScroll - scrollY < 32) {
+    return getLandingPageById(sections[sections.length - 1].getAttribute('data-chapter'))?.id || 'home';
+  }
+
+  const y = arrivalY();
+  let passed = sections[0];
   for (const el of sections) {
-    if (chapterOwnsReadingBand(el)) {
+    const rect = getStageRect(el);
+    if (rect.top <= y && rect.bottom > y) {
       return getLandingPageById(el.getAttribute('data-chapter'))?.id || 'home';
     }
+    if (rect.top <= y) passed = el;
   }
-  return 'home';
+
+  return getLandingPageById(passed.getAttribute('data-chapter'))?.id || 'home';
 }
 
 /** Mark which chapter the nav is pointing at. */

@@ -7,7 +7,6 @@ import {
 } from '../constants/sections';
 import { normalizePagePath } from '../constants/pages';
 import {
-  READING_BAND_ROOT_MARGIN,
   resolveActiveLandingId,
   scrollToLandingSection,
   setCurrentChapter,
@@ -15,10 +14,6 @@ import {
 } from '../utils/landingScroll';
 import { initChapterMotion } from '../utils/chapterMotion';
 import { prefersReducedMotion, watchChapterMode } from '../utils/chapterMode';
-
-function chapterSections() {
-  return Array.from(document.querySelectorAll('.page-section[data-chapter]'));
-}
 
 /**
  * Keeps landing URL, active nav, and titles in sync with one reading band.
@@ -126,32 +121,33 @@ export default function useLandingSection() {
   useEffect(() => {
     if (!isLandingPath(path)) return undefined;
 
-    const sections = chapterSections();
-    if (!sections.length) return undefined;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      if (programmaticRef.current) return;
+      const next = resolveActiveLandingId();
+      if (next) commitActive(next, { syncUrl: true });
+    };
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
 
-    const inBand = new Set();
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const id = entry.target.getAttribute('data-chapter');
-        if (entry.isIntersecting) inBand.add(id);
-        else inBand.delete(id);
-      });
-
-      const next = sections
-        .map((el) => el.getAttribute('data-chapter'))
-        .find((id) => inBand.has(id));
-
-      if (next && !programmaticRef.current) {
-        commitActive(next, { syncUrl: true });
-      }
-    }, { rootMargin: READING_BAND_ROOT_MARGIN });
-
-    sections.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [path, commitActive]);
 
   useEffect(() => () => {
     if (programTimerRef.current) clearTimeout(programTimerRef.current);
+    // Strict Mode clears this timer on the fake unmount, which used to
+    // leave the guard stuck on and freeze the nav underline.
+    programmaticRef.current = false;
   }, []);
 
   return {
