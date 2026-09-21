@@ -78,8 +78,7 @@ export default function ProjectsPage() {
       description: 'golf incremental video game, built with agents',
       timelineDescription:
         'A golf incremental video game built with coding agents. Godot gameplay plus gen-ai sprites and music.',
-      video: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-preview.mp4`,
-      poster: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-preview-poster.jpg`,
+      image: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-preview.gif`,
       blogLink: '/projects/golf-incremental',
       appLink: 'https://golf.bicrick.com',
       appLabel: 'play',
@@ -92,8 +91,7 @@ export default function ProjectsPage() {
       description: 'text editor encoded in the URL',
       timelineDescription:
         'A minimalist text editor that encodes the whole document into the URL. Share a link, share the doc.',
-      video: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.mp4`,
-      poster: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-header-poster.jpg`,
+      image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`,
       imageFit: 'contain',
       blogLink: '/projects/notepadable',
       appLink: 'https://notepadable.com',
@@ -119,8 +117,7 @@ export default function ProjectsPage() {
       description: 'compare optimizer performance in 3d',
       timelineDescription:
         'A 3D race track for gradient descent. Compare Batch, Momentum, Adam, and SGD on the same loss landscape.',
-      video: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.mp4`,
-      poster: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it-poster.jpg`,
+      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`,
       blogLink: '/projects/gd-visualizer',
       appLink: 'https://gd.bicrick.com',
       relevanceRank: 3,
@@ -132,8 +129,7 @@ export default function ProjectsPage() {
       description: 'coursework and takeaways',
       timelineDescription:
         'Notes and takeaways from the UT Austin MSAI program. Coursework highlights across the degree.',
-      video: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water.mp4`,
-      poster: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water-poster.jpg`,
+      image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`,
       blogLink: '/projects/ai-masters',
       relevanceRank: 4,
       dateRank: 6,
@@ -144,8 +140,7 @@ export default function ProjectsPage() {
       description: 'msoffice plaintext extractor',
       timelineDescription:
         'Extract clean plaintext from Microsoft Office docs. Built for feeding documents into LLM workflows.',
-      video: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.mp4`,
-      poster: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract-poster.jpg`,
+      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.gif`,
       blogLink: '/projects/docprep',
       appLink: 'https://docprep.site',
       relevanceRank: 6,

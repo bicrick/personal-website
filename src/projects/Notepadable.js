@@ -1,7 +1,6 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
 import NotepadableEmbed from '../components/NotepadableEmbed';
-import LoopingVideo from '../components/LoopingVideo';
 
 function Notepadable() {
   return (
@@ -32,9 +31,9 @@ function Notepadable() {
         Everything you type is compressed and stored in the URL hash fragment. The hash never hits the server. The static HTML and JavaScript decompress it client-side. Share a link and the recipient sees exactly what you wrote. Your text never touches a server. It works offline as a PWA. You can deploy it anywhere that serves static files.
       </p>
 
-      <LoopingVideo
-        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-encoding.mp4`}
-        poster={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-encoding-poster.jpg`}
+      <img
+        src={`${process.env.PUBLIC_URL}/images/notepadable/notepadable-encoding.gif`}
+        alt="Animation of the sentence The cat is happy tokenized, dictionary-encoded with 12-bit indices, packed with a version header, and lz-string compressed into a notepadable URL"
         width="960"
         height="540"
         style={{ width: '100%', height: 'auto', marginTop: '1.5rem', marginBottom: '0.5rem' }}

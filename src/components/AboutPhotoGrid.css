@@ -20,11 +20,6 @@
   pointer-events: none;
 }
 
-video.about-pic {
-  /* Videos default to inline; match the img box exactly */
-  object-position: center;
-}
-
 @media (max-width: 768px) {
   .about-pics {
     grid-template-columns: repeat(3, 1fr);

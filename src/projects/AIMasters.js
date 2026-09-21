@@ -1,6 +1,5 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
-import LoopingVideo from '../components/LoopingVideo';
 
 function AIMasters() {
   return (
@@ -11,11 +10,11 @@ function AIMasters() {
       linkLabel="see program info"
       abstract="A high-level tour of what I picked up in UT Austin's AI master's. Data curation and feature selection. Supervised and unsupervised learning. The full pipeline of building a model end to end. Hands-on PyTorch for classical ML, deep learning, and transformers. LLM basics. Reinforcement learning."
     >
-      <LoopingVideo
-        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water.mp4`}
-        poster={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water-poster.jpg`}
+      <img
+        src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`}
+        alt="UT Austin MSAI"
         width="1200"
-        height="674"
+        height="675"
         style={{ width: '100%', marginBottom: '0.5rem' }}
       />
       <p className="project-caption">
