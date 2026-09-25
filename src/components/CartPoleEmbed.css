@@ -18,6 +18,10 @@
   pointer-events: none;
 }
 
+.cart-pole-embed-stage.is-live .cart-pole-embed-frame {
+  pointer-events: auto;
+}
+
 .cart-pole-embed-hit {
   position: absolute;
   inset: 0;

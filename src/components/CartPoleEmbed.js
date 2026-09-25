@@ -13,6 +13,27 @@ function embedSrc(dark) {
   return `${ORIGIN}/?embed=1&theme=${dark ? 'dark' : 'light'}#triple`;
 }
 
+function liveSrc(dark) {
+  return `${ORIGIN}/?layout=desktop&theme=${dark ? 'dark' : 'light'}#triple`;
+}
+
+function useNarrow() {
+  const query = '(max-width: 800px)';
+  const [narrow, setNarrow] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia(query).matches
+  ));
+
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = () => setNarrow(mq.matches);
+    onChange();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return narrow;
+}
+
 function useSiteDark() {
   const [dark, setDark] = useState(isDark);
 
@@ -34,7 +55,7 @@ function postTheme(frame, dark) {
   );
 }
 
-function CartPoleFrame({ dark, className, title }) {
+function CartPoleFrame({ dark, className, title, src, interactive = false }) {
   const [frame, setFrame] = useState(null);
 
   useEffect(() => {
@@ -45,10 +66,10 @@ function CartPoleFrame({ dark, className, title }) {
     <iframe
       ref={setFrame}
       className={className}
-      src={embedSrc(dark)}
+      src={src}
       title={title}
       loading="lazy"
-      tabIndex={-1}
+      tabIndex={interactive ? 0 : -1}
     />
   );
 }
@@ -57,28 +78,42 @@ function CartPoleTilePreview() {
   const dark = useSiteDark();
   return (
     <div className="cart-pole-tile-preview">
-      <CartPoleFrame dark={dark} className="cart-pole-tile-frame" title="cart-pole demo" />
+      <CartPoleFrame
+        dark={dark}
+        className="cart-pole-tile-frame"
+        title="cart-pole demo"
+        src={embedSrc(dark)}
+      />
     </div>
   );
 }
 
 function CartPoleEmbed() {
   const dark = useSiteDark();
+  const narrow = useNarrow();
   return (
     <figure className="project-figure cart-pole-embed">
-      <div className="cart-pole-embed-stage">
-        <CartPoleFrame dark={dark} className="cart-pole-embed-frame" title="cart-pole demo" />
-        <a
-          className="cart-pole-embed-hit"
-          href={FULL_HREF}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className="cart-pole-embed-hit-label">Open demo</span>
-        </a>
+      <div className={`cart-pole-embed-stage${narrow ? '' : ' is-live'}`}>
+        <CartPoleFrame
+          dark={dark}
+          className="cart-pole-embed-frame"
+          title="cart-pole demo"
+          src={narrow ? embedSrc(dark) : liveSrc(dark)}
+          interactive={!narrow}
+        />
+        {narrow ? (
+          <a
+            className="cart-pole-embed-hit"
+            href={FULL_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="cart-pole-embed-hit-label">Open demo</span>
+          </a>
+        ) : null}
       </div>
       <figcaption>
-        The triple pendulum swings up, holds, then drops and goes again.{' '}
+        The live triple pendulum.{' '}
         <a href={FULL_HREF} target="_blank" rel="noopener noreferrer">
           Open the demo
         </a>
