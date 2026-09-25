@@ -43,6 +43,17 @@
     "imageHeight": 630,
     "type": "website"
   },
+  "/projects/auto-research": {
+    "ogTitle": "experimenting with auto research",
+    "seoTitle": "experimenting with auto research - bicrick",
+    "description": "Agentic loops on cart-pole, from PPO to MPPI.",
+    "keywords": "bicrick, Patrick Brown, auto research, grok bot, cart-pole, pendulum, PPO, MPPI, reinforcement learning",
+    "imagePath": "/og/projects-simple-1200x630.jpg",
+    "imageAlt": "experimenting with auto research",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
   "/projects/qwop-python": {
     "ogTitle": "qwop-python",
     "seoTitle": "qwop-python - beat the HTML5 QWOP world record with RL - bicrick",

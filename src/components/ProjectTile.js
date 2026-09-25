@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import QwopTilePreview from './QwopTilePreview';
+import { CartPoleTilePreview } from './CartPoleEmbed';
 import './ProjectTile.css';
 
 function useFineHover() {
@@ -109,6 +110,8 @@ export default function ProjectTile({
 
   const media = project.livePreview === 'qwop' ? (
     <QwopTilePreview title={project.title} />
+  ) : project.livePreview === 'cartpole' ? (
+    <CartPoleTilePreview />
   ) : project.image ? (
     <img src={project.image} alt={project.title} width="1200" height="600" />
   ) : (

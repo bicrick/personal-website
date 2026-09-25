@@ -1,0 +1,76 @@
+.cart-pole-embed-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.cart-pole-embed-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.cart-pole-embed-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cart-pole-embed-hit:after {
+  display: none;
+}
+
+.cart-pole-embed-hit-label {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 0.35rem 0.65rem;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cart-pole-embed-stage:hover .cart-pole-embed-hit-label,
+.cart-pole-embed-stage:focus-within .cart-pole-embed-hit-label {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .cart-pole-embed-hit-label {
+    opacity: 1;
+  }
+}
+
+.cart-pole-tile-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+  pointer-events: none;
+}
+
+.cart-pole-tile-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}

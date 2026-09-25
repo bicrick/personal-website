@@ -10,6 +10,7 @@ import GDVisualizer from './projects/GDVisualizer';
 import AIMasters from './projects/AIMasters';
 import Notepadable from './projects/Notepadable';
 import GolfIncremental from './projects/GolfIncremental';
+import AutoResearch from './projects/AutoResearch';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/projects/gd-visualizer" element={<GDVisualizer />} />
         <Route path="/projects/notepadable" element={<Notepadable />} />
         <Route path="/projects/golf-incremental" element={<GolfIncremental />} />
+        <Route path="/projects/auto-research" element={<AutoResearch />} />
         {/* SiteLayout owns continuous landing content; child routes are path markers only */}
         <Route element={<SiteLayout />}>
           <Route path="/" element={null} />

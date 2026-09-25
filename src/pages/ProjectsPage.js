@@ -74,6 +74,19 @@ export default function ProjectsPage() {
 
   const projects = [
     {
+      title: 'experimenting with auto research',
+      description: 'agentic loops on cart-pole and pendulums',
+      timelineDescription:
+        'Agentic loops on cart-pole. PPO, then the double pendulum, then MPPI in the browser.',
+      livePreview: 'cartpole',
+      blogLink: '/projects/auto-research',
+      appLink: 'https://cart-pole-autoresearch.vercel.app/#triple',
+      appLabel: 'demo',
+      relevanceRank: 2,
+      dateRank: 1,
+      date: 'September 2026',
+    },
+    {
       title: 'range rat',
       description: 'golf incremental video game, built with agents',
       timelineDescription:
@@ -83,7 +96,7 @@ export default function ProjectsPage() {
       appLink: 'https://golf.bicrick.com',
       appLabel: 'play',
       relevanceRank: 1,
-      dateRank: 2,
+      dateRank: 3,
       date: 'August 2026',
     },
     {
@@ -95,8 +108,8 @@ export default function ProjectsPage() {
       imageFit: 'contain',
       blogLink: '/projects/notepadable',
       appLink: 'https://notepadable.com',
-      relevanceRank: 5,
-      dateRank: 3,
+      relevanceRank: 6,
+      dateRank: 4,
       date: 'March 2026',
     },
     {
@@ -108,8 +121,8 @@ export default function ProjectsPage() {
       blogLink: '/projects/qwop-python',
       appLink: '/demos/qwop',
       appLabel: 'demo',
-      relevanceRank: 2,
-      dateRank: 1,
+      relevanceRank: 3,
+      dateRank: 2,
       date: 'September 2026',
     },
     {
@@ -120,8 +133,8 @@ export default function ProjectsPage() {
       image: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`,
       blogLink: '/projects/gd-visualizer',
       appLink: 'https://gd.bicrick.com',
-      relevanceRank: 3,
-      dateRank: 4,
+      relevanceRank: 4,
+      dateRank: 5,
       date: 'November 2025',
     },
     {
@@ -131,8 +144,8 @@ export default function ProjectsPage() {
         'Notes and takeaways from the UT Austin MSAI program. Coursework highlights across the degree.',
       image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`,
       blogLink: '/projects/ai-masters',
-      relevanceRank: 4,
-      dateRank: 6,
+      relevanceRank: 5,
+      dateRank: 7,
       date: 'Fall 2024 – Fall 2025',
     },
     {
@@ -143,8 +156,8 @@ export default function ProjectsPage() {
       image: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.gif`,
       blogLink: '/projects/docprep',
       appLink: 'https://docprep.site',
-      relevanceRank: 6,
-      dateRank: 5,
+      relevanceRank: 7,
+      dateRank: 6,
       date: 'December 2025',
     },
   ];
