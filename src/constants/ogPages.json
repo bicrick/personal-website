@@ -10,6 +10,28 @@
     "imageHeight": 630,
     "type": "website"
   },
+  "/career": {
+    "ogTitle": "career",
+    "seoTitle": "Career - bicrick",
+    "description": "Computer engineering and the AI masters at UT Austin, then data engineering at H-E-B.",
+    "keywords": "bicrick, Patrick Brown, Career, UT Austin, AI Masters, H-E-B, data engineer",
+    "imagePath": "/og/about-1200x630.jpg",
+    "imageAlt": "Patrick Brown",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
+  "/build": {
+    "ogTitle": "how I build",
+    "seoTitle": "How I build - bicrick",
+    "description": "Agentic development with Cursor and Claude Code.",
+    "keywords": "bicrick, Patrick Brown, Cursor, Claude Code, agents",
+    "imagePath": "/og/about-1200x630.jpg",
+    "imageAlt": "Patrick Brown",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
+  },
   "/about": {
     "ogTitle": "about",
     "seoTitle": "About bicrick - Patrick Brown | Data Engineer",
@@ -42,6 +64,17 @@
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "website"
+  },
+  "/heb": {
+    "ogTitle": "data engineering at h-e-b",
+    "seoTitle": "data engineering at h-e-b - bicrick",
+    "description": "The control room for data engineering at H-E-B. AWS to GCP, Confluence RAG before Rovo, agents in the loop.",
+    "keywords": "bicrick, Patrick Brown, H-E-B, data engineering, dashboard, BigQuery, GCP, Confluence",
+    "imagePath": "/og/about-1200x630.jpg",
+    "imageAlt": "data engineering at h-e-b",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
   },
   "/projects/auto-research": {
     "ogTitle": "cart-pole-autoresearch",

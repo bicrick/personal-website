@@ -1,0 +1,178 @@
+.heb-title {
+  margin-top: 0;
+}
+
+.heb-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: transparent;
+}
+
+.heb-heatmap {
+  width: 100%;
+  margin: 8px 0 28px;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.heb-marks {
+  margin: 8px 0 28px;
+}
+
+.heb-marks-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 12px 8px;
+  margin: 0;
+  padding: 16px 12px;
+  border: 1px solid var(--rule);
+  background: var(--code-wash);
+}
+
+.heb-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.heb-mark-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--ink);
+}
+
+.heb-mark-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.heb-mark-label {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.heb-marks figcaption,
+.heb-lane figcaption {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+.heb-shot {
+  margin: 8px 0 28px;
+}
+
+.heb-shot-frame {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border: 1px dashed var(--ink-muted);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 7px,
+      var(--rule) 7px,
+      var(--rule) 8px
+    );
+}
+
+.heb-shot-label {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--paper);
+  padding: 2px 8px;
+}
+
+.heb-shot-note {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-muted);
+  background: var(--paper);
+  padding: 2px 8px;
+  text-align: center;
+  max-width: 28rem;
+}
+
+.heb-lane {
+  margin: 8px 0 28px;
+  border: 1px solid var(--rule);
+}
+
+.heb-lane-row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.heb-lane-row:first-child {
+  border-top: 0;
+}
+
+.heb-lane-year {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.heb-lane-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+}
+
+.heb-lane-tools .heb-mark {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.heb-lane-tools .heb-mark-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.heb-lane-tools .heb-mark-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.heb-lane-tools .heb-mark-label {
+  text-align: left;
+}
+
+@media (max-width: 760px) {
+  .heb-shot-frame {
+    min-height: 160px;
+  }
+
+  .heb-lane-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

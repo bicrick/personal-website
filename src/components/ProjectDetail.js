@@ -19,6 +19,8 @@ function Navigation() {
     <div className="nav">
       <Link to="/" className={linkClass('/')}>bicrick</Link>
       <span className="nav-separator">·</span>
+      <Link to="/career" className={linkClass('/career')}>career</Link>
+      <span className="nav-separator">·</span>
       <Link to="/about" className={linkClass('/about')}>about</Link>
       <span className="nav-separator">·</span>
       <Link to="/projects" className={linkClass('/projects')} aria-current={pathname.startsWith('/projects') ? 'page' : undefined}>projects</Link>
@@ -93,6 +95,9 @@ function ProjectDetail({
           <div className="project-body">
             {children}
           </div>
+          <Link to="/projects" className="project-back is-end">
+            ← projects
+          </Link>
         </article>
       </main>
     </div>

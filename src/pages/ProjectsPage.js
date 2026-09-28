@@ -138,17 +138,6 @@ export default function ProjectsPage() {
       date: 'November 2025',
     },
     {
-      title: 'artificial intelligence masters',
-      description: 'coursework and takeaways',
-      timelineDescription:
-        'Notes and takeaways from the UT Austin MSAI program. Coursework highlights across the degree.',
-      image: `${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`,
-      blogLink: '/projects/ai-masters',
-      relevanceRank: 2,
-      dateRank: 7,
-      date: 'Fall 2024 – Fall 2025',
-    },
-    {
       title: 'docprep',
       description: 'msoffice plaintext extractor',
       timelineDescription:
@@ -167,7 +156,6 @@ export default function ProjectsPage() {
   return (
     <section
       id="projects"
-      data-chapter="projects"
       className="page-section"
       aria-label="projects"
     >

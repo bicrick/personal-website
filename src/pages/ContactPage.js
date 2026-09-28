@@ -69,7 +69,6 @@ export default function ContactPage() {
   return (
     <section
       id="contact"
-      data-chapter="contact"
       className="page-section contact-page"
       aria-label="contact"
     >

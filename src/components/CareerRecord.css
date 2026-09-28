@@ -1,0 +1,146 @@
+.page-section.career-page {
+  max-width: 728px;
+  margin: 0 auto;
+  padding-top: 32px;
+  padding-bottom: 40px;
+  font-size: 20px;
+}
+
+.career-record {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 28px;
+}
+
+.career-record-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1.15rem 1.35rem;
+  align-items: start;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.career-record-row:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.career-record-row:hover,
+.career-record-row:focus-visible {
+  background-color: color-mix(in srgb, var(--card-wash) 55%, transparent);
+}
+
+.career-record-row:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.career-record-media {
+  width: 5.5rem;
+  height: 5.5rem;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.career-record-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.career-record-media.is-logo {
+  background: var(--card-wash);
+  display: grid;
+  place-items: center;
+  padding: 0.85rem;
+  box-sizing: border-box;
+}
+
+.career-record-media.is-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.career-record-copy {
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.career-record-title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.career-record-row:hover .career-record-title,
+.career-record-row:focus-visible .career-record-title {
+  color: var(--link);
+}
+
+.career-record-meta {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.career-record-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 760px) {
+  .page-section.career-page {
+    max-width: 100%;
+    padding-top: 24px;
+    padding-bottom: 32px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 560px) {
+  .career-record-row {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: 0.9rem 1rem;
+    padding: 1rem 0;
+  }
+
+  .career-record-media {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+
+  .career-record-media.is-logo {
+    padding: 0.65rem;
+  }
+
+  .career-record-title {
+    font-size: 14px;
+  }
+
+  .career-record-meta {
+    font-size: 11px;
+  }
+
+  .career-record-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}

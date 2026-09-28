@@ -1,46 +1,20 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import LandingNavBar from './LandingNavBar';
-import {
-  LandingProvider,
-  LandingSections,
-} from '../pages/LandingPage';
-import { useLandingNav } from '../hooks/landingNavContext';
 import { getPageSeo, normalizePagePath } from '../constants/pages';
-import { getLandingPage, isLandingPath, LANDING_PAGES } from '../constants/sections';
 
 function Navigation() {
   const { pathname } = useLocation();
   const currentPath = normalizePagePath(pathname);
-  const { activeId, scrollToSection } = useLandingNav();
   const navRef = useRef(null);
   const indicatorRef = useRef(null);
   const indicatorReadyRef = useRef(false);
 
-  const activePath = isLandingPath(currentPath)
-    ? (LANDING_PAGES.find((page) => page.id === activeId)?.path || currentPath)
-    : currentPath;
-
   const linkClass = (path) => (
-    activePath === path ? 'nav-link is-active' : 'nav-link'
+    currentPath === path ? 'nav-link is-active' : 'nav-link'
   );
-
-  const handleNav = (event, path) => {
-    if (
-      event.metaKey
-      || event.ctrlKey
-      || event.shiftKey
-      || event.altKey
-      || event.button !== 0
-    ) {
-      return;
-    }
-    event.preventDefault();
-    const page = getLandingPage(path);
-    scrollToSection(page.id);
-  };
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -61,7 +35,6 @@ function Navigation() {
       indicator.style.opacity = '1';
 
       if (!indicatorReadyRef.current) {
-        // First paint: sit under the active link with no slide-from-zero
         indicatorReadyRef.current = true;
         window.requestAnimationFrame(() => {
           indicator.classList.add('is-ready');
@@ -79,7 +52,7 @@ function Navigation() {
       window.cancelAnimationFrame(raf);
       window.removeEventListener('resize', place);
     };
-  }, [activePath, activeId]);
+  }, [currentPath]);
 
   return (
     <div className="nav" ref={navRef}>
@@ -88,18 +61,25 @@ function Navigation() {
         to="/"
         className={linkClass('/')}
         data-nav-id="home"
-        aria-current={activePath === '/' ? 'page' : undefined}
-        onClick={(e) => handleNav(e, '/')}
+        aria-current={currentPath === '/' ? 'page' : undefined}
       >
         bicrick
+      </Link>
+      <span className="nav-separator">·</span>
+      <Link
+        to="/career"
+        className={linkClass('/career')}
+        data-nav-id="career"
+        aria-current={currentPath === '/career' ? 'page' : undefined}
+      >
+        career
       </Link>
       <span className="nav-separator">·</span>
       <Link
         to="/about"
         className={linkClass('/about')}
         data-nav-id="about"
-        aria-current={activePath === '/about' ? 'page' : undefined}
-        onClick={(e) => handleNav(e, '/about')}
+        aria-current={currentPath === '/about' ? 'page' : undefined}
       >
         about
       </Link>
@@ -108,8 +88,7 @@ function Navigation() {
         to="/projects"
         className={linkClass('/projects')}
         data-nav-id="projects"
-        aria-current={activePath === '/projects' ? 'page' : undefined}
-        onClick={(e) => handleNav(e, '/projects')}
+        aria-current={currentPath === '/projects' ? 'page' : undefined}
       >
         projects
       </Link>
@@ -118,8 +97,7 @@ function Navigation() {
         to="/contact"
         className={linkClass('/contact')}
         data-nav-id="contact"
-        aria-current={activePath === '/contact' ? 'page' : undefined}
-        onClick={(e) => handleNav(e, '/contact')}
+        aria-current={currentPath === '/contact' ? 'page' : undefined}
       >
         contact
       </Link>
@@ -127,35 +105,20 @@ function Navigation() {
   );
 }
 
-function SiteChrome() {
+export default function SiteLayout() {
   const { pathname } = useLocation();
-  const currentPath = normalizePagePath(pathname);
-  const seo = getPageSeo(currentPath);
-
-  useLayoutEffect(() => {
-    document.documentElement.classList.remove('site-scroll-lock');
-  }, []);
+  const seo = getPageSeo(normalizePagePath(pathname));
 
   return (
     <div className="App_mainContainer landing-page">
       <SEO {...seo} />
       <StructuredData />
-      <LandingProvider>
-        <LandingNavBar>
-          <Navigation />
-        </LandingNavBar>
-        <main className="App_mainColumn landing">
-          <LandingSections />
-        </main>
-      </LandingProvider>
+      <LandingNavBar>
+        <Navigation />
+      </LandingNavBar>
+      <main className="App_mainColumn landing">
+        <Outlet />
+      </main>
     </div>
   );
-}
-
-/**
- * SiteLayout keeps one landing tree mounted for all landing URLs so scroll
- * position and the current chapter survive / → /about → /projects transitions.
- */
-export default function SiteLayout() {
-  return <SiteChrome />;
 }

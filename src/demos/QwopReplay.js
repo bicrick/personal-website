@@ -29,6 +29,8 @@ function DemoNav() {
     <div className="nav">
       <Link to="/" className={linkClass('/')}>bicrick</Link>
       <span className="nav-separator">·</span>
+      <Link to="/career" className={linkClass('/career')}>career</Link>
+      <span className="nav-separator">·</span>
       <Link to="/about" className={linkClass('/about')}>about</Link>
       <span className="nav-separator">·</span>
       <Link

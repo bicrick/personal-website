@@ -5,7 +5,6 @@ export default function HomePage() {
   return (
     <section
       id="home"
-      data-chapter="home"
       className="page-section home-section"
       aria-label="home"
     >

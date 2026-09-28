@@ -1,6 +1,6 @@
 /* Match project-article Substack measure + type rhythm (728 / 20 / 32). */
 .page-section.about-page {
-  max-width: 728px;
+  max-width: var(--measure);
   margin: 0 auto;
   padding-top: 32px;
   padding-bottom: 40px;
@@ -9,6 +9,8 @@
 
 .about-article {
   width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
 }
 
 .about-article p a {
@@ -30,7 +32,7 @@
   scroll-margin-top: 5rem;
 }
 
-.about-article h2:first-of-type {
+.about-header + h2 {
   margin-top: 0;
 }
 
@@ -58,6 +60,10 @@
     padding-top: 24px;
     padding-bottom: 32px;
     font-size: 18px;
+  }
+
+  .about-career {
+    margin: 28px 0 8px;
   }
 
   .about-article h2 {

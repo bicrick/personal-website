@@ -55,8 +55,3 @@
     display: none;
   }
 }
-
-html.is-simple-chapters .typewriter-heading-caret {
-  animation: none;
-  display: none;
-}

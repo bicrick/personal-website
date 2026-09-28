@@ -29,7 +29,6 @@ html {
 
 html {
   background-color: var(--paper);
-  scrollbar-gutter: stable;
   overscroll-behavior-y: none;
 }
 
@@ -160,23 +159,6 @@ h2 {
   margin: 0.75rem 0 0.35rem;
 }
 
-/* Blank until that chapter arrives, then the typewriter fills it in. */
-@media (hover: hover) and (pointer: fine) and (min-width: 801px) {
-  html:not(.is-simple-chapters) .page-section[data-chapter]:not(.is-chapter-current) .typewriter-heading-live {
-    opacity: 0;
-  }
-}
-
-@media (max-width: 800px) {
-  .page-section[data-chapter] .typewriter-heading-live {
-    opacity: 1;
-  }
-}
-
-html.is-simple-chapters .page-section[data-chapter] .typewriter-heading-live {
-  opacity: 1;
-}
-
 /* Prose reading style */
 .page-prose {
   color: var(--ink-soft);
@@ -207,7 +189,7 @@ p {
 .App_mainContainer.landing-page {
   justify-content: flex-start;
   align-items: stretch;
-  min-height: 100%;
+  min-height: 100dvh;
 }
 
 .App_mainColumn {
@@ -218,19 +200,20 @@ p {
 }
 
 .App_mainColumn.landing {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 0 var(--shell-pad) var(--shell-pad);
-  /* Modest end pad — just enough air after contact, not a half-viewport void */
-  padding-bottom: clamp(2.5rem, 10vh, 4.5rem);
+  padding: 0 var(--shell-pad);
+  padding-bottom: clamp(1.25rem, 3vh, 2rem);
 }
 
 section {
   margin: 0;
 }
 
-/* Landing scroll sections */
 .landing-nav {
   position: sticky;
   top: 0;
@@ -259,17 +242,7 @@ section {
   align-items: stretch;
   padding: var(--page-pad-top) 0 var(--page-pad-bottom);
   box-sizing: border-box;
-  scroll-margin-top: 4.75rem;
 }
-
-/*
-  Chapter turn — incoming page sits far back in Z, then comes forward into
-  place and recedes again on the way out. Scrubbed off scroll position by
-  Motion (see ChapterStage), which animates only opacity and transform so the
-  work stays on the compositor. No blur: animating a blur radius over a
-  full-page layer forces a re-raster every frame and is what made this
-  unusable on phones.
-*/
 
 .page-section-inner {
   width: 100%;
@@ -325,11 +298,6 @@ section {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-section[data-chapter] {
-    opacity: 1;
-    transform: none;
-  }
-
   .nav-indicator,
   .nav-indicator.is-ready {
     transition: none;
@@ -508,6 +476,20 @@ section {
   transform: translateZ(0);
 }
 
+.project-card.is-logo {
+  background: var(--card-wash);
+  border-color: transparent;
+}
+
+.project-card.is-logo img {
+  top: 50%;
+  left: 50%;
+  width: 74%;
+  height: 68%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+
 .project-card--contain {
   /* Match notepadable-header (800×532) so the full editor shows without letterboxing */
   aspect-ratio: 800 / 532;
@@ -531,13 +513,13 @@ section {
   text-align: center;
 }
 
-/* Home page — profile masthead */
+/* Home page — profile masthead, centered in the space under the nav */
 .page-section.home-section {
   position: relative;
+  flex: 1 1 auto;
   justify-content: center;
-  min-height: calc(100dvh - 4.5rem);
-  padding-top: clamp(2rem, 8vh, 3.5rem);
-  padding-bottom: 1.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
   overflow: visible;
 }
 
@@ -624,7 +606,7 @@ section {
   }
 
   .App_mainColumn.landing {
-    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
   .page-section {
@@ -634,10 +616,6 @@ section {
 
   .page-section.home-section {
     justify-content: center;
-    /* Own screen so about does not sit on the first page */
-    min-height: 100vh;
-    min-height: 100svh;
-    min-height: 100dvh;
     padding-top: 0;
     padding-bottom: 0;
   }

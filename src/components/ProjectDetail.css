@@ -44,6 +44,10 @@
   text-decoration: none;
 }
 
+.project-back.is-end {
+  margin: 36px 0 0;
+}
+
 .project-back:hover {
   color: var(--ink);
 }
