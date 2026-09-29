@@ -4,31 +4,9 @@ import './ProjectDetail.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import LandingNavBar from './LandingNavBar';
+import SiteNav from './SiteNav';
 import TypewriterHeading from './TypewriterHeading';
 import { getPageSeo } from '../constants/pages';
-
-function Navigation() {
-  const { pathname } = useLocation();
-  const linkClass = (path) => (
-    pathname === path || (path === '/projects' && pathname.startsWith('/projects/'))
-      ? 'nav-link is-active'
-      : 'nav-link'
-  );
-
-  return (
-    <div className="nav">
-      <Link to="/" className={linkClass('/')}>bicrick</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/career" className={linkClass('/career')}>career</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/about" className={linkClass('/about')}>about</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/projects" className={linkClass('/projects')} aria-current={pathname.startsWith('/projects') ? 'page' : undefined}>projects</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/contact" className={linkClass('/contact')}>contact</Link>
-    </div>
-  );
-}
 
 function ProjectDetail({
   title,
@@ -51,7 +29,7 @@ function ProjectDetail({
       <SEO {...seo} />
       <StructuredData />
       <LandingNavBar>
-        <Navigation />
+        <SiteNav />
       </LandingNavBar>
       <main className="App_mainColumn landing project-detail">
         <article className="project-article">

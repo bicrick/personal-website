@@ -45,9 +45,9 @@
   },
   "/projects": {
     "ogTitle": "projects",
-    "seoTitle": "Projects by bicrick - RL environments, agents, evals",
-    "description": "QWOP world record, cart-pole research loops, Monocle, and eval harnesses.",
-    "keywords": "bicrick, Patrick Brown, Projects, QWOP, RL, agents, evals, Monocle, Machine Learning",
+    "seoTitle": "Projects by bicrick - RL environments, agents, tools",
+    "description": "QWOP world record, cart-pole research loops, Monocle, and Range Rat.",
+    "keywords": "bicrick, Patrick Brown, Projects, QWOP, RL, agents, Monocle, Machine Learning",
     "imagePath": "/og/projects-simple-1200x630.jpg",
     "imageAlt": "projects by bicrick",
     "imageWidth": 1200,

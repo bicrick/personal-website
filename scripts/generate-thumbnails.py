@@ -74,40 +74,51 @@ def monocle():
     before = Image.open(IMAGES / "monocle" / "wordle-before.png").convert("RGB")
     after = Image.open(IMAGES / "monocle" / "wordle-after.png").convert("RGB")
 
-    target_h = 720
-    scale = target_h / before.height
-    bw = int(before.width * scale)
-    before = before.resize((bw, target_h), Image.Resampling.LANCZOS)
+    # Layout: a wide CLI prompt bar across the top, then the before / after
+    # screenshots below it with an arrow between them.
+    prompt = font(MENLO, 62)
+    text = "make this medieval themed"
+    indent = 62
+    pad_x = 48
+    bar_w = d.textlength(text, font=prompt) + pad_x * 2 + indent
+    bar_h = 128
+    bar_top = 48
+    bar = ((W - bar_w) / 2, bar_top, (W + bar_w) / 2, bar_top + bar_h)
+
+    glow = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    ImageDraw.Draw(glow).rounded_rectangle(
+        (bar[0], bar[1] + 10, bar[2], bar[3] + 10), radius=22, fill=(20, 22, 30, 90)
+    )
+    glow = glow.filter(ImageFilter.GaussianBlur(14))
+    base.paste(glow, (0, 0), glow)
+    d = ImageDraw.Draw(base)
+    d.rounded_rectangle(bar, radius=22, fill=TERM_BG)
+    text_y = bar[1] + (bar_h - 62) / 2 - 8
+    d.text((bar[0] + pad_x, text_y), ">", font=prompt, fill=LINK)
+    d.text((bar[0] + pad_x + indent, text_y), text, font=prompt, fill=TERM_INK)
+
+    target_h = 560
+    before = before.resize((int(before.width * target_h / before.height), target_h), Image.Resampling.LANCZOS)
     after = after.resize((int(after.width * target_h / after.height), target_h), Image.Resampling.LANCZOS)
 
-    margin = 150
-    top = 70
-    left_xy = (margin, top)
-    right_xy = (W - margin - after.width, top)
-
+    shots_top = bar[3] + 42
+    arrow_gap = 280
+    left_xy = (int(W / 2 - arrow_gap / 2 - before.width), int(shots_top))
+    right_xy = (int(W / 2 + arrow_gap / 2), int(shots_top))
     shadowed(base, rounded(before), left_xy)
     shadowed(base, rounded(after), right_xy)
 
     d = ImageDraw.Draw(base)
-    label = font(ARIAL_BOLD, 26)
-    centered_text(d, left_xy[0] + before.width / 2, top + target_h + 34, "BEFORE", label, MUTED)
-    centered_text(d, right_xy[0] + after.width / 2, top + target_h + 34, "AFTER", label, LINK)
+    label = font(ARIAL_BOLD, 30)
+    label_y = shots_top + target_h + 30
+    centered_text(d, left_xy[0] + before.width / 2, label_y, "BEFORE", label, MUTED)
+    centered_text(d, right_xy[0] + after.width / 2, label_y, "AFTER", label, LINK)
 
     cx = W / 2
-    cy = top + target_h / 2
-    prompt = font(MENLO, 30)
-    lines = ["make this", "medieval themed"]
-    box_w = max(d.textlength(line, font=prompt) for line in lines) + 64
-    box_h = 150
-    box = (cx - box_w / 2, cy - box_h / 2 - 40, cx + box_w / 2, cy + box_h / 2 - 40)
-    d.rounded_rectangle(box, radius=14, fill=(255, 255, 255), outline=RULE, width=2)
-    for i, line in enumerate(lines):
-        centered_text(d, cx, box[1] + 32 + i * 46, line, prompt, INK)
-
-    ay = box[3] + 46
-    d.line((cx - 70, ay, cx + 60, ay), fill=LINK, width=6)
-    d.polygon([(cx + 78, ay), (cx + 52, ay - 18), (cx + 52, ay + 18)], fill=LINK)
-    centered_text(d, cx, ay + 34, "local Cursor CLI", font(ARIAL, 24), MUTED)
+    ay = shots_top + target_h / 2
+    d.line((cx - 92, ay, cx + 58, ay), fill=LINK, width=12)
+    d.polygon([(cx + 100, ay), (cx + 56, ay - 30), (cx + 56, ay + 30)], fill=LINK)
+    centered_text(d, cx, ay + 58, "local Cursor CLI", font(ARIAL_BOLD, 28), INK)
 
     base.save(IMAGES / "monocle" / "monocle-1600x900.png", optimize=True)
 

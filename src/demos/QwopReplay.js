@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 import LandingNavBar from '../components/LandingNavBar';
+import SiteNav from '../components/SiteNav';
 import { getPageSeo } from '../constants/pages';
 import { createQwopReplayPlayer, loadQwopDemoAssets } from './qwopReplayEngine';
 import {
@@ -16,35 +17,6 @@ import './QwopReplay.css';
 const MODEL_INFO_ID = 'qwop-model-info';
 const PLAYBACK_RATES = [0.5, 1, 2, 4];
 const COURSE_METERS = 100;
-
-function DemoNav() {
-  const { pathname } = useLocation();
-  const linkClass = (path) => (
-    pathname === path || (path === '/projects' && pathname.startsWith('/projects/'))
-      ? 'nav-link is-active'
-      : 'nav-link'
-  );
-
-  return (
-    <div className="nav">
-      <Link to="/" className={linkClass('/')}>bicrick</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/career" className={linkClass('/career')}>career</Link>
-      <span className="nav-separator">·</span>
-      <Link to="/about" className={linkClass('/about')}>about</Link>
-      <span className="nav-separator">·</span>
-      <Link
-        to="/projects"
-        className={linkClass('/projects')}
-        aria-current={pathname.startsWith('/projects') || pathname.startsWith('/demos/') ? 'page' : undefined}
-      >
-        projects
-      </Link>
-      <span className="nav-separator">·</span>
-      <Link to="/contact" className={linkClass('/contact')}>contact</Link>
-    </div>
-  );
-}
 
 function QwopReplay() {
   const canvasRef = useRef(null);
@@ -199,7 +171,7 @@ function QwopReplay() {
       <SEO {...getPageSeo('/demos/qwop')} />
 
       <LandingNavBar>
-        <DemoNav />
+        <SiteNav />
       </LandingNavBar>
 
       <main className="qwop-replay-main">

@@ -10,11 +10,7 @@ function isDark() {
 }
 
 function embedSrc(dark) {
-  return `${ORIGIN}/?embed=1&theme=${dark ? 'dark' : 'light'}#triple`;
-}
-
-function liveSrc(dark) {
-  return `${ORIGIN}/?layout=desktop&theme=${dark ? 'dark' : 'light'}#triple`;
+  return `${ORIGIN}/?embed=1&theme=${dark ? 'dark' : 'light'}#single`;
 }
 
 function useNarrow() {
@@ -98,7 +94,7 @@ function CartPoleEmbed() {
           dark={dark}
           className="cart-pole-embed-frame"
           title="cart-pole demo"
-          src={narrow ? embedSrc(dark) : liveSrc(dark)}
+          src={embedSrc(dark)}
           interactive={!narrow}
         />
         {narrow ? (
@@ -113,7 +109,7 @@ function CartPoleEmbed() {
         ) : null}
       </div>
       <figcaption>
-        The live triple pendulum.{' '}
+        The live reel, from one link through the quad.{' '}
         <a href={FULL_HREF} target="_blank" rel="noopener noreferrer">
           Open the demo
         </a>

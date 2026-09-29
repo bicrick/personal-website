@@ -41,19 +41,6 @@ export const PROJECTS = [
     date: 'September 2026',
   },
   {
-    title: 'tracebench',
-    description: 'offline evals and RL tasks from agent traces',
-    timelineDescription:
-      'An offline eval harness for tool-using agents: replay traces, score tool errors and task success, then mine failures into RL tasks.',
-    image: `${process.env.PUBLIC_URL}/images/tracebench/tracebench-1600x900.png`,
-    blogLink: '/projects/tracebench',
-    appLink: 'https://github.com/bicrick/tracebench',
-    appLabel: 'repo',
-    relevanceRank: 4,
-    dateRank: 0,
-    date: 'September 2026',
-  },
-  {
     title: 'range rat',
     description: 'golf incremental video game, built with agents',
     timelineDescription:

@@ -94,7 +94,7 @@ export default function ProjectsPage() {
           ) : null}
         </div>
         <p className="projects-intro">
-          RL environments, agent evals, and the tools around them. The longer note is{' '}
+          RL environments, agents, and the tools around them. The longer note is{' '}
           <Link to="/projects/agent-research-loops">agent research loops</Link>
           . More on{' '}
           <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">

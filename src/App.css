@@ -605,6 +605,34 @@ section {
     --block-gap: 2.25rem;
   }
 
+  /* Header: one row, five links spread edge to edge, no dot separators.
+     The theme toggle keeps its own slot on the right. */
+  :root {
+    --nav-pad-y: 0.85rem;
+  }
+
+  .landing-nav-inner {
+    padding-left: var(--shell-pad);
+    padding-right: calc(var(--shell-pad) + 2.5rem + env(safe-area-inset-right));
+  }
+
+  .nav {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0;
+    /* Scales down on narrow phones so all five always fit */
+    font-size: clamp(13px, 4.1vw, 16px);
+    line-height: 1.9;
+  }
+
+  .nav .nav-separator {
+    display: none;
+  }
+
+  .nav .nav-link {
+    white-space: nowrap;
+  }
+
   .App_mainColumn.landing {
     padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
