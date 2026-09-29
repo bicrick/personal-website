@@ -1,11 +1,11 @@
 {
   "/": {
     "ogTitle": "bicrick",
-    "seoTitle": "bicrick - Patrick Brown | Agent-First Engineer",
-    "description": "Patrick Brown. Agent-first engineer in Austin, TX.",
-    "keywords": "bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin",
+    "seoTitle": "bicrick - Patrick Brown | Data Engineer II",
+    "description": "Patrick Brown. Data Engineer II building agents, RL environments, and data platforms. QWOP world record 45.167s. Relocating to San Francisco.",
+    "keywords": "bicrick, Patrick Brown, Data Engineer II, AI, Agents, Reinforcement Learning, Machine Learning, GCP, AWS, Austin, HEB, UT Austin",
     "imagePath": "/og/home-1200x630.jpg",
-    "imageAlt": "Patrick Brown, agent-first engineer",
+    "imageAlt": "Patrick Brown, Data Engineer II",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "website"
@@ -13,7 +13,7 @@
   "/career": {
     "ogTitle": "career",
     "seoTitle": "Career - bicrick",
-    "description": "Computer engineering and the AI masters at UT Austin, then data engineering at H-E-B.",
+    "description": "Data Engineer II at H-E-B. UT Austin B.S. ECE 3.87 and M.S. AI 3.84.",
     "keywords": "bicrick, Patrick Brown, Career, UT Austin, AI Masters, H-E-B, data engineer",
     "imagePath": "/og/about-1200x630.jpg",
     "imageAlt": "Patrick Brown",
@@ -34,8 +34,8 @@
   },
   "/about": {
     "ogTitle": "about",
-    "seoTitle": "About bicrick - Patrick Brown | Data Engineer",
-    "description": "Data engineer at H-E-B. Austin, TX.",
+    "seoTitle": "About bicrick - Patrick Brown | Data Engineer II",
+    "description": "Data Engineer II at H-E-B. Austin, TX. Builds with Cursor and Claude Code.",
     "keywords": "bicrick, Patrick Brown, About, Data Engineer, ML Data Prep, GCP, AWS, Austin, HEB, UT Austin, AI Masters",
     "imagePath": "/og/about-1200x630.jpg",
     "imageAlt": "Patrick Brown with his dog",
@@ -45,9 +45,9 @@
   },
   "/projects": {
     "ogTitle": "projects",
-    "seoTitle": "Projects by bicrick - Software Development Portfolio",
-    "description": "Software by bicrick.",
-    "keywords": "bicrick, Patrick Brown, Projects, Portfolio, Software Development, docprep, AI, Machine Learning",
+    "seoTitle": "Projects by bicrick - RL environments, agents, evals",
+    "description": "QWOP world record, cart-pole research loops, Monocle, and eval harnesses.",
+    "keywords": "bicrick, Patrick Brown, Projects, QWOP, RL, agents, evals, Monocle, Machine Learning",
     "imagePath": "/og/projects-simple-1200x630.jpg",
     "imageAlt": "projects by bicrick",
     "imageWidth": 1200,
@@ -68,7 +68,7 @@
   "/heb": {
     "ogTitle": "data engineering at h-e-b",
     "seoTitle": "data engineering at h-e-b - bicrick",
-    "description": "The control room for data engineering at H-E-B. AWS to GCP, Confluence RAG before Rovo, agents in the loop.",
+    "description": "The control room for data engineering at H-E-B. 10+ teams, 100+ users. AWS to GCP, Confluence RAG before Rovo.",
     "keywords": "bicrick, Patrick Brown, H-E-B, data engineering, dashboard, BigQuery, GCP, Confluence",
     "imagePath": "/og/about-1200x630.jpg",
     "imageAlt": "data engineering at h-e-b",
@@ -149,6 +149,72 @@
     "keywords": "bicrick, Patrick Brown, docprep, Microsoft Office, plaintext extractor, AI documents, PyWebView, React",
     "imagePath": "/og/docprep-1200x630.jpg",
     "imageAlt": "docprep",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/monocle": {
+    "ogTitle": "monocle",
+    "seoTitle": "monocle - restyle the live tab with Cursor CLI - bicrick",
+    "description": "Chrome extension that restyles the live tab using your local Cursor CLI.",
+    "keywords": "bicrick, Patrick Brown, monocle, Cursor, Chrome extension, agents",
+    "imagePath": "/og/monocle-1200x630.jpg",
+    "imageAlt": "monocle",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/mcpixel": {
+    "ogTitle": "mcpixel",
+    "seoTitle": "MCPixel - local pixel-art pipeline - bicrick",
+    "description": "Generate, cut out, and snap sprites to a pixel grid. Used for Range Rat.",
+    "keywords": "bicrick, Patrick Brown, MCPixel, pixel art, Range Rat",
+    "imagePath": "/og/range-rat-1200x630.jpg",
+    "imageAlt": "mcpixel",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/cifar10-fast-mps": {
+    "ogTitle": "cifar10-fast-mps",
+    "seoTitle": "cifar10-fast-mps - airbench on Apple Silicon - bicrick",
+    "description": "Reimplementation of 94% on CIFAR-10 in seconds, ported to MPS.",
+    "keywords": "bicrick, Patrick Brown, CIFAR-10, airbench, PyTorch, MPS",
+    "imagePath": "/og/cifar10-1200x630.jpg",
+    "imageAlt": "cifar10-fast-mps",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/tracebench": {
+    "ogTitle": "tracebench",
+    "seoTitle": "tracebench - offline agent eval harness - bicrick",
+    "description": "Replay agent traces and score tool-error rate, task success, and keep rate.",
+    "keywords": "bicrick, Patrick Brown, tracebench, agent evals, traces",
+    "imagePath": "/og/tracebench-1200x630.jpg",
+    "imageAlt": "tracebench",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/trace2tasks": {
+    "ogTitle": "trace2tasks",
+    "seoTitle": "trace2tasks - RL tasks from agent traces - bicrick",
+    "description": "Mine Gymnasium tasks and reward heuristics from agent traces.",
+    "keywords": "bicrick, Patrick Brown, trace2tasks, RL, agent traces",
+    "imagePath": "/og/trace2tasks-1200x630.jpg",
+    "imageAlt": "trace2tasks",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/agent-research-loops": {
+    "ogTitle": "agent research loops",
+    "seoTitle": "agent research loops - bicrick",
+    "description": "A cron-driven agent that watches a training farm and enqueues the next experiment.",
+    "keywords": "bicrick, Patrick Brown, auto research, grok bot, RL, QWOP, cart-pole",
+    "imagePath": "/og/qwop-python-1200x630.jpg",
+    "imageAlt": "agent research loops",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

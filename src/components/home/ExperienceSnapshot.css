@@ -1,0 +1,77 @@
+.experience-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.experience-list li {
+  margin: 0;
+}
+
+.experience-row {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1.4fr) minmax(0, 0.8fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+}
+
+.experience-row:after {
+  display: none;
+}
+
+.experience-row:hover .experience-role,
+.experience-row:focus-visible .experience-role {
+  color: var(--link);
+}
+
+.experience-logo {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0.2rem;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  box-sizing: border-box;
+}
+
+.experience-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.experience-role {
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.experience-org,
+.experience-dates {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+}
+
+.experience-dates {
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .experience-row {
+    grid-template-columns: 2.1rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo role dates"
+      "logo org dates";
+  }
+
+  .experience-logo { grid-area: logo; }
+  .experience-role { grid-area: role; }
+  .experience-org { grid-area: org; }
+  .experience-dates { grid-area: dates; align-self: start; }
+}

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
 import CartPoleEmbed from '../components/CartPoleEmbed';
+import ResultTable from '../components/project/ResultTable';
+import FlowDiagram from '../components/project/FlowDiagram';
 
 function AutoResearch() {
   return (
@@ -57,8 +59,35 @@ function AutoResearch() {
       </p>
 
       <p>
-        The specific controller matters less to me than the loop around it. The same grok bot was still checking in every 15 minutes and changing the next experiment, and that is how the triple pendulum got stable enough to run in the browser. On a laptop it uses WebGPU. On a phone it falls back to workers. The frame above is that deployment, and you can mess with it. The code is in{' '}
+        The specific controller matters less to me than the loop around it. The same grok bot was still checking in every 15 minutes and changing the next experiment, and that is how the triple pendulum got stable enough to run in the browser. On a laptop it uses WebGPU. On a phone it falls back to workers. The frame above is that deployment, and you can mess with it.         The code is in{' '}
         <a href="https://github.com/bicrick/cart-pole-autoresearch" target="_blank" rel="noopener noreferrer">cart-pole-autoresearch</a>.
+      </p>
+
+      <h2>/ results</h2>
+
+      <ResultTable
+        caption="Browser MPPI profiles gated in Python. Lite is the phone path."
+        columns={['profile', 'samples', 'upright in 12.5s', '4096-sample replan']}
+        rows={[
+          ['full (WebGPU)', '4,096 / replan 4', '100%', '~3 ms on M2 Pro'],
+          ['full (workers)', '4,096 / replan 4', '100%', '~15–23 ms on 10 workers'],
+          ['lite', '2,048 / replan 8', '95%', 'about 4× less compute'],
+        ]}
+      />
+
+      <FlowDiagram
+        caption="Same grok-bot loop as qwop-python, pointed at a harder plant."
+        steps={[
+          { title: 'PPO hold', detail: 'pole starts near upright, bumpers on the track' },
+          { title: 'remove help', detail: 'longer track, farther initial states' },
+          { title: 'double', detail: 'bot retunes reward weights and learning rates' },
+          { title: 'triple / MPPI', detail: 'plan online, recover from a grab' },
+        ]}
+      />
+
+      <p>
+        Failure mode on PPO: a loose reward gets hacked. The policy finds a high score that is not the behavior you wanted. That is why the loop had to rewrite the next experiment after it had seen the run. The longer note is{' '}
+        <Link to="/projects/agent-research-loops">agent research loops</Link>.
       </p>
     </ProjectDetail>
   );

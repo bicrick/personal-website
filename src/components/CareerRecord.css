@@ -106,6 +106,42 @@
   color: var(--ink-soft);
 }
 
+.career-record-bullets {
+  margin: 0.55rem 0 0;
+  padding: 0 0 0 1.1rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.career-record-bullets li {
+  margin: 0 0 0.4rem;
+}
+
+.career-record-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.career-record-row.is-static {
+  cursor: default;
+}
+
+/* Desktop: every line stays on one line */
+@media (min-width: 761px) {
+  .career-record-title,
+  .career-record-meta,
+  .career-record-desc,
+  .career-record-bullets li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.career-record-row.is-static:hover .career-record-title {
+  color: var(--ink);
+}
+
 @media (max-width: 760px) {
   .page-section.career-page {
     max-width: 100%;

@@ -2,7 +2,7 @@ import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import HebMarkRow from '../components/heb/HebMarkRow';
-import HebShot from '../components/heb/HebShot';
+import HebArchitecture from '../components/heb/HebArchitecture';
 import HebToolLane from '../components/heb/HebToolLane';
 import '../components/heb/Heb.css';
 
@@ -31,31 +31,27 @@ function Heb() {
         I have been shipping it since May 2023. Hundreds of completed tickets. Two repositories still taking commits in the same week. I do not wait for a platform team to modernize the stack. I learn the next one and move the product onto it.
       </p>
 
-      <HebShot
-        label="home / the control room"
-        note="screenshot of the live home page, no production numbers"
-      />
-
       <h2>/ impact</h2>
 
       <p>
-        Before this app, workflow health lived in six tools and a Slack thread. I pulled failed runs, SLAs, extracts, Tableau refreshes, Kafka dependencies, and on-call into one product. A team can filter to its own world. A lead can see the whole platform. That is the difference between hunting and operating.
+        Before this app, workflow health lived in six tools and a Slack thread. I pulled failed runs, SLAs, extracts, Tableau refreshes, Kafka dependencies, and on-call into one product. The first version on AWS EKS was adopted by 10+ teams and 100+ users. A team can filter to its own world. A lead can see the whole platform. That is the difference between hunting and operating.
       </p>
 
       <p>
-        I also built the first version of asking the wiki instead of searching it. A chat box, a vector store, Confluence behind it. This was 2024, before Rovo. If you wanted an answer from internal docs, you asked the thing I wired up.
+        I also built the first version of asking the wiki instead of searching it. A chat box, a vector store, Confluence behind it, with autonomous re-embedding. This was 2024, before Rovo. If you wanted an answer from internal docs, you asked the thing I wired up.
       </p>
 
-      <HebShot
-        label="chat / confluence rag"
-        note="the 2024 chat UI. docs in, answer out. before rovo."
-      />
+      <p>
+        As Data Engineer II I put a Kafka event bus under the product so Composer, Argo, and Databricks could publish pipeline events into one place. A dependency service on that bus tracks lineage across platforms. Screenshots of the live UI stay internal. The architecture is public.
+      </p>
 
       <h2>/ the stack</h2>
 
       <p>
         The product is a React UI on a Python API. It started on AWS, in containers, on a cluster. It is moving to GCP: Cloud Run, Cloud SQL, Firestore for live status, BigQuery for table watermarks, Composer for the DAGs. Kafka is the bus either way. I write the Terraform. I write the pages. I write the collectors that feed them.
       </p>
+
+      <HebArchitecture />
 
       <HebMarkRow
         ids={[
@@ -84,11 +80,6 @@ function Heb() {
       <p>
         In 2025 I wrote the plan to leave the old cluster. One container on EKS was fine until it was not. The rewrite is a second repo, stood up that September. 2026 is the year the new plant started taking real load: Composer events, ingest history, BigQuery watermarks, live status on Firestore. I am still keeping the old dashboard alive while I cut the new one over. That is the hard part. Anyone can start a greenfield. Fewer people keep both in the air.
       </p>
-
-      <HebShot
-        label="gcp / composer and watermarks"
-        note="the new dashboard. composer runs, ingest, bigquery watermarks."
-      />
 
       <p>
         Last month I took Teradata out of the old UI and put an SLA page on the new one. Same week. That is how I work. Deprecate the dying thing. Ship the next one. Do not leave a hole in the middle.

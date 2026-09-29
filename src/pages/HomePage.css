@@ -1,0 +1,44 @@
+.page-section.home-section.is-dossier {
+  justify-content: flex-start;
+  padding-top: var(--page-pad-top);
+  padding-bottom: var(--page-pad-bottom);
+}
+
+.home-block {
+  margin-top: 2.4rem;
+}
+
+.home-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.home-block-head h2 {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.home-copy .home-proof {
+  margin-top: 0.85rem;
+}
+
+.home-heatmap {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--rule);
+}
+
+@media (max-width: 800px) {
+  .page-section.home-section.is-dossier {
+    justify-content: flex-start;
+    padding-top: var(--page-pad-top);
+    padding-bottom: var(--page-pad-bottom);
+  }
+}

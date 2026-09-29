@@ -1,11 +1,17 @@
 import React from 'react';
 import TypewriterHeading from '../components/TypewriterHeading';
+import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
+import HighlightStrip from '../components/home/HighlightStrip';
+import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
+import FeaturedProjects from '../components/home/FeaturedProjects';
+import HomeFooter from '../components/home/HomeFooter';
+import './HomePage.css';
 
 export default function HomePage() {
   return (
     <section
       id="home"
-      className="page-section home-section"
+      className="page-section home-section is-dossier"
       aria-label="home"
     >
       <div className="page-section-inner home-inner">
@@ -23,16 +29,19 @@ export default function HomePage() {
               Patrick Brown
             </TypewriterHeading>
             <p className="home-bio">
-              Agent-first engineer specializing in machine learning.
-              Austin, TX.
+              Engineer building agents, RL environments, and data platforms.
+              QWOP world record 45.167s.
             </p>
             <p className="home-bio-sub">
-              Currently at{' '}
+              Data Engineer II at{' '}
               <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>
-              .
+              . Austin, TX. Relocating to San Francisco.
             </p>
+            <HighlightStrip />
             <div className="home-links">
               <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
+              <span className="nav-separator">·</span>
+              <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
               <span className="nav-separator">·</span>
               <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">resume</a>
               <span className="nav-separator">·</span>
@@ -40,6 +49,20 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <ExperienceSnapshot />
+        <FeaturedProjects />
+        <section className="home-block" aria-label="how I build">
+          <div className="home-block-head">
+            <h2>how I build</h2>
+            <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
+              cursor profile
+            </a>
+          </div>
+          <figure className="home-heatmap">
+            <CursorActivityHeatmap />
+          </figure>
+        </section>
+        <HomeFooter />
       </div>
     </section>
   );

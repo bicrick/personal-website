@@ -1,0 +1,18 @@
+.home-footer {
+  margin-top: 0.5rem;
+}
+
+.home-footer-lead {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.98em;
+}
+
+.home-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: var(--ink-muted);
+}

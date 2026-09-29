@@ -12,6 +12,12 @@ import Notepadable from './projects/Notepadable';
 import GolfIncremental from './projects/GolfIncremental';
 import AutoResearch from './projects/AutoResearch';
 import Heb from './projects/Heb';
+import Monocle from './projects/Monocle';
+import MCPixel from './projects/MCPixel';
+import Cifar10FastMps from './projects/Cifar10FastMps';
+import Tracebench from './projects/Tracebench';
+import Trace2Tasks from './projects/Trace2Tasks';
+import AgentResearchLoops from './projects/AgentResearchLoops';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
@@ -35,6 +41,12 @@ function App() {
         <Route path="/projects/notepadable" element={<Notepadable />} />
         <Route path="/projects/golf-incremental" element={<GolfIncremental />} />
         <Route path="/projects/auto-research" element={<AutoResearch />} />
+        <Route path="/projects/monocle" element={<Monocle />} />
+        <Route path="/projects/mcpixel" element={<MCPixel />} />
+        <Route path="/projects/cifar10-fast-mps" element={<Cifar10FastMps />} />
+        <Route path="/projects/tracebench" element={<Tracebench />} />
+        <Route path="/projects/trace2tasks" element={<Trace2Tasks />} />
+        <Route path="/projects/agent-research-loops" element={<AgentResearchLoops />} />
         <Route path="/heb" element={<Heb />} />
         <Route path="/build" element={<Navigate to="/about" replace />} />
         <Route element={<SiteLayout />}>

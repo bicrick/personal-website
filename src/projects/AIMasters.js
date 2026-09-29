@@ -1,5 +1,7 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import ProjectFigure from '../components/project/ProjectFigure';
+import ProjectPair from '../components/project/ProjectPair';
 
 function AIMasters() {
   return (
@@ -10,16 +12,13 @@ function AIMasters() {
       linkLabel="see program info"
       abstract="A high-level tour of what I picked up in UT Austin's AI master's. Data curation and feature selection. Supervised and unsupervised learning. The full pipeline of building a model end to end. Hands-on PyTorch for classical ML, deep learning, and transformers. LLM basics. Reinforcement learning."
     >
-      <img
+      <ProjectFigure
         src={`${process.env.PUBLIC_URL}/images/ai-masters/ut-water.gif`}
         alt="UT Austin MSAI"
-        width="1200"
-        height="675"
-        style={{ width: '100%', marginBottom: '0.5rem' }}
+        width={1200}
+        height={675}
+        caption="Motivations, coursework, and takeaways from my time at UT Austin"
       />
-      <p className="project-caption">
-        Motivations, coursework, and takeaways from my time at UT Austin
-      </p>
 
       <h2>/ motivations</h2>
       
@@ -33,88 +32,82 @@ function AIMasters() {
 
       <h2>/ notable projects</h2>
 
-      <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>Deep Learning: Multi-task Road Detection</h3>
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-          <div style={{ width: '50%' }}>
-            <img 
-              src={`${process.env.PUBLIC_URL}/images/ai-masters/00001_im.jpg`} 
-              alt="Mario Kart racing game input" 
-              width="400"
-              height="300"
-              style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
-            />
-            <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
-              Base Mario Kart image
-            </p>
-          </div>
-          <div style={{ width: '50%' }}>
-            <img 
-              src={`${process.env.PUBLIC_URL}/images/ai-masters/00002_depth.png`} 
-              alt="Depth map prediction" 
-              width="400"
-              height="300"
-              style={{ width: '100%', objectFit: 'contain', marginBottom: '0.5rem' }}
-            />
-            <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>
-              Predicted depth map
-            </p>
-          </div>
-        </div>
-        <p style={{ marginBottom: '0.75rem' }}>
+      <div className="project-case">
+        <h3>Deep Learning: Multi-task Road Detection</h3>
+        <ProjectPair>
+          <ProjectFigure
+            src={`${process.env.PUBLIC_URL}/images/ai-masters/00001_im.jpg`}
+            alt="Mario Kart racing game input"
+            width={400}
+            height={300}
+            contain
+            caption="Base Mario Kart image"
+          />
+          <ProjectFigure
+            src={`${process.env.PUBLIC_URL}/images/ai-masters/00002_depth.png`}
+            alt="Depth map prediction"
+            width={400}
+            height={300}
+            contain
+            caption="Predicted depth map"
+          />
+        </ProjectPair>
+        <p>
           Built a U-Net style architecture for autonomous driving that simultaneously predicts depth and road segmentation. The model takes Mario Kart-style racing game footage and outputs both a depth map and lane boundary segmentation mask.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
+        <p>
           Used an encoder-decoder architecture with skip connections. The encoder progressively downsamples the image while increasing channels. The decoder upsamples back to full resolution. Skip connections between encoder and decoder help preserve fine boundary details that would otherwise be lost in the bottleneck.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
+        <p>
           Trained on SuperTuxKart racing data with two loss functions - cross-entropy for segmentation and absolute error for depth. The model had to handle class imbalance since most pixels are background. Used IoU metric instead of raw accuracy. Final model achieved IoU over 0.75 and depth MAE under 0.05 on both overall pixels and lane boundaries specifically.
         </p>
       </div>
 
-      <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>Advances in Deep Learning: Model Compression</h3>
-        <img 
-          src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`} 
-          alt="Memory reduction through compression techniques" 
-          width="1200"
-          height="600"
-          style={{ width: '75%', marginBottom: '0.5rem', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}
+      <div className="project-case">
+        <h3>Advances in Deep Learning: Model Compression</h3>
+        <ProjectFigure
+          src={`${process.env.PUBLIC_URL}/images/ai-masters/memory_compression_visualization.png`}
+          alt="Memory reduction through compression techniques"
+          width={1200}
+          height={600}
+          caption="Memory footprint comparison: QLoRA achieves 4.5x compression while 4-bit quantization reaches 6.3x reduction"
         />
-        <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
-          Memory footprint comparison: QLoRA achieves 4.5x compression while 4-bit quantization reaches 6.3x reduction
-        </p>
-        <p style={{ marginBottom: '0.75rem' }}>
+        <p>
           Implemented memory-efficient training techniques for large neural networks. Built half-precision networks, LoRA adapters, 4-bit quantization, and QLoRA from scratch. The goal was to train and run large models on limited hardware without sacrificing accuracy.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
+        <p>
           Started with a 73MB network and implemented four compression approaches. Half-precision gave 50% memory reduction. LoRA added trainable low-rank adapters to frozen half-precision weights. 4-bit quantization used custom block quantization to achieve 7x memory reduction. QLoRA combined both techniques for maximum efficiency.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
-          The quantization implementation used block-wise quantization where groups of weights share a normalization factor stored in float16. Each weight gets packed into 4 bits. Had to implement custom loading hooks since PyTorch doesn't natively support this format. The quantized weights remain frozen during training - for trainability, QLoRA adds full-precision LoRA adapters on top of the frozen 4-bit base.
+        <p>
+          The quantization implementation used block-wise quantization where groups of weights share a normalization factor stored in float16. Each weight gets packed into 4 bits. Had to implement custom loading hooks since PyTorch doesn&apos;t natively support this format. The quantized weights remain frozen during training - for trainability, QLoRA adds full-precision LoRA adapters on top of the frozen 4-bit base.
+        </p>
+        <p>
+          A sanitized from-scratch implementation lives in{' '}
+          <a href="https://github.com/bicrick/scratch-qlora" target="_blank" rel="noopener noreferrer">bicrick/scratch-qlora</a>.
         </p>
       </div>
 
-      <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ marginBottom: '0.5rem' }}>NLP: Transformer Language Model from Scratch</h3>
-        <img 
-          src={`${process.env.PUBLIC_URL}/images/ai-masters/positional_encoding_comparison.png`} 
-          alt="Impact of positional encodings on self-attention" 
-          width="1200"
-          height="600"
-          style={{ width: '100%', marginBottom: '0.5rem' }}
+      <div className="project-case">
+        <h3>NLP: Transformer Language Model from Scratch</h3>
+        <ProjectFigure
+          src={`${process.env.PUBLIC_URL}/images/ai-masters/positional_encoding_comparison.png`}
+          alt="Impact of positional encodings on self-attention"
+          width={1200}
+          height={600}
+          caption="Adding positional encodings teaches the model where to look. Instead of treating input as a bag of characters, it learns to attend precisely to previous positions containing the same character."
         />
-        <p style={{ fontStyle: 'italic', color: 'var(--ink-muted)', fontSize: '0.85rem', textAlign: 'center', marginBottom: '1rem' }}>
-          Adding positional encodings teaches the model where to look. Instead of treating input as a bag of characters, it learns to attend precisely to previous positions containing the same character.
-        </p>
-        <p style={{ marginBottom: '0.75rem' }}>
+        <p>
           Implemented a complete transformer architecture without using any pre-built attention layers. Built self-attention, positional encodings, and causal masking from the ground up. Trained it on two tasks - a letter counting task and character-level language modeling.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
+        <p>
           The letter counting task was designed to test if the model could learn to attend to relevant context. Given a string, predict how many times each character appeared before that position. This requires the model to look back through the sequence and count. Without positional encodings the model treats input as a bag of characters. With positional encodings it can distinguish position and achieved 98% accuracy.
         </p>
-        <p style={{ marginBottom: '0.25rem' }}>
-          For language modeling, trained on the text8 dataset (100k characters from Wikipedia). Implemented causal masking so tokens can't attend to future positions. The model predicts the next character at each position simultaneously. Used perplexity as the evaluation metric. Final model achieved perplexity under 7, which corresponds to reasonable compression and generation quality for a character-level model.
+        <p>
+          For language modeling, trained on the text8 dataset (100k characters from Wikipedia). Implemented causal masking so tokens can&apos;t attend to future positions. The model predicts the next character at each position simultaneously. Used perplexity as the evaluation metric. Final model achieved perplexity under 7, which corresponds to reasonable compression and generation quality for a character-level model.
+        </p>
+        <p>
+          A sanitized from-scratch implementation lives in{' '}
+          <a href="https://github.com/bicrick/scratch-transformer" target="_blank" rel="noopener noreferrer">bicrick/scratch-transformer</a>.
         </p>
       </div>
 
@@ -173,7 +166,11 @@ function AIMasters() {
       <h2>/ repository</h2>
 
       <p>
-        The code for this coursework is hosted in a private <a href="https://github.com/bicrick/MSAI" target="_blank" rel="noopener noreferrer">GitHub repository</a>. It stays private for academic integrity reasons. Access is available upon request. Email patrickbrownai@gmail.com for inquiries.
+        Full coursework stays in a private repository for academic integrity. Public, assignment-free reimplementations of the transformer and QLoRA work are in{' '}
+        <a href="https://github.com/bicrick/scratch-transformer" target="_blank" rel="noopener noreferrer">scratch-transformer</a>
+        {' '}and{' '}
+        <a href="https://github.com/bicrick/scratch-qlora" target="_blank" rel="noopener noreferrer">scratch-qlora</a>.
+        Email patrickbrownai@gmail.com if you need the private coursework.
       </p>
 
       <p style={{ marginTop: '2rem', fontSize: '0.9rem' }}>

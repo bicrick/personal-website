@@ -18,9 +18,20 @@ function CareerRow({ item }) {
         {item.description ? (
           <p className="career-record-desc">{item.description}</p>
         ) : null}
+        {item.bullets ? (
+          <ul className="career-record-bullets">
+            {item.bullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </>
   );
+
+  if (!item.href) {
+    return <div className="career-record-row is-static">{body}</div>;
+  }
 
   if (item.external) {
     return (

@@ -102,7 +102,7 @@ def make_home():
     split_card(
         PUBLIC / "about" / "headshot.jpg",
         "Patrick Brown",
-        "Agent-first engineer · Austin, TX",
+        "Data Engineer II · Austin, TX",
         "home-1200x630.jpg",
     )
 
@@ -116,7 +116,7 @@ def make_about():
     x, y = 668, 190
     draw.text((x, y), "bicrick", font=font(FONT_BOLD, 28), fill=INK)
     draw.text((x, y + 46), "about", font=font(FONT_BOLD, 64), fill=INK)
-    draw.text((x, y + 130), "Data engineer at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
+    draw.text((x, y + 130), "Data Engineer II at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
     draw.text((x, 360), "Golf, puzzles, and building\nwith coding agents.", font=font(FONT_REG, 24), fill=MUTED)
     save_jpg(canvas, "about-1200x630.jpg")
 
@@ -184,6 +184,30 @@ def make_project_cards():
         "ai masters",
         "UT Austin MSAI notes",
         "ai-masters-1200x630.jpg",
+    )
+    split_card(
+        PUBLIC / "images" / "monocle" / "wordle-after.png",
+        "monocle",
+        "restyle the live tab",
+        "monocle-1200x630.jpg",
+    )
+    split_card(
+        PUBLIC / "images" / "cifar10" / "cifar10-1200x600.png",
+        "cifar10-fast-mps",
+        "airbench on Apple Silicon",
+        "cifar10-1200x630.jpg",
+    )
+    split_card(
+        PUBLIC / "images" / "tracebench" / "tracebench-1200x600.png",
+        "tracebench",
+        "offline agent evals",
+        "tracebench-1200x630.jpg",
+    )
+    split_card(
+        PUBLIC / "images" / "tracebench" / "trace2tasks-1200x600.png",
+        "trace2tasks",
+        "RL tasks from traces",
+        "trace2tasks-1200x630.jpg",
     )
 
 

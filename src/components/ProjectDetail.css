@@ -188,6 +188,10 @@
   margin: 32px 0;
 }
 
+.project-case {
+  margin: 0 0 3rem;
+}
+
 .project-figure {
   margin: 32px 0 20px;
 }
@@ -223,6 +227,10 @@
 
 .project-figure img {
   margin: 0;
+}
+
+.project-figure img.is-contain {
+  object-fit: contain;
 }
 
 .project-figure figcaption,

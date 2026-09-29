@@ -1,0 +1,16 @@
+.project-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.project-pair .project-figure {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .project-pair {
+    grid-template-columns: 1fr;
+  }
+}

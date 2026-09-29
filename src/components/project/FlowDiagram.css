@@ -1,0 +1,51 @@
+.flow-diagram {
+  margin: 8px 0 28px;
+}
+
+.flow-diagram ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: flow;
+}
+
+.flow-diagram li {
+  counter-increment: flow;
+  padding: 0.85rem 0.9rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--code-wash);
+}
+
+.flow-diagram li strong {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+
+.flow-diagram li strong::before {
+  content: counter(flow) ". ";
+  color: var(--ink-muted);
+}
+
+.flow-diagram li span {
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.flow-diagram figcaption {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  margin: 8px 0 0;
+  font-style: italic;
+}

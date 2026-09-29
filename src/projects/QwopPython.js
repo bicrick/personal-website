@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
 import ProjectYoutubeEmbed from '../components/ProjectYoutubeEmbed';
 import QwopPreviewEmbed from '../components/QwopPreviewEmbed';
+import BarChart from '../components/project/BarChart';
+import ResultTable from '../components/project/ResultTable';
+import FlowDiagram from '../components/project/FlowDiagram';
 
 function QwopPython() {
   return (
@@ -108,6 +111,51 @@ function QwopPython() {
 
       <p>
         I also have a <Link to="/demos/qwop">live demo</Link> where you can mess around with a recording from the Python gym.
+      </p>
+
+      <h2>/ results</h2>
+
+      <p>
+        The gym is the environment. The record is the proof. The numbers below are the same ones from the writeup: a chromedriver wrapper was too slow to hunt a world record, so the environment had to become Python.
+      </p>
+
+      <BarChart
+        unit="it/s"
+        caption="Single-process throughput. Four Python envs in parallel hit about 40,000 it/s."
+        rows={[
+          { label: 'browser gym', value: 300, display: '100–500' },
+          { label: 'python env', value: 10000, display: '~10,000' },
+          { label: '4× python', value: 40000, display: '~40,000' },
+        ]}
+      />
+
+      <ResultTable
+        caption="Ablations that actually moved the time. Literal keypress imitation faceplanted; a tunable gait metric did not."
+        columns={['setup', 'what happened']}
+        rows={[
+          ['virgin PPO', 'reliable finishers, far from the record'],
+          ['literal WR keypress clone', 'faceplanted at the start'],
+          ['tunable gait metric', 'learned the stride shape, then went under the record in sim'],
+          ['no opening fine-tune', 'Python policy faceplanted on HTML5 physics'],
+          ['opening fine-tune + transfer', '45.167s on the official browser game'],
+        ]}
+      />
+
+      <h2>/ the research loop</h2>
+
+      <FlowDiagram
+        caption="A grok bot checked the farm every 15 minutes. I watched TensorBoard."
+        steps={[
+          { title: 'farm', detail: 'GCP VMs running parallel Python envs' },
+          { title: 'observe', detail: 'bot reads curves, kills plateaued policies' },
+          { title: 'shape', detail: 'swap hyperparameters and reward weights' },
+          { title: 'enqueue', detail: 'next experiment starts without a human in the loop' },
+        ]}
+      />
+
+      <p>
+        That loop is the product. The gym is an RL environment built by reverse-engineering a 13,000-line minified game with coding agents. The same pattern is written up in the{' '}
+        <Link to="/projects/agent-research-loops">agent research loops</Link> note.
       </p>
 
       <h2>/ conclusions</h2>

@@ -10,7 +10,7 @@ function StructuredData() {
     "url": "https://bicrick.com",
     "image": "https://www.bicrick.com/og/home-1200x630.jpg",
     "email": "mailto:patrickbrownai@gmail.com",
-    "jobTitle": "Data Engineer",
+    "jobTitle": "Data Engineer II",
     "worksFor": {
       "@type": "Organization",
       "name": "H-E-B"
@@ -34,13 +34,13 @@ function StructuredData() {
     ],
     "knowsAbout": [
       "Data Engineering",
-      "Machine Learning Data Preparation",
+      "Reinforcement Learning",
+      "Agent Evaluation",
+      "Machine Learning",
       "ML Pipelines",
-      "Analytics Dashboards",
       "Google Cloud Platform",
       "Amazon Web Services",
       "Artificial Intelligence",
-      "Software Development",
       "Python",
       "React"
     ]

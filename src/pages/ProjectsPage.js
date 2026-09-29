@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import ProjectTile from '../components/ProjectTile';
 import ProjectTimeline from '../components/ProjectTimeline';
+import { listedProjects } from '../constants/projects';
 
 const SHOW_PROJECT_VIEW_SELECTOR = false;
 
@@ -71,87 +73,7 @@ export default function ProjectsPage() {
   const [viewMode, setViewMode] = useState(getDefaultView);
   const [expandedKey, setExpandedKey] = useState(null);
   const isTimeline = viewMode === 'timeline';
-
-  const projects = [
-    {
-      title: 'cart-pole-autoresearch',
-      description: 'agentic loops on cart-pole and pendulums',
-      timelineDescription:
-        'Agentic loops on cart-pole, double, triple, and quadruple pendulums running in the browser.',
-      livePreview: 'cartpole',
-      blogLink: '/projects/auto-research',
-      appLink: 'https://cart-pole-autoresearch.vercel.app/#triple',
-      appLabel: 'demo',
-      relevanceRank: 3,
-      dateRank: 1,
-      date: 'September 2026',
-    },
-    {
-      title: 'range rat',
-      description: 'golf incremental video game, built with agents',
-      timelineDescription:
-        'A golf incremental video game built with coding agents. Godot gameplay plus gen-ai sprites and music.',
-      image: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-preview.gif`,
-      blogLink: '/projects/golf-incremental',
-      appLink: 'https://golf.bicrick.com',
-      appLabel: 'play',
-      relevanceRank: 4,
-      dateRank: 3,
-      date: 'August 2026',
-    },
-    {
-      title: 'notepadable',
-      description: 'text editor encoded in the URL',
-      timelineDescription:
-        'A minimalist text editor that encodes the whole document into the URL. Share a link, share the doc.',
-      image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`,
-      imageFit: 'contain',
-      blogLink: '/projects/notepadable',
-      appLink: 'https://notepadable.com',
-      relevanceRank: 5,
-      dateRank: 4,
-      date: 'March 2026',
-    },
-    {
-      title: 'qwop-python',
-      description: 'QWOP gym in pure Python + grok bot',
-      timelineDescription:
-        'A QWOP gym written in pure Python, used with an autonomous grok bot research loop to achieve a world record of 45.167 seconds.',
-      livePreview: 'qwop',
-      blogLink: '/projects/qwop-python',
-      appLink: '/demos/qwop',
-      appLabel: 'demo',
-      relevanceRank: 1,
-      dateRank: 2,
-      date: 'September 2026',
-    },
-    {
-      title: 'gd-visualizer',
-      description: 'compare optimizer performance in 3d',
-      timelineDescription:
-        'A 3D race track for gradient descent. Compare Batch, Momentum, Adam, and SGD on the same loss landscape.',
-      image: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`,
-      blogLink: '/projects/gd-visualizer',
-      appLink: 'https://gd.bicrick.com',
-      relevanceRank: 6,
-      dateRank: 5,
-      date: 'November 2025',
-    },
-    {
-      title: 'docprep',
-      description: 'msoffice plaintext extractor',
-      timelineDescription:
-        'Extract clean plaintext from Microsoft Office docs. Built for feeding documents into LLM workflows.',
-      image: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.gif`,
-      blogLink: '/projects/docprep',
-      appLink: 'https://docprep.site',
-      relevanceRank: 7,
-      dateRank: 6,
-      date: 'December 2025',
-    },
-  ];
-
-  const sortedProjects = [...projects].sort((a, b) => a.relevanceRank - b.relevanceRank);
+  const sortedProjects = listedProjects();
 
   return (
     <section
@@ -172,7 +94,9 @@ export default function ProjectsPage() {
           ) : null}
         </div>
         <p className="projects-intro">
-          These are some of the projects I am proud of. I have much more on my{' '}
+          RL environments, agent evals, and the tools around them. The longer note is{' '}
+          <Link to="/projects/agent-research-loops">agent research loops</Link>
+          . More on{' '}
           <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
