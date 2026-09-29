@@ -15,8 +15,8 @@
 
 .career-record-row {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
-  gap: 1.15rem 1.35rem;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 1.15rem 1.25rem;
   align-items: start;
   padding: 1.15rem 0;
   border-bottom: 1px solid var(--rule);
@@ -40,8 +40,8 @@
 }
 
 .career-record-media {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   overflow: hidden;
   border: 1px solid var(--rule);
   background: var(--surface);
@@ -59,7 +59,7 @@
   background: var(--card-wash);
   display: grid;
   place-items: center;
-  padding: 0.85rem;
+  padding: 0.5rem;
   box-sizing: border-box;
 }
 
@@ -71,11 +71,20 @@
 
 .career-record-copy {
   min-width: 0;
-  padding-top: 0.15rem;
+}
+
+.career-record-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 1.35rem;
+  margin: 0 0 0.45rem;
 }
 
 .career-record-title {
-  margin: 0 0 0.35rem;
+  margin: 0;
+  min-width: 0;
   font-family: var(--font-pixel);
   font-size: 15px;
   font-weight: 400;
@@ -90,7 +99,8 @@
 }
 
 .career-record-meta {
-  margin: 0 0 0.55rem;
+  margin: 0;
+  flex-shrink: 0;
   font-family: var(--font-pixel);
   font-size: 12px;
   font-weight: 400;
@@ -153,18 +163,23 @@
 
 @media (max-width: 560px) {
   .career-record-row {
-    grid-template-columns: 4.25rem minmax(0, 1fr);
-    gap: 0.9rem 1rem;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.9rem 0.9rem;
     padding: 1rem 0;
   }
 
   .career-record-media {
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .career-record-media.is-logo {
-    padding: 0.65rem;
+    padding: 0.4rem;
+  }
+
+  .career-record-head {
+    flex-direction: column;
+    gap: 0.2rem;
   }
 
   .career-record-title {

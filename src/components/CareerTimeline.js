@@ -13,8 +13,10 @@ function CareerRow({ item }) {
         <img src={item.image} alt="" />
       </div>
       <div className="career-record-copy">
-        <h3 className="career-record-title">{item.title}</h3>
-        {item.date ? <p className="career-record-meta">{item.date}</p> : null}
+        <div className="career-record-head">
+          <h3 className="career-record-title">{item.title}</h3>
+          {item.date ? <p className="career-record-meta">{item.date}</p> : null}
+        </div>
         {item.description ? (
           <p className="career-record-desc">{item.description}</p>
         ) : null}

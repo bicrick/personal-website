@@ -164,46 +164,13 @@
     "imageHeight": 630,
     "type": "article"
   },
-  "/projects/mcpixel": {
-    "ogTitle": "mcpixel",
-    "seoTitle": "MCPixel - local pixel-art pipeline - bicrick",
-    "description": "Generate, cut out, and snap sprites to a pixel grid. Used for Range Rat.",
-    "keywords": "bicrick, Patrick Brown, MCPixel, pixel art, Range Rat",
-    "imagePath": "/og/range-rat-1200x630.jpg",
-    "imageAlt": "mcpixel",
-    "imageWidth": 1200,
-    "imageHeight": 630,
-    "type": "article"
-  },
-  "/projects/cifar10-fast-mps": {
-    "ogTitle": "cifar10-fast-mps",
-    "seoTitle": "cifar10-fast-mps - airbench on Apple Silicon - bicrick",
-    "description": "Reimplementation of 94% on CIFAR-10 in seconds, ported to MPS.",
-    "keywords": "bicrick, Patrick Brown, CIFAR-10, airbench, PyTorch, MPS",
-    "imagePath": "/og/cifar10-1200x630.jpg",
-    "imageAlt": "cifar10-fast-mps",
-    "imageWidth": 1200,
-    "imageHeight": 630,
-    "type": "article"
-  },
   "/projects/tracebench": {
     "ogTitle": "tracebench",
-    "seoTitle": "tracebench - offline agent eval harness - bicrick",
-    "description": "Replay agent traces and score tool-error rate, task success, and keep rate.",
-    "keywords": "bicrick, Patrick Brown, tracebench, agent evals, traces",
+    "seoTitle": "tracebench - offline agent evals and RL tasks from traces - bicrick",
+    "description": "Replay agent traces, score tool-error rate, task success, and keep rate, and mine RL tasks from failures.",
+    "keywords": "bicrick, Patrick Brown, tracebench, trace2tasks, agent evals, RL environments, traces",
     "imagePath": "/og/tracebench-1200x630.jpg",
     "imageAlt": "tracebench",
-    "imageWidth": 1200,
-    "imageHeight": 630,
-    "type": "article"
-  },
-  "/projects/trace2tasks": {
-    "ogTitle": "trace2tasks",
-    "seoTitle": "trace2tasks - RL tasks from agent traces - bicrick",
-    "description": "Mine Gymnasium tasks and reward heuristics from agent traces.",
-    "keywords": "bicrick, Patrick Brown, trace2tasks, RL, agent traces",
-    "imagePath": "/og/trace2tasks-1200x630.jpg",
-    "imageAlt": "trace2tasks",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

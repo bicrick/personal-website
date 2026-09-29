@@ -186,28 +186,18 @@ def make_project_cards():
         "ai-masters-1200x630.jpg",
     )
     split_card(
-        PUBLIC / "images" / "monocle" / "wordle-after.png",
+        PUBLIC / "images" / "monocle" / "monocle-1600x900.png",
         "monocle",
         "restyle the live tab",
         "monocle-1200x630.jpg",
+        fit="contain",
     )
     split_card(
-        PUBLIC / "images" / "cifar10" / "cifar10-1200x600.png",
-        "cifar10-fast-mps",
-        "airbench on Apple Silicon",
-        "cifar10-1200x630.jpg",
-    )
-    split_card(
-        PUBLIC / "images" / "tracebench" / "tracebench-1200x600.png",
+        PUBLIC / "images" / "tracebench" / "tracebench-1600x900.png",
         "tracebench",
         "offline agent evals",
         "tracebench-1200x630.jpg",
-    )
-    split_card(
-        PUBLIC / "images" / "tracebench" / "trace2tasks-1200x600.png",
-        "trace2tasks",
-        "RL tasks from traces",
-        "trace2tasks-1200x630.jpg",
+        fit="contain",
     )
 
 

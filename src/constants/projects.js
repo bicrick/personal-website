@@ -32,7 +32,7 @@ export const PROJECTS = [
     description: 'restyle the live tab with your local Cursor CLI',
     timelineDescription:
       'A Chrome extension that restyles the page you are looking at using your local Cursor CLI. Site JS and media keep running.',
-    image: `${process.env.PUBLIC_URL}/images/monocle/wordle-after.png`,
+    image: `${process.env.PUBLIC_URL}/images/monocle/monocle-1600x900.png`,
     blogLink: '/projects/monocle',
     appLink: 'https://github.com/bicrick/monocle',
     appLabel: 'repo',
@@ -42,42 +42,16 @@ export const PROJECTS = [
   },
   {
     title: 'tracebench',
-    description: 'offline eval harness for agent traces',
+    description: 'offline evals and RL tasks from agent traces',
     timelineDescription:
-      'Instrument a tool-using agent, dump JSONL traces, replay them offline, and score tool-error rate, task success, and keep rate.',
-    image: `${process.env.PUBLIC_URL}/images/tracebench/tracebench-1200x600.png`,
+      'An offline eval harness for tool-using agents: replay traces, score tool errors and task success, then mine failures into RL tasks.',
+    image: `${process.env.PUBLIC_URL}/images/tracebench/tracebench-1600x900.png`,
     blogLink: '/projects/tracebench',
     appLink: 'https://github.com/bicrick/tracebench',
     appLabel: 'repo',
     relevanceRank: 4,
     dateRank: 0,
     date: 'September 2026',
-  },
-  {
-    title: 'trace2tasks',
-    description: 'RL tasks mined from agent traces',
-    timelineDescription:
-      'Turn success and failure traces into Gymnasium tasks with reward heuristics and a dataset card.',
-    image: `${process.env.PUBLIC_URL}/images/tracebench/trace2tasks-1200x600.png`,
-    blogLink: '/projects/trace2tasks',
-    appLink: 'https://github.com/bicrick/trace2tasks',
-    appLabel: 'repo',
-    relevanceRank: 5,
-    dateRank: 0,
-    date: 'September 2026',
-  },
-  {
-    title: 'cifar10-fast-mps',
-    description: 'airbench reimplementation on Apple Silicon',
-    timelineDescription:
-      'Reimplementation of 94% on CIFAR-10 in seconds, ported to MPS. 5.1x faster than a ResNet-18 baseline on an M3.',
-    image: `${process.env.PUBLIC_URL}/images/cifar10/cifar10-1200x600.png`,
-    blogLink: '/projects/cifar10-fast-mps',
-    appLink: 'https://github.com/bicrick/cifar10-fast-mps',
-    appLabel: 'repo',
-    relevanceRank: 6,
-    dateRank: 8,
-    date: 'December 2025',
   },
   {
     title: 'range rat',
@@ -88,22 +62,9 @@ export const PROJECTS = [
     blogLink: '/projects/golf-incremental',
     appLink: 'https://golf.bicrick.com',
     appLabel: 'play',
-    relevanceRank: 7,
+    relevanceRank: 5,
     dateRank: 3,
     date: 'August 2026',
-  },
-  {
-    title: 'mcpixel',
-    description: 'local pixel-art pipeline behind range rat',
-    timelineDescription:
-      'Generate, cut out, and snap sprites to a pixel grid on your machine. The art pipeline used for Range Rat.',
-    image: `${process.env.PUBLIC_URL}/images/golf-incremental/range-rat-preview.gif`,
-    blogLink: '/projects/mcpixel',
-    appLink: 'https://github.com/bicrick/MCPixel',
-    appLabel: 'repo',
-    relevanceRank: 8,
-    dateRank: 4,
-    date: 'July 2026',
   },
   {
     title: 'gd-visualizer',
@@ -113,7 +74,7 @@ export const PROJECTS = [
     image: `${process.env.PUBLIC_URL}/images/gd-visualizer/testing-it.gif`,
     blogLink: '/projects/gd-visualizer',
     appLink: 'https://gd.bicrick.com',
-    relevanceRank: 9,
+    relevanceRank: 6,
     dateRank: 7,
     date: 'November 2025',
   },
@@ -122,11 +83,10 @@ export const PROJECTS = [
     description: 'text editor encoded in the URL',
     timelineDescription:
       'A minimalist text editor that encodes the whole document into the URL. Share a link, share the doc.',
-    image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-header.gif`,
-    imageFit: 'contain',
+    image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-1200x600.png`,
     blogLink: '/projects/notepadable',
     appLink: 'https://notepadable.com',
-    relevanceRank: 10,
+    relevanceRank: 7,
     dateRank: 6,
     date: 'March 2026',
   },
@@ -138,9 +98,10 @@ export const PROJECTS = [
     image: `${process.env.PUBLIC_URL}/images/docprep/docprep-extract.gif`,
     blogLink: '/projects/docprep',
     appLink: 'https://docprep.site',
-    relevanceRank: 11,
+    relevanceRank: 8,
     dateRank: 9,
     date: 'December 2025',
+    unlisted: true,
   },
 ];
 
@@ -150,5 +111,6 @@ export function featuredProjects() {
 }
 
 export function listedProjects() {
-  return [...PROJECTS].sort((a, b) => a.relevanceRank - b.relevanceRank);
+  return PROJECTS.filter((project) => !project.unlisted)
+    .sort((a, b) => a.relevanceRank - b.relevanceRank);
 }

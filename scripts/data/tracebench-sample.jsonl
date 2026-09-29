@@ -1,0 +1,4 @@
+{"trace_id": "t-7fd7779e", "task": {"id": "edit-readme", "goal": "add a title to README.md"}, "steps": [{"tool": "read", "ok": true, "error": null}, {"tool": "edit", "ok": true, "error": null}], "success": true}
+{"trace_id": "t-48531f2f", "task": {"id": "bad-search", "goal": "find the deploy script"}, "steps": [{"tool": "search", "ok": false, "error": "invalid_args"}, {"tool": "search", "ok": true, "error": null}, {"tool": "read", "ok": true, "error": null}], "success": true}
+{"trace_id": "t-03016145", "task": {"id": "broken-edit", "goal": "rename the helper"}, "steps": [{"tool": "read", "ok": true, "error": null}, {"tool": "edit", "ok": false, "error": "file_locked"}, {"tool": "edit", "ok": false, "error": "file_locked"}], "success": false}
+{"trace_id": "t-c11dc9ce", "task": {"id": "empty-run", "goal": "open the config"}, "steps": [{"tool": "read", "ok": false, "error": "not_found"}], "success": false}
