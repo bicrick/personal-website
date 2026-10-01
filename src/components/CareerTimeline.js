@@ -3,31 +3,16 @@ import { Link } from 'react-router-dom';
 import './CareerRecord.css';
 
 function CareerRow({ item }) {
-  const mediaClass = item.fit === 'contain'
-    ? 'career-record-media is-logo'
-    : 'career-record-media';
-
   const body = (
     <>
-      <div className={mediaClass} aria-hidden="true">
-        <img src={item.image} alt="" />
-      </div>
-      <div className="career-record-copy">
-        <div className="career-record-head">
-          <h3 className="career-record-title">{item.title}</h3>
-          {item.date ? <p className="career-record-meta">{item.date}</p> : null}
-        </div>
-        {item.description ? (
-          <p className="career-record-desc">{item.description}</p>
-        ) : null}
-        {item.bullets ? (
-          <ul className="career-record-bullets">
-            {item.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+      <span className="career-logo">
+        <img src={item.logo} alt={item.org} />
+      </span>
+      <span className="career-copy">
+        <span className="career-role">{item.role}</span>
+        <span className="career-dates">{item.dates}</span>
+        {item.note ? <span className="career-note">{item.note}</span> : null}
+      </span>
     </>
   );
 
@@ -57,12 +42,12 @@ function CareerRow({ item }) {
 
 export default function CareerTimeline({ items }) {
   return (
-    <div className="career-record" role="list">
+    <ul className="career-record">
       {items.map((item) => (
-        <div key={item.title} role="listitem">
+        <li key={`${item.role}-${item.org}`}>
           <CareerRow item={item} />
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

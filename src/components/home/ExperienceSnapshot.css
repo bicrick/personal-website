@@ -11,7 +11,7 @@
 
 .experience-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 7.25rem minmax(0, 1fr);
+  grid-template-columns: 7.25rem minmax(0, 1fr) auto;
   gap: 1rem;
   align-items: center;
   padding: 0.9rem 0;
@@ -31,7 +31,6 @@
 .experience-logo {
   display: grid;
   place-items: center;
-  justify-self: center;
   width: 7.25rem;
   height: 2.65rem;
 }
@@ -57,16 +56,27 @@
 
 @media (max-width: 700px) {
   .experience-row {
-    grid-template-columns: minmax(0, 1fr) 5.5rem minmax(0, 1fr);
-    gap: 0.65rem;
+    grid-template-columns: 6.25rem minmax(0, 1fr);
+    gap: 0.2rem 0.85rem;
   }
 
   .experience-logo {
-    width: 5.5rem;
-    height: 2.15rem;
+    grid-row: 1 / span 2;
+    width: 6.25rem;
+    height: 2.35rem;
+  }
+
+  .experience-role {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
   }
 
   .experience-dates {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
     font-size: 0.78rem;
+    text-align: left;
   }
 }

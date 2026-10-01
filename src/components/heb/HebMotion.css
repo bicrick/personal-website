@@ -13,6 +13,7 @@
 @supports (animation-timeline: view()) {
   .heb-spread,
   .heb-marks,
+  .heb-stack,
   .heb-lane,
   .heb-heatmap {
     animation: heb-enter linear both;
@@ -161,128 +162,6 @@
   100% {
     opacity: 0;
   }
-}
-
-@keyframes heb-knob {
-  0%,
-  24% {
-    transform: translateX(0);
-  }
-
-  38%,
-  86% {
-    transform: translateX(calc(100% + 4px));
-  }
-
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes heb-label-mine {
-  0%,
-  24% {
-    color: #fff;
-  }
-
-  38%,
-  86% {
-    color: var(--m-text);
-  }
-
-  100% {
-    color: #fff;
-  }
-}
-
-@keyframes heb-label-platform {
-  0%,
-  24% {
-    color: var(--m-text);
-  }
-
-  38%,
-  86% {
-    color: #fff;
-  }
-
-  100% {
-    color: var(--m-text);
-  }
-}
-
-.heb-scope-knob {
-  animation: heb-knob 10s ease-in-out infinite;
-}
-
-.heb-scope-label:not(.is-platform) {
-  animation: heb-label-mine 10s ease-in-out infinite;
-}
-
-.heb-scope-label.is-platform {
-  animation: heb-label-platform 10s ease-in-out infinite;
-}
-
-@keyframes heb-show {
-  0%,
-  24% {
-    opacity: 0;
-  }
-
-  38%,
-  86% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes heb-hide {
-  0%,
-  24% {
-    opacity: 1;
-  }
-
-  38%,
-  86% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes heb-alert {
-  0%,
-  24% {
-    background: transparent;
-  }
-
-  38%,
-  86% {
-    background: var(--m-red-soft);
-  }
-
-  100% {
-    background: transparent;
-  }
-}
-
-.heb-status-live .is-ok,
-.heb-sla-live span:first-child {
-  animation: heb-hide 10s ease-in-out infinite;
-}
-
-.heb-status-live .is-bad,
-.heb-sla-live span:last-child {
-  animation: heb-show 10s ease-in-out infinite;
-}
-
-.heb-table tr.is-live td {
-  animation: heb-alert 10s ease-in-out infinite;
 }
 
 @keyframes heb-log-raw {
@@ -632,6 +511,10 @@
   animation: heb-stream 7s linear infinite;
 }
 
+.heb-one-lines {
+  animation: heb-stream 12s linear infinite;
+}
+
 @keyframes heb-llm-out {
   0%,
   28% {
@@ -706,15 +589,10 @@
 @media (prefers-reduced-motion: reduce) {
   .heb-spread,
   .heb-marks,
+  .heb-stack,
   .heb-lane,
   .heb-heatmap,
   .heb-ticket tbody tr,
-  .heb-scope-knob,
-  .heb-scope-label,
-  .heb-status-live .is-ok,
-  .heb-status-live .is-bad,
-  .heb-sla-live span,
-  .heb-table tr.is-live td,
   .heb-log-raw,
   .heb-log-summary,
   .heb-chat-q,
@@ -728,6 +606,7 @@
   .heb-trace div,
   .heb-chat-input i,
   .heb-llm-lines,
+  .heb-one-lines,
   .heb-llm-out,
   .heb-flow-rail i,
   .heb-filter-query,
@@ -743,7 +622,11 @@
     opacity: 1;
   }
 
-  .heb-trace div {
-    color: var(--ink);
+  .heb-one .is-copy {
+    display: none;
+  }
+
+  .heb-one {
+    height: auto;
   }
 }

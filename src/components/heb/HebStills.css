@@ -140,39 +140,6 @@ html.is-dark .heb-window {
   font-size: 13px;
 }
 
-.heb-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.heb-table th {
-  padding: 0 10px 8px 0;
-  font-family: var(--m-font);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-align: left;
-  color: var(--m-muted);
-}
-
-.heb-table td {
-  padding: 8px 10px 8px 0;
-  border-top: 1px solid var(--m-line);
-  vertical-align: middle;
-}
-
-.heb-table td:last-child,
-.heb-table th:last-child {
-  padding-right: 0;
-  text-align: right;
-}
-
-.heb-table tr.is-bad td {
-  background: var(--m-red-soft);
-}
-
 .heb-status {
   display: inline-flex;
   align-items: center;
@@ -222,84 +189,6 @@ html.is-dark .heb-window {
 
 .heb-status.is-pill.is-run {
   color: var(--m-blue);
-}
-
-
-.heb-status-live,
-.heb-sla-live {
-  display: inline-grid;
-}
-
-.heb-status-live > span,
-.heb-sla-live > span {
-  grid-area: 1 / 1;
-}
-
-.heb-status-live .is-ok,
-.heb-sla-live span:first-child {
-  opacity: 0;
-}
-
-.heb-scopes {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-  padding: 3px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--m-well);
-}
-
-.heb-scope-knob {
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: 3px;
-  width: calc(50% - 5px);
-  border-radius: 999px;
-  background: var(--m-blue);
-  transform: translateX(calc(100% + 4px));
-}
-
-.heb-scope-label {
-  position: relative;
-  z-index: 1;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-family: var(--m-font);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-align: center;
-  color: var(--m-text);
-}
-
-.heb-scope-label.is-platform {
-  color: #fff;
-}
-
-.heb-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 10px 14px;
-  list-style: none;
-  border-bottom: 1px solid var(--m-line);
-  background: var(--m-canvas);
-}
-
-.heb-chips li {
-  padding: 2px 10px;
-  border: 1px solid var(--m-blue-line);
-  border-radius: 999px;
-  background: var(--m-blue-soft);
-  font-family: var(--m-font);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-  color: var(--m-blue-dark);
 }
 
 .heb-routes {
@@ -705,14 +594,6 @@ html.is-dark .heb-window {
   .heb-facts,
   .heb-facts.is-stack {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .heb-table {
-    font-size: 12px;
-  }
-
-  .heb-scope-label {
-    padding: 4px 8px;
   }
 
   .heb-pages {

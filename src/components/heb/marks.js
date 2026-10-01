@@ -8,7 +8,10 @@ import { ReactComponent as Gcp } from './icons/gcp.svg';
 import { ReactComponent as BigQuery } from './icons/bigquery.svg';
 import { ReactComponent as Kafka } from './icons/kafka.svg';
 import { ReactComponent as Kubernetes } from './icons/kubernetes.svg';
+import { ReactComponent as Argo } from './icons/argo.svg';
+import { ReactComponent as Postgres } from './icons/postgres.svg';
 import { ReactComponent as CloudRun } from './icons/cloudrun.svg';
+import { ReactComponent as Storage } from './icons/storage.svg';
 import { ReactComponent as Firestore } from './icons/firestore.svg';
 import { ReactComponent as CloudSql } from './icons/cloudsql.svg';
 import { ReactComponent as Composer } from './icons/composer.svg';
@@ -34,7 +37,10 @@ export const MARKS = {
   bigquery: { label: 'BigQuery', icon: <Icon Svg={BigQuery} /> },
   kafka: { label: 'Kafka', icon: <Icon Svg={Kafka} /> },
   kubernetes: { label: 'Kubernetes', icon: <Icon Svg={Kubernetes} /> },
+  argo: { label: 'Argo CD', icon: <Icon Svg={Argo} /> },
+  postgres: { label: 'Postgres', icon: <Icon Svg={Postgres} /> },
   cloudrun: { label: 'Cloud Run', icon: <Icon Svg={CloudRun} /> },
+  storage: { label: 'Cloud Storage', icon: <Icon Svg={Storage} /> },
   firestore: { label: 'Firestore', icon: <Icon Svg={Firestore} /> },
   cloudsql: { label: 'Cloud SQL', icon: <Icon Svg={CloudSql} /> },
   composer: { label: 'Composer', icon: <Icon Svg={Composer} /> },

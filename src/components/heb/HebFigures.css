@@ -138,6 +138,46 @@
   background: var(--ink);
 }
 
+.heb-one {
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.heb-one-lines {
+  display: flex;
+  flex-direction: column;
+}
+
+.heb-one-lines span {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.heb-one-lines b {
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.heb-one-lines i {
+  font-style: normal;
+}
+
+.heb-one-lines .is-error {
+  color: #d21f32;
+}
+
+html.is-dark .heb-one-lines .is-error {
+  color: #ff5d6c;
+}
+
 .heb-llm {
   display: grid;
   grid-template-columns: 1.35fr 0.75fr;

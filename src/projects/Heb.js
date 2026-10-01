@@ -2,12 +2,12 @@ import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
 import HebSpread from '../components/heb/HebSpread';
 import ApiTrace from '../components/heb/stills/ApiTrace';
-import AwsDiagram from '../components/heb/stills/AwsDiagram';
 import DatabaseTable from '../components/heb/stills/DatabaseTable';
-import EventBus from '../components/heb/stills/EventBus';
 import LogCause from '../components/heb/stills/LogCause';
+import OnePlace from '../components/heb/stills/OnePlace';
 import UiTicket from '../components/heb/stills/UiTicket';
 import WikiAsk from '../components/heb/stills/WikiAsk';
+import HebStack from '../components/heb/HebStack';
 import '../components/heb/Heb.css';
 import '../components/heb/HebStills.css';
 import '../components/heb/HebFigures.css';
@@ -31,7 +31,7 @@ function Heb() {
     >
       <HebSpread year="2023">
         <p>
-          I had just graduated college. This was my first full-time job as a software engineer. I typed every line of TypeScript myself. I started the way most engineers do, on a simple page. A table of jobs, a filter, the screen a team opened in the morning.
+          I had just graduated college. This was my first full-time job as a software engineer. I started the way most engineers do, on a simple page. A table of jobs, a filter, the screen a team opened in the morning. I typed every line of TypeScript myself.
         </p>
         <UiTicket />
       </HebSpread>
@@ -52,12 +52,19 @@ function Heb() {
 
       <HebSpread>
         <p>
-          I spun up a persistent LLM to ingest log failures from extracts and the other data pipelines, and to find the root cause. An engineer could see why the job failed without opening the trace.
+          Then I built one environment for every data engineer in the org. They could track a process, see why a job failed, configure an SLA, look through past executions, and examine the cost. All of it in one place.
+        </p>
+        <OnePlace />
+      </HebSpread>
+
+      <HebSpread>
+        <p>
+          I even added a few features on top of that. I spun up a persistent LLM to ingest log failures from extracts and the other data pipelines, and to find the root cause. An engineer could see why the job failed without opening the trace.
         </p>
         <LogCause />
       </HebSpread>
 
-      <HebSpread>
+      <HebSpread year="2024">
         <p>
           I built a RAG assistant over the wiki, so an engineer could ask the dashboard instead of searching Confluence. This was before Rovo.
         </p>
@@ -66,29 +73,29 @@ function Heb() {
 
       <HebSpread>
         <p>
-          Then I learned to ship it. Kubernetes and Argo CD. I deployed what I had built, and I owned the network in front of it.
+          Composer, Argo, Databricks, and Informatica are separate systems. The jobs on each one still had to be tracked and monitored.
+        </p>
+        <p>
+          Those runs all go to the ebus. The dependency service feeds off that stream and can queue a new job, including one that runs on another platform. One orchestrator for all of them.
         </p>
       </HebSpread>
 
-      <HebSpread>
+      <HebSpread year="2025">
         <p>
-          The app lived on AWS. I learned the cluster, Lambdas, and the buckets. The page, the API, and Postgres were one production app, and I became Data Engineer II.
+          Then the infrastructure. I learned to manage it with Terraform, so the plant was something I could change in code instead of by hand.
         </p>
-        <AwsDiagram />
+        <p>
+          In early 2025 I was promoted to Data Engineer II. A lot of the growth after that was other people. I mentored junior engineers, and I ran two rounds of interns.
+        </p>
       </HebSpread>
 
-      <HebSpread>
+      <HebSpread year="2026">
         <p>
-          Composer, Argo, Databricks, and Informatica are separate systems. Each one publishes its run events onto the ebus, and the bus collects all of them. The dependency service reads that stream. Other data engineers use it to orchestrate a job that is waiting on data from a different platform.
+          I am leading the migration of our data engineering infrastructure to GCP. The AWS systems stay in place while that move happens.
         </p>
-        <EventBus />
       </HebSpread>
 
-      <HebSpread>
-        <p>
-          A new cloud, and a new app. I learned GCP while the AWS plant stayed up, and I stood the rewrite up from the architecture. Scale, CI/CD, and alerting were in the plan. Cloud Run, Cloud Storage, BigQuery, Composer. That plant took real load.
-        </p>
-      </HebSpread>
+      <HebStack />
     </ProjectDetail>
   );
 }
