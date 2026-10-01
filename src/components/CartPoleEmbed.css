@@ -4,6 +4,10 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--rule);
+  background: #e4ecf8;
+}
+
+html.is-dark .cart-pole-embed-stage {
   background: #0b1626;
 }
 
@@ -66,8 +70,12 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0b1626;
+  background: #e4ecf8;
   pointer-events: none;
+}
+
+html.is-dark .cart-pole-tile-preview {
+  background: #0b1626;
 }
 
 .cart-pole-tile-frame {
