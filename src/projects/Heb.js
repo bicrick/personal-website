@@ -2,16 +2,23 @@ import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import HebMarkRow from '../components/heb/HebMarkRow';
-import HebArchitecture from '../components/heb/HebArchitecture';
+import HebSpread from '../components/heb/HebSpread';
 import HebToolLane from '../components/heb/HebToolLane';
+import EventBus from '../components/heb/stills/EventBus';
+import NightBoard from '../components/heb/stills/NightBoard';
+import PlantPath from '../components/heb/stills/PlantPath';
+import TwoPlants from '../components/heb/stills/TwoPlants';
+import UiTicket from '../components/heb/stills/UiTicket';
+import WikiAsk from '../components/heb/stills/WikiAsk';
 import '../components/heb/Heb.css';
+import '../components/heb/HebStills.css';
 
 function Heb() {
   return (
     <ProjectDetail
       title="data engineering at h-e-b"
       date="2023-2026"
-      abstract="I build the control room for data engineering at H-E-B. One internal product. Every failed job, missed SLA, and late extract shows up there. I started it on AWS by hand. I am finishing the rewrite on GCP with agents in the loop."
+      abstract="I build the control room for data engineering at H-E-B. I started on the UI in 2023. I run the plant now."
     >
       <figure className="project-figure heb-title">
         <img
@@ -21,37 +28,47 @@ function Heb() {
         />
       </figure>
 
-      <h2>/ the job</h2>
+      <HebSpread
+        year="2023"
+        caption="I started on small UI. Tables, filters, pages."
+      >
+        <UiTicket />
+      </HebSpread>
 
-      <p>
-        H-E-B runs on pipelines. If a job dies at 3am, someone has to see it before a store does. I own the surface those people live on: the data engineering dashboard. Not a side project. The place teams come when something is on fire, and the place they come when they want to prove it is not.
-      </p>
+      <HebSpread
+        year="2023"
+        caption="That UI became the control room. Failed jobs, SLAs, extracts, Tableau, on-call. EKS, 10+ teams."
+      >
+        <NightBoard />
+      </HebSpread>
 
-      <p>
-        I have been shipping it since May 2023. Hundreds of completed tickets. Two repositories still taking commits in the same week. I do not wait for a platform team to modernize the stack. I learn the next one and move the product onto it.
-      </p>
+      <HebSpread
+        year="2024"
+        caption="I put a chat box on the wiki. Confluence behind it, before Rovo."
+      >
+        <WikiAsk />
+      </HebSpread>
 
-      <h2>/ impact</h2>
+      <HebSpread
+        year="2024–25"
+        caption="I learned the rest of the plant. Deploys, the network, Argo CD."
+      >
+        <PlantPath />
+      </HebSpread>
 
-      <p>
-        Before this app, workflow health lived in six tools and a Slack thread. I pulled failed runs, SLAs, extracts, Tableau refreshes, Kafka dependencies, and on-call into one product. The first version on AWS EKS was adopted by 10+ teams and 100+ users. A team can filter to its own world. A lead can see the whole platform. That is the difference between hunting and operating.
-      </p>
+      <HebSpread
+        year="2025"
+        caption="Composer, Argo, and Databricks publish into Kafka. Lineage sits on that bus."
+      >
+        <EventBus />
+      </HebSpread>
 
-      <p>
-        I also built the first version of asking the wiki instead of searching it. A chat box, a vector store, Confluence behind it, with autonomous re-embedding. This was 2024, before Rovo. If you wanted an answer from internal docs, you asked the thing I wired up.
-      </p>
-
-      <p>
-        As Data Engineer II I put a Kafka event bus under the product so Composer, Argo, and Databricks could publish pipeline events into one place. A dependency service on that bus tracks lineage across platforms. Screenshots of the live UI stay internal. The architecture is public.
-      </p>
-
-      <h2>/ the stack</h2>
-
-      <p>
-        The product is a React UI on a Python API. It started on AWS, in containers, on a cluster. It is moving to GCP: Cloud Run, Cloud SQL, Firestore for live status, BigQuery for table watermarks, Composer for the DAGs. Kafka is the bus either way. I write the Terraform. I write the pages. I write the collectors that feed them.
-      </p>
-
-      <HebArchitecture />
+      <HebSpread
+        year="2026"
+        caption="The GCP rewrite took load. The AWS dashboard stayed up through the cutover."
+      >
+        <TwoPlants />
+      </HebSpread>
 
       <HebMarkRow
         ids={[
@@ -72,24 +89,8 @@ function Heb() {
           'confluence',
           'terraform',
         ]}
-        caption="what the dashboard sits on. I have shipped production code against all of this."
+        caption="Shipped in production."
       />
-
-      <h2>/ moving the plant</h2>
-
-      <p>
-        In 2025 I wrote the plan to leave the old cluster. One container on EKS was fine until it was not. The rewrite is a second repo, stood up that September. 2026 is the year the new plant started taking real load: Composer events, ingest history, BigQuery watermarks, live status on Firestore. I am still keeping the old dashboard alive while I cut the new one over. That is the hard part. Anyone can start a greenfield. Fewer people keep both in the air.
-      </p>
-
-      <p>
-        Last month I took Teradata out of the old UI and put an SLA page on the new one. Same week. That is how I work. Deprecate the dying thing. Ship the next one. Do not leave a hole in the middle.
-      </p>
-
-      <h2>/ how I actually build</h2>
-
-      <p>
-        The first year I typed every line. When I got stuck I pasted into ChatGPT or Claude in a browser tab and copied the answer back. Then I put the model in the editor. Cursor first. Claude Code next to it. I am not waiting for a training to tell me the stack moved. I move with it, and the dashboard gets faster because of that.
-      </p>
 
       <HebToolLane
         rows={[
@@ -98,7 +99,7 @@ function Heb() {
           { year: '2025', ids: ['cursor', 'claudecode'] },
           { year: '2026', ids: ['cursor', 'claudecode'] },
         ]}
-        caption="same job. the loop around the code is what changed."
+        caption="The first year I typed every line. Then the model moved into the editor."
       />
 
       <figure className="heb-heatmap">

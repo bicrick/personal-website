@@ -74,46 +74,33 @@
   font-style: italic;
 }
 
-.heb-shot {
-  margin: 8px 0 28px;
+.heb-spread {
+  --heb-ok: #1c7c45;
+  --heb-bad: #b42318;
+  margin: 8px 0 36px;
 }
 
-.heb-shot-frame {
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 24px 16px;
-  border: 1px dashed var(--ink-muted);
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 7px,
-      var(--rule) 7px,
-      var(--rule) 8px
-    );
+html.is-dark .heb-spread {
+  --heb-ok: #7dcea0;
+  --heb-bad: #f0a8a2;
 }
 
-.heb-shot-label {
+.heb-spread-year {
+  margin: 0 0 8px;
   font-family: var(--font-pixel);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.04em;
-  color: var(--ink);
-  background: var(--paper);
-  padding: 2px 8px;
+  color: var(--ink-muted);
 }
 
-.heb-shot-note {
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--ink-muted);
-  background: var(--paper);
-  padding: 2px 8px;
+.heb-spread figcaption {
   text-align: center;
-  max-width: 28rem;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 8px 0 0;
+  font-style: italic;
 }
 
 .heb-lane {
@@ -167,10 +154,6 @@
 }
 
 @media (max-width: 760px) {
-  .heb-shot-frame {
-    min-height: 160px;
-  }
-
   .heb-lane-row {
     grid-template-columns: 1fr;
     gap: 8px;

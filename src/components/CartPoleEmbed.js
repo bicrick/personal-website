@@ -13,6 +13,9 @@ function embedSrc(dark) {
   return `${ORIGIN}/?embed=1&theme=${dark ? 'dark' : 'light'}#single`;
 }
 
+// Featured tile: the demo's ?card=1 cut is always navy, whatever the site theme.
+const TILE_SRC = `${ORIGIN}/?embed=1&card=1#single`;
+
 function useNarrow() {
   const query = '(max-width: 800px)';
   const [narrow, setNarrow] = useState(() => (
@@ -51,12 +54,12 @@ function postTheme(frame, dark) {
   );
 }
 
-function CartPoleFrame({ dark, className, title, src, interactive = false }) {
+function CartPoleFrame({ dark, className, title, src, interactive = false, lockTheme = false }) {
   const [frame, setFrame] = useState(null);
 
   useEffect(() => {
-    postTheme(frame, dark);
-  }, [frame, dark]);
+    if (!lockTheme) postTheme(frame, dark);
+  }, [frame, dark, lockTheme]);
 
   return (
     <iframe
@@ -71,14 +74,13 @@ function CartPoleFrame({ dark, className, title, src, interactive = false }) {
 }
 
 function CartPoleTilePreview() {
-  const dark = useSiteDark();
   return (
     <div className="cart-pole-tile-preview">
       <CartPoleFrame
-        dark={dark}
+        lockTheme
         className="cart-pole-tile-frame"
         title="cart-pole demo"
-        src={embedSrc(dark)}
+        src={TILE_SRC}
       />
     </div>
   );
