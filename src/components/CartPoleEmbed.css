@@ -4,7 +4,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--rule);
-  background: var(--paper);
+  background: #0b1626;
 }
 
 .cart-pole-embed-frame {

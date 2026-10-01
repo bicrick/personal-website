@@ -25,10 +25,6 @@
   color: var(--ink-muted);
 }
 
-.home-copy .home-proof {
-  margin-top: 0.85rem;
-}
-
 .home-heatmap {
   margin: 0;
   padding: 12px;

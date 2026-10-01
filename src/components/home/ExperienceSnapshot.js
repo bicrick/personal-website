@@ -30,11 +30,10 @@ export default function ExperienceSnapshot() {
         {ROWS.map((row) => (
           <li key={`${row.role}-${row.org}`}>
             <Link to={row.href} className="experience-row">
-              <span className="experience-logo" aria-hidden="true">
-                <img src={row.logo} alt="" />
-              </span>
               <span className="experience-role">{row.role}</span>
-              <span className="experience-org">{row.org}</span>
+              <span className="experience-logo">
+                <img src={row.logo} alt={row.org} />
+              </span>
               <span className="experience-dates">{row.dates}</span>
             </Link>
           </li>

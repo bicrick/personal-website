@@ -78,6 +78,15 @@
   color: var(--ink-muted);
 }
 
+.project-article .project-title-logo {
+  display: inline-block;
+  height: 0.78em;
+  width: auto;
+  margin: 0 0 0 0.28em;
+  border: 0;
+  vertical-align: -0.12em;
+}
+
 .project-abstract {
   margin: 0 0 32px;
   padding-bottom: 24px;

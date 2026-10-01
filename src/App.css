@@ -546,25 +546,14 @@ section {
 .home-heading {
   font-size: clamp(2.15rem, 4vw, 2.85rem);
   line-height: 1.12;
-  margin: 0.35rem 0 0.85rem;
+  margin: 0 0 0.4rem;
 }
 
-.home-bio {
+.home-place {
   margin: 0;
-  width: 100%;
-  max-width: 28rem;
-  font-size: 1.12em;
-  line-height: 1.65;
-  color: var(--ink-soft);
-}
-
-.home-bio-sub {
-  margin: 0.45rem 0 0;
-  width: 100%;
-  max-width: 28rem;
+  color: var(--ink-muted);
   font-size: 0.98em;
   line-height: 1.5;
-  color: var(--ink-muted);
 }
 
 .home-pic {
@@ -587,7 +576,7 @@ section {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.55rem;
-  margin-top: 1.65rem;
+  margin-top: 1rem;
   font-size: 1em;
   color: var(--ink-muted);
 }
@@ -666,20 +655,11 @@ section {
 
   .home-heading {
     font-size: clamp(1.95rem, 7vw, 2.25rem);
-    margin-bottom: 0.85rem;
-  }
-
-  .home-bio {
-    max-width: none;
-    font-size: 1.05em;
-  }
-
-  .home-bio-sub {
-    max-width: none;
+    margin-bottom: 0.35rem;
   }
 
   .home-links {
-    margin-top: 1.25rem;
+    margin-top: 0.85rem;
   }
 
   .projects-grid {

@@ -11,10 +11,10 @@
 
 .experience-row {
   display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1.4fr) minmax(0, 0.8fr) auto;
-  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) 7.25rem minmax(0, 1fr);
+  gap: 1rem;
   align-items: center;
-  padding: 0.75rem 0;
+  padding: 0.9rem 0;
   border-bottom: 1px solid var(--rule);
   color: inherit;
 }
@@ -31,12 +31,9 @@
 .experience-logo {
   display: grid;
   place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
-  padding: 0.2rem;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  box-sizing: border-box;
+  justify-self: center;
+  width: 7.25rem;
+  height: 2.65rem;
 }
 
 .experience-logo img {
@@ -52,26 +49,24 @@
   color: var(--ink);
 }
 
-.experience-org,
 .experience-dates {
   font-size: 0.88rem;
   color: var(--ink-muted);
-}
-
-.experience-dates {
   text-align: right;
 }
 
 @media (max-width: 700px) {
   .experience-row {
-    grid-template-columns: 2.1rem minmax(0, 1fr) auto;
-    grid-template-areas:
-      "logo role dates"
-      "logo org dates";
+    grid-template-columns: minmax(0, 1fr) 5.5rem minmax(0, 1fr);
+    gap: 0.65rem;
   }
 
-  .experience-logo { grid-area: logo; }
-  .experience-role { grid-area: role; }
-  .experience-org { grid-area: org; }
-  .experience-dates { grid-area: dates; align-self: start; }
+  .experience-logo {
+    width: 5.5rem;
+    height: 2.15rem;
+  }
+
+  .experience-dates {
+    font-size: 0.78rem;
+  }
 }

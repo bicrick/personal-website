@@ -27,7 +27,9 @@ function TwoPlants() {
         <div className="heb-meters">
           <p className="heb-meters-label">BigQuery freshness</p>
           {METERS.map((width) => (
-            <span key={width} style={{ width }} />
+            <div key={width} className="heb-meter">
+              <span style={{ width }} />
+            </div>
           ))}
         </div>
       </section>

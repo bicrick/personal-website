@@ -2,10 +2,10 @@ import React from 'react';
 import { GlyphArgo, GlyphCloud, GlyphNet, GlyphUi } from './glyphs';
 
 const STEPS = [
-  { label: 'UI pages', Glyph: GlyphUi },
-  { label: 'cloud deploys', Glyph: GlyphCloud },
-  { label: 'the network', Glyph: GlyphNet },
+  { label: 'Kubernetes', Glyph: GlyphCloud },
   { label: 'Argo CD', Glyph: GlyphArgo },
+  { label: 'deploys', Glyph: GlyphUi },
+  { label: 'the network', Glyph: GlyphNet },
 ];
 
 function PlantPath() {

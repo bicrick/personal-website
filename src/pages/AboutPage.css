@@ -1,4 +1,4 @@
-/* Match project-article Substack measure + type rhythm (728 / 20 / 32). */
+/* Site column, so the photo grid and heatmap use the same width as home. */
 .page-section.about-page {
   max-width: var(--measure);
   margin: 0 auto;
@@ -9,42 +9,65 @@
 
 .about-article {
   width: 100%;
-  max-width: 728px;
-  margin: 0 auto;
 }
 
-.about-article p a {
+.about-article p a,
+.about-build-head a {
   display: inline;
 }
 
 .about-header {
-  margin-bottom: 28px;
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
 }
 
-.about-article h2 {
+.about-header .page-title {
+  margin-top: 0;
+  margin-bottom: 0.85rem;
+}
+
+.about-article .about-pics {
+  margin: 0;
+}
+
+.about-article p {
+  margin: 0;
+  line-height: 32px;
+  color: var(--ink-soft);
+  font-size: 20px;
+}
+
+.about-build {
+  margin-top: 2.75rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+
+.about-build-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.about-build-head h2 {
+  margin: 0;
   font-family: var(--font-pixel);
   font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 20px;
   color: var(--ink-muted);
-  margin: 40px 0 12px;
-  scroll-margin-top: 5rem;
 }
 
-.about-header + h2 {
-  margin-top: 0;
-}
-
-.about-article p {
-  margin: 0 0 20px;
-  line-height: 32px;
-  color: var(--ink-soft);
-  font-size: 20px;
+.about-build p {
+  max-width: 42rem;
+  margin-bottom: 1.35rem;
 }
 
 .about-figure {
-  margin: 32px 0 20px;
+  margin: 0;
 }
 
 .about-heatmap {
@@ -62,17 +85,17 @@
     font-size: 18px;
   }
 
-  .about-career {
-    margin: 28px 0 8px;
-  }
-
-  .about-article h2 {
-    font-size: 15px;
-    margin: 32px 0 12px;
+  .about-header {
+    margin-bottom: 1.15rem;
   }
 
   .about-article p {
     font-size: 18px;
     line-height: 28.8px;
+  }
+
+  .about-build {
+    margin-top: 2.25rem;
+    padding-top: 1.35rem;
   }
 }

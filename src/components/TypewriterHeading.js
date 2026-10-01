@@ -17,6 +17,8 @@ function shouldType() {
 export default function TypewriterHeading({
   as: Tag = 'h2',
   className,
+  label,
+  suffix = null,
   children,
 }) {
   const text = String(children ?? '').replace(/\s+/g, ' ').trim();
@@ -64,15 +66,18 @@ export default function TypewriterHeading({
   }, [text]);
 
   const classes = ['typewriter-heading', 'page-title', className].filter(Boolean).join(' ');
+  const done = shown >= text.length;
 
   return (
-    <Tag className={classes} aria-label={text}>
+    <Tag className={classes} aria-label={label || text}>
       <span className="typewriter-heading-sizer" aria-hidden="true">
         {text}
+        {suffix}
         <span className="typewriter-heading-caret is-spacer" />
       </span>
       <span className="typewriter-heading-live" aria-hidden="true">
         {text.slice(0, shown)}
+        {done ? suffix : null}
         {caret ? (
           <span className={`typewriter-heading-caret${typing ? ' is-typing' : ''}`} />
         ) : null}

@@ -1,26 +1,31 @@
 import React from 'react';
+import HebBarLogo from './HebBarLogo';
 
-const CHIPS = ['runs', 'SLAs', 'extracts', 'Tableau', 'on-call'];
+const FILTERS = ['Met', 'Missed', 'Success', 'Running', 'Failed'];
 
 const ROWS = [
-  { job: 'store_inventory_extract', status: 'failed', sla: 'missed', ran: '03:12', bad: true },
-  { job: 'price_zone_refresh', status: 'ok', sla: 'met', ran: '02:40', bad: false },
-  { job: 'tableau_sales_refresh', status: 'ok', sla: 'met', ran: '01:15', bad: false },
-  { job: 'warehouse_counts', status: 'ok', sla: 'met', ran: '00:05', bad: false },
+  { job: 'store_inventory_extract', platform: 'Argo', sla: 'missed', bad: true },
+  { job: 'price_zone_refresh', platform: 'Databricks', sla: 'met', status: 'Running', run: true },
+  { job: 'tableau_sales_refresh', platform: 'Informatica', sla: 'met', status: 'Success' },
+  { job: 'warehouse_counts', platform: 'Argo', sla: 'met', status: 'Success' },
 ];
 
 function NightBoard() {
   return (
     <div className="heb-window" aria-hidden="true">
       <div className="heb-window-bar">
-        <span>control room</span>
-        <span className="heb-scopes">
-          <span>my team</span>
-          <span className="is-on">platform</span>
+        <span>Workflows</span>
+        <span className="heb-window-end">
+          <span className="heb-scopes">
+            <span className="heb-scope-knob" />
+            <span className="heb-scope-label">my team</span>
+            <span className="heb-scope-label is-platform">platform</span>
+          </span>
+          <HebBarLogo />
         </span>
       </div>
       <ul className="heb-chips">
-        {CHIPS.map((chip) => (
+        {FILTERS.map((chip) => (
           <li key={chip}>{chip}</li>
         ))}
       </ul>
@@ -28,23 +33,39 @@ function NightBoard() {
         <table className="heb-table">
           <thead>
             <tr>
-              <th>job</th>
-              <th>status</th>
+              <th>workflow</th>
+              <th>platform</th>
               <th>sla</th>
-              <th>ran</th>
+              <th>status</th>
             </tr>
           </thead>
           <tbody>
             {ROWS.map((row) => (
-              <tr key={row.job} className={row.bad ? 'is-bad' : undefined}>
+              <tr key={row.job} className={row.bad ? 'is-bad is-live' : undefined}>
                 <td>{row.job}</td>
+                <td>{row.platform}</td>
                 <td>
-                  <span className={row.bad ? 'heb-status is-bad' : 'heb-status is-ok'}>
-                    {row.status}
-                  </span>
+                  {row.bad ? (
+                    <span className="heb-sla-live">
+                      <span>met</span>
+                      <span>missed</span>
+                    </span>
+                  ) : (
+                    row.sla
+                  )}
                 </td>
-                <td>{row.sla}</td>
-                <td>{row.ran}</td>
+                <td>
+                  {row.bad ? (
+                    <span className="heb-status-live">
+                      <span className="heb-status is-pill is-ok">Success</span>
+                      <span className="heb-status is-pill is-bad">Failed</span>
+                    </span>
+                  ) : (
+                    <span className={row.run ? 'heb-status is-pill is-run' : 'heb-status is-pill is-ok'}>
+                      {row.status}
+                    </span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -1,7 +1,6 @@
 import React from 'react';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
-import HighlightStrip from '../components/home/HighlightStrip';
 import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 import HomeFooter from '../components/home/HomeFooter';
@@ -28,16 +27,7 @@ export default function HomePage() {
             <TypewriterHeading as="h2" className="home-heading">
               Patrick Brown
             </TypewriterHeading>
-            <p className="home-bio">
-              Engineer building agents, RL environments, and data platforms.
-              QWOP world record 45.167s.
-            </p>
-            <p className="home-bio-sub">
-              Data Engineer II at{' '}
-              <a href="https://www.heb.com/" target="_blank" rel="noopener noreferrer">H-E-B</a>
-              . Austin, TX. Relocating to San Francisco.
-            </p>
-            <HighlightStrip />
+            <p className="home-place">Austin, TX. Relocating to San Francisco.</p>
             <div className="home-links">
               <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
               <span className="nav-separator">·</span>

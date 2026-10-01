@@ -10,6 +10,8 @@ import { getPageSeo } from '../constants/pages';
 
 function ProjectDetail({
   title,
+  titleLabel,
+  titleSuffix = null,
   date,
   linkHref,
   linkLabel,
@@ -17,6 +19,8 @@ function ProjectDetail({
   secondaryLinkLabel,
   secondaryLinkInternal = false,
   abstract,
+  backHref = '/projects',
+  backLabel = 'projects',
   children,
 }) {
   const { pathname } = useLocation();
@@ -33,11 +37,13 @@ function ProjectDetail({
       </LandingNavBar>
       <main className="App_mainColumn landing project-detail">
         <article className="project-article">
-          <Link to="/projects" className="project-back">
-            ← projects
+          <Link to={backHref} className="project-back">
+            ← {backLabel}
           </Link>
           <header className="project-header">
-            <TypewriterHeading as="h1">{title}</TypewriterHeading>
+            <TypewriterHeading as="h1" label={titleLabel} suffix={titleSuffix}>
+              {title}
+            </TypewriterHeading>
             <div className="project-meta">
               {hasPrimary && (
                 <a href={linkHref} target="_blank" rel="noopener noreferrer">
@@ -73,8 +79,8 @@ function ProjectDetail({
           <div className="project-body">
             {children}
           </div>
-          <Link to="/projects" className="project-back is-end">
-            ← projects
+          <Link to={backHref} className="project-back is-end">
+            ← {backLabel}
           </Link>
         </article>
       </main>
