@@ -24,6 +24,12 @@ const ELSEWHERE = [
     external: true,
   },
   {
+    label: 'youtube',
+    href: 'https://www.youtube.com/@bicrick-dev',
+    value: '@bicrick-dev',
+    external: true,
+  },
+  {
     label: 'x',
     href: 'https://x.com/patrickbbrown',
     value: 'patrickbbrown',

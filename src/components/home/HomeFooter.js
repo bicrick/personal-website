@@ -6,6 +6,7 @@ const LINKS = [
   { label: 'email', href: 'mailto:patrickbrownai@gmail.com' },
   { label: 'github', href: 'https://github.com/bicrick', external: true },
   { label: 'linkedin', href: 'https://www.linkedin.com/in/patrick-brown-470617195/', external: true },
+  { label: 'youtube', href: 'https://www.youtube.com/@bicrick-dev', external: true },
   { label: 'resume', href: 'https://resume.bicrick.com/', external: true },
   { label: 'x', href: 'https://x.com/patrickbbrown', external: true },
   { label: 'cursor', href: 'https://cursor.com/@bicrick', external: true },

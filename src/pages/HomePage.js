@@ -33,6 +33,8 @@ export default function HomePage() {
               <span className="nav-separator">·</span>
               <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
               <span className="nav-separator">·</span>
+              <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
+              <span className="nav-separator">·</span>
               <a href="https://resume.bicrick.com/" target="_blank" rel="noopener noreferrer">resume</a>
               <span className="nav-separator">·</span>
               <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>

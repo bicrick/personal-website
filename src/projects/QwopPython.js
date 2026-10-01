@@ -75,6 +75,12 @@ function QwopPython() {
         I stood up a routine that would check in on the farm every 15 minutes. It would kill policies that have clearly plateaued, swap hyperparameters, and enqueue the next experiment. While it directed almost all of the training, I checked in intermittently, mostly watching TensorBoard while it ran the loop.
       </p>
 
+      <ProjectYoutubeEmbed
+        videoId="ufQMbUIswIs"
+        title="I Broke the QWOP World Record With AI"
+        caption="The video version: how the research loop broke the record."
+      />
+
       <h2>/ imitation learning</h2>
 
       <p>
