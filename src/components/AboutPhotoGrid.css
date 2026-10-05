@@ -1,29 +1,65 @@
-.about-pics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 32px 0 20px;
-  width: 100%;
-  pointer-events: none;
-  user-select: none;
+.about-prints {
+  position: relative;
+  height: 13.2rem;
+  margin: 1.75rem 0;
 }
 
-.about-pic {
-  width: 100%;
-  height: 100%;
+.about-print {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 22%;
+  max-width: 220px;
   aspect-ratio: 1;
   object-fit: cover;
   display: block;
-  min-width: 0;
   border: 1px solid var(--rule);
   background: var(--card-wash);
-  pointer-events: none;
+  box-shadow: 0 8px 18px var(--shadow);
+  z-index: var(--z);
+  transform: rotate(var(--turn));
+  transition: transform 160ms ease;
 }
 
-@media (max-width: 768px) {
-  .about-pics {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin: 24px 0 20px;
+.about-print:hover {
+  z-index: 5;
+  transform: rotate(0deg) scale(1.04);
+}
+
+@media (max-width: 760px) {
+  .about-prints {
+    display: flex;
+    height: auto;
+    gap: 10px;
+    margin: 1.75rem 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .about-print {
+    position: relative;
+    left: auto;
+    top: auto;
+    flex: 0 0 200px;
+    width: 200px;
+    max-width: none;
+    scroll-snap-align: start;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .about-print:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-print {
+    transition: none;
+  }
+
+  .about-print:hover {
+    transform: rotate(var(--turn));
   }
 }

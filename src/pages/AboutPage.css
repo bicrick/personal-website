@@ -12,7 +12,8 @@
 }
 
 .about-article p a,
-.about-build-head a {
+.about-build-head a,
+.about-honors a {
   display: inline;
 }
 
@@ -26,10 +27,6 @@
   margin-bottom: 0.85rem;
 }
 
-.about-article .about-pics {
-  margin: 0;
-}
-
 .about-article p {
   margin: 0;
   line-height: 32px;
@@ -41,6 +38,10 @@
   margin-top: 2.75rem;
   padding-top: 1.6rem;
   border-top: 1px solid var(--rule);
+}
+
+.about-prints + .about-build {
+  margin-top: 0;
 }
 
 .about-build-head {
@@ -66,6 +67,19 @@
   margin-bottom: 1.35rem;
 }
 
+.about-honors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 42rem;
+}
+
+.about-honors li {
+  line-height: 32px;
+  color: var(--ink-soft);
+  font-size: 20px;
+}
+
 .about-figure {
   margin: 0;
 }
@@ -89,7 +103,8 @@
     margin-bottom: 1.15rem;
   }
 
-  .about-article p {
+  .about-article p,
+  .about-honors li {
     font-size: 18px;
     line-height: 28.8px;
   }
@@ -97,5 +112,9 @@
   .about-build {
     margin-top: 2.25rem;
     padding-top: 1.35rem;
+  }
+
+  .about-prints + .about-build {
+    margin-top: 0;
   }
 }

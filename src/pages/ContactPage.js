@@ -43,8 +43,8 @@ const ELSEWHERE = [
   },
   {
     label: 'resume',
-    href: 'https://resume.bicrick.com/',
-    value: 'resume.bicrick.com',
+    href: `${process.env.PUBLIC_URL}/resume.pdf`,
+    value: 'bicrick.com/resume.pdf',
     external: true,
   },
 ];

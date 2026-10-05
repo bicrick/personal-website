@@ -42,6 +42,20 @@ export default function AboutPage() {
             </div>
           </figure>
         </section>
+
+        <section className="about-build" aria-label="honors">
+          <div className="about-build-head">
+            <h2>honors</h2>
+          </div>
+          <ul className="about-honors">
+            <li>Eagle Scout, 2018.</li>
+            <li>36 on the ACT, 2017.</li>
+            <li>
+              Club champion at{' '}
+              <a href="https://www.austintexas.gov/golfatx/hancock-course" target="_blank" rel="noopener noreferrer">Hancock golf course</a>, 2025 and 2026.
+            </li>
+          </ul>
+        </section>
       </article>
     </section>
   );

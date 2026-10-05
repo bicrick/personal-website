@@ -8,6 +8,7 @@ const JOBS = [
     org: 'H-E-B',
     role: 'Data Engineer II',
     dates: 'Apr 2025 – present',
+    note: 'Click to see more.',
     href: '/heb',
   },
   {
@@ -15,6 +16,7 @@ const JOBS = [
     org: 'H-E-B',
     role: 'Data Engineer I',
     dates: 'Jun 2023 – Apr 2025',
+    note: 'Click to see more.',
     href: '/heb',
   },
   {
