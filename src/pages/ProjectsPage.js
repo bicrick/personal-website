@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import ProjectTile from '../components/ProjectTile';
 import ProjectTimeline from '../components/ProjectTimeline';
@@ -94,13 +93,8 @@ export default function ProjectsPage() {
           ) : null}
         </div>
         <p className="projects-intro">
-          RL environments, agents, and the tools around them. The longer note is{' '}
-          <Link to="/projects/agent-research-loops">agent research loops</Link>
-          . More on{' '}
-          <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">
-            GitHub
-          </a>
-          .
+          Outside of work I like to do a lot of hobby coding. Lately I have been using grok bot and agentic research loops to do RL training. More on{' '}
+          <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">GitHub</a>.
         </p>
         {isTimeline ? (
           <ProjectTimeline

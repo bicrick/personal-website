@@ -1,4 +1,4 @@
-export { PAGE_SEO, getPageSeo } from './ogPages';
+export { PAGE_SEO, getPageSeo } from './ogPages.js';
 
 export function normalizePagePath(pathname) {
   if (!pathname) return '/';
