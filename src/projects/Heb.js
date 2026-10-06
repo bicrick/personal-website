@@ -6,18 +6,20 @@ import DatabaseTable from '../components/heb/stills/DatabaseTable';
 import LogCause from '../components/heb/stills/LogCause';
 import OnePlace from '../components/heb/stills/OnePlace';
 import UiTicket from '../components/heb/stills/UiTicket';
+import RunHistory from '../components/heb/stills/RunHistory';
 import WikiAsk from '../components/heb/stills/WikiAsk';
 import HebStack from '../components/heb/HebStack';
 import '../components/heb/Heb.css';
 import '../components/heb/HebStills.css';
 import '../components/heb/HebFigures.css';
 import '../components/heb/HebMotion.css';
+import '../components/heb/HebMl.css';
 
 function Heb() {
   return (
     <ProjectDetail
-      title="data engineering at"
-      titleLabel="data engineering at h-e-b"
+      title="data platform engineering at"
+      titleLabel="data platform engineering at h-e-b"
       titleSuffix={(
         <img
           className="project-title-logo"
@@ -85,13 +87,23 @@ function Heb() {
           Then the infrastructure. I learned to manage it with Terraform, so the plant was something I could change in code instead of by hand.
         </p>
         <p>
-          In early 2025 I was promoted to Data Engineer II. A lot of the growth after that was other people. I mentored junior engineers, and I ran two rounds of interns.
+          In early 2025 I was promoted. A lot of the growth after that was other people. I mentored junior engineers, and I ran two rounds of interns.
         </p>
+      </HebSpread>
+
+      <HebSpread>
+        <p>
+          I brought in all of our jobs from Vertex AI. We use machine learning for projections and inventory management, which in a grocery store means knowing how much of what belongs on the shelf. Those jobs used to run out of sight in the cloud console. Now the pipelines, the schedules, and the endpoints sit next to everything else.
+        </p>
+        <RunHistory />
       </HebSpread>
 
       <HebSpread year="2026">
         <p>
-          I am leading the migration of our data engineering infrastructure to GCP. The AWS systems stay in place while that move happens.
+          I kept going on the Vertex side. Training information and training metrics are in the same place now, so anyone can see what ran, how it is going, and how it trained. When a job hits an error, the error is on the page. You do not need console access to find out why.
+        </p>
+        <p>
+          I am leading the migration of our data platform to GCP, next to Vertex. The AWS systems stay in place while that move happens.
         </p>
       </HebSpread>
 

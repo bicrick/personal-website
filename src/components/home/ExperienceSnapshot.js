@@ -4,18 +4,21 @@ import './ExperienceSnapshot.css';
 
 const ROWS = [
   {
-    role: 'Data Engineer II',
     org: 'H-E-B',
-    dates: 'Apr 2025 – present',
     href: '/heb',
     logo: `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`,
+    entries: [
+      { role: 'ML Platform Engineering', dates: 'Jun 2023 – present' },
+    ],
   },
   {
-    role: 'M.S. Artificial Intelligence',
     org: 'UT Austin',
-    dates: 'Aug 2024 – Dec 2025',
     href: '/projects/ai-masters',
     logo: `${process.env.PUBLIC_URL}/images/career/ut-austin.svg`,
+    entries: [
+      { role: 'M.S. Artificial Intelligence', dates: 'Aug 2024 – Dec 2025' },
+      { role: 'B.S. Electrical and Computer Engineering', dates: 'May 2023' },
+    ],
   },
 ];
 
@@ -28,13 +31,19 @@ export default function ExperienceSnapshot() {
       </div>
       <ul className="experience-list">
         {ROWS.map((row) => (
-          <li key={`${row.role}-${row.org}`}>
+          <li key={row.org}>
             <Link to={row.href} className="experience-row">
               <span className="experience-logo">
                 <img src={row.logo} alt={row.org} />
               </span>
-              <span className="experience-role">{row.role}</span>
-              <span className="experience-dates">{row.dates}</span>
+              <span className="experience-entries">
+                {row.entries.map((entry) => (
+                  <span key={entry.role} className="experience-entry">
+                    <span className="experience-role">{entry.role}</span>
+                    <span className="experience-dates">{entry.dates}</span>
+                  </span>
+                ))}
+              </span>
             </Link>
           </li>
         ))}

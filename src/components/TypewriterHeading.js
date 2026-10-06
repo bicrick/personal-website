@@ -3,15 +3,13 @@ import './TypewriterHeading.css';
 
 const STEP_MS = 48;
 const CARET_HOLD_MS = 1600;
-const TYPEWRITER_QUERY = '(hover: hover) and (pointer: fine) and (min-width: 801px)';
 const REDUCE_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
 function shouldType() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
     return false;
   }
-  if (window.matchMedia(REDUCE_MOTION_QUERY).matches) return false;
-  return window.matchMedia(TYPEWRITER_QUERY).matches;
+  return !window.matchMedia(REDUCE_MOTION_QUERY).matches;
 }
 
 export default function TypewriterHeading({

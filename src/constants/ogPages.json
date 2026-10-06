@@ -66,12 +66,12 @@
     "type": "website"
   },
   "/heb": {
-    "ogTitle": "data engineering at h-e-b",
-    "seoTitle": "data engineering at h-e-b - bicrick",
-    "description": "The control room for data engineering at H-E-B. 10+ teams, 100+ users. AWS to GCP, Confluence RAG before Rovo.",
-    "keywords": "bicrick, Patrick Brown, H-E-B, data engineering, dashboard, BigQuery, GCP, Confluence",
+    "ogTitle": "data platform engineering at h-e-b",
+    "seoTitle": "data platform engineering at h-e-b - bicrick",
+    "description": "The control room for data platform engineering at H-E-B. 10+ teams, 100+ users. ML pipelines, endpoints, and training metrics on one dashboard. AWS to GCP.",
+    "keywords": "bicrick, Patrick Brown, H-E-B, data platform engineering, ML platform, Vertex AI, dashboard, BigQuery, GCP",
     "imagePath": "/og/about-1200x630.jpg",
-    "imageAlt": "data engineering at h-e-b",
+    "imageAlt": "data platform engineering at h-e-b",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

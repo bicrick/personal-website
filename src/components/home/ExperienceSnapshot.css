@@ -11,7 +11,7 @@
 
 .experience-row {
   display: grid;
-  grid-template-columns: 7.25rem minmax(0, 1fr) auto;
+  grid-template-columns: 7.25rem minmax(0, 1fr);
   gap: 1rem;
   align-items: center;
   padding: 0.9rem 0;
@@ -42,41 +42,61 @@
   object-fit: contain;
 }
 
+.experience-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.experience-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: baseline;
+}
+
 .experience-role {
-  font-size: 0.95rem;
-  line-height: 1.35;
+  font-size: 0.85rem;
+  line-height: 1.3;
   color: var(--ink);
 }
 
 .experience-dates {
-  font-size: 0.88rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
   color: var(--ink-muted);
   text-align: right;
+  white-space: nowrap;
 }
 
 @media (max-width: 700px) {
   .experience-row {
     grid-template-columns: 6.25rem minmax(0, 1fr);
     gap: 0.2rem 0.85rem;
+    align-items: start;
   }
 
   .experience-logo {
-    grid-row: 1 / span 2;
     width: 6.25rem;
     height: 2.35rem;
   }
 
+  .experience-entries {
+    gap: 0.55rem;
+  }
+
+  .experience-entry {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
   .experience-role {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: end;
+    font-size: 0.82rem;
   }
 
   .experience-dates {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: start;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     text-align: left;
   }
 }
