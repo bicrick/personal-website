@@ -10,7 +10,7 @@ function StructuredData() {
     "url": "https://bicrick.com",
     "image": "https://www.bicrick.com/og/home-1200x630.jpg",
     "email": "mailto:patrickbrownai@gmail.com",
-    "jobTitle": "Data Engineer II",
+    "jobTitle": "ML Platform Engineer",
     "worksFor": {
       "@type": "Organization",
       "name": "H-E-B"
@@ -34,7 +34,7 @@ function StructuredData() {
       "https://bicrick.com/contact"
     ],
     "knowsAbout": [
-      "Data Engineering",
+      "ML Platform Engineering",
       "Reinforcement Learning",
       "Agent Evaluation",
       "Machine Learning",

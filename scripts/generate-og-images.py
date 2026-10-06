@@ -41,6 +41,8 @@ def cover_crop(img, box):
 def contain_pad(img, box, bg=PAPER):
     tw, th = box
     src = img.convert("RGB")
+    if bg is None:
+        bg = src.getpixel((2, 2))
     sw, sh = src.size
     pad = 48
     scale = min((tw - pad * 2) / sw, (th - pad * 2) / sh)
@@ -65,17 +67,51 @@ def save_jpg(img, name):
     print(f"wrote {path}")
 
 
-def split_card(visual, title, subtitle, name, fit="cover"):
+TEXT_X = 668
+TEXT_W = W - TEXT_X - 40
+
+
+def wrap(draw, text, fnt, width):
+    lines, line = [], ""
+    for word in text.split():
+        trial = f"{line} {word}".strip()
+        if draw.textlength(trial, font=fnt) <= width or not line:
+            line = trial
+        else:
+            lines.append(line)
+            line = word
+    lines.append(line)
+    return lines
+
+
+def split_card(visual, title, subtitle, name, fit="cover", bg=PAPER):
     canvas = Image.new("RGB", (W, H), PAPER)
     src = Image.open(visual)
-    panel = cover_crop(src, (PANEL, H)) if fit == "cover" else contain_pad(src, (PANEL, H))
+    panel = cover_crop(src, (PANEL, H)) if fit == "cover" else contain_pad(src, (PANEL, H), bg)
     canvas.paste(panel, (0, 0))
     draw = ImageDraw.Draw(canvas)
     draw.line((PANEL, 0, PANEL, H), fill=RULE, width=1)
-    x, y = 668, 210
-    draw.text((x, y), "bicrick", font=font(FONT_BOLD, 28), fill=INK)
-    draw.text((x, y + 46), title, font=font(FONT_BOLD, title_size(title)), fill=INK)
-    draw.text((x, y + 130), subtitle, font=font(FONT_REG, 26), fill=MUTED)
+
+    title_font = font(FONT_BOLD, title_size(title))
+    title_lines = [title]
+    if draw.textlength(title, font=title_font) > TEXT_W:
+        title_font = font(FONT_BOLD, 52)
+        title_lines = wrap(draw, title, title_font, TEXT_W)
+    sub_font = font(FONT_REG, 26)
+    sub_lines = wrap(draw, subtitle, sub_font, TEXT_W)
+
+    title_h = int(title_font.size * 1.2)
+    block = 46 + title_h * len(title_lines) + 22 + 36 * len(sub_lines)
+    y = (H - block) // 2
+    draw.text((TEXT_X, y), "bicrick", font=font(FONT_BOLD, 28), fill=INK)
+    ty = y + 46
+    for line in title_lines:
+        draw.text((TEXT_X, ty), line, font=title_font, fill=INK)
+        ty += title_h
+    ty += 22
+    for line in sub_lines:
+        draw.text((TEXT_X, ty), line, font=sub_font, fill=MUTED)
+        ty += 36
     save_jpg(canvas, name)
 
 
@@ -102,7 +138,7 @@ def make_home():
     split_card(
         PUBLIC / "about" / "headshot.jpg",
         "Patrick Brown",
-        "Data Engineer II · Austin, TX",
+        "ML Platform Engineer · Austin, TX",
         "home-1200x630.jpg",
     )
 
@@ -116,7 +152,7 @@ def make_about():
     x, y = 668, 190
     draw.text((x, y), "bicrick", font=font(FONT_BOLD, 28), fill=INK)
     draw.text((x, y + 46), "about", font=font(FONT_BOLD, 64), fill=INK)
-    draw.text((x, y + 130), "Data Engineer II at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
+    draw.text((x, y + 130), "ML Platform Engineer at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
     draw.text((x, 360), "Golf, puzzles, and building\nwith coding agents.", font=font(FONT_REG, 24), fill=MUTED)
     save_jpg(canvas, "about-1200x630.jpg")
 
@@ -138,6 +174,38 @@ def make_contact():
 
 def make_projects():
     center_card("projects", "software by bicrick", "projects-simple-1200x630.jpg")
+
+
+def make_page_cards():
+    center_card(
+        "career",
+        "ML Platform Engineer at H-E-B",
+        "career-1200x630.jpg",
+    )
+    split_card(
+        PUBLIC / "images" / "heb" / "heb-logo.png",
+        "data platform engineering at h-e-b",
+        "10+ teams, 100+ users on one control room",
+        "heb-1200x630.jpg",
+        fit="contain",
+        bg=(255, 255, 255),
+    )
+    split_card(
+        PUBLIC / "images" / "agent-research-loops" / "loop-card.png",
+        "agentic research loops",
+        "An agent that reshapes rewards so the next run avoids the last cheat",
+        "agent-research-loops-1200x630.jpg",
+        fit="contain",
+        bg=None,
+    )
+    split_card(
+        PUBLIC / "images" / "auto-research" / "cart-pole-card.png",
+        "cart-pole-autoresearch",
+        "Agentic loops on cart-pole, from PPO to MPPI",
+        "auto-research-1200x630.jpg",
+        fit="contain",
+        bg=None,
+    )
 
 
 def make_project_cards():
@@ -206,4 +274,5 @@ if __name__ == "__main__":
     make_about()
     make_projects()
     make_contact()
+    make_page_cards()
     make_project_cards()
