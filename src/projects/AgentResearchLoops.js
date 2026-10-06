@@ -15,7 +15,7 @@ function AgentResearchLoops() {
       date="October 2026"
       backHref="/"
       backLabel="home"
-      abstract="We could always run many experiments at once, but a human had to sit in the loop: read the results, decide what to try next, and set it going. Agentic research loops, where an autonomous coding agent does all of that, take the human out of the loop, and they have sped up how fast we can make progress in reinforcement learning."
+      abstract="The way we go about reinforcement learning has changed. A human no longer has to sit in the loop. In an agentic research loop, an autonomous coding agent observes the runs, tunes hyperparameters, shapes rewards, queues up the next round of experiments, and then observes those, starting the process over."
     >
       <LoopRing />
 
