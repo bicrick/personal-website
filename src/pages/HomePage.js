@@ -3,6 +3,7 @@ import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
 import FeaturedProjects from '../components/home/FeaturedProjects';
+import WritingBlock from '../components/home/WritingBlock';
 import HomeFooter from '../components/home/HomeFooter';
 import './HomePage.css';
 
@@ -43,6 +44,7 @@ export default function HomePage() {
         </div>
         <ExperienceSnapshot />
         <FeaturedProjects />
+        <WritingBlock />
         <section className="home-block" aria-label="how I build">
           <div className="home-block-head">
             <h2>how I build</h2>

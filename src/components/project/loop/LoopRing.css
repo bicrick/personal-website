@@ -1,0 +1,353 @@
+.loop-ring {
+  margin: 8px 0 28px;
+}
+
+.loop-ring svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+}
+
+.loop-track {
+  fill: none;
+  stroke: var(--separator-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+
+.loop-chevron {
+  fill: none;
+  stroke: var(--separator-muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.loop-bead {
+  fill: var(--link);
+}
+
+.loop-clock {
+  animation: loop-clock var(--loop-dur) linear infinite;
+}
+
+/* Cards */
+
+.loop-card-frame {
+  fill: var(--paper);
+  stroke: var(--rule);
+  stroke-width: 1.25;
+}
+
+.loop-card-index,
+.loop-card-title,
+.scene-kicker,
+.exec-name,
+.ticket-plus,
+.ticket-name,
+.ticket-state,
+.code-line {
+  font-family: var(--font-pixel);
+}
+
+.loop-card-index,
+.loop-card-title {
+  font-size: 13px;
+  fill: var(--ink-muted);
+}
+
+.loop-card-body {
+  opacity: 0.55;
+}
+
+.loop-ring[data-stage="farm"] .loop-card.is-farm .loop-card-frame,
+.loop-ring[data-stage="observe"] .loop-card.is-observe .loop-card-frame,
+.loop-ring[data-stage="shape"] .loop-card.is-shape .loop-card-frame,
+.loop-ring[data-stage="enqueue"] .loop-card.is-enqueue .loop-card-frame {
+  stroke: var(--link);
+  stroke-width: 1.75;
+}
+
+.loop-ring[data-stage="farm"] .loop-card.is-farm .loop-card-index,
+.loop-ring[data-stage="farm"] .loop-card.is-farm .loop-card-title,
+.loop-ring[data-stage="observe"] .loop-card.is-observe .loop-card-index,
+.loop-ring[data-stage="observe"] .loop-card.is-observe .loop-card-title,
+.loop-ring[data-stage="shape"] .loop-card.is-shape .loop-card-index,
+.loop-ring[data-stage="shape"] .loop-card.is-shape .loop-card-title,
+.loop-ring[data-stage="enqueue"] .loop-card.is-enqueue .loop-card-index,
+.loop-ring[data-stage="enqueue"] .loop-card.is-enqueue .loop-card-title {
+  fill: var(--link);
+}
+
+.loop-ring[data-stage="farm"] .loop-card.is-farm .loop-card-body,
+.loop-ring[data-stage="observe"] .loop-card.is-observe .loop-card-body,
+.loop-ring[data-stage="shape"] .loop-card.is-shape .loop-card-body,
+.loop-ring[data-stage="enqueue"] .loop-card.is-enqueue .loop-card-body {
+  opacity: 1;
+}
+
+.loop-card-body {
+  transition: opacity 0.25s ease;
+}
+
+.scene-kicker,
+.exec-name,
+.ticket-plus,
+.ticket-name,
+.code-line {
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+.scene-kicker { fill: var(--ink-muted); }
+
+/* Farm: parallel executions */
+
+.exec-tile,
+.ticket-card {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.25;
+}
+
+.exec-dot {
+  fill: var(--ink-faint);
+}
+
+.exec.is-1 .exec-dot { animation: exec-dot-1 var(--loop-dur) linear infinite; }
+.exec.is-2 .exec-dot { animation: exec-dot-2 var(--loop-dur) linear infinite; }
+.exec.is-3 .exec-dot { animation: exec-dot-3 var(--loop-dur) linear infinite; }
+.exec.is-4 .exec-dot { animation: exec-dot-4 var(--loop-dur) linear infinite; }
+
+/* Observe: loss */
+
+.chart-grid {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+
+.chart-axis {
+  stroke: var(--ink-muted);
+  stroke-width: 1.25;
+}
+
+.loss-curve {
+  fill: none;
+  stroke: var(--link);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: loss-draw var(--loop-dur) linear infinite;
+}
+
+/* Shape: code */
+
+.code-line {
+  clip-path: inset(0 100% 0 0);
+}
+
+.code-line.is-1 { animation: type-1 var(--loop-dur) linear infinite; }
+.code-line.is-2 { animation: type-2 var(--loop-dur) linear infinite; }
+.code-line.is-3 { animation: type-3 var(--loop-dur) linear infinite; }
+
+.code-caret {
+  fill: var(--link);
+  opacity: 0;
+  animation: caret var(--loop-dur) linear infinite;
+}
+
+/* Enqueue: queue */
+
+.ticket {
+  opacity: 0;
+}
+
+.ticket.is-1 { animation: ticket-1 var(--loop-dur) linear infinite; }
+.ticket.is-2 { animation: ticket-2 var(--loop-dur) linear infinite; }
+.ticket.is-3 { animation: ticket-3 var(--loop-dur) linear infinite; }
+
+.ticket-in {
+  opacity: 1;
+}
+
+.ticket.is-1 .ticket-in { animation: ticket-in-1 var(--loop-dur) linear infinite; }
+.ticket.is-2 .ticket-in { animation: ticket-in-2 var(--loop-dur) linear infinite; }
+.ticket.is-3 .ticket-in { animation: ticket-in-3 var(--loop-dur) linear infinite; }
+
+.ticket-plus {
+  fill: var(--link);
+}
+
+.ticket-state {
+  font-size: 11px;
+  fill: var(--link);
+  text-anchor: end;
+}
+
+/* Bot */
+
+.grok-bot-head {
+  fill: var(--bot);
+}
+
+/* Eyes are cutouts, like the marketplace marks: they show the page behind. */
+.grok-bot-eye {
+  fill: var(--paper);
+}
+
+.grok-bot-link {
+  cursor: pointer;
+  outline: none;
+}
+
+.grok-bot-link .grok-bot {
+  transition: filter 0.2s ease;
+}
+
+.grok-bot-link:hover .grok-bot,
+.grok-bot-link:focus-visible .grok-bot {
+  filter: brightness(1.12);
+}
+
+.grok-bot-link:focus-visible .grok-bot-head {
+  stroke: var(--link);
+  stroke-width: 10;
+}
+
+/* Timeline. 14s loop, each step owns a quarter: arrive, hold ~18 percent, travel. */
+
+@keyframes loop-clock {
+  from { opacity: 0; }
+  to { opacity: 0; }
+}
+
+@keyframes exec-dot-1 {
+  0%, 2% { fill: var(--ink-faint); }
+  4%, 18% { fill: var(--link); }
+  20%, 100% { fill: var(--ink-faint); }
+}
+
+@keyframes exec-dot-2 {
+  0%, 5% { fill: var(--ink-faint); }
+  7%, 18% { fill: var(--link); }
+  20%, 100% { fill: var(--ink-faint); }
+}
+
+@keyframes exec-dot-3 {
+  0%, 8% { fill: var(--ink-faint); }
+  10%, 18% { fill: var(--link); }
+  20%, 100% { fill: var(--ink-faint); }
+}
+
+@keyframes exec-dot-4 {
+  0%, 11% { fill: var(--ink-faint); }
+  13%, 18% { fill: var(--link); }
+  20%, 100% { fill: var(--ink-faint); }
+}
+
+@keyframes loss-draw {
+  0%, 26% { stroke-dashoffset: 100; }
+  39%, 43% { stroke-dashoffset: 0; }
+  45%, 100% { stroke-dashoffset: 100; }
+}
+
+@keyframes type-1 {
+  0%, 51% { clip-path: inset(0 100% 0 0); }
+  55%, 68% { clip-path: inset(0 0 0 0); }
+  70%, 100% { clip-path: inset(0 100% 0 0); }
+}
+
+@keyframes type-2 {
+  0%, 55% { clip-path: inset(0 100% 0 0); }
+  60%, 68% { clip-path: inset(0 0 0 0); }
+  70%, 100% { clip-path: inset(0 100% 0 0); }
+}
+
+@keyframes type-3 {
+  0%, 60% { clip-path: inset(0 100% 0 0); }
+  65%, 68% { clip-path: inset(0 0 0 0); }
+  70%, 100% { clip-path: inset(0 100% 0 0); }
+}
+
+@keyframes caret {
+  0%, 50% { opacity: 0; transform: translate(14px, 45px); }
+  51% { opacity: 1; transform: translate(14px, 45px); }
+  55% { opacity: 1; transform: translate(96px, 45px); }
+  55.5% { opacity: 1; transform: translate(14px, 67px); }
+  60% { opacity: 1; transform: translate(81px, 67px); }
+  60.5% { opacity: 1; transform: translate(14px, 89px); }
+  65%, 68% { opacity: 1; transform: translate(88px, 89px); }
+  70%, 100% { opacity: 0; transform: translate(14px, 45px); }
+}
+
+@keyframes ticket-1 {
+  0%, 76% { opacity: 0; }
+  79%, 93% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+@keyframes ticket-2 {
+  0%, 81% { opacity: 0; }
+  84%, 93% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+@keyframes ticket-3 {
+  0%, 86% { opacity: 0; }
+  89%, 93% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+@keyframes ticket-in-1 {
+  0%, 76% { transform: translateX(-16px); }
+  79%, 100% { transform: translateX(0); }
+}
+
+@keyframes ticket-in-2 {
+  0%, 81% { transform: translateX(-16px); }
+  84%, 100% { transform: translateX(0); }
+}
+
+@keyframes ticket-in-3 {
+  0%, 86% { transform: translateX(-16px); }
+  89%, 100% { transform: translateX(0); }
+}
+
+.loop-ring figcaption {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exec-dot,
+  .loss-curve,
+  .code-line,
+  .code-caret,
+  .ticket,
+  .ticket-in,
+  .loop-clock {
+    animation: none;
+  }
+
+  .loop-card-body { opacity: 1; transition: none; }
+  .exec-dot { fill: var(--link); }
+  .loss-curve { stroke-dashoffset: 0; }
+  .code-line { clip-path: none; }
+  .code-caret { opacity: 0; }
+  .ticket { opacity: 1; }
+  .ticket-in { transform: none; }
+
+  .loop-ring .loop-card.is-farm .loop-card-frame {
+    stroke: var(--link);
+    stroke-width: 1.75;
+  }
+}

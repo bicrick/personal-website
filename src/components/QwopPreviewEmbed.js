@@ -6,7 +6,7 @@ import {
 } from '../demos/qwopReplayEngine';
 import './QwopPreviewEmbed.css';
 
-function QwopPreviewEmbed() {
+function QwopPreviewEmbed({ caption = 'Live pose replay of the trained PPO agent.' }) {
   const stageRef = useRef(null);
   const canvasRef = useRef(null);
   const playerRef = useRef(null);
@@ -84,7 +84,7 @@ function QwopPreviewEmbed() {
           <span className="qwop-preview-embed-hit-label">Open full demo</span>
         </Link>
       </div>
-      <figcaption>Live pose replay of the trained PPO agent.</figcaption>
+      <figcaption>{caption}</figcaption>
     </figure>
   );
 }

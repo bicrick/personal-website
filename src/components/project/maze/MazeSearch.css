@@ -1,0 +1,139 @@
+.maze-search {
+  --maze-prize: #a67c00;
+  --maze-prize-soft: rgba(166, 124, 0, 0.1);
+  margin: 8px 0 28px;
+}
+
+html.is-dark .maze-search {
+  --maze-prize: #f2c14e;
+  --maze-prize-soft: rgba(242, 193, 78, 0.09);
+}
+
+.maze-search svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+}
+
+.maze-wall {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+
+.maze-wall.is-outer {
+  stroke-width: 2.6;
+}
+
+.maze-trace {
+  fill: none;
+  stroke: var(--link);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+
+.maze-trace.is-ghost {
+  stroke: var(--ink-muted);
+  stroke-width: 1.6;
+  stroke-dasharray: 2 4;
+  transition: opacity 0.4s ease;
+}
+
+.maze-crow {
+  stroke: var(--maze-prize);
+  stroke-width: 2.2;
+  stroke-dasharray: 0.4 5.4;
+  stroke-linecap: round;
+}
+
+.maze-walker {
+  fill: var(--link);
+}
+
+.maze-start {
+  fill: var(--ink-muted);
+}
+
+.maze-pocket {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.maze-pocket line {
+  stroke: var(--ink-muted);
+  stroke-width: 2;
+}
+
+.maze-exit-name,
+.maze-readout,
+.maze-chart text {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  fill: var(--ink-muted);
+}
+
+.maze-exit {
+  fill: none;
+  stroke: var(--maze-prize);
+  stroke-width: 2;
+}
+
+.maze-exit.is-reached {
+  fill: var(--maze-prize);
+}
+
+.maze-readout.is-back {
+  fill: var(--maze-prize);
+}
+
+.maze-chart-axis {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.maze-chart-band {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.maze-chart-band rect {
+  fill: var(--maze-prize-soft);
+}
+
+.maze-chart .maze-chart-band text {
+  fill: var(--maze-prize);
+}
+
+.maze-chart-line {
+  fill: none;
+  stroke: var(--link);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.maze-chart-line.is-back {
+  stroke: var(--maze-prize);
+}
+
+.maze-chart-dot {
+  fill: var(--link);
+}
+
+.maze-chart-dot.is-back {
+  fill: var(--maze-prize);
+}
+
+.maze-search figcaption {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 8px 0 0;
+  font-style: italic;
+}

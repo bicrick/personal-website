@@ -175,13 +175,13 @@
     "imageHeight": 630,
     "type": "article"
   },
-  "/projects/agent-research-loops": {
-    "ogTitle": "agent research loops",
-    "seoTitle": "agent research loops - bicrick",
-    "description": "A cron-driven agent that watches a training farm and enqueues the next experiment.",
-    "keywords": "bicrick, Patrick Brown, auto research, grok bot, RL, QWOP, cart-pole",
+  "/writing/agent-research-loops": {
+    "ogTitle": "agentic research loops",
+    "seoTitle": "agentic research loops - bicrick",
+    "description": "An agent on the training farm that reshapes rewards and curricula so the next run avoids the last policy's cheat.",
+    "keywords": "bicrick, Patrick Brown, agentic research loops, auto research, grok bot, RL, QWOP, cart-pole",
     "imagePath": "/og/qwop-python-1200x630.jpg",
-    "imageAlt": "agent research loops",
+    "imageAlt": "agentic research loops",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

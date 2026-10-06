@@ -1,12 +1,18 @@
 .project-pair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1rem;
   margin: 0 0 1.5rem;
 }
 
 .project-pair .project-figure {
   margin: 0;
+}
+
+/* QWOP renders at 640 x 400, so the cart-pole window matches it. */
+.project-pair .qwop-preview-embed-stage,
+.project-pair .cart-pole-embed-stage {
+  aspect-ratio: 640 / 400;
 }
 
 @media (max-width: 700px) {

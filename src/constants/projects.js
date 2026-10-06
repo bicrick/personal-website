@@ -1,7 +1,7 @@
 export const PROJECTS = [
   {
     title: 'qwop-python',
-    description: 'beat the QWOP world record with an agent research loop',
+    description: 'beat the QWOP world record with an agentic research loop',
     timelineDescription:
       'Reverse-engineered minified QWOP into a headless Python gym, then beat the official world record at 45.167s with a grok-bot research loop.',
     livePreview: 'qwop',

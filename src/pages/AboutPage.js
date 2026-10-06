@@ -34,7 +34,8 @@ export default function AboutPage() {
             <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
               Cursor
             </a>{' '}
-            and Claude Code.
+            and Claude Code. The furthest I have taken it is{' '}
+            <Link to="/writing/agent-research-loops">agentic research loops</Link>.
           </p>
           <figure className="about-figure">
             <div className="about-heatmap">

@@ -5,6 +5,7 @@
   --ink-muted: #5a5e6b;
   --link: #2563eb;
   --link-soft: rgba(37, 99, 235, 0.2);
+  --bot: #d06a1f;
   --paper: #fbfbfa;
   --rule: #e8e8e6;
   --stipple: rgba(33, 35, 45, 0.05);
@@ -30,6 +31,7 @@ html.is-dark {
   --ink-muted: #8b8e97;
   --link: #6b9eff;
   --link-soft: rgba(107, 158, 255, 0.28);
+  --bot: #e39a55;
   --paper: #14151a;
   --rule: #2c2e36;
   --stipple: rgba(255, 255, 255, 0.045);

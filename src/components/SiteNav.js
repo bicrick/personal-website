@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 /** Which nav item a URL belongs to. Writeups and demos sit under their section. */
 function activeIdFor(pathname) {
   const path = normalizePagePath(pathname);
-  if (path === '/') return 'home';
+  if (path === '/' || path.startsWith('/writing')) return 'home';
   if (path === '/heb' || path.startsWith('/career')) return 'career';
   if (path.startsWith('/projects') || path.startsWith('/demos/')) return 'projects';
   const match = NAV_ITEMS.find((item) => item.path !== '/' && path.startsWith(item.path));

@@ -64,7 +64,7 @@ function QwopPython() {
       <h2>/ the research loop</h2>
 
       <p>
-        I stood up a few VMs on GCP to run my training. Because I did not want to live in the loop of hyperparameter grid-search hell, I wanted to try an agent research loop that could handle that part of the work for me. Originally trying{' '}
+        I stood up a few VMs on GCP to run my training. Because I did not want to live in the loop of hyperparameter grid-search hell, I wanted to try an agentic research loop that could handle that part of the work for me. Originally trying{' '}
         <a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener noreferrer">Andrej Karpathy&apos;s auto-research tool</a>
         , I found that there were better tools at my disposal. That is how I landed on{' '}
         <a href="https://cursor.com/docs/grok-bot" target="_blank" rel="noopener noreferrer">grok bot</a>
@@ -161,7 +161,7 @@ function QwopPython() {
 
       <p>
         That loop is the product. The gym is an RL environment built by reverse-engineering a 13,000-line minified game with coding agents. The same pattern is written up in the{' '}
-        <Link to="/projects/agent-research-loops">agent research loops</Link> note.
+        <Link to="/writing/agent-research-loops">agentic research loops</Link> note.
       </p>
 
       <h2>/ conclusions</h2>

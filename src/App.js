@@ -40,7 +40,8 @@ function App() {
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/tracebench" element={<Tracebench />} />
-        <Route path="/projects/agent-research-loops" element={<AgentResearchLoops />} />
+        <Route path="/writing/agent-research-loops" element={<AgentResearchLoops />} />
+        <Route path="/projects/agent-research-loops" element={<Navigate to="/writing/agent-research-loops" replace />} />
         <Route path="/heb" element={<Heb />} />
         <Route path="/build" element={<Navigate to="/about" replace />} />
         <Route element={<SiteLayout />}>

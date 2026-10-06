@@ -16,7 +16,7 @@ function AutoResearch() {
       secondaryLinkLabel="repo"
       abstract={
         <>
-          An auto research loop is an AI agent that manages a reinforcement learning environment. I used one here on cart-pole, from a pole near upright to the triple pendulum in the frame above. I started experimenting with these loops on{' '}
+          An agentic research loop is an AI agent that manages a reinforcement learning environment. I used one here on cart-pole, from a pole near upright to the triple pendulum in the frame above. I started experimenting with these loops on{' '}
           <Link to="/projects/qwop-python">qwop-python</Link>.
         </>
       }
@@ -26,7 +26,7 @@ function AutoResearch() {
       <h2>/ ppo</h2>
 
       <p>
-        The environment here is cart-pole. A cart sits on a straight track with a pole attached by a hinge. You apply a force to the cart, and the goal is to keep the pole upright and keep the cart on the track. I trained that with PPO, and the loop managed the run. I started experimenting with auto research loops on{' '}
+        The environment here is cart-pole. A cart sits on a straight track with a pole attached by a hinge. You apply a force to the cart, and the goal is to keep the pole upright and keep the cart on the track. I trained that with PPO, and the loop managed the run. I started experimenting with agentic research loops on{' '}
         <Link to="/projects/qwop-python">qwop-python</Link>.
       </p>
 
@@ -87,7 +87,7 @@ function AutoResearch() {
 
       <p>
         Failure mode on PPO: a loose reward gets hacked. The policy finds a high score that is not the behavior you wanted. That is why the loop had to rewrite the next experiment after it had seen the run. The longer note is{' '}
-        <Link to="/projects/agent-research-loops">agent research loops</Link>.
+        <Link to="/writing/agent-research-loops">agentic research loops</Link>.
       </p>
     </ProjectDetail>
   );
