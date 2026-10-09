@@ -18,8 +18,23 @@ MUTED = (90, 94, 107)
 RULE = (232, 232, 230)
 LINK = (37, 99, 235)
 
-FONT_BOLD = Path("/System/Library/Fonts/Supplemental/Arial Bold.ttf")
-FONT_REG = Path("/System/Library/Fonts/Supplemental/Arial.ttf")
+def _first_existing(*candidates):
+    for path in candidates:
+        if Path(path).exists():
+            return Path(path)
+    raise FileNotFoundError(f"No font found among: {candidates}")
+
+
+FONT_BOLD = _first_existing(
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+)
+FONT_REG = _first_existing(
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+)
 
 
 def font(path, size):
@@ -138,7 +153,7 @@ def make_home():
     split_card(
         PUBLIC / "about" / "headshot.jpg",
         "Patrick Brown",
-        "ML Platform Engineer · Austin, TX",
+        "Platform Engineer · Austin, TX",
         "home-1200x630.jpg",
     )
 
@@ -152,7 +167,7 @@ def make_about():
     x, y = 668, 190
     draw.text((x, y), "bicrick", font=font(FONT_BOLD, 28), fill=INK)
     draw.text((x, y + 46), "about", font=font(FONT_BOLD, 64), fill=INK)
-    draw.text((x, y + 130), "ML Platform Engineer at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
+    draw.text((x, y + 130), "Platform Engineer at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
     draw.text((x, 360), "Golf, puzzles, and building\nwith coding agents.", font=font(FONT_REG, 24), fill=MUTED)
     save_jpg(canvas, "about-1200x630.jpg")
 
@@ -179,7 +194,7 @@ def make_projects():
 def make_page_cards():
     center_card(
         "career",
-        "ML Platform Engineer at H-E-B",
+        "Platform Engineer at H-E-B",
         "career-1200x630.jpg",
     )
     split_card(

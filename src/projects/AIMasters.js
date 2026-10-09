@@ -27,7 +27,7 @@ function AIMasters() {
       </p>
       
       <p>
-        After graduating, I've been working on the ML platform at HEB for two years. I use AI daily, but I wanted to push further. I can work on things in my spare time, but deadlines help. This master's was about staying current, understanding how it all works, and keeping myself accountable.
+        After graduating, I've been working on the data platform at HEB for two years. I use AI daily, but I wanted to push further. I can work on things in my spare time, but deadlines help. This master's was about staying current, understanding how it all works, and keeping myself accountable.
       </p>
 
       <h2>/ notable projects</h2>

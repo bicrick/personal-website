@@ -6,7 +6,7 @@ const JOBS = [
   {
     logo: `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`,
     org: 'H-E-B',
-    role: 'ML Platform Engineer',
+    role: 'Data Platform Engineer II',
     dates: 'Apr 2025 – present',
     note: 'Click to see more.',
     href: '/heb',
@@ -14,7 +14,7 @@ const JOBS = [
   {
     logo: `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`,
     org: 'H-E-B',
-    role: 'Platform Engineer',
+    role: 'Data Platform Engineer I',
     dates: 'Jun 2023 – Apr 2025',
     note: 'Click to see more.',
     href: '/heb',
