@@ -197,6 +197,28 @@
   margin: 32px 0;
 }
 
+.project-article details {
+  margin: 0 0 20px;
+  border: 1px solid var(--rule);
+  padding: 0.75rem 1rem;
+}
+
+.project-article details summary {
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 28px;
+  margin-bottom: 0.75rem;
+}
+
+.project-article details[open] summary {
+  margin-bottom: 1rem;
+}
+
+.project-article details .result-table {
+  margin-bottom: 0;
+}
+
 .project-case {
   margin: 0 0 3rem;
 }

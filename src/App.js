@@ -14,6 +14,7 @@ import AutoResearch from './projects/AutoResearch';
 import Heb from './projects/Heb';
 import Monocle from './projects/Monocle';
 import Tracebench from './projects/Tracebench';
+import ContextShaping from './projects/ContextShaping';
 import AgentResearchLoops from './projects/AgentResearchLoops';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
@@ -40,6 +41,7 @@ function App() {
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/tracebench" element={<Tracebench />} />
+        <Route path="/projects/context-shaping" element={<ContextShaping />} />
         <Route path="/writing/agent-research-loops" element={<AgentResearchLoops />} />
         <Route path="/projects/agent-research-loops" element={<Navigate to="/writing/agent-research-loops" replace />} />
         <Route path="/heb" element={<Heb />} />

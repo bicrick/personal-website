@@ -90,6 +90,19 @@ export const PROJECTS = [
     date: 'December 2025',
     unlisted: true,
   },
+  {
+    title: 'same model, better harness',
+    description:
+      'How far can context management and tool design push a cheap model on multi-file refactors?',
+    timelineDescription:
+      'Held Claude Haiku 5.5 fixed and changed only the harness: +37 points pass rate, about 32x cheaper per solve.',
+    image: `${process.env.PUBLIC_URL}/images/context-shaping/headline.png`,
+    blogLink: '/projects/context-shaping',
+    relevanceRank: 0,
+    dateRank: 0,
+    date: 'October 2026',
+    unlisted: true,
+  },
 ];
 
 export function featuredProjects() {
