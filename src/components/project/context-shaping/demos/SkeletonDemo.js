@@ -1,11 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { LADDER, MINI_REPO, demoTokensForLevel } from '../data';
-import useReducedMotion from '../../useReducedMotion';
+import useDemoAutoplay from './useDemoAutoplay';
+import DemoTransport, { DemoNarration } from './DemoTransport';
 import './Demo.css';
 
-const STEP_MS = 1400;
-const HOLD_FULL_MS = 2800;
-const FINAL_IDX = LADDER.length - 1;
+const NARRATION = {
+  L0: 'The model only sees file names. It can’t tell who calls what.',
+  L1: 'Imports land — now it can see ValidationError flow between modules. First real jump (45%→61%).',
+  L2: 'Signatures add shape without bodies. Pass dips a bit while tokens climb.',
+  L3: 'Docstrings add intent. Still far cheaper than shipping every line.',
+  full: 'Every line ships. Tokens balloon for only a few more points — structure beat volume.',
+};
 
 function fileChunk(file, levelId) {
   if (levelId === 'L0') return null;
@@ -38,46 +43,27 @@ function renderLadderView(levelId) {
 }
 
 export default function SkeletonDemo() {
-  const reduce = useReducedMotion();
-  const rootRef = useRef(null);
-  const [inView, setInView] = useState(false);
-  const [idx, setIdx] = useState(reduce ? FINAL_IDX : 0);
-  const [tick, setTick] = useState(0);
+  const {
+    rootRef,
+    idx,
+    playing,
+    reduce,
+    pause,
+    play,
+    replay,
+    stepNext,
+    stepPrev,
+    goTo,
+  } = useDemoAutoplay({
+    length: LADDER.length,
+    stepMs: 1500,
+    holdLastMs: 2600,
+    loop: true,
+  });
 
   const level = LADDER[idx];
   const tokens = demoTokensForLevel(level.id);
   const view = useMemo(() => renderLadderView(level.id), [level.id]);
-
-  useEffect(() => {
-    const node = rootRef.current;
-    if (!node) return undefined;
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.35, rootMargin: '0px 0px -8% 0px' }
-    );
-    io.observe(node);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (reduce) {
-      setIdx(FINAL_IDX);
-      return undefined;
-    }
-    if (!inView) return undefined;
-
-    const delay = idx === FINAL_IDX ? HOLD_FULL_MS : STEP_MS;
-    const id = window.setTimeout(() => {
-      setIdx((prev) => (prev >= FINAL_IDX ? 0 : prev + 1));
-      setTick((t) => t + 1);
-    }, delay);
-    return () => window.clearTimeout(id);
-  }, [inView, idx, reduce]);
-
-  useEffect(() => {
-    if (reduce) setIdx(FINAL_IDX);
-  }, [reduce]);
-
   const tokenPct = Math.min(100, (tokens / 620) * 100);
   const sweetSpot = level.id === 'L1';
 
@@ -89,18 +75,34 @@ export default function SkeletonDemo() {
           <span className="cs-demo-badge">{MINI_REPO.label}</span>
         </div>
 
-        <div className="cs-ladder-rail" aria-hidden="true">
+        <DemoNarration>{NARRATION[level.id]}</DemoNarration>
+
+        <div className="cs-ladder-rail" role="tablist" aria-label="skeleton level">
           {LADDER.map((l, i) => (
-            <span
+            <button
               key={l.id}
+              type="button"
+              role="tab"
+              aria-selected={i === idx}
               className={`cs-ladder-step${i === idx ? ' is-on' : ''}${i < idx ? ' is-done' : ''}`}
+              onClick={() => goTo(i)}
             >
               {l.short}
-            </span>
+            </button>
           ))}
         </div>
 
-        <div className="cs-demo-stats" aria-live="polite">
+        <DemoTransport
+          playing={playing}
+          reduce={reduce}
+          onReplay={replay}
+          onPause={pause}
+          onPlay={play}
+          onPrev={stepPrev}
+          onNext={stepNext}
+        />
+
+        <div className="cs-demo-stats">
           <span className="cs-stat">
             level <strong>{level.id}</strong>
           </span>
@@ -110,32 +112,19 @@ export default function SkeletonDemo() {
           <span className="cs-stat">
             demo tokens <strong>~{tokens}</strong>
           </span>
-          {sweetSpot ? (
-            <span className="cs-stat is-accent">
-              <strong>first real gain</strong>
-            </span>
-          ) : null}
-          {level.id === 'full' ? (
-            <span className="cs-stat">
-              <strong>+tokens, little gain</strong>
-            </span>
-          ) : null}
         </div>
 
         <div className="cs-demo-split cs-demo-split--ladder">
           <ul className="cs-file-list cs-file-list--static" aria-label="mini repo files">
             {MINI_REPO.files.map((f) => (
               <li key={f.path}>
-                <span className={level.id === 'L0' || f.imports.length || f.signature || f.body ? 'is-in' : ''}>
-                  {f.path.split('/').pop()}
-                </span>
+                <span className="is-in">{f.path.split('/').pop()}</span>
               </li>
             ))}
           </ul>
           <pre
-            key={`${level.id}-${tick}`}
+            key={level.id}
             className={`cs-code cs-code--morph${reduce ? '' : ' is-anim'}`}
-            aria-live="polite"
           >
             {view}
           </pre>

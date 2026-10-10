@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { COMPACTION, CACHE } from '../data';
+import useDemoAutoplay from './useDemoAutoplay';
+import DemoTransport, { DemoNarration } from './DemoTransport';
 import './Demo.css';
 
 const MESSAGES = [
@@ -17,13 +19,18 @@ const MESSAGES = [
   { id: 12, kind: 'tool', text: 'tool: edit more callers…' },
 ];
 
+const NARRATION = {
+  none: `Window fills with every tool dump. Cache stays hot (${CACHE.noCompaction}%) but context is bloated.`,
+  sum50: `Summarize early. Pass drops to 79% and cache collapses ${CACHE.noCompaction}%→${CACHE.summarize50}% — summaries bust the prompt-cache prefix.`,
+  sum90: 'Wait longer before summarizing. Softens the accuracy hit (88%) vs cutting at 50%.',
+  drop: 'Drop old tool outputs, keep recent work. Same 93% pass, cheaper than early summaries.',
+};
+
 function applyMode(modeId) {
-  // Returns { gone: Set, summary: string|null, fill: 0-100 }
   if (modeId === 'none') {
     return { gone: new Set(), summary: null, fill: 92, cache: CACHE.noCompaction };
   }
   if (modeId === 'sum50') {
-    // early summary: collapse early tool outputs
     return {
       gone: new Set([3, 4, 5, 6, 8, 9]),
       summary: 'summary@50%: found ValidationError in fields/schema/validate; edits started',
@@ -39,7 +46,6 @@ function applyMode(modeId) {
       cache: null,
     };
   }
-  // drop old tool outputs — keep recent tools, drop oldest tool msgs
   return {
     gone: new Set([3, 4, 5, 6]),
     summary: null,
@@ -49,30 +55,60 @@ function applyMode(modeId) {
 }
 
 export default function CompactionDemo() {
-  const [modeId, setModeId] = useState('none');
-  const mode = COMPACTION.find((m) => m.id === modeId) || COMPACTION[0];
+  const {
+    rootRef,
+    idx,
+    playing,
+    reduce,
+    pause,
+    play,
+    replay,
+    stepNext,
+    stepPrev,
+    goTo,
+  } = useDemoAutoplay({
+    length: COMPACTION.length,
+    stepMs: 1800,
+    holdLastMs: 2800,
+    loop: true,
+  });
+
+  const mode = COMPACTION[idx];
+  const modeId = mode.id;
   const view = useMemo(() => applyMode(modeId), [modeId]);
 
   return (
-    <figure className="cs-demo">
+    <figure className="cs-demo" ref={rootRef}>
       <div className="cs-demo-panel">
         <div className="cs-demo-head">
           <p className="cs-demo-kicker">Compaction · context window</p>
           <span className="cs-demo-badge">simplified window · study cache rates</span>
         </div>
 
+        <DemoNarration>{NARRATION[modeId]}</DemoNarration>
+
         <div className="cs-demo-controls" role="tablist" aria-label="compaction mode">
-          {COMPACTION.map((m) => (
+          {COMPACTION.map((m, i) => (
             <button
               key={m.id}
               type="button"
               className={modeId === m.id ? 'is-on' : ''}
-              onClick={() => setModeId(m.id)}
+              onClick={() => goTo(i)}
             >
               {m.label}
             </button>
           ))}
         </div>
+
+        <DemoTransport
+          playing={playing}
+          reduce={reduce}
+          onReplay={replay}
+          onPause={pause}
+          onPlay={play}
+          onPrev={stepPrev}
+          onNext={stepNext}
+        />
 
         <div className="cs-demo-stats">
           <span className="cs-stat is-accent">
@@ -84,21 +120,18 @@ export default function CompactionDemo() {
             </span>
           )}
           <span className="cs-stat">
-            cache hit{' '}
-            <strong>
-              {view.cache != null ? `${view.cache}%` : '—'}
-            </strong>
+            cache hit <strong>{view.cache != null ? `${view.cache}%` : '—'}</strong>
           </span>
         </div>
 
         <div className="cs-window" aria-live="polite">
-          {view.summary && (
-            <div className="cs-msg is-summary">{view.summary}</div>
-          )}
+          {view.summary && <div className="cs-msg is-summary">{view.summary}</div>}
           {MESSAGES.map((m) => (
             <div
               key={m.id}
-              className={`cs-msg${m.kind === 'tool' ? ' is-tool' : ''}${view.gone.has(m.id) ? ' is-gone' : ''}`}
+              className={`cs-msg${m.kind === 'tool' ? ' is-tool' : ''}${
+                view.gone.has(m.id) ? ' is-gone' : ''
+              }`}
             >
               {m.text}
             </div>
@@ -110,8 +143,8 @@ export default function CompactionDemo() {
         </div>
       </div>
       <figcaption>
-        Strike-through = removed from context. Cache 85%→10% when summarizing at 50% is from the study;
-        the message list is a simplified illustration.
+        Strike-through = removed from context. Cache {CACHE.noCompaction}%→{CACHE.summarize50}% when
+        summarizing at 50% is from the study; the message list is a simplified illustration.
       </figcaption>
     </figure>
   );

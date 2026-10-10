@@ -22,7 +22,7 @@ function ContextShaping() {
       abstract="Same cheap model, only the harness changed: Claude Haiku 5.5 went from 63% to 100% on multi-file refactors at about 1/32 the cost per solved task."
     >
       <p>
-        Same model. Same 25 multi-file refactors. Change only the harness and Haiku 5.5 goes from 63% to 100%, at $0.0510 → $0.0016 per solve (~1/32). Below: live demos of each switch on a simplified marshmallow-shaped <code>ValidationError</code> rename. Pass rates are from the study; the mini repo is labeled where simplified.
+        Same model. Same 25 multi-file refactors. Change only the harness and Haiku 5.5 goes from 63% to 100%, at $0.0510 → $0.0016 per solve (~1/32). Scroll the demos — each auto-plays a guided walkthrough on a simplified marshmallow-shaped <code>ValidationError</code> rename. Pass rates are from the study; the mini repo is labeled where simplified. Replay / pause / step if you want.
       </p>
 
       <HeadlineCompare />
