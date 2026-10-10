@@ -138,7 +138,7 @@ export default function SwingMark() {
           <rect ref={ropeRef} className="swing-rope" x="14.6" y="-2" width="0.8" height="12.6" />
           <g ref={bodyRef} className="swing-body">
             <path className="swing-ring" d="M14 10h2v2h-2zM14.6 10.6h.8v.8h-.8z" fillRule="evenodd" />
-            <path className="swing-line" d="M11.4 14.2L14.4 11.8M18.6 14.2L15.6 11.8" />
+            <path className="swing-line" d="M10.4 14.2L14.4 11.8M19.6 14.2L15.6 11.8" />
             <CritterBody x={6} y={12} outfit="harness" legsRef={legsRef} />
           </g>
         </svg>

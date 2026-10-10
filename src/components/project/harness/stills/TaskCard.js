@@ -1,10 +1,26 @@
 import React from 'react';
 import { CcWindow, Transcript } from '../cc';
 
-// One of the 25 tasks, and the three checks every run had to pass.
+// The setup at a glance, one of the 25 tasks, and the three checks every
+// run had to pass.
+const STATS = [
+  ['1', 'model, Haiku 5.5'],
+  ['25', 'multi-file refactors'],
+  ['3', 'Python libraries'],
+  ['1,632', 'graded runs'],
+  ['$28.53', 'total spend'],
+];
 export default function TaskCard() {
   return (
     <div className="hs-task">
+      <div className="hs-stats">
+        {STATS.map(([n, label]) => (
+          <div key={label} className="hs-stat">
+            <span className="hs-stat-n">{n}</span>
+            <span className="hs-stat-label">{label}</span>
+          </div>
+        ))}
+      </div>
       <CcWindow title="marshmallow · hardest task" meta="468 lines · 19 files">
         <Transcript
           lines={[

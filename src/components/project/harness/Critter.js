@@ -61,8 +61,8 @@ const OUTFITS = {
   },
   harness: {
     over: [
-      ['o-strap', 'M5 2h1v7H5zM12 2h1v7h-1zM3 6.5h12v1H3z'],
-      ['o-buckle', 'M8 6h2v2H8z'],
+      ['o-strap', 'M4 2h1v7H4zM13 2h1v7h-1zM3 7h12v1H3z'],
+      ['o-buckle', 'M8 6.5h2v2H8z'],
     ],
   },
 };
@@ -106,27 +106,32 @@ export default function Critter({ mood, walk, hop, outfit, className = '', label
   );
 }
 
-// A pixel cart. `load` is a list of [className, height] blocks stacked
-// left to right; the cart grows to fit.
+// A pixel cart. `load` is a list of [className, height] columns; each
+// column is stacked from square crates, so a bigger load is a taller pile.
 export function Cart({ x = 0, y = 0, width = 14, load = [], bob }) {
   const step = width / Math.max(load.length, 1);
+  const size = Math.max(step - 0.5, 0.8);
   return (
     <g className={`cart${bob ? ` is-bob-${bob}` : ''}`} transform={`translate(${x} ${y})`}>
       <g className="cart-ride">
-        {load.map(([tone, h], i) => (
-          <rect
-            key={i}
-            className={`cart-load ${tone}`}
-            x={1 + i * step}
-            y={-h}
-            width={Math.max(step - 0.6, 0.8)}
-            height={h}
-          />
-        ))}
-        <rect className="cart-tray" x="0" y="0" width={width + 2} height="3" />
+        {load.flatMap(([tone, h], i) => {
+          const count = Math.max(1, Math.round(h / (size + 0.4)));
+          return Array.from({ length: count }, (_, j) => (
+            <rect
+              key={`${i}-${j}`}
+              className={`cart-load ${tone}`}
+              x={1 + i * step}
+              y={-(j + 1) * (size + 0.4)}
+              width={size}
+              height={size}
+              rx="0.35"
+            />
+          ));
+        })}
+        <rect className="cart-tray" x="0" y="0" width={width + 2} height="3" rx="0.4" />
       </g>
-      <rect className="cart-wheel" x="2" y="3" width="2" height="2" />
-      <rect className="cart-wheel" x={width - 2} y="3" width="2" height="2" />
+      <circle className="cart-wheel" cx="3" cy="4" r="1.3" />
+      <circle className="cart-wheel" cx={width - 1} cy="4" r="1.3" />
     </g>
   );
 }

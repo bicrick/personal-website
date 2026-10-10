@@ -13,8 +13,8 @@ export default function Headline() {
       </div>
       <div className="hs-head-mid">same model<br />same 125 runs<br />→</div>
       <div className="hs-head-side is-win">
-        <Critter className="hs-head-critter" mood="happy" hop />
-        <div className="hs-head-label">loop + tools + skill</div>
+        <Critter className="hs-head-critter" mood="happy" outfit="harness" hop />
+        <div className="hs-head-label">all four levers set</div>
         <div className="hs-head-num">100%</div>
         <div className="hs-head-cost">$0.0016 per solve</div>
       </div>
