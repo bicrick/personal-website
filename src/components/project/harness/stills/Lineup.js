@@ -2,14 +2,15 @@ import React from 'react';
 import Critter from '../Critter';
 import Logo, { HARNESSES } from '../logos';
 
-// Same Claude, six outfits. The model inside doesn't change; the harness does.
+// Same Claude, six outfits: harnesses that can all run the same Claude
+// model, plus the one I built. The model inside doesn't change.
 const CAST = [
   { id: 'claude', outfit: undefined, mood: 'happy' },
   { id: 'cursor', outfit: 'cursor' },
-  { id: 'codex', outfit: 'codex' },
-  { id: 'gemini', outfit: 'gemini' },
   { id: 'opencode', outfit: 'opencode' },
   { id: 'aider', outfit: 'aider' },
+  { id: 'mini', outfit: 'mini' },
+  { id: 'mine', outfit: 'harness', mood: 'happy' },
 ];
 
 export default function Lineup() {
@@ -19,8 +20,8 @@ export default function Lineup() {
         <div key={c.id} className="hs-cast" style={{ '--i': i }}>
           <Critter className="hs-cast-critter" outfit={c.outfit} mood={c.mood} hop />
           <div className="hs-cast-name">
-            <Logo id={c.id} />
-            <span>{HARNESSES[c.id].name}</span>
+            {c.id !== 'mine' && <Logo id={c.id} />}
+            <span>{c.id === 'mine' ? 'mine' : HARNESSES[c.id].name}</span>
           </div>
         </div>
       ))}

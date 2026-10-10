@@ -5,8 +5,9 @@ import {
   Hero,
   ContextPanel,
   TurnStack,
-  Levers,
   Lineup,
+  LeverBoard,
+  RunPlayer,
   ReadStrategies,
   ToolsStill,
   ForgetStill,
@@ -16,13 +17,6 @@ import {
   Duel,
   Headline,
 } from '../components/project/harness';
-
-const SETTINGS = [
-  'let it search, in a loop',
-  'tools that do the whole job, not grep',
-  'forget late; drop old output first',
-  'a short skill for the job, not house rules',
-];
 
 const READ_RESULTS = [
   { label: 'whole repo', value: 69 },
@@ -96,27 +90,54 @@ function ContextShaping() {
 
       <Spread kicker="the harness">
         <p>
-          The harness is the code around the model: Claude Code, Cursor, Codex and the rest. Put
-          the same model in any of them and it behaves differently. The harness is the outfit.
+          The harness is everything around the model. Claude Code, Cursor, OpenCode and Aider can
+          all run the same Claude model. Same model inside, different outfit.
         </p>
         <Lineup />
       </Spread>
 
       <Spread kicker="four levers">
         <p>
-          Every harness sets the same four levers. Together they decide what lands in the window,
-          and what the model can do about it.
+          Every harness makes the same four choices. Each one is a lever with a few settings. Pick
+          a harness to see how it sets them.
         </p>
-        <Levers />
+        <LeverBoard mode="harness" />
+        <p>
+          Codex and Gemini CLI run their own models, so you can&apos;t put Claude in them. They
+          still have to set the same four levers.
+        </p>
       </Spread>
 
-      <Spread kicker="the test">
+      <Spread kicker="the question">
         <p>
-          I couldn&apos;t find anyone testing these levers against each other on the same model.
-          So I took one cheap model and changed only the harness.
+          If the model never changes, how much can the levers alone move the result? And which
+          setting wins on each one?
         </p>
-        <p>A run passes only if nothing is missed. Every leftover reference is a missed caller.</p>
+      </Spread>
+
+      <Spread kicker="the experiment">
+        <p>
+          One lever at a time. Everything else stays at a plain baseline: search as it goes, grep
+          and edit, forget nothing, no notes. Pick a lever to see what I tried on it.
+        </p>
+        <LeverBoard mode="experiment" />
+      </Spread>
+
+      <Spread kicker="the tasks">
+        <p>
+          The model is always Claude Haiku 5.5. The tasks are multi-file refactors, like renaming a
+          class used all over a codebase. You either update every reference or you don&apos;t, so a
+          miss is easy to count.
+        </p>
         <TaskCard />
+      </Spread>
+
+      <Spread kicker="one run">
+        <p>
+          Here&apos;s a real run on the hardest task, the way the harness sees it. Watch the window
+          grow with each turn, then the grader decide.
+        </p>
+        <RunPlayer />
       </Spread>
 
       <Spread kicker="lever 1 · what it reads">
@@ -190,7 +211,8 @@ function ContextShaping() {
       </Spread>
 
       <Spread kicker="the takeaway">
-        <Levers settings={SETTINGS} mood="happy" outfit="harness" />
+        <p>Here&apos;s how I&apos;d set the four levers, from what won on each.</p>
+        <LeverBoard mode="mine" />
         <p>Before you upgrade the model, look at what your harness is feeding it.</p>
       </Spread>
 
