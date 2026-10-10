@@ -79,3 +79,59 @@
     grid-template-columns: 4.75rem minmax(0, 1fr);
   }
 }
+
+.harness-bot-strap,
+.harness-bot-rope {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.harness-bot-strap {
+  stroke-width: 11;
+}
+
+.harness-bot-rope {
+  stroke-width: 6;
+}
+
+.harness-bot-buckle {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 5;
+}
+
+.harness-bot-hook {
+  fill: var(--ink);
+}
+
+.harness-bot-ring {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 7;
+}
+
+.harness-bot-cheer {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.writing-row:hover .harness-bot-cheer,
+.writing-row:focus-visible .harness-bot-cheer {
+  animation: harness-bot-cheer 0.55s ease-out;
+}
+
+@keyframes harness-bot-cheer {
+  0%, 100% { transform: none; }
+  25% { transform: scale(1.05, 0.93); }
+  55% { transform: translateY(-7%) scale(0.96, 1.05); }
+  80% { transform: scale(1.03, 0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writing-row:hover .harness-bot-cheer,
+  .writing-row:focus-visible .harness-bot-cheer {
+    animation: none;
+  }
+}

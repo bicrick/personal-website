@@ -1,0 +1,236 @@
+.cs-demo {
+  margin: 8px 0 28px;
+}
+
+.cs-demo-panel {
+  border: 1px solid var(--rule);
+  background: var(--code-wash);
+  padding: 0.85rem 0.9rem 0.95rem;
+}
+
+.cs-demo-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.cs-demo-kicker {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--ink-muted);
+}
+
+.cs-demo-badge {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  padding: 0.2rem 0.4rem;
+}
+
+.cs-demo-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.cs-stat {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.cs-stat strong {
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.cs-stat.is-accent strong {
+  color: var(--link);
+}
+
+.cs-demo-narration {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-left: 2px solid var(--link);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.45;
+  letter-spacing: -0.15px;
+  min-height: 2.9em;
+}
+
+.cs-demo-transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 0 0.75rem;
+}
+
+.cs-demo-transport button {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 0.25rem 0.4rem;
+  cursor: pointer;
+}
+
+.cs-demo-transport button:hover,
+.cs-demo-transport button:focus-visible {
+  border-color: var(--ink);
+  color: var(--ink);
+  outline: none;
+}
+
+.cs-demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.55rem;
+}
+
+.cs-demo-controls button {
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+}
+
+.cs-demo-controls button.is-on,
+.cs-demo-controls button:hover,
+.cs-demo-controls button:focus-visible {
+  border-color: var(--ink);
+  color: var(--ink);
+  outline: none;
+}
+
+.cs-demo-controls button.is-on {
+  border-color: var(--link);
+  color: var(--link);
+}
+
+.cs-demo-panel > .cs-demo-stats {
+  margin: 0.85rem 0 0.6rem;
+}
+
+.cs-demo figcaption {
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  font-style: italic;
+}
+
+/* Skeleton ladder: ring panel + pass-rate bars side by side. */
+.cs-ladder-layout {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.cs-passbars {
+  display: grid;
+  gap: 2px;
+}
+
+.cs-demo .cs-passbars-title {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.cs-passbar {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) minmax(0, 1fr) 2.6rem 3.4rem;
+  gap: 0.6rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cs-passbar:hover,
+.cs-passbar:focus-visible,
+.cs-passbar.is-on {
+  border-color: var(--rule);
+  background: var(--surface);
+  color: var(--ink);
+  outline: none;
+}
+
+.cs-passbar-track {
+  height: 0.55rem;
+  background: var(--seg-free);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cs-passbar-track span {
+  display: block;
+  height: 100%;
+  background: var(--ink-muted);
+  border-radius: 0 2px 2px 0;
+  transition: opacity 300ms ease;
+}
+
+.cs-passbar.is-on .cs-passbar-track span {
+  background: var(--link);
+}
+
+.cs-passbar.is-next .cs-passbar-track span {
+  opacity: 0.35;
+}
+
+.cs-passbar-val,
+.cs-passbar-tok {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.cs-passbar-tok {
+  color: var(--ink-muted);
+}
+
+@media (max-width: 480px) {
+  .cs-passbar {
+    grid-template-columns: minmax(5.5rem, 1fr) minmax(0, 1fr) 2.4rem;
+  }
+
+  .cs-passbar-tok {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-passbar-track span {
+    transition: none;
+  }
+}
