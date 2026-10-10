@@ -1,50 +1,50 @@
 import React, { useState } from 'react';
 import { LADDER } from './data';
 import useInViewOn from './useInViewOn';
-import StaticFallback from './StaticFallback';
 import './ContextFigures.css';
 
-export default function SkeletonLadder({ fallbackSrc }) {
+const TIPS = {
+  'L0 file tree': 'Bare file tree only.',
+  'L1 +imports': 'File tree plus imports — the only real step up.',
+  'L2 +signatures': 'Signatures add length, not accuracy.',
+  'L3 +docstrings': 'Docstrings add length, not accuracy.',
+};
+
+export default function SkeletonLadder() {
   const { ref, on } = useInViewOn();
   const peak = Math.max(...LADDER.map((r) => r.pass));
   const [active, setActive] = useState(LADDER[1].label);
-  const current = LADDER.find((r) => r.label === active) || LADDER[0];
 
   return (
     <figure className="cs-figure" ref={ref}>
       <div className="cs-figure-panel">
-        <p className="cs-kicker">skeleton ladder · single-shot</p>
-        <div className="cs-ladder">
-          {LADDER.map((row, i) => {
-            const isPeak = row.pass === peak;
-            return (
-              <button
-                key={row.label}
-                type="button"
-                className={`cs-ladder-step${isPeak ? ' is-peak' : ''}${active === row.label ? ' is-active' : ''}`}
-                onClick={() => setActive(row.label)}
-                onMouseEnter={() => setActive(row.label)}
-                onFocus={() => setActive(row.label)}
-              >
-                <span className="cs-ladder-rank">L{i}</span>
-                <span className="cs-ladder-name">{row.label.replace(/^L\d\s*/, '')}</span>
-                <span className="cs-ladder-pass">{row.pass}%</span>
+        <p className="cs-kicker">Skeleton ladder · single-shot</p>
+        <div className="cs-hbar" role="list">
+          {LADDER.map((row) => (
+            <button
+              key={row.label}
+              type="button"
+              role="listitem"
+              className={`cs-hbar-row${row.pass === peak ? ' is-best' : ''}${active === row.label ? ' is-active' : ''}`}
+              onMouseEnter={() => setActive(row.label)}
+              onFocus={() => setActive(row.label)}
+              onClick={() => setActive(row.label)}
+            >
+              <span className="cs-tip">{TIPS[row.label]}</span>
+              <span className="cs-hbar-label">{row.label}</span>
+              <span className="cs-hbar-track">
                 <span
-                  className={`cs-ladder-bar${on ? ' is-on' : ''}`}
+                  className={`cs-hbar-fill${on ? ' is-on' : ''}`}
                   style={{ '--fill': `${row.pass}%` }}
                 >
-                  <span />
+                  {row.pass}%
                 </span>
-              </button>
-            );
-          })}
+              </span>
+            </button>
+          ))}
         </div>
-        <p className="cs-note">
-          {current.label}: {current.pass}%. L0 to L1 is the only real step; signatures and docstrings add nothing more.
-        </p>
       </div>
-      <figcaption>Skeleton ladder</figcaption>
-      <StaticFallback src={fallbackSrc} alt="Static skeleton ladder chart" />
+      <figcaption>L0→L1 helps. Signatures and docstrings do not.</figcaption>
     </figure>
   );
 }

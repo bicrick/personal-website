@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SCOREBOARD, HARD_TIER, FINAL_RUNS } from './data';
-import StaticFallback from './StaticFallback';
+import useInViewOn from './useInViewOn';
 import './ContextFigures.css';
 
 function money(n) {
@@ -8,43 +8,49 @@ function money(n) {
   return `$${n.toFixed(4)}`;
 }
 
-export default function HarnessScoreboard({ fallbackSrc }) {
+export default function HarnessScoreboard() {
+  const { ref, on } = useInViewOn();
   const [active, setActive] = useState(SCOREBOARD[0].label);
-  const current = SCOREBOARD.find((r) => r.label === active) || SCOREBOARD[0];
+  const maxPass = Math.max(...SCOREBOARD.map((r) => r.pass));
 
   return (
-    <figure className="cs-figure">
+    <figure className="cs-figure" ref={ref}>
       <div className="cs-figure-panel">
-        <p className="cs-kicker">real harnesses · same tasks · Haiku 5.5</p>
-        <ol className="cs-scoreboard">
-          {SCOREBOARD.map((row, i) => (
-            <li
+        <p className="cs-kicker">Real harnesses · Haiku 5.5 · same tasks</p>
+        <div className="cs-hbar" role="list">
+          {SCOREBOARD.map((row) => (
+            <button
               key={row.label}
-              role="button"
-              tabIndex={0}
-              className={`${row.highlight ? 'is-best' : ''}${active === row.label ? ' is-active' : ''}`}
-              onClick={() => setActive(row.label)}
+              type="button"
+              role="listitem"
+              className={`cs-hbar-row${row.highlight || row.pass === maxPass ? ' is-best' : ''}${active === row.label ? ' is-active' : ''}`}
               onMouseEnter={() => setActive(row.label)}
               onFocus={() => setActive(row.label)}
-              onKeyDown={(e) => e.key === 'Enter' && setActive(row.label)}
+              onClick={() => setActive(row.label)}
             >
-              <span className="cs-rank">{i + 1}</span>
-              <span className="cs-name">{row.label}</span>
-              <span className="cs-pass">{row.pass}%</span>
-              <span className="cs-cost">{money(row.cost)}</span>
-            </li>
+              <span className="cs-tip">
+                {row.pass}% · {money(row.cost)} per solve
+              </span>
+              <span className="cs-hbar-label">{row.label}</span>
+              <span className="cs-hbar-track">
+                <span
+                  className={`cs-hbar-fill${on ? ' is-on' : ''}`}
+                  style={{ '--fill': `${row.pass}%` }}
+                >
+                  {row.pass}%
+                </span>
+              </span>
+            </button>
           ))}
-        </ol>
+        </div>
         <p className="cs-delta">
-          hard tier: naive {HARD_TIER.naive}% → structured loop {HARD_TIER.structuredLoop}% · combined final run{' '}
-          {FINAL_RUNS}/{FINAL_RUNS}
-        </p>
-        <p className="cs-note">
-          {current.label}: {current.pass}%, {money(current.cost)} per solve.
+          Hard tier: naive {HARD_TIER.naive}% → structured loop {HARD_TIER.structuredLoop}% ·
+          combined final {FINAL_RUNS}/{FINAL_RUNS}
         </p>
       </div>
-      <figcaption>Real harnesses vs naive and combined</figcaption>
-      <StaticFallback src={fallbackSrc} alt="Static real-harness scoreboard" />
+      <figcaption>
+        Hover a row for cost/solve. Combined harness leads; headless Aider expects a human in the loop.
+      </figcaption>
     </figure>
   );
 }
