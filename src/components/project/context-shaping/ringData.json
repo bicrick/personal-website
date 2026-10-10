@@ -1,0 +1,1945 @@
+{
+ "window": 1000000,
+ "model": "claude-haiku-5-5",
+ "task": {
+  "id": "marshmallow-h03-rename-validationerror",
+  "label": "rename ValidationError \u2192 SchemaValidationError",
+  "repo": "marshmallow",
+  "files": 19,
+  "lines": 468
+ },
+ "scenarios": {
+  "full": {
+   "run": "250bcb4a",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.05033,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "repo": 206179,
+      "messages": 341
+     },
+     "total": 206621
+    }
+   ],
+   "scale": 1.523
+  },
+  "touched": {
+   "run": "4cfe6db4",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.14977,
+   "frames": [
+    {
+     "seg": {
+      "system": 100,
+      "repo": 175197,
+      "messages": 339
+     },
+     "total": 175636
+    }
+   ],
+   "scale": 1.513
+  },
+  "skel_L0": {
+   "run": "b38af570",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.11995,
+   "frames": [
+    {
+     "seg": {
+      "system": 98,
+      "repo": 388,
+      "messages": 202
+     },
+     "total": 688
+    },
+    {
+     "seg": {
+      "system": 98,
+      "repo": 126505,
+      "messages": 333
+     },
+     "total": 126936
+    }
+   ],
+   "scale": 1.485
+  },
+  "skel_L1": {
+   "run": "0aba5ded",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.15032,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "repo": 3562,
+      "messages": 207
+     },
+     "total": 3870
+    },
+    {
+     "seg": {
+      "system": 101,
+      "repo": 175002,
+      "messages": 341
+     },
+     "total": 175444
+    }
+   ],
+   "scale": 1.523
+  },
+  "skel_L2": {
+   "run": "a6429169",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.18263,
+   "frames": [
+    {
+     "seg": {
+      "system": 105,
+      "repo": 43257,
+      "messages": 216
+     },
+     "total": 43578
+    },
+    {
+     "seg": {
+      "system": 105,
+      "repo": 221445,
+      "messages": 356
+     },
+     "total": 221906
+    }
+   ],
+   "scale": 1.588
+  },
+  "skel_L3": {
+   "run": "738b24f3",
+   "passed": false,
+   "toolCalls": null,
+   "steps": null,
+   "hitStepCap": null,
+   "compactions": 0,
+   "missedCallers": 468,
+   "costUsd": 0.18466,
+   "frames": [
+    {
+     "seg": {
+      "system": 104,
+      "repo": 46292,
+      "messages": 215
+     },
+     "total": 46611
+    },
+    {
+     "seg": {
+      "system": 104,
+      "repo": 223811,
+      "messages": 354
+     },
+     "total": 224269
+    }
+   ],
+   "scale": 1.582
+  },
+  "agentic": {
+   "run": "05399428",
+   "passed": false,
+   "toolCalls": 552,
+   "steps": 25,
+   "hitStepCap": true,
+   "compactions": 0,
+   "missedCallers": 18,
+   "costUsd": 0.1848,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 140
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 741
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 1827,
+      "toolout": 3584
+     },
+     "cached": 740,
+     "did": "grep \u00b7 read_file",
+     "calls": 2,
+     "reasoning": 1611,
+     "total": 6012
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 3560,
+      "toolout": 6532
+     },
+     "cached": 6011,
+     "did": "list_files \u00b7 grep",
+     "calls": 4,
+     "reasoning": 3223,
+     "total": 10693
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 5425,
+      "toolout": 9942
+     },
+     "cached": 10692,
+     "did": "read_file \u00d72 \u00b7 edit",
+     "calls": 7,
+     "reasoning": 4834,
+     "total": 15968
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 7543,
+      "toolout": 10079
+     },
+     "cached": 15968,
+     "did": "edit \u00d76",
+     "calls": 13,
+     "reasoning": 6446,
+     "total": 18223
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 10405,
+      "toolout": 13514
+     },
+     "cached": 18222,
+     "did": "edit \u00d714 \u00b7 read_file",
+     "calls": 28,
+     "reasoning": 8057,
+     "total": 24520
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 12135,
+      "toolout": 15969
+     },
+     "cached": 24520,
+     "did": "grep",
+     "calls": 29,
+     "reasoning": 9669,
+     "total": 28705
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 15450,
+      "toolout": 16421
+     },
+     "cached": 28703,
+     "did": "edit \u00d719",
+     "calls": 48,
+     "reasoning": 11280,
+     "total": 32472
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 17162,
+      "toolout": 18879
+     },
+     "cached": 32471,
+     "did": "grep",
+     "calls": 49,
+     "reasoning": 12892,
+     "total": 36642
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 22290,
+      "toolout": 19811
+     },
+     "cached": 36642,
+     "did": "edit \u00d740",
+     "calls": 89,
+     "reasoning": 14503,
+     "total": 42702
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 23984,
+      "toolout": 22199
+     },
+     "cached": 42702,
+     "did": "grep",
+     "calls": 90,
+     "reasoning": 16115,
+     "total": 46784
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 27718,
+      "toolout": 23040
+     },
+     "cached": 46784,
+     "did": "edit \u00d732",
+     "calls": 122,
+     "reasoning": 17726,
+     "total": 51359
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 32402,
+      "toolout": 24374
+     },
+     "cached": 51359,
+     "did": "edit \u00d748",
+     "calls": 170,
+     "reasoning": 19338,
+     "total": 57377
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 34079,
+      "toolout": 27029
+     },
+     "cached": 57376,
+     "did": "grep",
+     "calls": 171,
+     "reasoning": 20949,
+     "total": 61709
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 39867,
+      "toolout": 28468
+     },
+     "cached": 61708,
+     "did": "edit \u00d763",
+     "calls": 234,
+     "reasoning": 22561,
+     "total": 68936
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 41517,
+      "toolout": 31075
+     },
+     "cached": 68935,
+     "did": "grep",
+     "calls": 235,
+     "reasoning": 24172,
+     "total": 73193
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 46253,
+      "toolout": 32149
+     },
+     "cached": 73193,
+     "did": "edit \u00d747",
+     "calls": 282,
+     "reasoning": 25784,
+     "total": 79003
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 51204,
+      "toolout": 34106
+     },
+     "cached": 79002,
+     "did": "edit \u00d751",
+     "calls": 333,
+     "reasoning": 27395,
+     "total": 85911
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 52879,
+      "toolout": 36368
+     },
+     "cached": 85910,
+     "did": "grep",
+     "calls": 334,
+     "reasoning": 29007,
+     "total": 89848
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 57127,
+      "toolout": 37522
+     },
+     "cached": 89846,
+     "did": "edit \u00d741",
+     "calls": 375,
+     "reasoning": 30618,
+     "total": 95250
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 62535,
+      "toolout": 38996
+     },
+     "cached": 95250,
+     "did": "edit \u00d760",
+     "calls": 435,
+     "reasoning": 32230,
+     "total": 102132
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 64185,
+      "toolout": 41333
+     },
+     "cached": 102131,
+     "did": "grep",
+     "calls": 436,
+     "reasoning": 33841,
+     "total": 106119
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 69692,
+      "toolout": 42743
+     },
+     "cached": 106118,
+     "did": "edit \u00d761",
+     "calls": 497,
+     "reasoning": 35453,
+     "total": 113036
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 71342,
+      "toolout": 44621
+     },
+     "cached": 113034,
+     "did": "grep",
+     "calls": 498,
+     "reasoning": 37064,
+     "total": 116564
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 76264,
+      "toolout": 45899
+     },
+     "cached": 116563,
+     "did": "edit \u00d753",
+     "calls": 551,
+     "reasoning": 38676,
+     "total": 122764
+    }
+   ],
+   "scale": 1.523,
+   "peak": 122762
+  },
+  "agentic_tools": {
+   "run": "99d45084",
+   "passed": true,
+   "toolCalls": 9,
+   "steps": 5,
+   "hitStepCap": false,
+   "compactions": 0,
+   "missedCallers": 0,
+   "costUsd": 0.00206,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "messages": 140
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 1169
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "messages": 526,
+      "toolout": 5614
+     },
+     "cached": 1168,
+     "did": "find_references \u00b7 grep",
+     "calls": 2,
+     "reasoning": 311,
+     "total": 7169
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "messages": 959,
+      "toolout": 5909
+     },
+     "cached": 7167,
+     "did": "rename_symbol \u00b7 grep",
+     "calls": 4,
+     "reasoning": 621,
+     "total": 7897
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "messages": 1357,
+      "toolout": 6202
+     },
+     "cached": 7897,
+     "did": "rename_symbol \u00b7 grep",
+     "calls": 6,
+     "reasoning": 932,
+     "total": 8588
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "messages": 1783,
+      "toolout": 6974
+     },
+     "cached": 8586,
+     "did": "read_file \u00b7 run_tests",
+     "calls": 8,
+     "reasoning": 1242,
+     "total": 9786
+    }
+   ],
+   "scale": 1.523,
+   "peak": 9785
+  },
+  "skel_retrieval": {
+   "run": "ea7504bd",
+   "passed": false,
+   "toolCalls": 297,
+   "steps": 25,
+   "hitStepCap": true,
+   "compactions": 0,
+   "missedCallers": 187,
+   "costUsd": 0.1154,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 140
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 42234
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 1477,
+      "toolout": 2949
+     },
+     "cached": 42233,
+     "did": "grep \u00b7 list_files",
+     "calls": 2,
+     "reasoning": 1235,
+     "total": 46520
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 2882,
+      "toolout": 6532
+     },
+     "cached": 46519,
+     "did": "grep \u00b7 read_file",
+     "calls": 4,
+     "reasoning": 2471,
+     "total": 51508
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 4868,
+      "toolout": 6761
+     },
+     "cached": 51507,
+     "did": "edit \u00d710",
+     "calls": 14,
+     "reasoning": 3706,
+     "total": 53723
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 6645,
+      "toolout": 6943
+     },
+     "cached": 53721,
+     "did": "edit \u00d78",
+     "calls": 22,
+     "reasoning": 4942,
+     "total": 55682
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 7915,
+      "toolout": 9520
+     },
+     "cached": 55680,
+     "did": "grep",
+     "calls": 23,
+     "reasoning": 6177,
+     "total": 59529
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 9590,
+      "toolout": 9657
+     },
+     "cached": 59528,
+     "did": "edit \u00d76",
+     "calls": 29,
+     "reasoning": 7412,
+     "total": 61341
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 11039,
+      "toolout": 9723
+     },
+     "cached": 61340,
+     "did": "edit \u00d72",
+     "calls": 31,
+     "reasoning": 8648,
+     "total": 62856
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 13377,
+      "toolout": 10088
+     },
+     "cached": 62854,
+     "did": "edit \u00d716",
+     "calls": 47,
+     "reasoning": 9883,
+     "total": 65559
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 15802,
+      "toolout": 10535
+     },
+     "cached": 65558,
+     "did": "edit \u00d718",
+     "calls": 65,
+     "reasoning": 11119,
+     "total": 68431
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 17119,
+      "toolout": 13130
+     },
+     "cached": 68429,
+     "did": "grep",
+     "calls": 66,
+     "reasoning": 12354,
+     "total": 72343
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 19568,
+      "toolout": 13541
+     },
+     "cached": 72342,
+     "did": "edit \u00d718",
+     "calls": 84,
+     "reasoning": 13589,
+     "total": 75203
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 21986,
+      "toolout": 13952
+     },
+     "cached": 75202,
+     "did": "edit \u00d718",
+     "calls": 102,
+     "reasoning": 14825,
+     "total": 78032
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 23261,
+      "toolout": 16732
+     },
+     "cached": 78031,
+     "did": "grep",
+     "calls": 103,
+     "reasoning": 16060,
+     "total": 82087
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 25707,
+      "toolout": 17143
+     },
+     "cached": 82085,
+     "did": "edit \u00d718",
+     "calls": 121,
+     "reasoning": 17295,
+     "total": 84944
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 27922,
+      "toolout": 17504
+     },
+     "cached": 84943,
+     "did": "edit \u00d715",
+     "calls": 136,
+     "reasoning": 18531,
+     "total": 87520
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 29196,
+      "toolout": 20271
+     },
+     "cached": 87518,
+     "did": "grep",
+     "calls": 137,
+     "reasoning": 19766,
+     "total": 91561
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 31546,
+      "toolout": 20659
+     },
+     "cached": 91560,
+     "did": "edit \u00d717",
+     "calls": 154,
+     "reasoning": 21002,
+     "total": 94299
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 33829,
+      "toolout": 21025
+     },
+     "cached": 94298,
+     "did": "edit \u00d716",
+     "calls": 170,
+     "reasoning": 22237,
+     "total": 96948
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 36111,
+      "toolout": 21391
+     },
+     "cached": 96946,
+     "did": "edit \u00d716",
+     "calls": 186,
+     "reasoning": 23472,
+     "total": 99596
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 37387,
+      "toolout": 23908
+     },
+     "cached": 99595,
+     "did": "grep",
+     "calls": 187,
+     "reasoning": 24708,
+     "total": 103389
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 40565,
+      "toolout": 24616
+     },
+     "cached": 103388,
+     "did": "edit \u00d731",
+     "calls": 218,
+     "reasoning": 25943,
+     "total": 107275
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 41841,
+      "toolout": 27175
+     },
+     "cached": 107274,
+     "did": "grep",
+     "calls": 219,
+     "reasoning": 27179,
+     "total": 111110
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 45158,
+      "toolout": 27929
+     },
+     "cached": 111108,
+     "did": "edit \u00d733",
+     "calls": 252,
+     "reasoning": 28414,
+     "total": 115181
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "repo": 41493,
+      "messages": 46432,
+      "toolout": 30490
+     },
+     "cached": 115179,
+     "did": "grep",
+     "calls": 253,
+     "reasoning": 29649,
+     "total": 119016
+    }
+   ],
+   "scale": 1.523,
+   "peak": 119016
+  },
+  "combined": {
+   "run": "fd8eb7b5",
+   "passed": true,
+   "toolCalls": 7,
+   "steps": 5,
+   "hitStepCap": false,
+   "compactions": 0,
+   "missedCallers": 0,
+   "costUsd": 0.00195,
+   "frames": [
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "procedure": 196,
+      "messages": 140
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 1365
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "procedure": 196,
+      "messages": 421,
+      "toolout": 3078
+     },
+     "cached": 1365,
+     "did": "find_references",
+     "calls": 1,
+     "reasoning": 241,
+     "total": 4724
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "procedure": 196,
+      "messages": 772,
+      "toolout": 3348
+     },
+     "cached": 4723,
+     "did": "rename_symbol",
+     "calls": 2,
+     "reasoning": 483,
+     "total": 5345
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "procedure": 196,
+      "messages": 1143,
+      "toolout": 3640
+     },
+     "cached": 5344,
+     "did": "rename_symbol \u00b7 grep",
+     "calls": 4,
+     "reasoning": 724,
+     "total": 6008
+    },
+    {
+     "seg": {
+      "system": 101,
+      "tools": 928,
+      "procedure": 196,
+      "messages": 1445,
+      "toolout": 6825
+     },
+     "cached": 6007,
+     "did": "grep \u00b7 run_tests",
+     "calls": 6,
+     "reasoning": 965,
+     "total": 9495
+    }
+   ],
+   "scale": 1.523,
+   "peak": 9494
+  }
+ },
+ "compaction": {
+  "task": "marshmallow-t04_rename_registryerror",
+  "seed": 0,
+  "budget": 12000,
+  "policies": {
+   "none": {
+    "run": "24732bfb",
+    "passed": true,
+    "toolCalls": 24,
+    "steps": 9,
+    "hitStepCap": false,
+    "compactions": 0,
+    "missedCallers": 0,
+    "costUsd": 0.00477,
+    "frames": [
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 133
+      },
+      "cached": 0,
+      "did": "task",
+      "calls": 0,
+      "reasoning": 0,
+      "total": 734
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 501,
+       "toolout": 1403
+      },
+      "cached": 733,
+      "did": "grep \u00b7 read_file",
+      "calls": 2,
+      "reasoning": 292,
+      "total": 2505
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 938,
+       "toolout": 5891
+      },
+      "cached": 2503,
+      "did": "read_file \u00d72",
+      "calls": 4,
+      "reasoning": 583,
+      "total": 7430
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2026,
+       "toolout": 9152
+      },
+      "cached": 7429,
+      "did": "edit \u00d78 \u00b7 read_file",
+      "calls": 13,
+      "reasoning": 875,
+      "total": 11779
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2412,
+       "toolout": 9220
+      },
+      "cached": 11778,
+      "did": "grep",
+      "calls": 14,
+      "reasoning": 1166,
+      "total": 12233
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2742,
+       "toolout": 12298
+      },
+      "cached": 12232,
+      "did": "read_file",
+      "calls": 15,
+      "reasoning": 1458,
+      "total": 15641
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 3290,
+       "toolout": 12717
+      },
+      "cached": 15640,
+      "did": "edit \u00d72 \u00b7 grep",
+      "calls": 18,
+      "reasoning": 1749,
+      "total": 16608
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 3878,
+       "toolout": 13553
+      },
+      "cached": 16608,
+      "did": "edit \u00d72 \u00b7 grep \u00b7 list_files",
+      "calls": 22,
+      "reasoning": 2041,
+      "total": 18032
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 4225,
+       "toolout": 14012
+      },
+      "cached": 18031,
+      "did": "run_tests",
+      "calls": 23,
+      "reasoning": 2332,
+      "total": 18838
+     }
+    ],
+    "scale": 1.523,
+    "peak": 18837
+   },
+   "sum50": {
+    "run": "17b2925d",
+    "passed": true,
+    "toolCalls": 48,
+    "steps": 25,
+    "hitStepCap": true,
+    "compactions": 14,
+    "missedCallers": 0,
+    "costUsd": 0.04447,
+    "frames": [
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146
+      },
+      "cached": 0,
+      "did": "task",
+      "calls": 0,
+      "reasoning": 0,
+      "total": 807
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 230,
+       "toolout": 1545
+      },
+      "cached": 807,
+      "did": "grep \u00b7 read_file",
+      "calls": 2,
+      "reasoning": 0,
+      "total": 2436
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 731,
+       "toolout": 3204
+      },
+      "cached": 2435,
+      "did": "edit \u00d74 \u00b7 read_file",
+      "calls": 7,
+      "reasoning": 0,
+      "total": 4596
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 1131,
+       "toolout": 10059
+      },
+      "cached": 4596,
+      "did": "edit \u00d73 \u00b7 read_file \u00d72",
+      "calls": 12,
+      "reasoning": 0,
+      "total": 11851
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 1032
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 12,
+      "reasoning": 0,
+      "total": 1839
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 228,
+       "toolout": 3465,
+       "summary": 1032
+      },
+      "cached": 1838,
+      "did": "grep \u00b7 read_file",
+      "calls": 14,
+      "reasoning": 0,
+      "total": 5386
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 347,
+       "toolout": 3509,
+       "summary": 1032
+      },
+      "cached": 5386,
+      "did": "edit",
+      "calls": 15,
+      "reasoning": 0,
+      "total": 5549
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 389,
+       "toolout": 6899,
+       "summary": 1032
+      },
+      "cached": 5549,
+      "did": "read_file",
+      "calls": 16,
+      "reasoning": 0,
+      "total": 8981
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 1994
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 16,
+      "reasoning": 0,
+      "total": 2801
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 228,
+       "toolout": 3465,
+       "summary": 1994
+      },
+      "cached": 2801,
+      "did": "grep \u00b7 read_file",
+      "calls": 18,
+      "reasoning": 0,
+      "total": 6348
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 3073
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 18,
+      "reasoning": 0,
+      "total": 3880
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 225,
+       "toolout": 486,
+       "summary": 3073
+      },
+      "cached": 3880,
+      "did": "grep \u00d72",
+      "calls": 20,
+      "reasoning": 0,
+      "total": 4445
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 320,
+       "toolout": 3876,
+       "summary": 3073
+      },
+      "cached": 4445,
+      "did": "read_file",
+      "calls": 21,
+      "reasoning": 0,
+      "total": 7930
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 4161
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 21,
+      "reasoning": 0,
+      "total": 4968
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 228,
+       "toolout": 3465,
+       "summary": 4161
+      },
+      "cached": 4968,
+      "did": "grep \u00b7 read_file",
+      "calls": 23,
+      "reasoning": 0,
+      "total": 8515
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 5181
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 23,
+      "reasoning": 0,
+      "total": 5988
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 237,
+       "toolout": 75,
+       "summary": 5181
+      },
+      "cached": 5988,
+      "did": "grep",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 6154
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 6077
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 6884
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 6962
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 7769
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 7888
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 8695
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 8818
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 9625
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 9752
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 10559
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 10656
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 11463
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 10772
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 11579
+     },
+     {
+      "seg": {
+       "system": 111,
+       "tools": 550,
+       "messages": 146,
+       "summary": 11543
+      },
+      "cached": 661,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 12350
+     }
+    ],
+    "scale": 1.677,
+    "peak": 12350
+   },
+   "sum90": {
+    "run": "f1efa6d4",
+    "passed": true,
+    "toolCalls": 34,
+    "steps": 14,
+    "hitStepCap": false,
+    "compactions": 2,
+    "missedCallers": 0,
+    "costUsd": 0.01191,
+    "frames": [
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 133
+      },
+      "cached": 0,
+      "did": "task",
+      "calls": 0,
+      "reasoning": 0,
+      "total": 734
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 597,
+       "toolout": 1403
+      },
+      "cached": 733,
+      "did": "grep \u00b7 read_file",
+      "calls": 2,
+      "reasoning": 388,
+      "total": 2601
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1702,
+       "toolout": 3016
+      },
+      "cached": 2599,
+      "did": "edit \u00d77 \u00b7 read_file",
+      "calls": 10,
+      "reasoning": 776,
+      "total": 5319
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2418,
+       "toolout": 9217
+      },
+      "cached": 5317,
+      "did": "edit \u00d72 \u00b7 read_file \u00d72",
+      "calls": 14,
+      "reasoning": 1163,
+      "total": 12236
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 133,
+       "summary": 1081
+      },
+      "cached": 600,
+      "did": "task",
+      "event": "summarized",
+      "calls": 14,
+      "reasoning": 0,
+      "total": 1815
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 595,
+       "toolout": 3147,
+       "summary": 1081
+      },
+      "cached": 1814,
+      "did": "grep \u00b7 read_file",
+      "calls": 16,
+      "reasoning": 388,
+      "total": 5424
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1094,
+       "toolout": 3186,
+       "summary": 1081
+      },
+      "cached": 5423,
+      "did": "edit",
+      "calls": 17,
+      "reasoning": 776,
+      "total": 5962
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1519,
+       "toolout": 6264,
+       "summary": 1081
+      },
+      "cached": 5961,
+      "did": "read_file",
+      "calls": 18,
+      "reasoning": 1163,
+      "total": 9465
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2125,
+       "toolout": 6310,
+       "summary": 1081
+      },
+      "cached": 9465,
+      "did": "edit \u00d72",
+      "calls": 20,
+      "reasoning": 1551,
+      "total": 10117
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2585,
+       "toolout": 6713,
+       "summary": 1081
+      },
+      "cached": 10117,
+      "did": "grep \u00d72",
+      "calls": 22,
+      "reasoning": 1939,
+      "total": 10980
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 3092,
+       "toolout": 10018,
+       "summary": 1081
+      },
+      "cached": 10980,
+      "did": "read_file \u00d72",
+      "calls": 24,
+      "reasoning": 2327,
+      "total": 14792
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 133,
+       "summary": 2021
+      },
+      "cached": 600,
+      "did": "task",
+      "event": "summarized",
+      "calls": 24,
+      "reasoning": 0,
+      "total": 2755
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 647,
+       "toolout": 404,
+       "summary": 2021
+      },
+      "cached": 2754,
+      "did": "grep \u00d72",
+      "calls": 26,
+      "reasoning": 388,
+      "total": 3673
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1157,
+       "toolout": 3940,
+       "summary": 2021
+      },
+      "cached": 3671,
+      "did": "read_file \u00b7 run_tests",
+      "calls": 28,
+      "reasoning": 776,
+      "total": 7719
+     }
+    ],
+    "scale": 1.523,
+    "peak": 14791
+   },
+   "drop": {
+    "run": "b3cd4a31",
+    "passed": true,
+    "toolCalls": 25,
+    "steps": 8,
+    "hitStepCap": false,
+    "compactions": 4,
+    "missedCallers": 0,
+    "costUsd": 0.00824,
+    "frames": [
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 133
+      },
+      "cached": 0,
+      "did": "task",
+      "calls": 0,
+      "reasoning": 0,
+      "total": 734
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 678,
+       "toolout": 1403
+      },
+      "cached": 733,
+      "did": "grep \u00b7 read_file",
+      "calls": 2,
+      "reasoning": 469,
+      "total": 2682
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1314,
+       "toolout": 8969
+      },
+      "cached": 2681,
+      "did": "read_file \u00d73",
+      "calls": 5,
+      "reasoning": 939,
+      "total": 10884
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 1827,
+       "toolout": 10708
+      },
+      "cached": 1278,
+      "did": "read_file",
+      "event": "dropped old tool outputs",
+      "calls": 6,
+      "reasoning": 1408,
+      "total": 13136
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 2380,
+       "toolout": 3593
+      },
+      "cached": 1977,
+      "did": "grep",
+      "event": "dropped old tool outputs",
+      "calls": 7,
+      "reasoning": 1877,
+      "total": 6574
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 3005,
+       "toolout": 9129
+      },
+      "cached": 6573,
+      "did": "read_file \u00d73",
+      "calls": 10,
+      "reasoning": 2347,
+      "total": 12735
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 4545,
+       "toolout": 6034
+      },
+      "cached": 2587,
+      "did": "edit \u00d712",
+      "event": "dropped old tool outputs",
+      "calls": 22,
+      "reasoning": 2816,
+      "total": 11180
+     },
+     {
+      "seg": {
+       "system": 101,
+       "tools": 500,
+       "messages": 5111,
+       "toolout": 1078
+      },
+      "cached": 3828,
+      "did": "grep \u00b7 run_tests",
+      "event": "dropped old tool outputs",
+      "calls": 24,
+      "reasoning": 3285,
+      "total": 6790
+     }
+    ],
+    "scale": 1.523,
+    "peak": 13135
+   }
+  }
+ },
+ "procedure": {
+  "task": "marshmallow-t04_rename_registryerror",
+  "seed": 0,
+  "runs": {
+   "none": {
+    "run": "24732bfb",
+    "passed": true,
+    "toolCalls": 24,
+    "steps": 9,
+    "hitStepCap": false,
+    "compactions": 0,
+    "missedCallers": 0,
+    "costUsd": 0.00477,
+    "first": {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "messages": 133
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 734
+    },
+    "peak": 18837
+   },
+   "skill": {
+    "run": "ad8e1f80",
+    "passed": true,
+    "toolCalls": 24,
+    "steps": 9,
+    "hitStepCap": false,
+    "compactions": 0,
+    "missedCallers": 0,
+    "costUsd": 0.00474,
+    "first": {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "procedure": 196,
+      "messages": 133
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 930
+    },
+    "peak": 18257
+   },
+   "agentsmd": {
+    "run": "77492de6",
+    "passed": true,
+    "toolCalls": 22,
+    "steps": 8,
+    "hitStepCap": false,
+    "compactions": 0,
+    "missedCallers": 0,
+    "costUsd": 0.00474,
+    "first": {
+     "seg": {
+      "system": 101,
+      "tools": 500,
+      "procedure": 206,
+      "messages": 133
+     },
+     "cached": 0,
+     "did": "task",
+     "calls": 0,
+     "reasoning": 0,
+     "total": 940
+    },
+    "peak": 18169
+   }
+  },
+  "skillTokensEst": 128
+ },
+ "final": {
+  "full": {
+   "n": 125,
+   "meanPrompt": 105626,
+   "maxPrompt": 206651
+  },
+  "combined": {
+   "n": 125,
+   "meanPrompt": 6848,
+   "maxPrompt": 24424
+  }
+ }
+}
