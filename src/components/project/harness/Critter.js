@@ -1,7 +1,8 @@
 import React from 'react';
 
-// A small pixel Claude that runs through the harness post. Drawn on an
-// 18 x 13 grid so every pose stays crisp at any size.
+// A small pixel Claude that runs through the harness post, drawn on an
+// 18 x 13 grid. Shapes overlap slightly so there are no seams when it
+// moves on sub-pixel positions.
 //
 // mood: open | happy | tired | sleep
 // walk: legs step in place
@@ -66,20 +67,18 @@ const OUTFITS = {
   },
 };
 
-export function CritterBody({ mood = 'open', walk = false, outfit, x = 0, y = 0 }) {
+export function CritterBody({ mood = 'open', walk = false, outfit, x = 0, y = 0, legsRef }) {
   const o = OUTFITS[outfit] || {};
   return (
     <g className={`critter${walk ? ' is-walk' : ''}`} transform={`translate(${x} ${y})`}>
       {(o.behind || []).map(([cls, d], i) => <path key={`b${i}`} className={cls} d={d} />)}
-      <g className="critter-legs">
-        <rect className="critter-leg is-a" x="4" y="9" width="1" height="3" />
-        <rect className="critter-leg is-b" x="6" y="9" width="1" height="3" />
-        <rect className="critter-leg is-a" x="11" y="9" width="1" height="3" />
-        <rect className="critter-leg is-b" x="13" y="9" width="1" height="3" />
+      <g className="critter-legs" ref={legsRef}>
+        <rect className="critter-leg is-a" x="4" y="8.5" width="1" height="3.5" />
+        <rect className="critter-leg is-b" x="6" y="8.5" width="1" height="3.5" />
+        <rect className="critter-leg is-a" x="11" y="8.5" width="1" height="3.5" />
+        <rect className="critter-leg is-b" x="13" y="8.5" width="1" height="3.5" />
       </g>
-      <rect className="critter-fill" x="3" y="2" width="12" height="7" />
-      <rect className="critter-fill" x="1" y="5" width="2" height="2" />
-      <rect className="critter-fill" x="15" y="5" width="2" height="2" />
+      <path className="critter-fill" d="M3 2h12v3h2v2h-2v2H3V7H1V5h2z" />
       {!o.hideEyes && EYES[mood].map(([ex, ey, w, h]) => (
         <rect key={`${ex}-${ey}`} className="critter-eye" x={ex} y={ey} width={w} height={h} />
       ))}
@@ -98,7 +97,6 @@ export default function Critter({ mood, walk, hop, outfit, className = '', label
       className={`critter-svg${hop ? ' is-hop' : ''} ${className}`}
       style={style}
       viewBox="0 -4 18 17"
-      shapeRendering="crispEdges"
       role={label ? 'img' : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : 'true'}

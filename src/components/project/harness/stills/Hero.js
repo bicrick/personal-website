@@ -11,7 +11,7 @@ const CARTS = [
 export default function Hero() {
   return (
     <div className="hs-hero">
-      <svg viewBox="0 6 92 36" shapeRendering="crispEdges" aria-hidden="true" className="hs-hero-svg">
+      <svg viewBox="0 6 92 36" aria-hidden="true" className="hs-hero-svg">
         <g className="cart-ground">
           {Array.from({ length: 16 }, (_, i) => (
             <rect key={i} x={i * 8} y="39" width="3" height="0.5" />

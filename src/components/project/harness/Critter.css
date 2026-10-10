@@ -48,11 +48,11 @@ html.is-dark .o-dark { fill: #34353f; }
   transform-box: fill-box;
 }
 
-.critter.is-walk .critter-leg.is-a { animation: critter-step 0.5s steps(1) infinite; }
-.critter.is-walk .critter-leg.is-b { animation: critter-step 0.5s steps(1) -0.25s infinite; }
+.critter.is-walk .critter-leg.is-a { animation: critter-step 0.5s ease-in-out infinite; }
+.critter.is-walk .critter-leg.is-b { animation: critter-step 0.5s ease-in-out -0.25s infinite; }
 
 @keyframes critter-step {
-  0% { transform: translateY(0); }
+  0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-1px); }
 }
 
@@ -73,12 +73,12 @@ html.is-dark .o-dark { fill: #34353f; }
 .cart-load.c-skill { fill: var(--c-skill); }
 .cart-load.c-sys { fill: var(--c-sys); }
 
-.cart.is-bob-1 .cart-ride { animation: cart-bob 0.5s steps(1) infinite; }
-.cart.is-bob-2 .cart-ride { animation: cart-bob 0.5s steps(1) -0.17s infinite; }
-.cart.is-bob-3 .cart-ride { animation: cart-bob 0.5s steps(1) -0.34s infinite; }
+.cart.is-bob-1 .cart-ride { animation: cart-bob 0.5s ease-in-out infinite; }
+.cart.is-bob-2 .cart-ride { animation: cart-bob 0.5s ease-in-out -0.17s infinite; }
+.cart.is-bob-3 .cart-ride { animation: cart-bob 0.5s ease-in-out -0.34s infinite; }
 
 @keyframes cart-bob {
-  0% { transform: translateY(0); }
+  0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-0.5px); }
 }
 
