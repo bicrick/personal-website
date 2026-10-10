@@ -1,11 +1,12 @@
 import React from 'react';
 import Critter from '../Critter';
+import Logo from '../logos';
 
 // What happens when the window fills. Three bars, three answers.
 const TRIGGERS = [
-  { at: 50, who: 'Gemini CLI' },
-  { at: 90, who: 'Codex CLI' },
-  { at: 97, who: 'Claude Code, near the limit', high: true },
+  { at: 50, who: 'Gemini CLI', id: 'gemini' },
+  { at: 90, who: 'Codex CLI', id: 'codex' },
+  { at: 97, who: 'Claude Code, near the limit', id: 'claude', high: true },
 ];
 
 function Blocks({ items }) {
@@ -27,7 +28,7 @@ export default function ForgetStill() {
           <Blocks items={[['c-sys', 6], ['c-tool', 6], ['c-msg', 3], ['c-result', 18], ['c-result', 22], ['c-result', 20], ['c-result', 17]]} />
           {TRIGGERS.map((t) => (
             <span key={t.who} className={`hs-trigger${t.high ? ' is-high' : ''}`} style={{ left: `${t.at}%` }}>
-              <span>{t.who}</span>
+              <span><Logo id={t.id} />{t.who}</span>
             </span>
           ))}
         </div>

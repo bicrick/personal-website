@@ -482,6 +482,7 @@
 .hs-strat-name {
   font-family: var(--font-pixel);
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .hs-strat-who {
@@ -675,7 +676,7 @@
   grid-template-columns: 150px 1fr 44px;
   align-items: center;
   column-gap: 12px;
-  margin: 8px 0;
+  margin: 16px 0;
   font-size: 14px;
 }
 
@@ -931,5 +932,98 @@
   .hs-duel .cc-bar.is-grow .cc-bar-seg,
   .hs-turn-critter {
     transition: none;
+  }
+}
+
+/* ---------- logos ---------- */
+
+.hs-logo {
+  display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  margin-right: 0.35em;
+  vertical-align: -0.17em;
+  fill: var(--ink);
+  flex-shrink: 0;
+}
+
+.hs-logo.is-claude { fill: #d97757; }
+.hs-logo.is-gemini { fill: #5b6ff0; }
+.hs-logo.is-opencode .hs-logo-bg { fill: var(--ink); }
+.hs-logo.is-opencode .hs-logo-fg { fill: var(--paper); }
+.hs-logo.is-opencode .hs-logo-mid { fill: #8a8a8a; }
+.hs-logo.is-aider .hs-logo-bg { fill: #0d1f14; }
+.hs-logo.is-aider .hs-logo-fg { fill: #3ce87a; }
+.hs-logo.is-mini .hs-logo-bg { fill: var(--ink-faint); }
+.hs-logo.is-mini .hs-logo-text {
+  fill: var(--ink);
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.hs-who {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 2px 10px;
+}
+
+.hs-who-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.hs-trigger span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.hs-bar-label {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- lineup ---------- */
+
+.hs-lineup {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  padding: 20px 12px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.hs-cast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hs-cast-critter {
+  width: 100%;
+  max-width: 76px;
+}
+
+.hs-cast .critter-svg.is-hop > .critter {
+  animation-delay: calc(var(--i) * -0.27s);
+}
+
+.hs-cast-name {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .hs-lineup {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 18px;
   }
 }

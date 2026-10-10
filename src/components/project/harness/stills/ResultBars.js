@@ -1,6 +1,7 @@
 import React from 'react';
 import Critter from '../Critter';
 import useInView from '../useInView';
+import Logo from '../logos';
 
 // Horizontal pass-rate bars. rows: [{ label, value, side, hl, mood }]
 export default function ResultBars({ title, sideLabel, rows, foot }) {
@@ -15,10 +16,12 @@ export default function ResultBars({ title, sideLabel, rows, foot }) {
       )}
       {rows.map((row, i) => (
         <div key={row.label} className={`hs-bar-row${row.hl ? ' is-hl' : ''}`} style={{ '--i': i, '--w': `${row.value}%` }}>
-          <span className="hs-bar-label">{row.label}</span>
+          <span className="hs-bar-label">{row.logo && <Logo id={row.logo} />}{row.label}</span>
           <div className="hs-bar-track">
             <span className="hs-bar-fill" />
-            {row.mood && <Critter className="hs-bar-critter" mood={row.mood} hop={row.mood === 'happy'} />}
+            {(row.mood || row.outfit) && (
+              <Critter className="hs-bar-critter" mood={row.mood} outfit={row.outfit} hop={row.mood === 'happy'} />
+            )}
           </div>
           <span className="hs-bar-val">{row.value}%</span>
           {sideLabel && <span className="hs-bar-side">{row.side}</span>}

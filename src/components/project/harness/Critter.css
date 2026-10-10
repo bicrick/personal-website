@@ -23,6 +23,24 @@
 .critter-sweat { fill: var(--c-msg); }
 .critter-z { fill: var(--ink-muted); }
 
+/* outfits */
+.o-cape, .o-dark { fill: #1c1c22; }
+.o-white { fill: #f4f2ec; }
+.o-mid { fill: #8a8a8a; }
+.o-emblem { fill: #f6d55c; }
+.o-hat { fill: #4b5fd6; }
+.o-hat-brim { fill: #3646b0; }
+.o-star { fill: #f6d55c; }
+.o-visor { fill: #0d2a18; }
+.o-visor-glow { fill: #3ce87a; }
+.o-hardhat { fill: #f2c230; }
+.o-hardhat-band { fill: #d9a514; }
+.o-strap { fill: #2a2b33; }
+.o-buckle { fill: #c9c7bf; }
+
+html.is-dark .o-cape,
+html.is-dark .o-dark { fill: #34353f; }
+
 .critter-leg,
 .cart-ride,
 .cart-ground,

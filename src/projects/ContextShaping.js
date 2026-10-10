@@ -6,6 +6,7 @@ import {
   ContextPanel,
   TurnStack,
   Levers,
+  Lineup,
   ReadStrategies,
   ToolsStill,
   ForgetStill,
@@ -38,12 +39,12 @@ const TOLD_RESULTS = [
 ];
 
 const REAL_RESULTS = [
-  { label: 'my stacked harness', value: 100, side: '$0.0017', hl: true, mood: 'happy' },
-  { label: 'OpenCode', value: 94, side: '$0.0043' },
-  { label: 'mini-swe-agent', value: 94, side: '$0.0031' },
-  { label: 'Claude Code', value: 91, side: '$0.0048' },
-  { label: 'whole repo', value: 64, side: '$0.0653' },
-  { label: 'Aider, headless', value: 18, side: '$0.16' },
+  { label: 'my stacked harness', value: 100, side: '$0.0017', hl: true, mood: 'happy', outfit: 'harness' },
+  { label: 'OpenCode', logo: 'opencode', outfit: 'opencode', value: 94, side: '$0.0043' },
+  { label: 'mini-swe-agent', logo: 'mini', outfit: 'mini', value: 94, side: '$0.0031' },
+  { label: 'Claude Code', logo: 'claude', mood: 'open', value: 91, side: '$0.0048' },
+  { label: 'whole repo', value: 64, side: '$0.0653', mood: 'tired' },
+  { label: 'Aider, headless', logo: 'aider', outfit: 'aider', value: 18, side: '$0.16' },
 ];
 
 function ContextShaping() {
@@ -80,11 +81,16 @@ function ContextShaping() {
 
       <Spread kicker="the harness">
         <p>
-          The harness is the code around the model: Claude Code, Cursor, Codex. It decides what goes
-          in the window and what the model can do about it.
+          The harness is the code around the model: Claude Code, Cursor, Codex, and the rest. Put
+          the same model in any of them and it acts differently. Think of the harness as the outfit.
         </p>
+        <Lineup />
+      </Spread>
+
+      <Spread kicker="what the harness controls">
         <p>
-          We can&apos;t change the model. We can change what it sees, and how it touches our code.
+          It decides what goes in the window and what the model can do about it. We can&apos;t
+          change the model. We can change what it sees, and how it touches our code.
         </p>
         <Levers />
       </Spread>
