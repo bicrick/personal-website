@@ -164,7 +164,7 @@
     "imageHeight": 630,
     "type": "article"
   },
-  "/projects/context-shaping": {
+  "/writing/context-shaping": {
     "ogTitle": "is your harness making your model dumber?",
     "seoTitle": "Is your harness making your model dumber? - bicrick",
     "description": "Same cheap model, only the harness changed: Claude Haiku 5.5 went from 63% to 100% on multi-file refactors at about 1/32 the cost per solved task.",

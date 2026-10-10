@@ -1,6 +1,13 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
-import ProjectFigure from '../components/project/ProjectFigure';
+import {
+  HeadlineCompare,
+  LayoutBars,
+  SkeletonLadder,
+  ToolsCompare,
+  CompactionBars,
+  HarnessScoreboard,
+} from '../components/project/context-shaping';
 
 const img = (name) => `${process.env.PUBLIC_URL}/images/context-shaping/${name}`;
 
@@ -9,6 +16,8 @@ function ContextShaping() {
     <ProjectDetail
       title="is your harness making your model dumber?"
       date="October 2026"
+      backHref="/"
+      backLabel="home"
       linkHref="https://github.com/bicrick/context-shaping"
       linkLabel="view repo"
       abstract="Same cheap model, only the harness changed: Claude Haiku 5.5 went from 63% to 100% on multi-file refactors at about 1/32 the cost per solved task."
@@ -25,10 +34,7 @@ function ContextShaping() {
         No bigger model, no fine-tuning, no clever prompt. Just different decisions about what the model gets to see and what it gets to do.
       </p>
 
-      <ProjectFigure
-        src={img('headline.png')}
-        alt="Naive full-repo prompt vs the best harness, same model"
-      />
+      <HeadlineCompare fallbackSrc={img('headline.png')} />
 
       <h2>/ why i cared</h2>
 
@@ -120,10 +126,7 @@ function ContextShaping() {
 
       <h3>1. More context didn&apos;t fix it</h3>
 
-      <ProjectFigure
-        src={img('arm_layout.png')}
-        alt="Pass rate by context layout"
-      />
+      <LayoutBars fallbackSrc={img('arm_layout.png')} />
 
       <p>
         My first hypothesis died fast. The whole repo in one prompt passed 69% in the main runs. Showing the model <em>only</em> the files it needed to change passed 68%.
@@ -147,10 +150,7 @@ function ContextShaping() {
 
       <h3>2. Skeletons alone fall flat</h3>
 
-      <ProjectFigure
-        src={img('arm_ladder.png')}
-        alt="Skeleton ladder"
-      />
+      <SkeletonLadder fallbackSrc={img('arm_ladder.png')} />
 
       <p>
         Repo maps are a popular idea, so I built a ladder. A bare file tree passed 45%. Adding imports got it to 61%. Adding signatures (57%) and docstrings (59%) did nothing more.
@@ -170,10 +170,7 @@ function ContextShaping() {
 
       <h3>3. The loop and a real tool did the heavy lifting</h3>
 
-      <ProjectFigure
-        src={img('arm_tools.png')}
-        alt="Raw grep/edit vs structured tools"
-      />
+      <ToolsCompare fallbackSrc={img('arm_tools.png')} />
 
       <p>
         Two changes carried this whole project.
@@ -221,10 +218,7 @@ function ContextShaping() {
 
       <h3>4. Compaction backfired, and the prompt cache is why</h3>
 
-      <ProjectFigure
-        src={img('arm_compaction_tight.png')}
-        alt="Compaction at a 12k budget"
-      />
+      <CompactionBars fallbackSrc={img('arm_compaction_tight.png')} />
 
       <p>
         At a 24k-token budget, compaction barely fired, and every variant landed within a point of no compaction. So I squeezed the budget to 12k.
@@ -252,10 +246,7 @@ function ContextShaping() {
 
       <h3>5. The real-harness scoreboard</h3>
 
-      <ProjectFigure
-        src={img('arm_E_real_harnesses.png')}
-        alt="Real harnesses vs naive and combined"
-      />
+      <HarnessScoreboard fallbackSrc={img('arm_E_real_harnesses.png')} />
 
       <p>
         Stacking the winners (agent loop, structured tools, no compaction, the skill file) gave the combined harness. It passed all 125 runs in the final head-to-head. On the hard tier in the main runs, the naive prompt passed 28% and the loop with structured tools passed 100%.
