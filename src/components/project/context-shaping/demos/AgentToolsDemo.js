@@ -10,7 +10,7 @@ const TOUR = [
     mode: 'grep',
     t: 'grep -n ValidationError **/*.py',
     detail: 'dozens of hits across 19 files (study: 468 lines)',
-    say: 'Blind text search. Hits everywhere — no idea which are definitions vs callers.',
+    say: 'Blind text search. Hits everywhere, with no idea which are definitions vs callers.',
   },
   {
     mode: 'grep',
@@ -32,9 +32,9 @@ const TOUR = [
   },
   {
     mode: 'grep',
-    t: `turn ${VALIDATION_ERROR.grep.turns}/${VALIDATION_ERROR.grep.turns} — stop`,
+    t: `turn ${VALIDATION_ERROR.grep.turns}/${VALIDATION_ERROR.grep.turns}: stop`,
     detail: 'step cap; callers still missing',
-    say: `Hits the step cap. Callers missed — hard rename ${VALIDATION_ERROR.grep.wins} in the study.`,
+    say: `Hits the step cap. Callers missed. Hard rename ${VALIDATION_ERROR.grep.wins} in the study.`,
   },
   {
     mode: 'structured',
@@ -52,12 +52,12 @@ const TOUR = [
     mode: 'structured',
     t: 'rename_symbol(…, apply=True)',
     detail: 'one mechanical rename',
-    say: 'One mechanical rename — no grep thrash.',
+    say: 'One mechanical rename. No grep thrash.',
   },
   {
     mode: 'structured',
     t: 'run tests · find_references again',
-    detail: 'zero leftovers — done',
+    detail: 'zero leftovers, done',
     say: `Tests green, zero leftovers. Hard rename ${VALIDATION_ERROR.structured.wins} with ~${VALIDATION_ERROR.structured.calls} calls.`,
   },
 ];

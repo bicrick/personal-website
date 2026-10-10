@@ -14,12 +14,12 @@ const TOUR = [
   {
     injected: true,
     active: -1,
-    say: 'Inject a five-step refactor skill into system context — same accuracy target, cheaper path.',
+    say: 'Inject a five-step refactor skill into the system context.',
   },
   {
     injected: true,
     active: 0,
-    say: 'Step 1: find every reference first — don’t rename blind.',
+    say: 'Step 1: find every reference first. Don’t rename blind.',
   },
   {
     injected: true,
