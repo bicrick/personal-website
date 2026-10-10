@@ -21,7 +21,7 @@ const MESSAGES = [
 
 const NARRATION = {
   none: `Window fills with every tool dump. Cache stays hot (${CACHE.noCompaction}%) but context is bloated.`,
-  sum50: `Summarize early. Pass drops to 79% and cache collapses ${CACHE.noCompaction}%→${CACHE.summarize50}% — summaries bust the prompt-cache prefix.`,
+  sum50: `Summarize early. Pass drops to 79% and the cache hit rate falls from ${CACHE.noCompaction}% to ${CACHE.summarize50}%, because every summary rewrites the prompt prefix.`,
   sum90: 'Wait longer before summarizing. Softens the accuracy hit (88%) vs cutting at 50%.',
   drop: 'Drop old tool outputs, keep recent work. Same 93% pass, cheaper than early summaries.',
 };
@@ -143,8 +143,9 @@ export default function CompactionDemo() {
         </div>
       </div>
       <figcaption>
-        Strike-through = removed from context. Cache {CACHE.noCompaction}%→{CACHE.summarize50}% when
-        summarizing at 50% is from the study; the message list is a simplified illustration.
+        Strike-through = removed from context. Compaction pass rates are at a 12k-token budget;
+        cache {CACHE.noCompaction}% vs {CACHE.summarize50}% is from the study. The message list is a
+        simplified illustration.
       </figcaption>
     </figure>
   );

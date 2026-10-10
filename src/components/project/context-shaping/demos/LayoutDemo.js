@@ -5,11 +5,11 @@ import DemoTransport, { DemoNarration } from './DemoTransport';
 import './Demo.css';
 
 const NARRATION = {
-  full: 'Everything dumped in. High tokens; the model drowns in noise (69%).',
-  touched: 'Only the files that change. Almost as good as full, fewer tokens — still single-shot.',
+  full: 'Everything dumped in. Most tokens, and still 69%: the missed callers were right there in the prompt.',
+  touched: 'Only the files that change. Knowing where to look didn’t help (68%). Still one shot to get every edit right.',
   skeleton: 'Signatures only, no agent. Cheap, but the model can’t fetch what it’s missing (57%).',
   'skel+tools': 'Skeleton plus a loop that retrieves on demand. Pass jumps to 92%.',
-  agentic: 'Search when needed, open what you need. 93% — explore beats stuffing the window.',
+  agentic: 'Search when needed, open what you need. 93%: exploring beats stuffing the window.',
 };
 
 function filesInMode(modeId) {

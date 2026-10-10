@@ -6,10 +6,10 @@ import './Demo.css';
 
 const NARRATION = {
   L0: 'The model only sees file names. It can’t tell who calls what.',
-  L1: 'Imports land — now it can see ValidationError flow between modules. First real jump (45%→61%).',
-  L2: 'Signatures add shape without bodies. Pass dips a bit while tokens climb.',
-  L3: 'Docstrings add intent. Still far cheaper than shipping every line.',
-  full: 'Every line ships. Tokens balloon for only a few more points — structure beat volume.',
+  L1: 'Imports land, so it can see ValidationError flow between modules. The one real jump (45% to 61%).',
+  L2: 'Signatures add shape without bodies. Tokens climb, pass dips a little.',
+  L3: 'Docstrings add intent. Still no better than imports alone.',
+  full: 'Every line ships. Best single-shot score, but still far behind an agent that can look around.',
 };
 
 function fileChunk(file, levelId) {
@@ -138,9 +138,9 @@ export default function SkeletonDemo() {
         </div>
       </div>
       <figcaption>
-        The model needs structure (imports / signatures), not every line — past the first level,
-        more detail mostly adds tokens. Pass rates from the study; token counts and mini-repo are
-        a simplified illustration.
+        Imports were the only level that helped. Signatures and docstrings added tokens, not
+        passes. Pass rates are from the study; token counts and the mini repo are a simplified
+        illustration.
       </figcaption>
     </figure>
   );

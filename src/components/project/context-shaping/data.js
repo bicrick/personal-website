@@ -42,7 +42,7 @@ export const VALIDATION_ERROR = {
   lines: 468,
   files: 19,
   grep: { wins: '0/3', calls: 451, tokens: 122762, turns: 25 },
-  structured: { wins: '3/3', calls: 8, tokens: 9456 },
+  structured: { wins: '3/3', calls: 8, tokens: 9785 },
 };
 
 export const COMPACTION = [
