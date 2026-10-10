@@ -102,8 +102,7 @@
   margin: 0 0 0.55rem;
 }
 
-.cs-demo-controls button,
-.cs-seg button {
+.cs-demo-controls button {
   border: 1px solid var(--rule);
   background: var(--surface);
   color: var(--ink-muted);
@@ -116,212 +115,19 @@
 
 .cs-demo-controls button.is-on,
 .cs-demo-controls button:hover,
-.cs-demo-controls button:focus-visible,
-.cs-seg button.is-on,
-.cs-seg button:hover,
-.cs-seg button:focus-visible {
+.cs-demo-controls button:focus-visible {
   border-color: var(--ink);
   color: var(--ink);
   outline: none;
 }
 
-.cs-demo-controls button.is-on,
-.cs-seg button.is-on {
+.cs-demo-controls button.is-on {
   border-color: var(--link);
   color: var(--link);
 }
 
-.cs-ladder-rail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin: 0 0 0.75rem;
-}
-
-.cs-ladder-step {
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--ink-muted);
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  padding: 0.3rem 0.45rem;
-  opacity: 0.55;
-  cursor: pointer;
-  transition: opacity 280ms ease, border-color 280ms ease, color 280ms ease;
-}
-
-.cs-ladder-step.is-done {
-  opacity: 0.85;
-  color: var(--ink-soft);
-}
-
-.cs-ladder-step.is-on {
-  opacity: 1;
-  border-color: var(--link);
-  color: var(--link);
-}
-
-.cs-file-list--static {
-  pointer-events: none;
-}
-
-.cs-file-list--static span {
-  display: block;
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink-muted);
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  letter-spacing: 0.01em;
-  padding: 0.4rem 0.45rem;
-}
-
-.cs-file-list--static li:last-child span {
-  border-bottom: 0;
-}
-
-.cs-file-list--static span.is-in {
-  box-shadow: inset 2px 0 0 var(--link);
-  color: var(--ink);
-}
-
-.cs-code--morph.is-anim {
-  animation: cs-code-morph 420ms ease;
-}
-
-@keyframes cs-code-morph {
-  from {
-    opacity: 0.28;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.cs-demo-split {
-  display: grid;
-  grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr);
-  gap: 0.55rem;
-  min-height: 12rem;
-}
-
-.cs-file-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  overflow: auto;
-  max-height: 16rem;
-}
-
-.cs-file-list button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: 0;
-  border-bottom: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink-muted);
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  letter-spacing: 0.01em;
-  padding: 0.4rem 0.45rem;
-  cursor: pointer;
-}
-
-.cs-file-list button:last-child {
-  border-bottom: 0;
-}
-
-.cs-file-list button.is-on,
-.cs-file-list button:hover,
-.cs-file-list button:focus-visible {
-  color: var(--ink);
-  background: var(--code-wash);
-  outline: none;
-}
-
-.cs-file-list button.is-in {
-  box-shadow: inset 2px 0 0 var(--link);
-  color: var(--ink);
-}
-
-.cs-file-list button.is-dim,
-.cs-file-static.is-dim {
-  opacity: 0.45;
-}
-
-.cs-file-static {
-  display: block;
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink-muted);
-  font-family: var(--font-pixel);
-  font-size: 10px;
-  letter-spacing: 0.01em;
-  padding: 0.4rem 0.45rem;
-}
-
-.cs-file-list li:last-child .cs-file-static {
-  border-bottom: 0;
-}
-
-.cs-file-static.is-in {
-  box-shadow: inset 2px 0 0 var(--link);
-  color: var(--ink);
-}
-
-.cs-file-static.is-on {
-  background: var(--code-wash);
-}
-
-.cs-code {
-  margin: 0;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  padding: 0.65rem 0.7rem;
-  overflow: auto;
-  max-height: 16rem;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--ink-soft);
-  white-space: pre;
-}
-
-.cs-code .is-hit {
-  background: var(--link-soft);
-  color: var(--ink);
-}
-
-.cs-code .is-miss {
-  background: rgba(196, 70, 50, 0.12);
-}
-
-.cs-code .is-ok {
-  background: rgba(37, 99, 235, 0.1);
-}
-
-.cs-token-bar {
-  margin: 0.65rem 0 0;
-  height: 0.45rem;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.cs-token-bar > span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--ink);
-  transition: width 400ms ease;
-}
-
-.cs-token-bar.is-hot > span {
-  background: var(--link);
+.cs-demo-panel > .cs-demo-stats {
+  margin: 0.85rem 0 0.6rem;
 }
 
 .cs-demo figcaption {
@@ -334,156 +140,97 @@
   font-style: italic;
 }
 
-/* Agent replay */
-.cs-replay {
+/* Skeleton ladder: ring panel + pass-rate bars side by side. */
+.cs-ladder-layout {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.9rem;
 }
 
-.cs-replay-log {
-  border: 1px solid var(--rule);
+.cs-passbars {
+  display: grid;
+  gap: 2px;
+}
+
+.cs-demo .cs-passbars-title {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.cs-passbar {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) minmax(0, 1fr) 2.6rem 3.4rem;
+  gap: 0.6rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cs-passbar:hover,
+.cs-passbar:focus-visible,
+.cs-passbar.is-on {
+  border-color: var(--rule);
   background: var(--surface);
-  padding: 0.55rem 0.65rem;
-  min-height: 9.5rem;
-  max-height: 14rem;
-  overflow: auto;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--ink-soft);
+  color: var(--ink);
+  outline: none;
 }
 
-.cs-replay-log .step {
-  margin: 0 0 0.35rem;
+.cs-passbar-track {
+  height: 0.55rem;
+  background: var(--seg-free);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cs-passbar-track span {
+  display: block;
+  height: 100%;
+  background: var(--ink-muted);
+  border-radius: 0 2px 2px 0;
+  transition: opacity 300ms ease;
+}
+
+.cs-passbar.is-on .cs-passbar-track span {
+  background: var(--link);
+}
+
+.cs-passbar.is-next .cs-passbar-track span {
   opacity: 0.35;
 }
 
-.cs-replay-log .step.is-done,
-.cs-replay-log .step.is-current {
-  opacity: 1;
-}
-
-.cs-replay-log .step.is-current {
-  color: var(--link);
-}
-
-.cs-replay-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.85rem;
-}
-
-/* Compaction window */
-.cs-window {
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  padding: 0.45rem;
-  display: grid;
-  gap: 0.3rem;
-  min-height: 10rem;
-}
-
-.cs-msg {
-  border: 1px solid var(--rule);
-  background: var(--code-wash);
-  padding: 0.35rem 0.45rem;
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  color: var(--ink-muted);
-  transition: opacity 200ms ease, filter 200ms ease;
-}
-
-.cs-msg.is-tool {
-  border-style: dashed;
-}
-
-.cs-msg.is-gone {
-  opacity: 0.25;
-  filter: grayscale(1);
-  text-decoration: line-through;
-}
-
-.cs-msg.is-summary {
-  border-color: var(--link);
-  color: var(--link);
-}
-
-/* Skill inject */
-.cs-skill {
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  padding: 0.7rem 0.75rem;
-}
-
-.cs-skill-title {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-pixel);
-  font-size: 12px;
+.cs-passbar-val,
+.cs-passbar-tok {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
 
-.cs-skill ol {
-  margin: 0;
-  padding-left: 1.2rem;
-  color: var(--ink-soft);
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.cs-skill li.is-on {
-  color: var(--link);
-}
-
-.cs-skill-context {
-  margin-top: 0.65rem;
-  border-top: 1px solid var(--rule);
-  padding-top: 0.55rem;
-  font-family: var(--font-pixel);
-  font-size: 11px;
+.cs-passbar-tok {
   color: var(--ink-muted);
 }
 
-.cs-skill-context.is-in {
-  color: var(--link);
-}
-
-.cs-skill.is-empty {
-  opacity: 0.55;
-}
-
-.cs-skill.is-injected {
-  opacity: 1;
-}
-
-@media (max-width: 700px) {
-  .cs-demo-split {
-    grid-template-columns: 1fr;
+@media (max-width: 480px) {
+  .cs-passbar {
+    grid-template-columns: minmax(5.5rem, 1fr) minmax(0, 1fr) 2.4rem;
   }
 
-  .cs-file-list {
-    display: flex;
-    overflow-x: auto;
-    max-height: none;
-  }
-
-  .cs-file-list button,
-  .cs-file-list--static span,
-  .cs-file-static {
-    flex: 0 0 auto;
-    border-bottom: 0;
-    border-right: 1px solid var(--rule);
-    white-space: nowrap;
+  .cs-passbar-tok {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cs-token-bar > span,
-  .cs-msg,
-  .cs-ladder-step {
+  .cs-passbar-track span {
     transition: none;
-  }
-
-  .cs-code--morph.is-anim {
-    animation: none;
   }
 }

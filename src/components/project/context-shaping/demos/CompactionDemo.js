@@ -1,152 +1,129 @@
-import React, { useMemo } from 'react';
-import { COMPACTION, CACHE } from '../data';
+import React from 'react';
+import { COMPACTION } from '../data';
+import ContextPanel from '../ring/ContextRing';
+import TurnStrip from '../ring/TurnStrip';
+import { COMPACTION_RUNS, fmtTokens, SPLIT_NOTE } from '../ring/runs';
 import useDemoAutoplay from './useDemoAutoplay';
-import DemoTransport, { DemoNarration } from './DemoTransport';
-import './Demo.css';
+import DemoFrame from './DemoFrame';
 
-const MESSAGES = [
-  { id: 1, kind: 'user', text: 'Rename ValidationError → SchemaError across the package.' },
-  { id: 2, kind: 'assistant', text: 'I will find references, then edit.' },
-  { id: 3, kind: 'tool', text: 'tool: grep ValidationError → 48 matches' },
-  { id: 4, kind: 'tool', text: 'tool: read fields.py (120 lines)' },
-  { id: 5, kind: 'tool', text: 'tool: read schema.py (200 lines)' },
-  { id: 6, kind: 'tool', text: 'tool: read validate.py (90 lines)' },
-  { id: 7, kind: 'assistant', text: 'Editing call sites…' },
-  { id: 8, kind: 'tool', text: 'tool: edit exceptions.py' },
-  { id: 9, kind: 'tool', text: 'tool: grep again → 22 matches left' },
-  { id: 10, kind: 'tool', text: 'tool: read tests/test_schema.py' },
-  { id: 11, kind: 'assistant', text: 'Continuing renames…' },
-  { id: 12, kind: 'tool', text: 'tool: edit more callers…' },
-];
+const BUDGET = COMPACTION_RUNS.budget;
+const RUNS = COMPACTION_RUNS.policies;
 
-const NARRATION = {
-  none: `Window fills with every tool dump. Cache stays hot (${CACHE.noCompaction}%) but context is bloated.`,
-  sum50: `Summarize early. Pass drops to 79% and the cache hit rate falls from ${CACHE.noCompaction}% to ${CACHE.summarize50}%, because every summary rewrites the prompt prefix.`,
-  sum90: 'Wait longer before summarizing. Softens the accuracy hit (88%) vs cutting at 50%.',
-  drop: 'Drop old tool outputs, keep recent work. Same 93% pass, cheaper than early summaries.',
+const POLICY = {
+  none: {
+    marks: [{ at: BUDGET, label: '12k' }],
+    start: `No compaction. Every result stays, so the prompt climbs past 12k to ${fmtTokens(RUNS.none.peak)}. But each call begins with the previous call’s prompt, so the reusable prefix (outer arc) keeps pace.`,
+    end: 'Done in 9 calls. Across all runs: 93% pass and an 85% cache hit rate.',
+  },
+  sum50: {
+    marks: [{ at: BUDGET * 0.5, label: '50%' }],
+    start: 'Summarize at 50%: once a prompt passes 6k, the whole history is replaced by a summary.',
+    event: 'Summarized. The prompt shrinks, but the reusable prefix drops to just the system prompt and tools. The next call pays full price.',
+    spiral: 'Now the summary alone is over 6k, so every call triggers another summary, each longer than the last.',
+    end: 'Step cap: 25 calls, 14 summaries. Across all runs: 79% pass, a 10% cache hit rate, and the highest cost per solve.',
+  },
+  sum90: {
+    marks: [{ at: BUDGET * 0.9, label: '90%' }],
+    start: 'Summarize at 90%: wait until 10.8k, so the history is rewritten less often.',
+    event: 'Summarized. Fewer rewrites than at 50%, but each one still wipes the reusable prefix.',
+    end: 'Two summaries in this run. Across all runs: 88% pass, a 43% cache hit rate.',
+  },
+  drop: {
+    marks: [{ at: BUDGET * 0.5, label: '50%' }],
+    start: 'Drop old tool outputs: past 6k, keep the conversation but blank every result except the last two.',
+    event: 'Old outputs blanked. The prompt before the first blanked result is still reusable; everything after it is new.',
+    end: 'Done in 8 calls with 4 drops. Across all runs: 93% pass at $0.0143 per solve, the best of the three policies, though the cache hit rate is 16%.',
+  },
 };
 
-function applyMode(modeId) {
-  if (modeId === 'none') {
-    return { gone: new Set(), summary: null, fill: 92, cache: CACHE.noCompaction };
+const TIMELINE = COMPACTION.flatMap((p, pi) =>
+  RUNS[p.id].frames.map((frame, f, all) => ({ pi, f, frame, last: f === all.length - 1 }))
+);
+const FIRST = COMPACTION.map((_, pi) => TIMELINE.findIndex((s) => s.pi === pi));
+
+function sayFor({ pi, f, frame, last }) {
+  const id = COMPACTION[pi].id;
+  const p = POLICY[id];
+  if (last) return p.end;
+  if (id === 'sum50' && f >= 17) return p.spiral;
+  if (frame.event) return p.event;
+  if (f > 0) {
+    const prior = RUNS[id].frames.slice(0, f).some((x) => x.event);
+    if (prior) return p.event;
   }
-  if (modeId === 'sum50') {
-    return {
-      gone: new Set([3, 4, 5, 6, 8, 9]),
-      summary: 'summary@50%: found ValidationError in fields/schema/validate; edits started',
-      fill: 55,
-      cache: CACHE.summarize50,
-    };
-  }
-  if (modeId === 'sum90') {
-    return {
-      gone: new Set([3, 4, 5]),
-      summary: 'summary@90%: reference search complete; continuing edits',
-      fill: 78,
-      cache: null,
-    };
-  }
-  return {
-    gone: new Set([3, 4, 5, 6]),
-    summary: null,
-    fill: 60,
-    cache: null,
-  };
+  return p.start;
 }
 
-export default function CompactionDemo() {
-  const {
-    rootRef,
-    idx,
-    playing,
-    reduce,
-    pause,
-    play,
-    replay,
-    stepNext,
-    stepPrev,
-    goTo,
-  } = useDemoAutoplay({
-    length: COMPACTION.length,
-    stepMs: 1800,
-    holdLastMs: 2800,
-    loop: true,
-  });
+const SAY = TIMELINE.map(sayFor);
+const DURATIONS = TIMELINE.map((s, i) => {
+  if (s.f === 0 || s.last) return 2600;
+  return SAY[i] !== SAY[i - 1] ? 2400 : 650;
+});
 
-  const mode = COMPACTION[idx];
-  const modeId = mode.id;
-  const view = useMemo(() => applyMode(modeId), [modeId]);
+export default function CompactionDemo() {
+  const auto = useDemoAutoplay({ length: TIMELINE.length, durations: DURATIONS, holdLastMs: 3200 });
+  const step = TIMELINE[auto.idx];
+  const policy = COMPACTION[step.pi];
+  const run = RUNS[policy.id];
+  const { frame } = step;
+  const reused = frame.cached / frame.total;
+
+  const ring = {
+    id: policy.id,
+    title: policy.label,
+    segments: frame.seg,
+    reasoning: frame.reasoning,
+    capacity: BUDGET,
+    capacityLabel: policy.id === 'none' ? '12k (not enforced)' : '12k budget',
+    marks: POLICY[policy.id].marks,
+    outer: { tokens: frame.cached, kind: 'cache' },
+    note: `${Math.round(reused * 100)}% reused`,
+    footer: (
+      <TurnStrip
+        cells={run.frames.map((x) => ({
+          fill: x.cached / x.total,
+          mark: x.event ? (policy.id === 'drop' ? 'drop' : 'summary') : null,
+        }))}
+        current={step.f}
+        label="model calls"
+        onPick={(i) => auto.goTo(FIRST[step.pi] + i)}
+        legend="one cell per call · shade = prompt reused from the previous call · tick = compaction"
+      />
+    ),
+  };
 
   return (
-    <figure className="cs-demo" ref={rootRef}>
-      <div className="cs-demo-panel">
-        <div className="cs-demo-head">
-          <p className="cs-demo-kicker">Compaction · context window</p>
-          <span className="cs-demo-badge">simplified window · study cache rates</span>
-        </div>
-
-        <DemoNarration>{NARRATION[modeId]}</DemoNarration>
-
-        <div className="cs-demo-controls" role="tablist" aria-label="compaction mode">
-          {COMPACTION.map((m, i) => (
-            <button
-              key={m.id}
-              type="button"
-              className={modeId === m.id ? 'is-on' : ''}
-              onClick={() => goTo(i)}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-
-        <DemoTransport
-          playing={playing}
-          reduce={reduce}
-          onReplay={replay}
-          onPause={pause}
-          onPlay={play}
-          onPrev={stepPrev}
-          onNext={stepNext}
-        />
-
-        <div className="cs-demo-stats">
-          <span className="cs-stat is-accent">
-            pass <strong>{mode.pass}%</strong>
-          </span>
-          {mode.cost != null && (
-            <span className="cs-stat">
-              cost/solve <strong>${mode.cost.toFixed(4)}</strong>
-            </span>
-          )}
-          <span className="cs-stat">
-            cache hit <strong>{view.cache != null ? `${view.cache}%` : '—'}</strong>
-          </span>
-        </div>
-
-        <div className="cs-window" aria-live="polite">
-          {view.summary && <div className="cs-msg is-summary">{view.summary}</div>}
-          {MESSAGES.map((m) => (
-            <div
-              key={m.id}
-              className={`cs-msg${m.kind === 'tool' ? ' is-tool' : ''}${
-                view.gone.has(m.id) ? ' is-gone' : ''
-              }`}
-            >
-              {m.text}
-            </div>
-          ))}
-        </div>
-
-        <div className="cs-token-bar is-hot" aria-hidden="true">
-          <span style={{ width: `${view.fill}%` }} />
-        </div>
-      </div>
-      <figcaption>
-        Strike-through = removed from context. Compaction pass rates are at a 12k-token budget;
-        cache {CACHE.noCompaction}% vs {CACHE.summarize50}% is from the study. The message list is a
-        simplified illustration.
-      </figcaption>
-    </figure>
+    <DemoFrame
+      auto={auto}
+      kicker="Compaction · when the window fills"
+      badge="real runs · 12k-token budget"
+      say={SAY[auto.idx]}
+      tabs={{
+        label: 'compaction policy',
+        items: COMPACTION.map((p, i) => ({
+          id: p.id,
+          label: p.label,
+          on: i === step.pi,
+          onClick: () => auto.goTo(FIRST[i]),
+        })),
+      }}
+      stats={[
+        { label: 'pass rate', value: `${policy.pass}%`, accent: true },
+        { label: 'cache hit rate', value: `${policy.cache}%` },
+        { label: 'cost/solve', value: `$${policy.cost.toFixed(4)}` },
+        { label: 'this run', value: `${run.steps} calls · ${run.compactions} compactions` },
+      ]}
+      caption={`Outer arc and cell shading: how much of each prompt is identical to the previous call’s, which is what the prompt cache can reuse. One real run per policy on the marshmallow RegistryError rename; the three compaction policies ran at a 12k-token budget, “none” is the plain grep agent with no budget. Pass, cache and cost: main runs.`}
+    >
+      <ContextPanel
+        rings={[ring]}
+        focus={policy.id === 'drop' ? 'toolout' : policy.id === 'none' ? 'toolout' : 'summary'}
+        notes={{
+          summary: 'Written by the model itself, then sent as the new start of the conversation. A rewritten start means nothing after the system prompt and tools can come from cache.',
+          toolout: policy.id === 'drop' ? 'Blanked results stay as a one-line placeholder, so the conversation keeps its shape.' : null,
+        }}
+        source={`${SPLIT_NOTE} Reused prefix computed by comparing consecutive prompts. Run ${run.run}.`}
+      />
+    </DemoFrame>
   );
 }

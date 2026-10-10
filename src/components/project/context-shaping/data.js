@@ -1,4 +1,8 @@
-/** Exact numbers from the published study. Demo token counts for the mini-repo are illustrative. */
+/**
+ * Exact numbers from the published study (results/article_numbers.json, summary.csv).
+ * Per-run context sizes for the ring demos live in ringData.json
+ * (built by scripts/extract-context-rings.py).
+ */
 
 export const HEADLINE = {
   naivePass: 63,
@@ -7,13 +11,6 @@ export const HEADLINE = {
   combinedCost: 0.0016,
   costRatioLabel: '1/32',
 };
-
-export const LAYOUT = [
-  { label: 'full repo (naive)', pass: 69, note: 'single-shot' },
-  { label: 'only files needed', pass: 68, note: 'oracle / single-shot' },
-  { label: 'skeleton + agent', pass: 92, note: 'agent loop' },
-  { label: 'agent + grep', pass: 93, note: 'agent loop' },
-];
 
 export const LADDER = [
   { id: 'L0', label: 'L0 file tree', pass: 45, short: 'tree' },
@@ -45,17 +42,13 @@ export const VALIDATION_ERROR = {
   structured: { wins: '3/3', calls: 8, tokens: 9785 },
 };
 
+/** `none` is the plain grep agent (no budget); the others ran at a 12k-token budget. */
 export const COMPACTION = [
-  { id: 'none', label: 'none', pass: 93, cost: null, cache: 85 },
+  { id: 'none', label: 'none', pass: 93, cost: 0.0085, cache: 85 },
   { id: 'sum50', label: 'summarize @50%', pass: 79, cost: 0.0397, cache: 10 },
-  { id: 'sum90', label: 'summarize @90%', pass: 88, cost: null, cache: null },
-  { id: 'drop', label: 'drop old tool outputs', pass: 93, cost: 0.0143, cache: null },
+  { id: 'sum90', label: 'summarize @90%', pass: 88, cost: 0.0147, cache: 43 },
+  { id: 'drop', label: 'drop old outputs', pass: 93, cost: 0.0143, cache: 16 },
 ];
-
-export const CACHE = {
-  summarize50: 10,
-  noCompaction: 85,
-};
 
 export const HARD_TIER = {
   naive: 28,
@@ -79,112 +72,13 @@ export const SKILL = {
   costWith: 0.008,
   costWithout: 0.0085,
   agentsMd: 91,
+  costAgentsMd: 0.0092,
+  /** The skill's five steps, condensed from cshape/strategies.py SKILL. */
   steps: [
-    'Find all references to the symbol',
-    'Change each definition and call site',
+    'Find all references first: src and tests, imports, __all__, docstrings, string paths',
+    'Change the definition, then every reference you found',
     'Run the tests',
-    'Search again for leftovers',
-    'Finish only when the grader is clean',
+    'Search again for the old name; the count must be zero',
+    'Only then call finish',
   ],
 };
-
-/** Simplified mini-repo for demos (marshmallow-shaped ValidationError rename). */
-export const MINI_REPO = {
-  task: 'Rename ValidationError → SchemaError',
-  label: 'simplified marshmallow-shaped snippet',
-  files: [
-    {
-      path: 'marshmallow/exceptions.py',
-      role: 'def',
-      touched: true,
-      imports: [],
-      signature: 'class ValidationError(Exception):',
-      docstring: '"""Raised when validation fails."""',
-      body: `class ValidationError(Exception):
-    """Raised when validation fails."""
-    def __init__(self, message, field_name=None):
-        self.messages = message
-        self.field_name = field_name
-        super().__init__(message)`,
-    },
-    {
-      path: 'marshmallow/fields.py',
-      role: 'raise',
-      touched: true,
-      imports: ['from .exceptions import ValidationError'],
-      signature: 'def _validate(self, value):',
-      docstring: '"""Validate a single field value."""',
-      body: `from .exceptions import ValidationError
-
-def _validate(self, value):
-    """Validate a single field value."""
-    if value is None and self.required:
-        raise ValidationError("required")
-    return value`,
-    },
-    {
-      path: 'marshmallow/schema.py',
-      role: 'catch',
-      touched: true,
-      imports: ['from .exceptions import ValidationError'],
-      signature: 'def load(self, data):',
-      docstring: '"""Deserialize and validate input data."""',
-      body: `from .exceptions import ValidationError
-
-def load(self, data):
-    """Deserialize and validate input data."""
-    try:
-        return self._do_load(data)
-    except ValidationError as err:
-        raise err`,
-    },
-    {
-      path: 'marshmallow/validate.py',
-      role: 'ref',
-      touched: true,
-      imports: ['from .exceptions import ValidationError'],
-      signature: 'def validate_email(value):',
-      docstring: '"""Raise ValidationError on bad email."""',
-      body: `from .exceptions import ValidationError
-
-def validate_email(value):
-    """Raise ValidationError on bad email."""
-    if "@" not in value:
-        raise ValidationError("invalid email")
-    return value`,
-    },
-    {
-      path: 'tests/test_schema.py',
-      role: 'test',
-      touched: true,
-      imports: ['from marshmallow.exceptions import ValidationError'],
-      signature: 'def test_required_missing():',
-      docstring: null,
-      body: `from marshmallow.exceptions import ValidationError
-
-def test_required_missing():
-    with pytest.raises(ValidationError):
-        UserSchema().load({})`,
-    },
-    {
-      path: 'docs/quickstart.rst',
-      role: 'docs',
-      touched: false,
-      imports: [],
-      signature: null,
-      docstring: null,
-      body: `Catch ValidationError when calling Schema.load.`,
-    },
-  ],
-};
-
-/** Illustrative demo token weights (not study totals). */
-export function demoTokensForLevel(levelId) {
-  const weights = { L0: 48, L1: 96, L2: 180, L3: 240, full: 620 };
-  return weights[levelId] ?? 180;
-}
-
-export function demoTokensForLayout(modeId) {
-  const weights = { full: 620, touched: 410, skeleton: 180, 'skel+tools': 220, agentic: 95 };
-  return weights[modeId] ?? 200;
-}

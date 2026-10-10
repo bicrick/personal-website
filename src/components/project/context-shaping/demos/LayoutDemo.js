@@ -1,157 +1,139 @@
-import React, { useMemo } from 'react';
-import { LAYOUT_MODES, MINI_REPO, demoTokensForLayout } from '../data';
+import React from 'react';
+import ContextPanel from '../ring/ContextRing';
+import TurnStrip from '../ring/TurnStrip';
+import { SCENARIOS, ringFor, fmtTokens, SPLIT_NOTE } from '../ring/runs';
 import useDemoAutoplay from './useDemoAutoplay';
-import DemoTransport, { DemoNarration } from './DemoTransport';
-import './Demo.css';
+import DemoFrame from './DemoFrame';
 
-const NARRATION = {
-  full: 'Everything dumped in. Most tokens, and still 69%: the missed callers were right there in the prompt.',
-  touched: 'Only the files that change. Knowing where to look didn’t help (68%). Still one shot to get every edit right.',
-  skeleton: 'Signatures only, no agent. Cheap, but the model can’t fetch what it’s missing (57%).',
-  'skel+tools': 'Skeleton plus a loop that retrieves on demand. Pass jumps to 92%.',
-  agentic: 'Search when needed, open what you need. 93%: exploring beats stuffing the window.',
-};
+const S = SCENARIOS;
 
-function filesInMode(modeId) {
-  if (modeId === 'full') return MINI_REPO.files.map((f) => f.path);
-  if (modeId === 'touched') return MINI_REPO.files.filter((f) => f.touched).map((f) => f.path);
-  if (modeId === 'skeleton' || modeId === 'skel+tools') {
-    return MINI_REPO.files.filter((f) => f.touched).map((f) => f.path);
-  }
-  return ['marshmallow/exceptions.py', 'marshmallow/fields.py'];
-}
+const MODES = [
+  {
+    id: 'full',
+    label: 'full repo',
+    pass: 69,
+    run: S.full,
+    frames: S.full.frames,
+    focus: 'repo',
+    say: () =>
+      `Everything in one prompt: ${fmtTokens(S.full.frames[0].total)} tokens before the model writes a word. 69% across all tasks; 0 for 3 on this one.`,
+    notes: { repo: 'All 37 Python files. The missed callers were right there in the prompt; the model still had to rewrite every one in a single reply.' },
+  },
+  {
+    id: 'touched',
+    label: 'only files needed',
+    pass: 68,
+    run: S.touched,
+    frames: S.touched.frames,
+    focus: 'repo',
+    say: () =>
+      `Only the files the reference solution touches. Barely smaller (${fmtTokens(S.touched.frames[0].total)}), barely different (68%). Knowing where to look wasn’t the problem.`,
+    notes: { repo: 'An oracle: the exact files the fix needs, chosen with the answer key. Real harnesses can’t do this.' },
+  },
+  {
+    id: 'skeleton',
+    label: 'skeleton',
+    pass: 57,
+    run: S.skel_L2,
+    frames: S.skel_L2.frames,
+    focus: 'repo',
+    say: (f) =>
+      f === 0
+        ? `A signature skeleton first (${fmtTokens(S.skel_L2.frames[0].total)}), so the model can pick files…`
+        : `…then the skeleton plus every file it picked: ${fmtTokens(S.skel_L2.frames[1].total)}, more than the whole repo. 57%.`,
+    notes: { repo: 'Two calls: pick files from the skeleton, then edit with the skeleton and the picked files.' },
+  },
+  {
+    id: 'skel+agent',
+    label: 'skeleton + agent',
+    pass: 92,
+    run: S.skel_retrieval,
+    frames: S.skel_retrieval.frames,
+    focus: 'toolout',
+    say: (f, last) =>
+      last
+        ? `25 turns later: ${fmtTokens(S.skel_retrieval.peak)}. The skeleton never leaves; the tool outputs pile on top. 92% across all tasks.`
+        : `The skeleton up front (${fmtTokens(S.skel_retrieval.frames[0].total)}), then an agent loop that reads what it needs. Watch the ring grow call by call.`,
+    notes: {
+      repo: `The skeleton is resent on every call: ${fmtTokens(S.skel_retrieval.frames[0].seg.repo)} tokens, 25 times.`,
+    },
+  },
+  {
+    id: 'agentic',
+    label: 'agentic search',
+    pass: 93,
+    run: S.agentic,
+    frames: S.agentic.frames,
+    focus: 'toolout',
+    say: (f, last) =>
+      last
+        ? `Same growth, no skeleton: ${fmtTokens(S.agentic.peak)} at the step cap. 93% across all tasks, but this hard task beat every grep agent. The next section shows why.`
+        : `Start nearly empty (${fmtTokens(S.agentic.frames[0].total)}) and search on demand. Tool outputs and the model’s own edits fill the ring turn by turn.`,
+    notes: {
+      messages: 'Mostly the agent’s own edit calls. Each carries the exact code it searches for and its replacement, and all of them stay in the prompt.',
+    },
+  },
+];
 
-function codeForMode(file, modeId) {
-  if (modeId === 'full') return file.body;
-  if (modeId === 'touched') return file.touched ? file.body : '# not in context';
-  if (modeId === 'skeleton' || modeId === 'skel+tools') {
-    if (!file.touched) return '# not in context';
-    return [...file.imports, file.signature, file.docstring].filter(Boolean).join('\n');
-  }
-  if (file.path === 'marshmallow/exceptions.py' || file.path === 'marshmallow/fields.py') {
-    return file.body;
-  }
-  return '# not retrieved yet';
-}
-
-function focusFile(modeId) {
-  if (modeId === 'agentic') return 'marshmallow/exceptions.py';
-  return MINI_REPO.files.find((f) => f.touched)?.path || MINI_REPO.files[0].path;
-}
+const TIMELINE = MODES.flatMap((mode, m) =>
+  mode.frames.map((_, f) => ({ m, f, last: f === mode.frames.length - 1 }))
+);
+const DURATIONS = TIMELINE.map(({ m, f, last }) => {
+  const n = MODES[m].frames.length;
+  if (n <= 2) return 2800;
+  if (f === 0) return 2200;
+  return last ? 2800 : 240;
+});
+const FIRST = MODES.map((_, m) => TIMELINE.findIndex((t) => t.m === m));
 
 export default function LayoutDemo() {
-  const {
-    rootRef,
-    idx,
-    playing,
-    reduce,
-    pause,
-    play,
-    replay,
-    stepNext,
-    stepPrev,
-    goTo,
-  } = useDemoAutoplay({
-    length: LAYOUT_MODES.length,
-    stepMs: 1700,
-    holdLastMs: 2800,
-    loop: true,
+  const auto = useDemoAutoplay({ length: TIMELINE.length, durations: DURATIONS, holdLastMs: 3000 });
+  const { m, f, last } = TIMELINE[auto.idx];
+  const mode = MODES[m];
+  const agent = mode.frames.length > 2;
+  const frame = mode.frames[f];
+
+  const ring = ringFor(mode.id, frame, {
+    title: mode.label,
+    footer: agent ? (
+      <TurnStrip
+        cells={mode.frames.map(() => ({ fill: 1 }))}
+        current={f}
+        label="model calls"
+        onPick={(i) => auto.goTo(FIRST[m] + i)}
+        legend={`call ${f + 1} of ${mode.frames.length} · 25 is the step cap`}
+      />
+    ) : null,
   });
 
-  const mode = LAYOUT_MODES[idx];
-  const modeId = mode.id;
-  const inContext = useMemo(() => new Set(filesInMode(modeId)), [modeId]);
-  const filePath = focusFile(modeId);
-  const file = MINI_REPO.files.find((f) => f.path === filePath) || MINI_REPO.files[0];
-  const tokens = demoTokensForLayout(modeId);
-  const code = codeForMode(file, modeId);
-  const highlighted = inContext.has(file.path);
-
   return (
-    <figure className="cs-demo" ref={rootRef}>
-      <div className="cs-demo-panel">
-        <div className="cs-demo-head">
-          <p className="cs-demo-kicker">What enters the context window</p>
-          <span className="cs-demo-badge">{MINI_REPO.label}</span>
-        </div>
-
-        <DemoNarration>{NARRATION[modeId]}</DemoNarration>
-
-        <div className="cs-demo-controls" role="tablist" aria-label="context layout">
-          {LAYOUT_MODES.map((m, i) => (
-            <button
-              key={m.id}
-              type="button"
-              role="tab"
-              aria-selected={modeId === m.id}
-              className={modeId === m.id ? 'is-on' : ''}
-              onClick={() => goTo(i)}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-
-        <DemoTransport
-          playing={playing}
-          reduce={reduce}
-          onReplay={replay}
-          onPause={pause}
-          onPlay={play}
-          onPrev={stepPrev}
-          onNext={stepNext}
-        />
-
-        <div className="cs-demo-stats">
-          <span className="cs-stat is-accent">
-            pass <strong>{mode.pass}%</strong>
-          </span>
-          <span className="cs-stat">
-            demo tokens <strong>~{tokens}</strong>
-          </span>
-          <span className="cs-stat">
-            in window <strong>
-              {inContext.size}/{MINI_REPO.files.length} files
-            </strong>
-          </span>
-        </div>
-
-        <div className="cs-demo-split">
-          <ul className="cs-file-list" aria-label="files in context">
-            {MINI_REPO.files.map((f) => {
-              const on = inContext.has(f.path);
-              return (
-                <li key={f.path}>
-                  <span
-                    className={`cs-file-static${filePath === f.path ? ' is-on' : ''}${
-                      on ? ' is-in' : ' is-dim'
-                    }`}
-                  >
-                    {f.path.split('/').pop()}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-          <pre key={modeId} className={`cs-code${reduce ? '' : ' cs-code--morph is-anim'}`}>
-            {highlighted
-              ? code.split('\n').map((line, i) => (
-                  <div key={i} className={line.includes('ValidationError') ? 'is-hit' : undefined}>
-                    {line || ' '}
-                  </div>
-                ))
-              : code}
-          </pre>
-        </div>
-
-        <div className="cs-token-bar is-hot" aria-hidden="true">
-          <span style={{ width: `${Math.min(100, (tokens / 620) * 100)}%` }} />
-        </div>
-      </div>
-      <figcaption>
-        Blue edge = in the window. Pass rates from the study; file set and tokens are a simplified
-        illustration.
-      </figcaption>
-    </figure>
+    <DemoFrame
+      auto={auto}
+      kicker="What enters the context window"
+      badge="real runs · ValidationError task"
+      say={mode.say(f, last)}
+      tabs={{
+        label: 'context layout',
+        items: MODES.map((x, i) => ({
+          id: x.id,
+          label: x.label,
+          on: i === m,
+          onClick: () => auto.goTo(FIRST[i]),
+        })),
+      }}
+      stats={[
+        { label: 'pass, all tasks', value: `${mode.pass}%`, accent: true },
+        { label: 'this run', value: mode.run.passed ? 'passed' : mode.run.hitStepCap ? 'failed · step cap' : 'failed' },
+        { label: 'prompt', value: `${frame.total.toLocaleString()} tokens` },
+      ]}
+      caption="Each layout fills the same window differently. Rings: one real run per layout on the marshmallow ValidationError rename (hard tier). Pass rates: main runs, all 25 tasks."
+    >
+      <ContextPanel
+        rings={[ring]}
+        focus={mode.focus}
+        notes={mode.notes}
+        source={`${SPLIT_NOTE} Run ${mode.run.run}.`}
+      />
+    </DemoFrame>
   );
 }

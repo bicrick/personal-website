@@ -10,7 +10,7 @@
   padding: 0.95rem 1rem 1rem;
 }
 
-.cs-kicker {
+.cs-figure .cs-kicker {
   margin: 0 0 0.85rem;
   font-family: var(--font-pixel);
   font-size: 12px;
@@ -134,7 +134,7 @@
   border-color: var(--link);
 }
 
-.cs-pair-label {
+.cs-figure .cs-pair-label {
   margin: 0 0 0.4rem;
   font-family: var(--font-pixel);
   font-size: 11px;
@@ -142,7 +142,7 @@
   color: var(--ink-muted);
 }
 
-.cs-pair-value {
+.cs-figure .cs-pair-value {
   margin: 0 0 0.2rem;
   font-family: var(--font-pixel);
   font-size: 2rem;
@@ -155,7 +155,7 @@
   color: var(--link);
 }
 
-.cs-pair-sub {
+.cs-figure .cs-pair-sub {
   margin: 0;
   font-size: 13px;
   line-height: 1.35;
@@ -186,7 +186,7 @@
   width: var(--fill);
 }
 
-.cs-delta {
+.cs-figure .cs-delta {
   margin: 0.8rem 0 0;
   font-family: var(--font-pixel);
   font-size: 12px;
@@ -322,4 +322,10 @@
   .cs-pair-meter > span {
     transition: none;
   }
+}
+
+.cs-headline-rings {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
 }

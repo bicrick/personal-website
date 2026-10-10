@@ -7,6 +7,8 @@ import useReducedMotion from '../../useReducedMotion';
  * - Advances idx 0..length-1; optionally loops or settles.
  * - prefers-reduced-motion → jump to last step, no animation.
  * - Optional pause / step / replay after (or during) autoplay.
+ * - `durations[i]` (ms) overrides `stepMs` for step i, for timelines that mix
+ *   quick per-turn frames with slower narrated beats.
  */
 export default function useDemoAutoplay({
   length,
@@ -14,6 +16,7 @@ export default function useDemoAutoplay({
   holdLastMs = 2400,
   loop = false,
   initialIndex = 0,
+  durations = null,
 }) {
   const reduce = useReducedMotion();
   const rootRef = useRef(null);
@@ -29,7 +32,9 @@ export default function useDemoAutoplay({
     if (!node) return undefined;
     const io = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.32, rootMargin: '0px 0px -6% 0px' }
+      // "In view" = crossing the middle band of the screen, so demos taller
+      // than the viewport (common on phones) still start.
+      { threshold: 0, rootMargin: '-30% 0px -30% 0px' }
     );
     io.observe(node);
     return () => io.disconnect();
@@ -46,7 +51,7 @@ export default function useDemoAutoplay({
   useEffect(() => {
     if (reduce || !inView || !playing || length < 1) return undefined;
     const last = length - 1;
-    const delay = idx >= last ? holdLastMs : stepMs;
+    const delay = idx >= last ? holdLastMs : durations?.[idx] ?? stepMs;
     const id = window.setTimeout(() => {
       if (idx >= last) {
         setFinishedOnce(true);
@@ -60,7 +65,7 @@ export default function useDemoAutoplay({
       }
     }, delay);
     return () => window.clearTimeout(id);
-  }, [reduce, inView, playing, idx, length, stepMs, holdLastMs, loop]);
+  }, [reduce, inView, playing, idx, length, stepMs, holdLastMs, loop, durations]);
 
   const pause = useCallback(() => setPlaying(false), []);
   const play = useCallback(() => {
