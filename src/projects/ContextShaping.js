@@ -20,7 +20,7 @@ import {
 const SETTINGS = [
   'let it search, in a loop',
   'tools that do the whole job, not grep',
-  'forget late; drop old output first'
+  'forget late; drop old output first',
   'a short skill for the job, not house rules',
 ];
 
