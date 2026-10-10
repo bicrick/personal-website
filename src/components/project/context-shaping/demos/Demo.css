@@ -94,30 +94,72 @@
   color: var(--link);
 }
 
-.cs-slider-wrap {
-  display: grid;
+.cs-ladder-rail {
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.35rem;
   margin: 0 0 0.75rem;
 }
 
-.cs-slider-wrap label {
+.cs-ladder-step {
   font-family: var(--font-pixel);
   font-size: 11px;
   letter-spacing: 0.02em;
   color: var(--ink-muted);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  padding: 0.3rem 0.45rem;
+  opacity: 0.55;
+  transition: opacity 280ms ease, border-color 280ms ease, color 280ms ease;
 }
 
-.cs-slider-wrap input[type='range'] {
-  width: 100%;
-  accent-color: var(--link);
+.cs-ladder-step.is-done {
+  opacity: 0.85;
+  color: var(--ink-soft);
 }
 
-.cs-slider-ticks {
-  display: flex;
-  justify-content: space-between;
+.cs-ladder-step.is-on {
+  opacity: 1;
+  border-color: var(--link);
+  color: var(--link);
+}
+
+.cs-file-list--static {
+  pointer-events: none;
+}
+
+.cs-file-list--static span {
+  display: block;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-muted);
   font-family: var(--font-pixel);
   font-size: 10px;
-  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+  padding: 0.4rem 0.45rem;
+}
+
+.cs-file-list--static li:last-child span {
+  border-bottom: 0;
+}
+
+.cs-file-list--static span.is-in {
+  box-shadow: inset 2px 0 0 var(--link);
+  color: var(--ink);
+}
+
+.cs-code--morph.is-anim {
+  animation: cs-code-morph 420ms ease;
+}
+
+@keyframes cs-code-morph {
+  from {
+    opacity: 0.28;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cs-demo-split {
@@ -354,7 +396,8 @@
     max-height: none;
   }
 
-  .cs-file-list button {
+  .cs-file-list button,
+  .cs-file-list--static span {
     flex: 0 0 auto;
     border-bottom: 0;
     border-right: 1px solid var(--rule);
@@ -364,7 +407,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cs-token-bar > span,
-  .cs-msg {
+  .cs-msg,
+  .cs-ladder-step {
     transition: none;
+  }
+
+  .cs-code--morph.is-anim {
+    animation: none;
   }
 }
