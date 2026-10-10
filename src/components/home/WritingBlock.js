@@ -2,7 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { WRITING } from '../../constants/writing';
 import GrokBotMark from './GrokBotMark';
+import HarnessBotMark from './HarnessBotMark';
 import './WritingBlock.css';
+
+const MARKS = { harness: HarnessBotMark };
 
 export default function WritingBlock() {
   return (
@@ -11,20 +14,23 @@ export default function WritingBlock() {
         <h2>writing</h2>
       </div>
       <ul className="writing-list">
-        {WRITING.map((piece) => (
-          <li key={piece.path}>
-            <Link to={piece.path} className="writing-row">
-              <span className="writing-media" aria-hidden="true">
-                <GrokBotMark />
-              </span>
-              <span className="writing-copy">
-                <span className="writing-title">{piece.title}</span>
-                <span className="writing-description">{piece.description}</span>
-                <span className="writing-date">{piece.date}</span>
-              </span>
-            </Link>
-          </li>
-        ))}
+        {WRITING.map((piece) => {
+          const Mark = MARKS[piece.mark] || GrokBotMark;
+          return (
+            <li key={piece.path}>
+              <Link to={piece.path} className="writing-row">
+                <span className="writing-media" aria-hidden="true">
+                  <Mark />
+                </span>
+                <span className="writing-copy">
+                  <span className="writing-title">{piece.title}</span>
+                  <span className="writing-description">{piece.description}</span>
+                  <span className="writing-date">{piece.date}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

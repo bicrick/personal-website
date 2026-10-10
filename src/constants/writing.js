@@ -4,6 +4,7 @@ export const WRITING = [
     description:
       'Same cheap model, only the harness changed: 63% to 100% on multi-file refactors at about 1/32 the cost.',
     path: '/writing/context-shaping',
+    mark: 'harness',
     date: 'October 2026',
   },
   {
