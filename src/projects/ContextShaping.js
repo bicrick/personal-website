@@ -17,6 +17,13 @@ import {
   Headline,
 } from '../components/project/harness';
 
+const SETTINGS = [
+  'let it search, in a loop',
+  'tools that do the whole job, not grep',
+  'forget late; drop old output first'
+  'a short skill for the job, not house rules',
+];
+
 const READ_RESULTS = [
   { label: 'whole repo', value: 69 },
   { label: 'only the right files', value: 68 },
@@ -26,7 +33,7 @@ const READ_RESULTS = [
 ];
 
 const FORGET_RESULTS = [
-  { label: 'never forget', value: 93, side: '85%' },
+  { label: 'no cap (baseline)', value: 93, side: '85%' },
   { label: 'summarize at 50%', value: 79, side: '10%', mood: 'tired' },
   { label: 'summarize at 90%', value: 88, side: '43%' },
   { label: 'drop old output', value: 93, side: '16%', hl: true },
@@ -59,6 +66,14 @@ function ContextShaping() {
     >
       <Hero />
 
+      <Spread>
+        <p>
+          You can&apos;t change the model. You can change what it sees, and how it touches your
+          code. That part is the harness. This is a guide to it, and to what happened when I tested
+          it.
+        </p>
+      </Spread>
+
       <Spread kicker="the context window">
         <p>
           A model never sees your repo. It sees one thing: its context window. Everything it knows
@@ -81,23 +96,38 @@ function ContextShaping() {
 
       <Spread kicker="the harness">
         <p>
-          The harness is the code around the model: Claude Code, Cursor, Codex, and the rest. Put
-          the same model in any of them and it acts differently. Think of the harness as the outfit.
+          The harness is the code around the model: Claude Code, Cursor, Codex and the rest. Put
+          the same model in any of them and it behaves differently. The harness is the outfit.
         </p>
         <Lineup />
       </Spread>
 
-      <Spread kicker="what the harness controls">
+      <Spread kicker="four levers">
         <p>
-          It decides what goes in the window and what the model can do about it. We can&apos;t
-          change the model. We can change what it sees, and how it touches our code.
+          Every harness sets the same four levers. Together they decide what lands in the window,
+          and what the model can do about it.
         </p>
         <Levers />
+      </Spread>
+
+      <Spread kicker="the test">
+        <p>
+          I couldn&apos;t find anyone testing these levers against each other on the same model.
+          So I took one cheap model and changed only the harness.
+        </p>
+        <p>A run passes only if nothing is missed. Every leftover reference is a missed caller.</p>
+        <TaskCard />
       </Spread>
 
       <Spread kicker="lever 1 · what it reads">
         <p>Harnesses show the model your code in one of four ways.</p>
         <ReadStrategies />
+        <p>
+          More context didn&apos;t help. The whole repo and only the right files scored the same;
+          the callers it missed were sitting right there in the prompt. Searching in a loop, and
+          checking its own work, did.
+        </p>
+        <ResultBars title="pass rate, all 25 tasks" rows={READ_RESULTS} />
       </Spread>
 
       <Spread kicker="lever 2 · what it can do">
@@ -106,66 +136,37 @@ function ContextShaping() {
           code can do the whole job in one call.
         </p>
         <ToolsStill />
+        <p>
+          On the hardest task, grep drowned in its own search results. The rename tool asked where
+          the name was used and renamed it. Across all 25 tasks: 97% vs 93%, and 5.2x cheaper per
+          solve.
+        </p>
+        <Duel />
       </Spread>
 
       <Spread kicker="lever 3 · what it forgets">
         <p>
           Long sessions fill the window, so the harness throws things out. Some summarize, some
-          clear old tool output. They disagree on when.
+          clear old tool output, and they disagree on when.
         </p>
         <ForgetStill />
-      </Spread>
-
-      <Spread kicker="lever 4 · what it's told">
-        <p>Notes loaded up front: house rules, or a procedure for one kind of job.</p>
-        <ToldStill />
-      </Spread>
-
-      <Spread kicker="the test">
         <p>
-          Nobody tests these against each other with the model held still. So I did: one cheap
-          model, Claude Haiku 5.5, on 25 multi-file refactors across three Python libraries. 1,632
-          graded runs, $28.53.
-        </p>
-        <p>A run passes only if nothing is missed. Every leftover reference is a missed caller.</p>
-        <TaskCard />
-      </Spread>
-
-      <Spread kicker="what it reads · result">
-        <p>
-          More context didn&apos;t help. The whole repo and only the right files scored the same.
-          The callers it missed were sitting in the prompt. Letting it search and check its own work
-          did help.
-        </p>
-        <ResultBars title="pass rate, all 25 tasks" rows={READ_RESULTS} />
-      </Spread>
-
-      <Spread kicker="what it can do · result">
-        <p>
-          The hardest task, same model and same loop. Grep drowned in its own search results.
-          The rename tool asked where the name was used, got an exact answer, and renamed it.
-        </p>
-        <p>Across all 25 tasks: 97% vs 93%, and 5.2x cheaper per solve.</p>
-        <Duel />
-      </Spread>
-
-      <Spread kicker="what it forgets · result">
-        <p>
-          With a tight 12k budget, summarizing early hurt most. Every summary rewrites the start of
-          the prompt, which wipes the prompt cache, so each call after it costs more: $0.0397 per
-          solve vs $0.0143 for dropping old output.
+          With the window capped at 12k tokens, summarizing early hurt most. Each summary rewrites
+          the start of the prompt, which wipes the prompt cache, so every call after it costs more.
         </p>
         <ResultBars
-          title="pass rate"
+          title="pass rate, 12k-token cap"
           sideLabel="cache hit"
           rows={FORGET_RESULTS}
-          foot="12k-token budget. Never forget ran without one."
+          foot="Per solve: $0.0397 summarizing at 50%, $0.0143 dropping old output."
         />
       </Spread>
 
-      <Spread kicker="what it's told · result">
+      <Spread kicker="lever 4 · what it’s told">
+        <p>Notes loaded up front: house rules, or a procedure for one kind of job.</p>
+        <ToldStill />
         <p>
-          The skill file was a small cost win, not an accuracy win. The generic conventions file
+          The skill was a small cost win, not an accuracy win. The generic conventions file
           didn&apos;t earn its tokens.
         </p>
         <ResultBars title="pass rate" sideLabel="per solve" rows={TOLD_RESULTS} />
@@ -173,31 +174,29 @@ function ContextShaping() {
 
       <Spread kicker="real harnesses">
         <p>
-          I ran real agents on the same tasks and model. The general ones land in the low 90s for
-          under half a cent. Aider is built for a human in the loop, so headless it&apos;s no
-          verdict on Aider.
+          Same tasks, same model, in real harnesses. The outfits from earlier land in the low 90s
+          for under half a cent. Aider is built for a human in the loop, so running it headless is
+          no verdict on Aider.
         </p>
         <ResultBars title="pass rate" sideLabel="per solve" rows={REAL_RESULTS} />
       </Spread>
 
-      <Spread kicker="stacking it">
+      <Spread kicker="all four levers">
         <p>
-          Then I stacked the winners: a loop, structured tools, no compaction, the skill file. Five
-          seeds on all 25 tasks, against the whole repo in one prompt.
+          Then I set every lever to its winner and ran five seeds on all 25 tasks, against the
+          whole repo in one prompt.
         </p>
         <Headline />
       </Spread>
 
-      <Spread kicker="what i'd take from it">
-        <p>Give the model the operation, not the raw materials.</p>
-        <p>Let it look things up instead of preloading everything.</p>
-        <p>If it has to forget, drop old tool output first, and do it late.</p>
+      <Spread kicker="the takeaway">
+        <Levers settings={SETTINGS} mood="happy" outfit="harness" />
         <p>Before you upgrade the model, look at what your harness is feeding it.</p>
       </Spread>
 
       <Spread kicker="caveats">
         <p>
-          25 small Python refactors I wrote, one model. The stacked harness was picked on the same
+          25 small Python refactors I wrote, one model. The winning setup was picked on the same
           tasks it was tested on, so 100% is optimistic. Every task, run and transcript is at{' '}
           <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">
             github.com/bicrick/context-shaping
