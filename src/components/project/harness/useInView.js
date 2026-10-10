@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import useReducedMotion from '../useReducedMotion';
 
-export default function useInViewOn() {
+export default function useInView() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const [on, setOn] = useState(false);

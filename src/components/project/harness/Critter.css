@@ -1,0 +1,87 @@
+/* The pixel Claude and its carts. Context colors match the Claude Code
+   context panel: messages blue, system tools orange, MCP green, skills
+   gold, system prompt gray. */
+:root {
+  --critter: #d97757;
+  --critter-eye: #1f1e1d;
+  --c-msg: #4f86e8;
+  --c-tool: #d4643b;
+  --c-mcp: #4a9c74;
+  --c-skill: #c9922e;
+  --c-sys: #a8a49b;
+  --c-buffer: #6f6c66;
+}
+
+.critter-svg {
+  display: block;
+  overflow: visible;
+}
+
+.critter-fill { fill: var(--critter); }
+.critter-leg { fill: var(--critter); }
+.critter-eye { fill: var(--critter-eye); }
+.critter-sweat { fill: var(--c-msg); }
+.critter-z { fill: var(--ink-muted); }
+
+.critter-leg,
+.cart-ride,
+.cart-ground,
+.critter-svg.is-hop > .critter {
+  transform-box: fill-box;
+}
+
+.critter.is-walk .critter-leg.is-a { animation: critter-step 0.5s steps(1) infinite; }
+.critter.is-walk .critter-leg.is-b { animation: critter-step 0.5s steps(1) -0.25s infinite; }
+
+@keyframes critter-step {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+
+.critter-svg.is-hop > .critter { animation: critter-hop 1.6s ease-in-out infinite; }
+
+@keyframes critter-hop {
+  0%, 60%, 100% { transform: translateY(0); }
+  70% { transform: translateY(-2px); }
+  80% { transform: translateY(0); }
+  88% { transform: translateY(-1px); }
+}
+
+.cart-tray { fill: var(--ink); }
+.cart-wheel { fill: var(--ink-muted); }
+.cart-load.c-msg { fill: var(--c-msg); }
+.cart-load.c-tool { fill: var(--c-tool); }
+.cart-load.c-mcp { fill: var(--c-mcp); }
+.cart-load.c-skill { fill: var(--c-skill); }
+.cart-load.c-sys { fill: var(--c-sys); }
+
+.cart.is-bob-1 .cart-ride { animation: cart-bob 0.5s steps(1) infinite; }
+.cart.is-bob-2 .cart-ride { animation: cart-bob 0.5s steps(1) -0.17s infinite; }
+.cart.is-bob-3 .cart-ride { animation: cart-bob 0.5s steps(1) -0.34s infinite; }
+
+@keyframes cart-bob {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-0.5px); }
+}
+
+.cart-rope line {
+  stroke: var(--ink-muted);
+  stroke-width: 0.6;
+}
+
+.cart-ground rect { fill: var(--ink-muted); opacity: 0.5; }
+.cart-ground { animation: cart-ground 0.8s linear infinite; }
+
+@keyframes cart-ground {
+  from { transform: translateX(0); }
+  to { transform: translateX(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .critter-leg,
+  .cart-ride,
+  .cart-ground,
+  .critter-svg.is-hop > .critter {
+    animation: none !important;
+  }
+}
