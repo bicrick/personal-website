@@ -80,10 +80,36 @@
   }
 }
 
+.swing-mark {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 24 / 29.5;
+}
+
 .swing-arm {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.swing-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.swing-body {
   transform-box: view-box;
-  transform-origin: 15px 0;
-  animation: swing-arm 2.6s ease-in-out infinite alternate;
+  transform-origin: 15px 11px;
+}
+
+.swing-body .critter-legs {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
 }
 
 .swing-rope,
@@ -96,32 +122,13 @@
 }
 
 .swing-shadow {
-  fill: var(--ink);
-  opacity: 0.1;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: swing-shadow 2.6s ease-in-out infinite alternate;
-}
-
-@keyframes swing-arm {
-  from { transform: rotate(16deg); }
-  to { transform: rotate(-16deg); }
-}
-
-@keyframes swing-shadow {
-  from { transform: translateX(-4px) scaleX(0.8); }
-  50% { transform: translateX(0) scaleX(1.05); }
-  to { transform: translateX(4px) scaleX(0.8); }
-}
-
-.writing-row:hover .swing-arm,
-.writing-row:focus-visible .swing-arm {
-  animation-duration: 1.1s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .swing-arm,
-  .swing-shadow {
-    animation: none;
-  }
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  height: 7%;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.11;
+  will-change: transform;
 }
