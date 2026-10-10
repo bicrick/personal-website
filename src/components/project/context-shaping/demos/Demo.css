@@ -58,11 +58,48 @@
   color: var(--link);
 }
 
+.cs-demo-narration {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-left: 2px solid var(--link);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.45;
+  letter-spacing: -0.15px;
+  min-height: 2.9em;
+}
+
+.cs-demo-transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 0 0.75rem;
+}
+
+.cs-demo-transport button {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 0.25rem 0.4rem;
+  cursor: pointer;
+}
+
+.cs-demo-transport button:hover,
+.cs-demo-transport button:focus-visible {
+  border-color: var(--ink);
+  color: var(--ink);
+  outline: none;
+}
+
 .cs-demo-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.55rem;
 }
 
 .cs-demo-controls button,
@@ -110,6 +147,7 @@
   background: var(--surface);
   padding: 0.3rem 0.45rem;
   opacity: 0.55;
+  cursor: pointer;
   transition: opacity 280ms ease, border-color 280ms ease, color 280ms ease;
 }
 
@@ -211,8 +249,32 @@
   color: var(--ink);
 }
 
-.cs-file-list button.is-dim {
+.cs-file-list button.is-dim,
+.cs-file-static.is-dim {
   opacity: 0.45;
+}
+
+.cs-file-static {
+  display: block;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-muted);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 0.01em;
+  padding: 0.4rem 0.45rem;
+}
+
+.cs-file-list li:last-child .cs-file-static {
+  border-bottom: 0;
+}
+
+.cs-file-static.is-in {
+  box-shadow: inset 2px 0 0 var(--link);
+  color: var(--ink);
+}
+
+.cs-file-static.is-on {
+  background: var(--code-wash);
 }
 
 .cs-code {
@@ -385,6 +447,14 @@
   color: var(--link);
 }
 
+.cs-skill.is-empty {
+  opacity: 0.55;
+}
+
+.cs-skill.is-injected {
+  opacity: 1;
+}
+
 @media (max-width: 700px) {
   .cs-demo-split {
     grid-template-columns: 1fr;
@@ -397,7 +467,8 @@
   }
 
   .cs-file-list button,
-  .cs-file-list--static span {
+  .cs-file-list--static span,
+  .cs-file-static {
     flex: 0 0 auto;
     border-bottom: 0;
     border-right: 1px solid var(--rule);

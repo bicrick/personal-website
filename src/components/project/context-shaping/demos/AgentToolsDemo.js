@@ -1,84 +1,132 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { TOOLS, VALIDATION_ERROR, MINI_REPO } from '../data';
-import useReducedMotion from '../../useReducedMotion';
+import useDemoAutoplay from './useDemoAutoplay';
+import DemoTransport, { DemoNarration } from './DemoTransport';
 import './Demo.css';
 
-const GREP_STEPS = [
-  { t: 'grep -n ValidationError **/*.py', detail: 'dozens of hits across 19 files (study: 468 lines)' },
-  { t: 'read marshmallow/exceptions.py', detail: 'open definition' },
-  { t: 'edit exceptions.py', detail: 'rename class' },
-  { t: 'read fields.py · edit', detail: 'one caller' },
-  { t: 'read schema.py · edit', detail: 'one caller' },
-  { t: 'read validate.py · edit', detail: 'one caller' },
-  { t: 'grep again… more hits', detail: 'context ballooning' },
-  { t: `turn ${VALIDATION_ERROR.grep.turns}/${VALIDATION_ERROR.grep.turns} — stop`, detail: 'step cap; callers still missing' },
-];
-
-const STRUCT_STEPS = [
-  { t: 'find_references(ValidationError)', detail: 'AST-grouped defs / imports / code' },
-  { t: 'rename_symbol(…, dry_run=True)', detail: 'preview all sites' },
-  { t: 'rename_symbol(…, apply=True)', detail: 'one mechanical rename' },
-  { t: 'run tests', detail: 'green' },
-  { t: 'find_references(ValidationError)', detail: 'zero leftovers — done' },
+/** Guided tour: grep path first (fails), then structured tools (wins). */
+const TOUR = [
+  {
+    mode: 'grep',
+    t: 'grep -n ValidationError **/*.py',
+    detail: 'dozens of hits across 19 files (study: 468 lines)',
+    say: 'Blind text search. Hits everywhere — no idea which are definitions vs callers.',
+  },
+  {
+    mode: 'grep',
+    t: 'read marshmallow/exceptions.py',
+    detail: 'open definition',
+    say: 'Opens one file at a time. Context fills with noise.',
+  },
+  {
+    mode: 'grep',
+    t: 'edit exceptions.py · fields.py · schema.py…',
+    detail: 'rename callers one by one',
+    say: 'Edits callers one by one. Easy to miss some.',
+  },
+  {
+    mode: 'grep',
+    t: 'grep again… more hits',
+    detail: 'context ballooning',
+    say: 'Still finding leftovers. The token bill climbs.',
+  },
+  {
+    mode: 'grep',
+    t: `turn ${VALIDATION_ERROR.grep.turns}/${VALIDATION_ERROR.grep.turns} — stop`,
+    detail: 'step cap; callers still missing',
+    say: `Hits the step cap. Callers missed — hard rename ${VALIDATION_ERROR.grep.wins} in the study.`,
+  },
+  {
+    mode: 'structured',
+    t: 'find_references(ValidationError)',
+    detail: 'AST-grouped defs / imports / code',
+    say: 'Switch tools: AST-aware references group defs, imports, and code.',
+  },
+  {
+    mode: 'structured',
+    t: 'rename_symbol(…, dry_run=True)',
+    detail: 'preview all sites',
+    say: 'Dry-run previews every site before touching code.',
+  },
+  {
+    mode: 'structured',
+    t: 'rename_symbol(…, apply=True)',
+    detail: 'one mechanical rename',
+    say: 'One mechanical rename — no grep thrash.',
+  },
+  {
+    mode: 'structured',
+    t: 'run tests · find_references again',
+    detail: 'zero leftovers — done',
+    say: `Tests green, zero leftovers. Hard rename ${VALIDATION_ERROR.structured.wins} with ~${VALIDATION_ERROR.structured.calls} calls.`,
+  },
 ];
 
 export default function AgentToolsDemo() {
-  const [mode, setMode] = useState('structured');
-  const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const reduce = useReducedMotion();
-  const steps = mode === 'grep' ? GREP_STEPS : STRUCT_STEPS;
+  const {
+    rootRef,
+    idx,
+    playing,
+    reduce,
+    pause,
+    play,
+    replay,
+    stepNext,
+    stepPrev,
+    goTo,
+  } = useDemoAutoplay({
+    length: TOUR.length,
+    stepMs: 1300,
+    holdLastMs: 3000,
+    loop: true,
+  });
+
+  const current = TOUR[idx];
+  const mode = current.mode;
+  const steps = useMemo(
+    () => TOUR.filter((s) => s.mode === mode),
+    [mode]
+  );
+  const localIdx = steps.findIndex((s) => s === current);
   const stats = mode === 'grep' ? VALIDATION_ERROR.grep : VALIDATION_ERROR.structured;
-
-  useEffect(() => {
-    const len = mode === 'grep' ? GREP_STEPS.length : STRUCT_STEPS.length;
-    setStep(reduce ? len - 1 : 0);
-    setPlaying(!reduce);
-  }, [mode, reduce]);
-
-  useEffect(() => {
-    if (!playing || reduce) return undefined;
-    const len = mode === 'grep' ? GREP_STEPS.length : STRUCT_STEPS.length;
-    if (step >= len - 1) return undefined;
-    const id = setTimeout(() => setStep((s) => s + 1), mode === 'grep' ? 700 : 900);
-    return () => clearTimeout(id);
-  }, [playing, step, mode, reduce]);
-
-  const callersLeft = mode === 'grep' && step >= steps.length - 1;
+  const callersLeft = mode === 'grep' && localIdx >= steps.length - 1;
 
   return (
-    <figure className="cs-demo">
+    <figure className="cs-demo" ref={rootRef}>
       <div className="cs-demo-panel">
         <div className="cs-demo-head">
           <p className="cs-demo-kicker">Agent loop · {MINI_REPO.task}</p>
           <span className="cs-demo-badge">simplified replay · study transcript patterns</span>
         </div>
 
+        <DemoNarration>{current.say}</DemoNarration>
+
         <div className="cs-demo-controls" role="tablist" aria-label="tool setup">
           <button
             type="button"
             className={mode === 'grep' ? 'is-on' : ''}
-            onClick={() => setMode('grep')}
+            onClick={() => goTo(0)}
           >
             grep + edit
           </button>
           <button
             type="button"
             className={mode === 'structured' ? 'is-on' : ''}
-            onClick={() => setMode('structured')}
+            onClick={() => goTo(5)}
           >
             find_references + rename
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setStep(0);
-              setPlaying(true);
-            }}
-          >
-            replay
-          </button>
         </div>
+
+        <DemoTransport
+          playing={playing}
+          reduce={reduce}
+          onReplay={replay}
+          onPause={pause}
+          onPlay={play}
+          onPrev={stepPrev}
+          onNext={stepNext}
+        />
 
         <div className="cs-demo-stats">
           <span className="cs-stat is-accent">
@@ -88,10 +136,16 @@ export default function AgentToolsDemo() {
             hard task <strong>{stats.wins}</strong>
           </span>
           <span className="cs-stat">
-            calls <strong>{mode === 'grep' ? `~${VALIDATION_ERROR.grep.calls}` : `~${VALIDATION_ERROR.structured.calls}`}</strong>
+            calls{' '}
+            <strong>
+              {mode === 'grep'
+                ? `~${VALIDATION_ERROR.grep.calls}`
+                : `~${VALIDATION_ERROR.structured.calls}`}
+            </strong>
           </span>
           <span className="cs-stat">
-            peak tokens <strong>
+            peak tokens{' '}
+            <strong>
               {mode === 'grep'
                 ? VALIDATION_ERROR.grep.tokens.toLocaleString()
                 : VALIDATION_ERROR.structured.tokens.toLocaleString()}
@@ -103,8 +157,8 @@ export default function AgentToolsDemo() {
           <div className="cs-replay-log" aria-live="polite">
             {steps.map((s, i) => (
               <div
-                key={s.t}
-                className={`step${i < step ? ' is-done' : ''}${i === step ? ' is-current' : ''}`}
+                key={`${s.mode}-${s.t}`}
+                className={`step${i < localIdx ? ' is-done' : ''}${i === localIdx ? ' is-current' : ''}`}
               >
                 <div>{s.t}</div>
                 <div style={{ opacity: 0.7 }}>{s.detail}</div>
@@ -113,21 +167,17 @@ export default function AgentToolsDemo() {
           </div>
           <div className="cs-replay-meta">
             <span className="cs-stat">
-              step <strong>{Math.min(step + 1, steps.length)}/{steps.length}</strong>
+              tour <strong>
+                {idx + 1}/{TOUR.length}
+              </strong>
             </span>
             <span className={`cs-stat${callersLeft ? '' : ' is-accent'}`}>
               callers <strong>{callersLeft ? 'missed' : 'updated'}</strong>
             </span>
-            {mode === 'grep' && (
-              <span className="cs-stat">
-                avg study calls/run <strong>{TOOLS.grep.calls}</strong>
-              </span>
-            )}
-            {mode === 'structured' && (
-              <span className="cs-stat">
-                avg study calls/run <strong>{TOOLS.structured.calls}</strong>
-              </span>
-            )}
+            <span className="cs-stat">
+              avg study calls/run{' '}
+              <strong>{mode === 'grep' ? TOOLS.grep.calls : TOOLS.structured.calls}</strong>
+            </span>
           </div>
         </div>
       </div>
