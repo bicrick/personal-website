@@ -29,7 +29,7 @@ function ContextShaping() {
       </p>
 
       <p>
-        The short version: on this kind of task, the harness matters more than I expected, and one choice (a real find-references tool instead of grep) does most of the work.
+        The short version: on this kind of task, the harness matters more than I expected, and two choices do most of the work: letting the model explore in a loop instead of answering in one shot, and giving it a real find-references tool instead of grep.
       </p>
 
       <h2>/ the setup</h2>
@@ -93,7 +93,7 @@ function ContextShaping() {
         On the ladder itself, a bare file tree isn&apos;t enough (L0, 45%) and adding imports helps (L1, 61%). Signatures (L2, 57%) and docstrings (L3, 59%) add nothing more. On repos this small, the extra detail just makes the prompt longer.
       </p>
 
-      <h2>/ finding 2: a real find-references tool is the biggest single lever</h2>
+      <h2>/ finding 2: once the agent can explore, a real find-references tool is the biggest lever</h2>
 
       <ProjectFigure
         src={img('arm_tools.png')}
@@ -416,7 +416,7 @@ function ContextShaping() {
           <strong>One model.</strong> Haiku 5.5 always uses extended thinking. A model without it, or a bigger one, could respond differently to the same harness changes.
         </li>
         <li>
-          <strong>Arm E is thin.</strong> Mostly one seed, a partial second seed, out-of-the-box settings, and some rate-limit noise (see above).
+          <strong>The real-harness comparison is thin.</strong> Mostly one seed, a partial second seed, out-of-the-box settings, and some rate-limit noise (see above).
         </li>
         <li>
           <strong>Bookkeeping.</strong> The ledger shows $28.53 spent, and the per-run logs (including retried and duplicate rows) account for $27.52. The remaining $1.01 is API spend from runs I killed and restarted during the night, which never wrote a row. 36 runs were logged twice by overlapping jobs ($1.80); the stats keep one copy of each. One cell (L1 skeleton, one marshmallow task, seed 0) is missing, so that config has n=74.
@@ -435,7 +435,7 @@ function ContextShaping() {
           -style tasks I didn&apos;t write myself (its baseline agent solved none of the tasks that needed edits in more than six files, the same high-fan-out regime where structured tools made the biggest difference here).
         </li>
         <li>
-          <strong>The RL-environment angle.</strong> Each task plus its grader is a small, cheap environment. &quot;Missed callers&quot; is a dense, verifiable signal instead of a single pass/fail bit, and an episode with the combined harness costs about $0.0016. That is enough to train a policy on harness behavior, not just evaluate it.
+          <strong>The RL-environment angle.</strong> Each task plus its grader is a small, cheap environment. &quot;Missed callers&quot; is a dense, verifiable signal instead of a single pass/fail bit, and an episode with the combined harness costs about $0.0016. At that price, the same setup could be a training environment, not just an eval.
         </li>
       </ul>
 
