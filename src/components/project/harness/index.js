@@ -6,6 +6,7 @@ export { default as Hero } from './stills/Hero';
 export { default as ContextPanel } from './stills/ContextPanel';
 export { default as TurnStack } from './stills/TurnStack';
 export { default as Levers } from './stills/Levers';
+export { default as Lineup } from './stills/Lineup';
 export { default as ReadStrategies } from './stills/ReadStrategies';
 export { default as ToolsStill } from './stills/ToolsStill';
 export { default as ForgetStill } from './stills/ForgetStill';

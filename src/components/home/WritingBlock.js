@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { WRITING } from '../../constants/writing';
 import GrokBotMark from './GrokBotMark';
-import CartTrainMark from './CartTrainMark';
+import SwingMark from './SwingMark';
 import './WritingBlock.css';
 
-const MARKS = { harness: CartTrainMark };
+const MARKS = { harness: SwingMark };
 
 export default function WritingBlock() {
   return (
