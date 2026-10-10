@@ -90,21 +90,6 @@ export const PROJECTS = [
     date: 'December 2025',
     unlisted: true,
   },
-  {
-    title: 'is your harness making your model dumber?',
-    description:
-      'Same cheap model, only the harness changed: 63% to 100% on multi-file refactors at about 1/32 the cost.',
-    timelineDescription:
-      'Held Claude Haiku 5.5 fixed and changed only the harness: 63% to 100%, about 1/32 the cost per solve.',
-    image: `${process.env.PUBLIC_URL}/images/context-shaping/headline.png`,
-    blogLink: '/projects/context-shaping',
-    appLink: 'https://github.com/bicrick/context-shaping',
-    appLabel: 'repo',
-    relevanceRank: 0,
-    dateRank: 0,
-    date: 'October 2026',
-    unlisted: true,
-  },
 ];
 
 export function featuredProjects() {
