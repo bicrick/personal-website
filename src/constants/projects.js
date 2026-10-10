@@ -91,13 +91,15 @@ export const PROJECTS = [
     unlisted: true,
   },
   {
-    title: 'same model, better harness',
+    title: 'is your harness making your model dumber?',
     description:
-      'How far can context management and tool design push a cheap model on multi-file refactors?',
+      'Same cheap model, only the harness changed: 63% to 100% on multi-file refactors at about 1/32 the cost.',
     timelineDescription:
-      'Held Claude Haiku 5.5 fixed and changed only the harness: +37 points pass rate, about 32x cheaper per solve.',
+      'Held Claude Haiku 5.5 fixed and changed only the harness: 63% to 100%, about 1/32 the cost per solve.',
     image: `${process.env.PUBLIC_URL}/images/context-shaping/headline.png`,
     blogLink: '/projects/context-shaping',
+    appLink: 'https://github.com/bicrick/context-shaping',
+    appLabel: 'repo',
     relevanceRank: 0,
     dateRank: 0,
     date: 'October 2026',

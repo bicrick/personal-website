@@ -284,8 +284,8 @@ def make_project_cards():
     )
     split_card(
         PUBLIC / "images" / "context-shaping" / "headline.png",
-        "same model, better harness",
-        "How far can context management and tool design push a cheap model?",
+        "is your harness making your model dumber?",
+        "Same cheap model, only the harness changed: 63% to 100%",
         "context-shaping-1200x630.jpg",
         fit="contain",
         bg=None,
