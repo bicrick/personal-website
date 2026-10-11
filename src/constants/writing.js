@@ -1,8 +1,8 @@
 export const WRITING = [
   {
-    title: 'is your harness making your model dumber?',
+    title: 'same model, six harnesses',
     description:
-      "You can't change the model, but you can change what it sees. A visual guide to context windows and harnesses.",
+      'One model in six coding harnesses, the same real bugs. What the wrapper changes, and why.',
     path: '/writing/context-shaping',
     mark: 'harness',
     date: 'October 2026',

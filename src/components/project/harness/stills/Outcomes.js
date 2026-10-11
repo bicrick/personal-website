@@ -12,7 +12,7 @@ export default function Outcomes() {
       innerRef={ref}
       className={`oc${on ? ' is-on' : ''}`}
       title="how each run ended"
-      caption="Every harness hands in a wrong fix on 11 to 13 bugs. What separates them is how often a run ends with nothing."
+      caption={`Every harness hands in a wrong fix on ${Math.min(...OUTCOMES.map((r) => r.wrong))} to ${Math.max(...OUTCOMES.map((r) => r.wrong))} bugs. What separates them is how often a run ends with nothing.`}
     >
       {OUTCOMES.map((r, row) => (
         <div key={r.id} className="oc-row">

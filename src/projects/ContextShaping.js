@@ -74,7 +74,7 @@ function ContextShaping() {
       <p>
         Some of those empty runs are design choices. OpenCode stopped {OPENCODE_PERMISSION_STOPS}{' '}
         times at a permission prompt, waiting for a yes nobody was there to give. Aider is built
-        for a person at the keyboard: in {AIDER_HANDBACKS} of {SWE_N} runs its last message asked
+        for a person at the keyboard: in {AIDER_HANDBACKS} runs its last message asked
         me to run the tests. Run unattended, both just stop.
       </p>
 
