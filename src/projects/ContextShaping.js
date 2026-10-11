@@ -43,7 +43,10 @@ function ContextShaping() {
         <p>
           The model only reads and writes text. It can&apos;t open your files, and it forgets
           everything between turns. So the tool around it, the harness, decides what it gets to
-          read each turn: which files, which instructions, which results so far. It turns the
+          read each turn: which files, which instructions, which results so far.
+        </p>
+        <p>
+          It also turns the
           model&apos;s requests into real actions, like searching your code, editing a file or
           running the tests. And when the model&apos;s working memory fills up, the harness
           decides what to drop.
@@ -63,7 +66,7 @@ function ContextShaping() {
         </p>
         <Stat
           value={`${worst.rate}% → ${best.rate}%`}
-          label={`bugs fixed, from ${worst.label} to ${best.label}, with the same model inside`}
+          label={`of bugs fixed, from ${worst.label} to ${best.label}, with the same model inside`}
         />
         <p>
           That&apos;s a {best.rate - worst.rate}-point swing from the harness alone. Fixing the

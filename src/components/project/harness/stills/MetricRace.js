@@ -7,7 +7,7 @@ const METRICS = [
   { key: 'rate', tab: 'Success rate', note: `bugs fixed out of ${SWE_N}. Higher is better.`, fmt: (v) => `${v}%`, high: true },
   { key: 'usd', tab: '$ per fix', note: 'API spend divided by bugs fixed. Lower is better.', fmt: (v) => (v < 0.01 ? `${(v * 100).toFixed(2)}¢` : `${(v * 100).toFixed(1)}¢`) },
   { key: 'tok', tab: 'Tokens per fix', note: 'chunks of text the model read and wrote, per bug fixed. Lower is better.', fmt: (v) => `${Math.round(v / 1000)}k` },
-  { key: 'min', tab: 'Minutes per fix', note: 'wall-clock time per bug fixed. Lower is better.', fmt: (v) => `${v.toFixed(1)} min` },
+  { key: 'min', tab: 'Minutes per fix', note: 'time on the clock per bug fixed. Lower is better.', fmt: (v) => `${v.toFixed(1)} min` },
 ];
 
 export default function MetricRace() {

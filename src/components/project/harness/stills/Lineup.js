@@ -17,7 +17,7 @@ export default function Lineup() {
     <div className="hs-lineup">
       {CAST.map((c, i) => (
         <div key={c.id} className="hs-cast" style={{ '--i': i }}>
-          <Critter className="hs-cast-critter" outfit={c.outfit} mood={c.mood} hop />
+          <Critter className="hs-cast-critter" outfit={c.outfit} mood={c.mood} />
           <div className="hs-cast-name">
             {c.id !== 'swe' && <Logo id={c.id} />}
             <span>{c.id === 'swe' ? 'SWE-agent' : HARNESSES[c.id].name}</span>
