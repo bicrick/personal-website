@@ -70,8 +70,49 @@ const OUTFITS = {
   },
 };
 
-export function CritterBody({ mood = 'open', walk = false, outfit, x = 0, y = 0, legsRef }) {
-  const o = OUTFITS[outfit] || {};
+// Back views: no face, the costume seen from behind. Same grid and palette.
+const BACKS = {
+  plain: { over: [['critter-shade', 'M8.5 3h1v5h-1zM3 2h12v.6H3z']] },
+  cursor: {
+    over: [
+      ['o-dark', 'M3 2h12v3H3zM3 1h2v1H3zM4 0h1v1H4zM13 1h2v1h-2zM13 0h1v1h-1z'],
+      ['o-cape', 'M3 4.6h12l2.5 7.4h-17z'],
+      ['o-mid', 'M8.6 5.4h.8v6h-.8z'],
+    ],
+  },
+  opencode: {
+    over: [
+      ['o-dark', 'M2 1h14v8H2zM1 5h2v2H1zM15 5h2v2h-2z'],
+      ['o-mid', 'M8 3h2v2H8zM7 5h1v2H7zM10 5h1v2h-1z'],
+    ],
+  },
+  aider: {
+    over: [
+      ['critter-shade', 'M8.5 6h1v2h-1z'],
+      ['o-dark', 'M2 3.9h14v1.3H2z'],
+      ['o-mid', 'M8.2 3.6h1.6v1.9H8.2z'],
+    ],
+  },
+  mini: {
+    over: [
+      ['critter-shade', 'M8.5 4h1v4h-1z'],
+      ['o-hardhat', 'M4.5 -0.5h9v2.5h-9zM6 -1.5h6v1H6z'],
+      ['o-hardhat', 'M2.5 1.6h13v1h-13z'],
+    ],
+  },
+  swe: {
+    over: [
+      ['critter-shade', 'M8.5 3h1v5h-1z'],
+      ['o-cap', 'M5.5 0h7v2.2h-7z'],
+      ['o-cap', 'M2 -1.6h14v1.4H2z'],
+      ['o-cap-btn', 'M8.5 -2h1v.6h-1z'],
+      ['o-tassel', 'M8.6 -0.4h.8v3.2h-.8zM8.2 2.6h1.6v1.4H8.2z'],
+    ],
+  },
+};
+
+export function CritterBody({ mood = 'open', walk = false, outfit, back = false, x = 0, y = 0, legsRef }) {
+  const o = back ? (BACKS[outfit] || BACKS.plain) : (OUTFITS[outfit] || {});
   return (
     <g className={`critter${walk ? ' is-walk' : ''}`} transform={`translate(${x} ${y})`}>
       {(o.behind || []).map(([cls, d], i) => <path key={`b${i}`} className={cls} d={d} />)}
@@ -82,7 +123,7 @@ export function CritterBody({ mood = 'open', walk = false, outfit, x = 0, y = 0,
         <rect className="critter-leg is-b" x="13" y="8.5" width="1" height="3.5" />
       </g>
       <path className="critter-fill" d="M3 2h12v3h2v2h-2v2H3V7H1V5h2z" />
-      {!o.hideEyes && EYES[mood].map(([ex, ey, w, h]) => (
+      {!back && !o.hideEyes && EYES[mood].map(([ex, ey, w, h]) => (
         <rect key={`${ex}-${ey}`} className="critter-eye" x={ex} y={ey} width={w} height={h} />
       ))}
       {(o.over || []).map(([cls, d], i) => <path key={`o${i}`} className={cls} d={d} />)}

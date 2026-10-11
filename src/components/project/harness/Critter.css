@@ -20,6 +20,7 @@
 .critter-fill { fill: var(--critter); }
 .critter-leg { fill: var(--critter); }
 .critter-eye { fill: var(--critter-eye); }
+.critter-shade { fill: #c2664a; }
 .critter-sweat { fill: var(--c-msg); }
 .critter-z { fill: var(--ink-muted); }
 

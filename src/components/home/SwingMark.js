@@ -21,7 +21,7 @@ const DEG = 180 / Math.PI;
 // Costume loop: the six harnesses from the post, same art.
 const OUTFITS = [undefined, 'cursor', 'opencode', 'aider', 'mini', 'swe'];
 const HOLD = 2.4; // seconds hanging in each costume
-const SPIN = 0.45; // seconds per turn
+const SPIN = 0.9; // seconds per full turn: front, edge, back, edge, next front
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const pickAmp = () => 0.04 + Math.random() * 0.07;
@@ -36,6 +36,7 @@ export default function SwingMark() {
   const spinRef = useRef(null);
   const reduce = useReducedMotion();
   const [look, setLook] = useState(0);
+  const [back, setBack] = useState(false);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -44,7 +45,7 @@ export default function SwingMark() {
     const s = {
       th: 0.08, w: 0, ph: 0, pw: 0, ps: 0, psw: 0, y: 0.6, yv: 0,
       amp: pickAmp(), swings: 0, kick: 2 + Math.random() * 3,
-      clock: 0, look: 0, swapped: false,
+      clock: 0, look: 0, phase: 0,
     };
     let raf = 0;
     let last = 0;
@@ -88,14 +89,20 @@ export default function SwingMark() {
       const t = s.clock - HOLD;
       if (t < 0) return 1;
       const p = Math.min(t / SPIN, 1);
-      if (p >= 0.25 && !s.swapped) {
-        s.swapped = true;
+      // edge-on at 1/4 (show the back) and 3/4 (next costume, front again)
+      if (p >= 0.25 && s.phase === 0) {
+        s.phase = 1;
+        setBack(true);
+      }
+      if (p >= 0.75 && s.phase === 1) {
+        s.phase = 2;
         s.look = (s.look + 1) % OUTFITS.length;
+        setBack(false);
         setLook(s.look);
       }
       if (p >= 1) {
         s.clock = 0;
-        s.swapped = false;
+        s.phase = 0;
         return 1;
       }
       // snap to a few frames so the pixels stay crisp
@@ -169,7 +176,7 @@ export default function SwingMark() {
             <path className="swing-ring" d="M14 10h2v2h-2zM14.6 10.6h.8v.8h-.8z" fillRule="evenodd" />
             <path className="swing-line" d="M10.4 14.2L14.4 11.8M19.6 14.2L15.6 11.8" />
             <g ref={spinRef} className="swing-spin">
-              <CritterBody x={6} y={12} outfit={reduce ? undefined : OUTFITS[look]} legsRef={legsRef} />
+              <CritterBody x={6} y={12} outfit={reduce ? undefined : OUTFITS[look]} back={!reduce && back} legsRef={legsRef} />
             </g>
           </g>
         </svg>
