@@ -25,3 +25,11 @@ export const CACHE_RACE = {
   aider: [[85461, 2433, 0.00897], [93561, 2433, 0.009842], [70821, 0, 0.007558], [70821, 0, 0.007558]],
   opencode: [[1249, 782, 0.000078], [10448, 9909, 0.000207], [11066, 10444, 0.00037], [12134, 11064, 0.00037], [12432, 12132, 0.000199], [12563, 12430, 0.000189], [12697, 12561, 0.000226], [13419, 12695, 0.000316]],
 };
+
+// Confound check (all 50 tasks, same fair setup), not shown in the main lineup:
+// opencode_auto = OpenCode with every permission auto-approved (no headless permission stops);
+// cursor_nothink = Cursor on "Haiku 5.5 High No Thinking" (0 of 50 runs had thinking vs 49 of 50).
+export const SWE_VARIANTS = {
+  opencode_auto: { id: 'opencode_auto', base: 'opencode', label: 'OpenCode (auto-approve)', outfit: 'opencode', solved: 36, rate: 72, ci: [58, 83], usd: 0.0071, tok: 226806, min: 3.8, cache: 93 },
+  cursor_nothink: { id: 'cursor_nothink', base: 'cursor', label: 'Cursor (no thinking)', outfit: 'cursor', solved: 35, rate: 70, ci: [56, 81], usd: 0.0093, tok: 392911, min: 4.9, cache: 94, est: true },
+};
