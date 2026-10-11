@@ -3,7 +3,6 @@ import ProjectDetail from '../components/ProjectDetail';
 import {
   Spread,
   Hero,
-  Anatomy,
   Lineup,
   MetricRace,
   CacheRace,
@@ -11,6 +10,16 @@ import {
   Stat,
   Beat,
 } from '../components/project/harness';
+import { SWE, SWE_N } from '../components/project/harness/swebench';
+
+// Headline numbers come from the data module, so the copy follows the data.
+const byRate = [...SWE].sort((a, b) => b.rate - a.rate);
+const best = byRate[0];
+const worst = byRate[byRate.length - 1];
+const aider = SWE.find((r) => r.id === 'aider');
+const cheapest = [...SWE].sort((a, b) => a.usd - b.usd)[0];
+const others = SWE.filter((r) => r.id !== 'aider').map((r) => r.cache);
+const cents = (v) => (v < 0.01 ? (v * 100).toFixed(2) : (v * 100).toFixed(1));
 
 function ContextShaping() {
   return (
@@ -25,93 +34,83 @@ function ContextShaping() {
       <Hero />
 
       <Spread>
-        <Display>Same model. Six harnesses. <em>Does the wrapper matter?</em></Display>
+        <Display>Everyone compares the models. Almost no one looks at what&apos;s wrapped around them.</Display>
         <p>
-          When people compare AI coding tools, they usually compare the model inside. But you
-          never talk to a model directly. You talk to the program wrapped around it, and that
-          program is called a harness.
-        </p>
-      </Spread>
-
-      <Spread kicker="what is a harness">
-        <Beat>A harness is not a model.</Beat>
-        <p>
-          The model is the brain. All it does is read some text and predict what comes next. It
-          can&apos;t open your files or run your tests, and it remembers nothing between turns.
+          When a new model comes out, we argue about its benchmark scores. But nobody uses a model
+          on its own. You use it through a tool like Claude Code, Cursor or Aider, and that tool
+          does a lot of quiet work you never see.
         </p>
         <p>
-          The model only sees one thing: its context window, the block of text it reads each
-          turn. The harness is everything that fills it. It writes the instructions, picks which
-          of your files to show, offers tools like search and run tests, actually runs them, and
-          decides what to forget when the window gets full.
+          The model only reads and writes text. It can&apos;t open your files, and it forgets
+          everything between turns. So the tool around it, the harness, decides what it gets to
+          read each turn: which files, which instructions, which results so far. It turns the
+          model&apos;s requests into real actions, like searching your code, editing a file or
+          running the tests. And when the model&apos;s working memory fills up, the harness
+          decides what to drop.
         </p>
-        <Anatomy />
         <p>
-          Claude Code, Cursor, Aider and others are all harnesses, and many of them can run the
-          exact same model. Same brain, different costume.
-        </p>
-      </Spread>
-
-      <Spread kicker="the test">
-        <p>
-          So I took one model, Claude Haiku 5.5, and put it in six popular harnesses. Each one got
-          the same 49 real bugs from open-source projects (a public benchmark called SWE-bench
-          Verified), the same computer resources, and the same pass/fail check: the
-          project&apos;s own tests.
+          Several of these tools can run the very same model. Same mind, different outfit.
         </p>
         <Lineup />
-        <p>The only thing that changed was the costume.</p>
       </Spread>
 
-      <Spread kicker="the results">
-        <Stat value="+17" label="points of success rate between best and worst" />
+      <Spread>
         <p>
-          The wrapper alone moved the success rate from 61% to 78%. But success is only half of
-          it. What does each fix cost you, in money, in tokens (the chunks of text the model
-          reads and writes), and in time?
+          I wanted to know how much the outfit matters. So I took one model, Claude Haiku 5.5,
+          and ran it in six popular harnesses on the same {SWE_N} real bugs from open-source
+          projects, taken from a public benchmark called SWE-bench Verified. Every run got the
+          same computer and was graded the same way: by the project&apos;s own tests.
+        </p>
+        <Stat
+          value={`${worst.rate}% → ${best.rate}%`}
+          label={`bugs fixed, from ${worst.label} to ${best.label}, with the same model inside`}
+        />
+        <p>
+          That&apos;s a {best.rate - worst.rate}-point swing from the harness alone. Fixing the
+          bug is only part of it, though. Here&apos;s what each fix cost in money, in tokens (the
+          chunks of text the model reads and writes) and in time.
         </p>
         <MetricRace />
-        <Stat value="15×" label="Aider’s cost per fix compared with OpenCode’s" />
-        <p>
-          Most of them fix a bug for about a cent. Aider pays about eight and a half cents, and
-          fixes the fewest.
-        </p>
       </Spread>
 
-      <Spread kicker="why">
-        <Beat>The difference is the cache.</Beat>
+      <Spread>
+        <Beat>
+          The biggest gap is cost. {aider.label} paid about {cents(aider.usd)}¢ per fix;{' '}
+          {cheapest.label} paid {cents(cheapest.usd)}¢.
+        </Beat>
         <p>
-          Every time the harness asks the model something, it sends the whole context window
-          again. Providers remember the beginning of what you sent last time, and charge about a
-          tenth of the price for the part that matches. That memory is the cache.
+          Every time a harness asks the model something, it sends the whole conversation again.
+          Model providers keep a short-term copy of what you sent last time, a cache, and charge
+          about a tenth of the price for any opening that matches it exactly.
         </p>
         <CacheRace />
         <p>
-          A harness that only adds to the end of the window keeps the start identical, so most
-          of each trip is cheap. Five of the six got 90 to 93% of their text from the cache.
-          Aider rebuilds its window every time, with a fresh map of the project and whole files,
-          so almost nothing matches. It got 4%.
+          A harness that only adds to the end keeps the opening identical, so most of each trip
+          is cheap. Five of the six got {Math.min(...others)} to {Math.max(...others)}% of their
+          input from the cache. {aider.label} rebuilds the conversation each time, with a fresh
+          map of the project and whole files up front, so almost nothing matches. It got{' '}
+          {aider.cache}%.
         </p>
       </Spread>
 
-      <Spread kicker="the takeaway">
+      <Spread>
         <p>
-          The model sets how smart the work can be. The harness decides how much of that you
-          actually get, and what you pay for it, mostly through what it puts in the context
-          window and whether it keeps the cache warm.
+          The model sets how capable the work can be. The harness decides how much of that you
+          actually get, and what you pay for it, mostly through what it puts in front of the
+          model and whether it keeps the cache warm.
         </p>
-        <Display>Before you upgrade the model, look at what your harness is <em>feeding it</em>.</Display>
+        <Display>Before you upgrade the model, look at what your harness is feeding it.</Display>
       </Spread>
 
       <Spread kicker="method">
         <p className="hs-note">
-          50 SWE-bench Verified tasks; one was dropped because its tests need the open internet.
-          Three runs at a time, each in its own 2 CPU / 4 GB container; minutes per fix use only
-          runs made under those equal conditions. With 49 tasks each success rate is about ±12
-          points (95% Wilson interval). Tokens include cache reads. Cache rate = cache reads ÷ all
-          input tokens. Cursor bills outside my cost tracking, so its cost is estimated from its
-          own token logs, and it kept its built-in skills. Total spend $5.34. Every run and log is
-          at{' '}
+          {SWE_N} SWE-bench Verified tasks, one model. Three runs at a time, each in its own
+          2 CPU / 4 GB container; minutes per fix use only runs made under those equal
+          conditions. With {SWE_N} tasks, each success rate is uncertain by about ±12 points
+          (95% Wilson interval), so only the ends of the ranking are clearly apart. Tokens
+          include cache reads. Cache rate = cache reads ÷ all input tokens. Cursor bills outside
+          my cost tracking, so its cost is estimated from its own token logs, and it kept its
+          built-in skills. Every run and log is at{' '}
           <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">
             github.com/bicrick/context-shaping
           </a>

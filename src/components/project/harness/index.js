@@ -4,7 +4,6 @@ import './Harness.css';
 export { default as Spread } from './Spread';
 export { default as Hero } from './stills/Hero';
 export { default as Lineup } from './stills/Lineup';
-export { default as Anatomy } from './stills/Anatomy';
 export { default as MetricRace } from './stills/MetricRace';
 export { default as CacheRace } from './stills/CacheRace';
 export { Display, Stat, Beat } from './Type';

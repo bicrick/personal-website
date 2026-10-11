@@ -4,7 +4,7 @@ import Critter from '../Critter';
 import { CACHE_RACE } from '../swebench';
 
 const MAX = 94000;
-const STEP_MS = 700;
+const STEP_MS = 1100;
 
 function Lane({ outfit, name, calls, shown }) {
   const spent = calls.slice(0, shown).reduce((s, c) => s + c[2], 0);
@@ -47,7 +47,7 @@ export default function CacheRace() {
         <span><i className="cr-sw is-hit" />from cache</span>
         <span><i className="cr-sw" />paid in full</span>
       </div>
-      <div className="hs-foot">Real logs from one bug both fixed. Each bar is one trip to the model. Grey was remembered from last time (cheap), orange was paid in full.</div>
+      <div className="hs-foot">Real logs from one bug both fixed. Each bar is one trip to the model. The light part came from the cache (cheap); the darker part was paid in full.</div>
     </div>
   );
 }

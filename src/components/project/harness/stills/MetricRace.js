@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Critter from '../Critter';
 import useInView from '../useInView';
-import { SWE } from '../swebench';
+import { SWE, SWE_N } from '../swebench';
 
 const METRICS = [
-  { key: 'rate', tab: 'Success rate', note: 'bugs fixed out of 49. Higher is better.', fmt: (v) => `${v}%`, high: true },
+  { key: 'rate', tab: 'Success rate', note: `bugs fixed out of ${SWE_N}. Higher is better.`, fmt: (v) => `${v}%`, high: true },
   { key: 'usd', tab: '$ per fix', note: 'API spend divided by bugs fixed. Lower is better.', fmt: (v) => (v < 0.01 ? `${(v * 100).toFixed(2)}¢` : `${(v * 100).toFixed(1)}¢`) },
   { key: 'tok', tab: 'Tokens per fix', note: 'chunks of text the model read and wrote, per bug fixed. Lower is better.', fmt: (v) => `${Math.round(v / 1000)}k` },
   { key: 'min', tab: 'Minutes per fix', note: 'wall-clock time per bug fixed. Lower is better.', fmt: (v) => `${v.toFixed(1)} min` },
@@ -16,7 +16,7 @@ export default function MetricRace() {
   const [auto, setAuto] = useState(true);
   useEffect(() => {
     if (!on || !auto) return undefined;
-    const t = setTimeout(() => setM((x) => (x + 1) % METRICS.length), 4200);
+    const t = setTimeout(() => setM((x) => (x + 1) % METRICS.length), 6500);
     return () => clearTimeout(t);
   }, [on, auto, m]);
   const met = METRICS[m];
@@ -49,7 +49,7 @@ export default function MetricRace() {
           );
         })}
       </div>
-      <div className="hs-foot">Same model in every costume. {m === 0 && 'With 49 bugs each rate is about ±12 points, so only the ends of the list are clearly apart.'}{m === 1 && '*Cursor bills separately; its cost is estimated from its own token logs.'}{m === 2 && 'Includes tokens re-read from cache, which are cheap. That is why Claude Code reads the most but costs about a cent.'}{m === 3 && 'Measured only on runs under equal conditions (3 at a time, same CPU and memory).'}</div>
+      <div className="hs-foot">Same model in every costume. {m === 0 && 'Each rate is uncertain by about ±12 points, so only the ends of the list are clearly apart.'}{m === 1 && '*Cursor bills separately; its cost is estimated from its own token logs.'}{m === 2 && 'Includes text re-read from the cache, which is cheap, so more tokens does not always mean more cost.'}{m === 3 && 'Measured only on runs under equal conditions (3 at a time, same CPU and memory).'}</div>
     </div>
   );
 }
