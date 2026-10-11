@@ -4,8 +4,8 @@
 }
 
 :root {
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  --font-pixel: 'Geist Pixel Square', 'Geist', monospace;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-pixel: 'Geist Pixel Square', 'IBM Plex Sans', monospace;
   /* Shared reading column (projects width is the site default) */
   --measure: 56rem;
   --shell-pad: 1.25rem;

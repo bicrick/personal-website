@@ -1,9 +1,9 @@
-/* Self-hosted Geist fonts (from the `geist` npm package) */
+/* Self-hosted fonts: IBM Plex Sans (@fontsource-variable/ibm-plex-sans) and Geist Pixel (`geist` npm package) */
 
 @font-face {
-  font-family: 'Geist';
-  src: url('./assets/fonts/Geist-Variable.woff2') format('woff2');
-  font-weight: 100 900;
+  font-family: 'IBM Plex Sans';
+  src: url('./assets/fonts/IBMPlexSans-Variable.woff2') format('woff2');
+  font-weight: 100 700;
   font-style: normal;
   font-display: swap;
 }

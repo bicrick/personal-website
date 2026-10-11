@@ -10,6 +10,10 @@
   user-select: none;
 }
 
+.typewriter-heading-sizer::before {
+  content: attr(data-text);
+}
+
 .typewriter-heading-live {
   position: absolute;
   left: 0;
