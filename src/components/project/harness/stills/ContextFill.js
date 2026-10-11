@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Fig from '../Fig';
+import Stack from '../Stack';
 import Critter from '../Critter';
 import useInView from '../useInView';
 
@@ -34,7 +35,6 @@ export default function ContextFill() {
   }, [on, i]);
   const s = STEPS[i];
   const used = SEGS.reduce((n, g) => n + s.w[g.key], 0);
-  const small = SEGS.filter((g) => s.w[g.key] > 0 && s.w[g.key] < 22);
   return (
     <Fig
       innerRef={ref}
@@ -57,12 +57,18 @@ export default function ContextFill() {
         ))}
         <span className="cb-lab is-shown is-free" style={{ flex: 1 }}>free <b>{TOTAL - used}k</b></span>
       </div>
-      <div className="cb-legend">
-        {small.map((g) => (
-          <span key={g.key} className={s.hot === g.key ? 'is-hot' : ''}><i className={`cb-sw is-${g.key}`} />{g.label} <b>{s.w[g.key]}k</b></span>
+      <Stack
+        className="cb-legend-stack"
+        at={i}
+        items={STEPS.map((st, n) => (
+          <div key={n} className="cb-legend">
+            {SEGS.filter((g) => st.w[g.key] > 0 && st.w[g.key] < 22).map((g) => (
+              <span key={g.key} className={st.hot === g.key ? 'is-hot' : ''}><i className={`cb-sw is-${g.key}`} />{g.label} <b>{st.w[g.key]}k</b></span>
+            ))}
+          </div>
         ))}
-      </div>
-      <div className="cb-say"><Critter className="cb-critter" /><span key={i}>{s.say}</span></div>
+      />
+      <div className="cb-say"><Critter className="cb-critter" /><Stack at={i} items={STEPS.map((st) => st.say)} /></div>
     </Fig>
   );
 }

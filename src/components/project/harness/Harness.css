@@ -191,7 +191,7 @@
 .cb-legend b { display: inline; }
 .cb-sw { width: 8px; height: 8px; flex: none; }
 .cb-say { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--ink-muted); font-style: italic; }
-.cb-say span { animation: hs-fade 0.9s ease; }
+
 .cb-critter { width: 20px; flex: none; }
 @keyframes hs-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .cb-seg, .cb-lab { transition: none; } .cb-say span { animation: none; } }
@@ -261,3 +261,10 @@
 .cf2.is-fixed .cf2-ghost { opacity: 1; }
 .mr-tag { margin-left: 6px; font-style: normal; font-family: var(--font-pixel); font-size: 10px; color: var(--hs-accent); border: 1px solid currentColor; padding: 0 3px; vertical-align: 2px; }
 .ck-rate { color: var(--ink-muted); font-size: 13px; }
+
+/* layout-stable swaps */
+.hs-stack { display: grid; }
+.hs-stack-i { grid-area: 1 / 1; visibility: hidden; opacity: 0; transition: opacity 0.5s ease; }
+.hs-stack-i.is-on { visibility: visible; opacity: 1; }
+.cb-labels { min-height: 1.6em; }
+.cb-say .hs-stack { flex: 1; }

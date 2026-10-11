@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Critter from '../Critter';
 import useInView from '../useInView';
 import Fig from '../Fig';
+import Stack from '../Stack';
 import { SWE_FAIR as SWE, SWE_N } from '../swebench';
 
 const METRICS = [
@@ -33,7 +34,7 @@ export default function MetricRace() {
   const best = met.high ? max : Math.min(...vals);
   const rows = [...SWE].sort((a, b) => (met.high ? b[met.key] - a[met.key] : a[met.key] - b[met.key]));
   return (
-    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="settings fixed" caption={CAPS[m]}>
+    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="settings fixed" caption={CAPS} captionAt={m}>
       <div className="mr-tabs" role="tablist">
         {METRICS.map((x, i) => (
           <button key={x.key} type="button" role="tab" aria-selected={i === m} className={`mr-tab${i === m ? ' is-on' : ''}`} onClick={() => { setAuto(false); setM(i); }}>
@@ -41,7 +42,7 @@ export default function MetricRace() {
           </button>
         ))}
       </div>
-      <div className="mr-note">{met.note}</div>
+      <Stack className="mr-note" at={m} items={METRICS.map((x) => x.note)} />
       <div className="mr-rows" style={{ height: SWE.length * 52 }}>
         {SWE.map((r) => {
           const pos = rows.indexOf(r);

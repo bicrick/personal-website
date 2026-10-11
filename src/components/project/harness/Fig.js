@@ -1,8 +1,9 @@
 import React from 'react';
+import Stack from './Stack';
 
 // Crisp figure frame: thin rule, square corners, small pixel title,
 // italic caption underneath like the rest of the site.
-export default function Fig({ title, aside, caption, children, innerRef, className = '' }) {
+export default function Fig({ title, aside, caption, captionAt = 0, children, innerRef, className = '' }) {
   return (
     <figure className={`hs-fig ${className}`}>
       <div className="hs-fig-box" ref={innerRef}>
@@ -11,7 +12,9 @@ export default function Fig({ title, aside, caption, children, innerRef, classNa
         )}
         {children}
       </div>
-      {caption && <figcaption>{caption}</figcaption>}
+      {caption && (Array.isArray(caption)
+        ? <figcaption><Stack items={caption} at={captionAt} /></figcaption>
+        : <figcaption>{caption}</figcaption>)}
     </figure>
   );
 }
