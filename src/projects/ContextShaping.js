@@ -3,51 +3,20 @@ import ProjectDetail from '../components/ProjectDetail';
 import {
   Spread,
   Hero,
-  ContextPanel,
-  TurnStack,
   Lineup,
-  LeverBoard,
-  RunPlayer,
-  ReadStrategies,
-  ToolsStill,
-  ForgetStill,
-  ToldStill,
   SwePassRate,
   SweCostScatter,
-  SweTokens,
-  SweRig,
+  CacheRace,
   SweOverlap,
-  TaskCard,
-  ResultBars,
-  Duel,
-  Headline,
+  Display,
+  Stat,
+  Beat,
 } from '../components/project/harness';
-
-const READ_RESULTS = [
-  { label: 'whole repo', value: 69 },
-  { label: 'only the right files', value: 68 },
-  { label: 'map + imports', value: 61 },
-  { label: 'map, file tree only', value: 45 },
-  { label: 'search in a loop', value: 93, hl: true, mood: 'happy' },
-];
-
-const FORGET_RESULTS = [
-  { label: 'no cap (baseline)', value: 93, side: '85%' },
-  { label: 'summarize at 50%', value: 79, side: '10%', mood: 'tired' },
-  { label: 'summarize at 90%', value: 88, side: '43%' },
-  { label: 'drop old output', value: 93, side: '16%', hl: true },
-];
-
-const TOLD_RESULTS = [
-  { label: 'no notes', value: 93, side: '$0.0085' },
-  { label: 'refactor skill', value: 93, side: '$0.0080', hl: true },
-  { label: 'AGENTS.md', value: 91, side: '$0.0092' },
-];
 
 function ContextShaping() {
   return (
     <ProjectDetail
-      title="is your harness making your model dumber?"
+      title="same model, six harnesses"
       date="October 2026"
       backHref="/"
       backLabel="home"
@@ -57,217 +26,93 @@ function ContextShaping() {
       <Hero />
 
       <Spread>
-        <p>
-          You can&apos;t change the model. You can change what it sees, and how it touches your
-          code. That part is the harness. This is a guide to it, and to what happened when I tested
-          it.
-        </p>
+        <Display>Same model. Six harnesses. <em>Does the wrapper matter?</em></Display>
       </Spread>
 
-      <Spread kicker="the context window">
+      <Spread>
         <p>
-          A model never sees your repo. It sees one thing: its context window. Everything it knows
-          about your task has to fit in there.
+          Every time a new model drops, we argue about the model. I wanted to know about the other
+          half: the wrapper around it.
         </p>
         <p>
-          This is mine, from the Claude Code app. Blue is the conversation. Everything else was
-          loaded before I typed a word.
-        </p>
-        <ContextPanel />
-      </Spread>
-
-      <Spread kicker="every turn">
-        <p>
-          The model has no memory between turns. Every time it calls a tool, the whole window goes
-          back in, plus the new result. It hauls the full cart, every step.
-        </p>
-        <TurnStack />
-      </Spread>
-
-      <Spread kicker="the harness">
-        <p>
-          The harness is everything around the model. Claude Code, Cursor, OpenCode and Aider can
-          all run the same Claude model. Same model inside, different outfit.
+          A model never sees your repo. It sees its context window, and something has to decide
+          what goes in there: which files, which tool results, what gets thrown out when it fills
+          up. That something is the harness. Claude Code, Cursor, Aider and the rest can all run
+          the exact same model. Same Claude inside, different outfit.
         </p>
         <Lineup />
       </Spread>
 
-      <Spread kicker="four levers">
+      <Spread>
         <p>
-          Every harness makes the same four choices. Each one is a lever with a few settings. Pick
-          a harness to see how it sets them.
+          So I put Claude Haiku 5.5 in six popular harnesses and gave each one the same 49 real
+          GitHub bugs from SWE-bench Verified. Same model, same containers, same limits, graded by
+          the bugs&apos; own tests. The only thing that changed was the outfit.
         </p>
-        <LeverBoard mode="harness" />
-        <p>
-          Codex and Gemini CLI run their own models, so you can&apos;t put Claude in them. They
-          still have to set the same four levers.
-        </p>
-      </Spread>
-
-      <Spread kicker="the question">
-        <p>
-          If the model never changes, how much can the levers alone move the result? And which
-          setting wins on each one?
-        </p>
-      </Spread>
-
-      <Spread kicker="the experiment">
-        <p>
-          One lever at a time. Everything else stays at a plain baseline: search as it goes, grep
-          and edit, forget nothing, no notes. Pick a lever to see what I tried on it.
-        </p>
-        <LeverBoard mode="experiment" />
-      </Spread>
-
-      <Spread kicker="the tasks">
-        <p>
-          The model is always Claude Haiku 5.5. The tasks are multi-file refactors, like renaming a
-          class used all over a codebase. You either update every reference or you don&apos;t, so a
-          miss is easy to count.
-        </p>
-        <TaskCard />
-      </Spread>
-
-      <Spread kicker="one run">
-        <p>
-          Here&apos;s a real run on the hardest task, the way the harness sees it. Watch the window
-          grow with each turn, then the grader decide.
-        </p>
-        <RunPlayer />
-      </Spread>
-
-      <Spread kicker="lever 1 · what it reads">
-        <p>Harnesses show the model your code in one of four ways.</p>
-        <ReadStrategies />
-        <p>
-          More context didn&apos;t help. The whole repo and only the right files scored the same;
-          the callers it missed were sitting right there in the prompt. Searching in a loop, and
-          checking its own work, did.
-        </p>
-        <ResultBars title="pass rate, all 25 tasks" rows={READ_RESULTS} />
-      </Spread>
-
-      <Spread kicker="lever 2 · what it can do">
-        <p>
-          Most agents find code with grep and edit one file at a time. A tool that understands the
-          code can do the whole job in one call.
-        </p>
-        <ToolsStill />
-        <p>
-          On the hardest task, grep drowned in its own search results. The rename tool asked where
-          the name was used and renamed it. Across all 25 tasks: 97% vs 93%, and 5.2x cheaper per
-          solve.
-        </p>
-        <Duel />
-      </Spread>
-
-      <Spread kicker="lever 3 · what it forgets">
-        <p>
-          Long sessions fill the window, so the harness throws things out. Some summarize, some
-          clear old tool output, and they disagree on when.
-        </p>
-        <ForgetStill />
-        <p>
-          With the window capped at 12k tokens, summarizing early hurt most. Each summary rewrites
-          the start of the prompt, which wipes the prompt cache, so every call after it costs more.
-        </p>
-        <ResultBars
-          title="pass rate, 12k-token cap"
-          sideLabel="cache hit"
-          rows={FORGET_RESULTS}
-          foot="Per solve: $0.0397 summarizing at 50%, $0.0143 dropping old output."
-        />
-      </Spread>
-
-      <Spread kicker="lever 4 · what it’s told">
-        <p>Notes loaded up front: house rules, or a procedure for one kind of job.</p>
-        <ToldStill />
-        <p>
-          The skill was a small cost win, not an accuracy win. The generic conventions file
-          didn&apos;t earn its tokens.
-        </p>
-        <ResultBars title="pass rate" sideLabel="per solve" rows={TOLD_RESULTS} />
-      </Spread>
-
-      <Spread kicker="all four levers, stacked">
-        <p>
-          Then I set every lever to its winner and ran five seeds on all 25 tasks, against the
-          whole repo in one prompt.
-        </p>
-        <Headline />
-        <p>
-          But those were 25 refactors I wrote myself, and I picked the winners on the same tasks.
-          The real question is whether any of this shows up in harnesses people actually use, on
-          bugs nobody wrote for them.
-        </p>
-      </Spread>
-
-      <Spread kicker="the real test">
-        <p>
-          So I took 49 real GitHub bugs from SWE-bench Verified and ran them through six
-          off-the-shelf harnesses. Same model in all of them. Everything except the harness was
-          held fixed.
-        </p>
-        <SweRig />
-      </Spread>
-
-      <Spread kicker="finding 1 · the harness moves the score">
-        <p>
-          Same model, same bugs, and the pass rate ran from 61% to 78%. That&apos;s 17 points from
-          the outfit alone.
-        </p>
+        <Stat value="+17" label="points of pass rate, from the wrapper alone" />
         <SwePassRate />
         <p>
-          Honest version: 49 tasks is not many. The ranges all overlap, so I wouldn&apos;t bet on
-          the order in the middle. Top versus bottom is the only gap I&apos;d stand behind.
+          Forty-nine bugs is a small sample, so the ranges overlap. I wouldn&apos;t bet on the
+          order in the middle. The gap between the top and the bottom is real.
         </p>
       </Spread>
 
-      <Spread kicker="finding 2 · cost moves way more">
+      <Spread>
+        <Beat>Cost is where they really pull apart.</Beat>
+        <Stat value="15×" label="Aider’s cost per fix vs OpenCode’s" />
         <p>
-          Accuracy spread 17 points. Cost spread 15×. Most harnesses land around a cent per solved
-          bug. Aider lands at eight and a half, and solves the fewest.
+          Most land around a cent per bug fixed. Aider lands at eight and a half, and fixes the
+          fewest.
         </p>
         <SweCostScatter />
       </Spread>
 
-      <Spread kicker="finding 3 · it’s the cache">
+      <Spread>
+        <Beat>The difference is the cache.</Beat>
         <p>
-          Aider isn&apos;t sending the most tokens. It rebuilds the front of the prompt with repo
-          maps and whole files, so almost nothing comes from cache. That&apos;s lever 3 again:
-          rewrite the start of the prompt and you pay full price every turn.
+          It isn&apos;t that Aider sends the most tokens. It&apos;s which tokens. Every call goes
+          back with the whole window, and providers cache the part that hasn&apos;t changed since
+          last time. Cached tokens cost about a tenth as much.
         </p>
-        <SweTokens />
         <p>
-          And lever 1: mini-swe-agent, the barest loop here, just searches as it goes. It solves
-          about as many as Claude Code on less than half the tokens.
+          Here&apos;s one bug both of them fixed, every model call, from the run logs.
+        </p>
+        <CacheRace />
+        <p>
+          Aider rebuilds its prompt each time, with a fresh repo map and the full files, so the
+          cache almost never matches. Across the run, 4% of its prompt tokens came from cache. The
+          other five sat at 90 to 93%, because they only add to the end of the window and leave
+          the start alone.
         </p>
       </Spread>
 
-      <Spread kicker="finding 4 · the race is at the margin">
-        <p>
-          Most of these bugs don&apos;t care which harness you use. All six solved the same 26,
-          and none could touch 8. Everything above happened in the 15 in between.
-        </p>
+      <Spread>
+        <Beat>Most bugs don&apos;t care which harness you pick.</Beat>
+        <div className="hs-stat-pair">
+          <Stat value="26" label="fixed by all six" />
+          <Stat value="8" label="fixed by none" />
+        </div>
+        <p>The whole race happened in the 15 in between.</p>
         <SweOverlap />
       </Spread>
 
-      <Spread kicker="the takeaway">
+      <Spread>
         <p>
-          The model sets the floor. The harness decides how you spend to get past it, and that
-          shows up in your bill long before it shows up in your pass rate. Here&apos;s how
-          I&apos;d set the levers.
+          So the model sets the floor. The easy bugs get fixed no matter what you wrap it in. The
+          harness decides how far past that floor you get, and how much you pay for every step,
+          and it does that mostly through what it puts in the context window and whether
+          it keeps the cache warm.
         </p>
-        <LeverBoard mode="mine" />
-        <p>Before you upgrade the model, look at what your harness is feeding it.</p>
+        <Display>Before you upgrade the model, look at what your harness is <em>feeding it</em>.</Display>
       </Spread>
 
-      <Spread kicker="caveats">
-        <p>
-          One model, 49 tasks; one more was dropped because its tests need the open internet.
-          Cursor bills outside my cost proxy, so its cost is estimated from its own logs, and it
-          kept its built-in skills. Runs were three at a time in 2 CPU / 4 GB containers. Total
-          spend: $5.34. Every task, run and transcript is at{' '}
+      <Spread kicker="method">
+        <p className="hs-note">
+          Claude Haiku 5.5, 50 SWE-bench Verified tasks, one dropped because its tests need the
+          open internet. Three runs at a time, each in its own 2 CPU / 4 GB container. Ranges are
+          95% Wilson intervals. Cache hit = cache reads ÷ all prompt tokens. Cursor bills outside
+          my cost proxy, so its cost is estimated from its own token logs, and it kept its
+          built-in skills. Total spend $5.34. Every run and log is at{' '}
           <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">
             github.com/bicrick/context-shaping
           </a>

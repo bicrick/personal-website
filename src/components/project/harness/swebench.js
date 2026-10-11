@@ -1,7 +1,7 @@
 // SWE-bench Verified, 50-task subset, Haiku 5.5 in six harnesses.
 // From bicrick/context-shaping results/swebench/summary_tokens.csv
 // (latest row per task x harness; psf__requests-2317 excluded, 49 scored).
-// ci = 95% Wilson interval. cache = cache_read / all prompt tokens.
+// ci = 95% Wilson interval. cache = cache_read / (input + cache_read + cache_write).
 // Cursor bills outside the cost proxy, so its $ is estimated from its own token logs.
 export const SWE_N = 49;
 export const SWE_ALL = 26; // solved by all six
@@ -21,3 +21,11 @@ export const SWE = [
 export const SWE_SPREAD = [
   { k: 6, n: 26 }, { k: 5, n: 6 }, { k: 4, n: 2 }, { k: 3, n: 1 }, { k: 2, n: 1 }, { k: 1, n: 5 }, { k: 0, n: 8 },
 ];
+
+// Real per-call logs, django__django-11880, both solved it.
+// [prompt tokens, of which read from cache, usd]
+export const CACHE_RACE = {
+  task: 'django__django-11880',
+  aider: [[85461, 2433, 0.00897], [93561, 2433, 0.009842], [70821, 0, 0.007558], [70821, 0, 0.007558]],
+  opencode: [[1249, 782, 0.000078], [10448, 9909, 0.000207], [11066, 10444, 0.00037], [12134, 11064, 0.00037], [12432, 12132, 0.000199], [12563, 12430, 0.000189], [12697, 12561, 0.000226], [13419, 12695, 0.000316]],
+};
