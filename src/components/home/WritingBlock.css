@@ -132,3 +132,8 @@
   opacity: 0.11;
   will-change: transform;
 }
+
+.swing-spin {
+  transform-box: view-box;
+  transform-origin: 15px 18px;
+}

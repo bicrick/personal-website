@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CritterBody } from '../project/harness/Critter';
 import useReducedMotion from '../project/useReducedMotion';
 import '../project/harness/Critter.css';
@@ -18,6 +18,10 @@ const LEG_K = 40;
 const LEG_DAMP = 4;
 const STEP = 1 / 240;
 const DEG = 180 / Math.PI;
+// Costume loop: the six harnesses from the post, same art.
+const OUTFITS = [undefined, 'cursor', 'opencode', 'aider', 'mini', 'swe'];
+const HOLD = 2.4; // seconds hanging in each costume
+const SPIN = 0.45; // seconds per turn
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const pickAmp = () => 0.04 + Math.random() * 0.07;
@@ -29,7 +33,9 @@ export default function SwingMark() {
   const legsRef = useRef(null);
   const ropeRef = useRef(null);
   const shadowRef = useRef(null);
+  const spinRef = useRef(null);
   const reduce = useReducedMotion();
+  const [look, setLook] = useState(0);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -38,6 +44,7 @@ export default function SwingMark() {
     const s = {
       th: 0.08, w: 0, ph: 0, pw: 0, ps: 0, psw: 0, y: 0.6, yv: 0,
       amp: pickAmp(), swings: 0, kick: 2 + Math.random() * 3,
+      clock: 0, look: 0, swapped: false,
     };
     let raf = 0;
     let last = 0;
@@ -76,7 +83,28 @@ export default function SwingMark() {
       s.ps += s.psw * h;
     };
 
+    const spin = () => {
+      // 0..HOLD hang, then one horizontal turn; swap costume when edge-on
+      const t = s.clock - HOLD;
+      if (t < 0) return 1;
+      const p = Math.min(t / SPIN, 1);
+      if (p >= 0.25 && !s.swapped) {
+        s.swapped = true;
+        s.look = (s.look + 1) % OUTFITS.length;
+        setLook(s.look);
+      }
+      if (p >= 1) {
+        s.clock = 0;
+        s.swapped = false;
+        return 1;
+      }
+      // snap to a few frames so the pixels stay crisp
+      return Math.round(Math.cos(2 * Math.PI * p) * 6) / 6;
+    };
+
     const draw = () => {
+      const sx = spin();
+      spinRef.current.style.transform = `scale(${sx === 0 ? 0.08 : sx}, 1)`;
       armRef.current.style.transform = `rotate(${s.th * DEG}deg)`;
       const stretch = clamp(s.y * 0.04, -0.04, 0.04);
       bodyRef.current.style.transform = `translateY(${s.y}px) rotate(${clamp(s.ph * DEG, -12, 12)}deg) scale(${1 - stretch * 0.5}, ${1 + stretch})`;
@@ -84,7 +112,7 @@ export default function SwingMark() {
       legsRef.current.style.transform = `skewX(${clamp(-s.ps * DEG, -24, 24)}deg)`;
       // positive rotation swings the critter left, so the shadow follows -sin
       const x = -Math.sin(s.th);
-      shadowRef.current.style.transform = `translateX(${x * 160}%) scaleX(${1 - Math.abs(x) * 0.8})`;
+      shadowRef.current.style.transform = `translateX(${x * 160}%) scaleX(${(1 - Math.abs(x) * 0.8) * (0.55 + 0.45 * Math.abs(sx))})`;
     };
 
     const frame = (t) => {
@@ -93,6 +121,7 @@ export default function SwingMark() {
       last = t;
       while (acc >= STEP) {
         step(STEP);
+        s.clock += STEP;
         acc -= STEP;
       }
       draw();
@@ -139,7 +168,9 @@ export default function SwingMark() {
           <g ref={bodyRef} className="swing-body">
             <path className="swing-ring" d="M14 10h2v2h-2zM14.6 10.6h.8v.8h-.8z" fillRule="evenodd" />
             <path className="swing-line" d="M10.4 14.2L14.4 11.8M19.6 14.2L15.6 11.8" />
-            <CritterBody x={6} y={12} outfit="harness" legsRef={legsRef} />
+            <g ref={spinRef} className="swing-spin">
+              <CritterBody x={6} y={12} outfit={reduce ? undefined : OUTFITS[look]} legsRef={legsRef} />
+            </g>
           </g>
         </svg>
       </span>
