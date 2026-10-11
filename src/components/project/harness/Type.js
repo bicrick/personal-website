@@ -1,11 +1,7 @@
 import React from 'react';
 import useInView from './useInView';
 
-// Loud type: the post's question, and its pull-stats.
-export function Display({ children }) {
-  return <div className="hs-display" role="heading" aria-level="2">{children}</div>;
-}
-
+// A quiet pull-stat: the site's pixel face, small and precise.
 export function Stat({ value, label }) {
   const { ref, on } = useInView();
   return (
@@ -14,8 +10,4 @@ export function Stat({ value, label }) {
       <span className="hs-stat-label">{label}</span>
     </div>
   );
-}
-
-export function Beat({ children }) {
-  return <div className="hs-beat">{children}</div>;
 }

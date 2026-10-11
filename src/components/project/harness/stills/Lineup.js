@@ -1,6 +1,7 @@
 import React from 'react';
 import Critter from '../Critter';
 import Logo, { HARNESSES } from '../logos';
+import Fig from '../Fig';
 
 // Same Claude, six outfits: the six harnesses in the SWE-bench run.
 const CAST = [
@@ -14,6 +15,7 @@ const CAST = [
 
 export default function Lineup() {
   return (
+    <Fig caption="The six harnesses in the test. Same Claude inside each one.">
     <div className="hs-lineup">
       {CAST.map((c, i) => (
         <div key={c.id} className="hs-cast" style={{ '--i': i }}>
@@ -25,5 +27,6 @@ export default function Lineup() {
         </div>
       ))}
     </div>
+    </Fig>
   );
 }

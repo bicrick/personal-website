@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Critter from '../Critter';
 import useInView from '../useInView';
+import Fig from '../Fig';
 import { SWE, SWE_N } from '../swebench';
 
 const METRICS = [
@@ -8,6 +9,13 @@ const METRICS = [
   { key: 'usd', tab: '$ per fix', note: 'API spend divided by bugs fixed. Lower is better.', fmt: (v) => (v < 0.01 ? `${(v * 100).toFixed(2)}¢` : `${(v * 100).toFixed(1)}¢`) },
   { key: 'tok', tab: 'Tokens per fix', note: 'chunks of text the model read and wrote, per bug fixed. Lower is better.', fmt: (v) => `${Math.round(v / 1000)}k` },
   { key: 'min', tab: 'Minutes per fix', note: 'time on the clock per bug fixed. Lower is better.', fmt: (v) => `${v.toFixed(1)} min` },
+];
+
+const CAPS = [
+  'Each rate is uncertain by about ±12 points, so only the ends of the list are clearly apart.',
+  '*Cursor bills separately; its cost is estimated from its own token logs.',
+  'Includes text re-read from the cache, which is cheap, so more tokens is not always more cost.',
+  'Only from runs under equal conditions: three at a time, same CPU and memory.',
 ];
 
 export default function MetricRace() {
@@ -25,7 +33,7 @@ export default function MetricRace() {
   const best = met.high ? max : Math.min(...vals);
   const rows = [...SWE].sort((a, b) => (met.high ? b[met.key] - a[met.key] : a[met.key] - b[met.key]));
   return (
-    <div ref={ref} className={`hs-card mr${on ? ' is-on' : ''}`}>
+    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="same model in every costume" caption={CAPS[m]}>
       <div className="mr-tabs" role="tablist">
         {METRICS.map((x, i) => (
           <button key={x.key} type="button" role="tab" aria-selected={i === m} className={`mr-tab${i === m ? ' is-on' : ''}`} onClick={() => { setAuto(false); setM(i); }}>
@@ -49,7 +57,6 @@ export default function MetricRace() {
           );
         })}
       </div>
-      <div className="hs-foot">Same model in every costume. {m === 0 && 'Each rate is uncertain by about ±12 points, so only the ends of the list are clearly apart.'}{m === 1 && '*Cursor bills separately; its cost is estimated from its own token logs.'}{m === 2 && 'Includes text re-read from the cache, which is cheap, so more tokens does not always mean more cost.'}{m === 3 && 'Measured only on runs under equal conditions (3 at a time, same CPU and memory).'}</div>
-    </div>
+    </Fig>
   );
 }
