@@ -1,25 +1,21 @@
-// SWE-bench Verified, 50-task subset, Haiku 5.5 in six harnesses.
+// SWE-bench Verified, Haiku 5.5 in six harnesses, 49 scored tasks.
 // From bicrick/context-shaping results/swebench/summary_tokens.csv
-// (latest row per task x harness; psf__requests-2317 excluded, 49 scored).
-// ci = 95% Wilson interval. cache = cache_read / (input + cache_read + cache_write).
-// Cursor bills outside the cost proxy, so its $ is estimated from its own token logs.
+// (latest row per task x harness; psf__requests-2317 excluded).
+// rate: tasks solved / 49 (ci = 95% Wilson interval).
+// usd: total spend / solves (Cursor estimated from its own token logs).
+// tok: all tokens (input + output + cache read + cache write) / solves.
+// min: wall-clock minutes per solve, from the runs under the fair setup only
+//      (3 at a time, 2 CPU / 4 GB each): total wall time / solves in those runs.
+// cache: cache_read / (input + cache_read + cache_write).
 export const SWE_N = 49;
-export const SWE_ALL = 26; // solved by all six
-export const SWE_NONE = 8; // solved by none
-export const SWE_SPEND = 5.34; // total proxied spend incl. pilot + retries
 
 export const SWE = [
-  { id: 'cursor', label: 'Cursor', logo: 'cursor', solved: 38, pct: 78, ci: [64, 87], perSolve: 0.0111, tokPerSolve: 382576, cache: 93, est: true },
-  { id: 'swe_agent', label: 'SWE-agent', solved: 36, pct: 73, ci: [60, 84], perSolve: 0.0172, tokPerSolve: 425722, cache: 92 },
-  { id: 'claude_code', label: 'Claude Code', logo: 'claude', solved: 35, pct: 71, ci: [58, 82], perSolve: 0.012, tokPerSolve: 456423, cache: 93 },
-  { id: 'mini', label: 'mini-swe-agent', logo: 'mini', solved: 34, pct: 69, ci: [55, 80], perSolve: 0.0076, tokPerSolve: 196178, cache: 91 },
-  { id: 'opencode', label: 'OpenCode', logo: 'opencode', solved: 31, pct: 63, ci: [49, 75], perSolve: 0.0055, tokPerSolve: 149342, cache: 90 },
-  { id: 'aider', label: 'Aider', logo: 'aider', solved: 30, pct: 61, ci: [47, 74], perSolve: 0.0853, tokPerSolve: 265701, cache: 4 },
-];
-
-// Tasks by how many of the six harnesses solved them (sums to 49).
-export const SWE_SPREAD = [
-  { k: 6, n: 26 }, { k: 5, n: 6 }, { k: 4, n: 2 }, { k: 3, n: 1 }, { k: 2, n: 1 }, { k: 1, n: 5 }, { k: 0, n: 8 },
+  { id: 'cursor', label: 'Cursor', outfit: 'cursor', solved: 38, rate: 78, ci: [64, 87], usd: 0.0111, tok: 382576, min: 8.9, cache: 93, est: true },
+  { id: 'swe_agent', label: 'SWE-agent', outfit: 'harness', solved: 36, rate: 73, ci: [60, 84], usd: 0.0172, tok: 425722, min: 14.8, cache: 92 },
+  { id: 'claude_code', label: 'Claude Code', outfit: undefined, solved: 35, rate: 71, ci: [58, 82], usd: 0.012, tok: 456423, min: 7.6, cache: 93 },
+  { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', solved: 34, rate: 69, ci: [55, 80], usd: 0.0076, tok: 196178, min: 6.0, cache: 91 },
+  { id: 'opencode', label: 'OpenCode', outfit: 'opencode', solved: 31, rate: 63, ci: [49, 75], usd: 0.0055, tok: 149342, min: 5.8, cache: 90 },
+  { id: 'aider', label: 'Aider', outfit: 'aider', solved: 30, rate: 61, ci: [47, 74], usd: 0.0853, tok: 265701, min: 7.5, cache: 4 },
 ];
 
 // Real per-call logs, django__django-11880, both solved it.

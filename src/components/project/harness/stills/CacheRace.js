@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import useInView from '../useInView';
-import Logo from '../logos';
+import Critter from '../Critter';
 import { CACHE_RACE } from '../swebench';
 
 const MAX = 94000;
 const STEP_MS = 700;
 
-function Lane({ id, name, calls, shown }) {
+function Lane({ outfit, name, calls, shown }) {
   const spent = calls.slice(0, shown).reduce((s, c) => s + c[2], 0);
   return (
     <div className="cr-lane">
       <div className="cr-lane-head">
-        <span className="cr-name"><Logo id={id} />{name}</span>
+        <span className="cr-name"><Critter className="cr-critter" outfit={outfit} />{name}</span>
         <span className="cr-cost">${spent.toFixed(spent < 0.01 ? 4 : 3)}</span>
       </div>
       {calls.map(([prompt, cached], i) => (
@@ -40,14 +40,14 @@ export default function CacheRace() {
   }, [on, shown, total]);
   return (
     <div ref={ref} className="hs-card cr">
-      <div className="cr-title">Same bug, every model call</div>
-      <Lane id="aider" name="Aider" calls={CACHE_RACE.aider} shown={shown} />
-      <Lane id="opencode" name="OpenCode" calls={CACHE_RACE.opencode} shown={shown} />
+      <div className="cr-title">One bug, every trip to the model</div>
+      <Lane outfit="aider" name="Aider" calls={CACHE_RACE.aider} shown={shown} />
+      <Lane outfit="opencode" name="OpenCode" calls={CACHE_RACE.opencode} shown={shown} />
       <div className="cr-key">
         <span><i className="cr-sw is-hit" />from cache</span>
         <span><i className="cr-sw" />paid in full</span>
       </div>
-      <div className="hs-foot">Real logs from one task both solved ({CACHE_RACE.task}). Aider resends ~70k tokens of repo map and files each call; OpenCode grows a little and re-reads the rest from cache.</div>
+      <div className="hs-foot">Real logs from one bug both fixed. Each bar is one trip to the model. Grey was remembered from last time (cheap), orange was paid in full.</div>
     </div>
   );
 }
