@@ -15,6 +15,8 @@ import {
   SwePassRate,
   SweCostScatter,
   SweTokens,
+  SweRig,
+  SweOverlap,
   TaskCard,
   ResultBars,
   Duel,
@@ -40,15 +42,6 @@ const TOLD_RESULTS = [
   { label: 'no notes', value: 93, side: '$0.0085' },
   { label: 'refactor skill', value: 93, side: '$0.0080', hl: true },
   { label: 'AGENTS.md', value: 91, side: '$0.0092' },
-];
-
-const REAL_RESULTS = [
-  { label: 'my stacked harness', value: 100, side: '$0.0017', hl: true, mood: 'happy', outfit: 'harness' },
-  { label: 'OpenCode', logo: 'opencode', outfit: 'opencode', value: 94, side: '$0.0043' },
-  { label: 'mini-swe-agent', logo: 'mini', outfit: 'mini', value: 94, side: '$0.0031' },
-  { label: 'Claude Code', logo: 'claude', mood: 'open', value: 91, side: '$0.0048' },
-  { label: 'whole repo', value: 64, side: '$0.0653', mood: 'tired' },
-  { label: 'Aider, headless', logo: 'aider', outfit: 'aider', value: 18, side: '$0.16' },
 ];
 
 function ContextShaping() {
@@ -196,62 +189,85 @@ function ContextShaping() {
         <ResultBars title="pass rate" sideLabel="per solve" rows={TOLD_RESULTS} />
       </Spread>
 
-      <Spread kicker="real harnesses">
-        <p>
-          Same tasks, same model, in real harnesses. The outfits from earlier land in the low 90s
-          for under half a cent. Aider is built for a human in the loop, so running it headless is
-          no verdict on Aider.
-        </p>
-        <ResultBars title="pass rate" sideLabel="per solve" rows={REAL_RESULTS} />
-      </Spread>
-
-      <Spread kicker="same model, six harnesses">
-        <p>
-          My 25 refactors are small and I wrote them. So I took 50 real bugs from SWE-bench
-          Verified and ran them through six off-the-shelf harnesses, all on Haiku 5.5. Same
-          containers, same limits, three runs at a time. One task couldn&apos;t be graded on my
-          box, so each harness got 49.
-        </p>
-        <p>
-          The harness alone moved the pass rate from 61% to 78%. That sounds big, but 49 tasks is
-          not many. The ranges overlap, so I&apos;d only trust the gap between the top and the bottom.
-        </p>
-        <SwePassRate />
-        <p>
-          Cost is where they really split. Most land around a cent per solved bug. Aider lands at
-          eight and a half.
-        </p>
-        <SweCostScatter />
-        <p>
-          It isn&apos;t sending the most tokens. It resends repo maps and whole files that almost
-          never hit the cache, so it pays full price every turn. mini-swe-agent, the barest loop
-          here, solves about as many as Claude Code on less than half the tokens.
-        </p>
-        <SweTokens />
-        <p>
-          Cursor bills outside my cost proxy, so its cost is estimated from its own token logs,
-          and it kept its built-in skills. Total spend for the whole run: $5.34.
-        </p>
-      </Spread>
-
-      <Spread kicker="all four levers">
+      <Spread kicker="all four levers, stacked">
         <p>
           Then I set every lever to its winner and ran five seeds on all 25 tasks, against the
           whole repo in one prompt.
         </p>
         <Headline />
+        <p>
+          But those were 25 refactors I wrote myself, and I picked the winners on the same tasks.
+          The real question is whether any of this shows up in harnesses people actually use, on
+          bugs nobody wrote for them.
+        </p>
+      </Spread>
+
+      <Spread kicker="the real test">
+        <p>
+          So I took 49 real GitHub bugs from SWE-bench Verified and ran them through six
+          off-the-shelf harnesses. Same model in all of them. Everything except the harness was
+          held fixed.
+        </p>
+        <SweRig />
+      </Spread>
+
+      <Spread kicker="finding 1 · the harness moves the score">
+        <p>
+          Same model, same bugs, and the pass rate ran from 61% to 78%. That&apos;s 17 points from
+          the outfit alone.
+        </p>
+        <SwePassRate />
+        <p>
+          Honest version: 49 tasks is not many. The ranges all overlap, so I wouldn&apos;t bet on
+          the order in the middle. Top versus bottom is the only gap I&apos;d stand behind.
+        </p>
+      </Spread>
+
+      <Spread kicker="finding 2 · cost moves way more">
+        <p>
+          Accuracy spread 17 points. Cost spread 15×. Most harnesses land around a cent per solved
+          bug. Aider lands at eight and a half, and solves the fewest.
+        </p>
+        <SweCostScatter />
+      </Spread>
+
+      <Spread kicker="finding 3 · it’s the cache">
+        <p>
+          Aider isn&apos;t sending the most tokens. It rebuilds the front of the prompt with repo
+          maps and whole files, so almost nothing comes from cache. That&apos;s lever 3 again:
+          rewrite the start of the prompt and you pay full price every turn.
+        </p>
+        <SweTokens />
+        <p>
+          And lever 1: mini-swe-agent, the barest loop here, just searches as it goes. It solves
+          about as many as Claude Code on less than half the tokens.
+        </p>
+      </Spread>
+
+      <Spread kicker="finding 4 · the race is at the margin">
+        <p>
+          Most of these bugs don&apos;t care which harness you use. All six solved the same 26,
+          and none could touch 8. Everything above happened in the 15 in between.
+        </p>
+        <SweOverlap />
       </Spread>
 
       <Spread kicker="the takeaway">
-        <p>Here&apos;s how I&apos;d set the four levers, from what won on each.</p>
+        <p>
+          The model sets the floor. The harness decides how you spend to get past it, and that
+          shows up in your bill long before it shows up in your pass rate. Here&apos;s how
+          I&apos;d set the levers.
+        </p>
         <LeverBoard mode="mine" />
         <p>Before you upgrade the model, look at what your harness is feeding it.</p>
       </Spread>
 
       <Spread kicker="caveats">
         <p>
-          25 small Python refactors I wrote, one model. The winning setup was picked on the same
-          tasks it was tested on, so 100% is optimistic. Every task, run and transcript is at{' '}
+          One model, 49 tasks; one more was dropped because its tests need the open internet.
+          Cursor bills outside my cost proxy, so its cost is estimated from its own logs, and it
+          kept its built-in skills. Runs were three at a time in 2 CPU / 4 GB containers. Total
+          spend: $5.34. Every task, run and transcript is at{' '}
           <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">
             github.com/bicrick/context-shaping
           </a>

@@ -1,7 +1,7 @@
 import React from 'react';
 import useInView from '../useInView';
 import Logo from '../logos';
-import { SWE, SWE_N, SWE_ALL, SWE_NONE } from '../swebench';
+import { SWE, SWE_N, SWE_ALL, SWE_NONE, SWE_SPREAD } from '../swebench';
 
 // 1. Pass rate with 95% interval whiskers. Axis 40-100%.
 export function SwePassRate() {
@@ -75,8 +75,53 @@ export function SweTokens() {
         </div>
       ))}
       <div className="hs-foot">
-        Aider isn&apos;t the heaviest, it just almost never hits the cache. All six solved the same {SWE_ALL} tasks; none solved {SWE_NONE}.
+        Right column: share of prompt tokens served from cache. Aider sits at 4%.
       </div>
+    </div>
+  );
+}
+
+// The rig: what was held fixed. Lines tick on in order.
+export function SweRig() {
+  const { ref, on } = useInView();
+  const items = [
+    ['model', 'Claude Haiku 5.5, every run'],
+    ['tasks', '49 real bugs from SWE-bench Verified'],
+    ['harnesses', 'six, off the shelf, headless'],
+    ['box', 'own container each, 2 CPU / 4 GB'],
+    ['load', 'three runs at a time, never more'],
+    ['grading', 'the official SWE-bench tests'],
+  ];
+  return (
+    <div ref={ref} className={`hs-card swe-rig${on ? ' is-on' : ''}`}>
+      <div className="hs-card-head"><span>held fixed</span><span className="hs-muted">only the harness changes</span></div>
+      {items.map(([k, v], i) => (
+        <div key={k} className="swe-rig-row" style={{ '--i': i }}>
+          <span className="swe-rig-k">{k}</span><span>{v}</span><span className="swe-rig-tick">✓</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// 49 tasks, one square each, shaded by how many harnesses solved it.
+export function SweOverlap() {
+  const { ref, on } = useInView();
+  const cells = SWE_SPREAD.flatMap(({ k, n }) => Array.from({ length: n }, () => k));
+  return (
+    <div ref={ref} className={`hs-card swe-overlap${on ? ' is-on' : ''}`}>
+      <div className="hs-card-head"><span>{SWE_N} tasks, by how many harnesses solved them</span></div>
+      <div className="swe-cells">
+        {cells.map((k, i) => (
+          <span key={i} className="swe-cell" style={{ '--i': i, '--a': k / 6 }} title={`${k} of 6`} />
+        ))}
+      </div>
+      <div className="swe-cell-labels">
+        <span><b>{SWE_ALL}</b> all six</span>
+        <span><b>{SWE_N - SWE_ALL - SWE_NONE}</b> split</span>
+        <span><b>{SWE_NONE}</b> none</span>
+      </div>
+      <div className="hs-foot">The whole race between harnesses happens in the 15 split tasks.</div>
     </div>
   );
 }

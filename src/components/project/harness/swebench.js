@@ -16,3 +16,8 @@ export const SWE = [
   { id: 'opencode', label: 'OpenCode', logo: 'opencode', solved: 31, pct: 63, ci: [49, 75], perSolve: 0.0055, tokPerSolve: 149342, cache: 90 },
   { id: 'aider', label: 'Aider', logo: 'aider', solved: 30, pct: 61, ci: [47, 74], perSolve: 0.0853, tokPerSolve: 265701, cache: 4 },
 ];
+
+// Tasks by how many of the six harnesses solved them (sums to 49).
+export const SWE_SPREAD = [
+  { k: 6, n: 26 }, { k: 5, n: 6 }, { k: 4, n: 2 }, { k: 3, n: 1 }, { k: 2, n: 1 }, { k: 1, n: 5 }, { k: 0, n: 8 },
+];
