@@ -38,3 +38,10 @@ export const CHECKED_VARIANTS = {
   cursor_nothink: { id: 'cursor_nothink', label: 'Cursor (no thinking)', outfit: 'cursor', pct: 80, rate: 70 },
 };
 export const TWO_FILES_NOTHINK = { cursor_nothink: { files: ['mysql/base.py'], solved: false } };
+
+// Fair lineup for the figures: variants stand in for their originals.
+const OSUB = { opencode: 'opencode_auto', cursor: 'cursor_nothink' };
+const OTAG = { opencode: 'auto-approve', cursor: 'no thinking' };
+export const OUTCOMES_FAIR = OUTCOMES.map((r) => (OSUB[r.id] ? { ...OUTCOMES_VARIANTS[OSUB[r.id]], label: r.label, tag: OTAG[r.id] } : r))
+  .sort((a, b) => b.fixed - a.fixed || a.none - b.none);
+export const CHECKED_FAIR = CHECKED.map((r) => (r.id === 'cursor' ? { ...CHECKED_VARIANTS.cursor_nothink, label: r.label, tag: 'no thinking' } : r));

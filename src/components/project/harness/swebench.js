@@ -33,3 +33,8 @@ export const SWE_VARIANTS = {
   opencode_auto: { id: 'opencode_auto', base: 'opencode', label: 'OpenCode (auto-approve)', outfit: 'opencode', solved: 36, rate: 72, ci: [58, 83], usd: 0.0071, tok: 226806, min: 3.8, cache: 93 },
   cursor_nothink: { id: 'cursor_nothink', base: 'cursor', label: 'Cursor (no thinking)', outfit: 'cursor', solved: 35, rate: 70, ci: [56, 81], usd: 0.0093, tok: 392911, min: 4.9, cache: 94, est: true },
 };
+
+// "Fair" lineup: the two variants stand in for their originals, tagged with the setting that changed.
+const TAGS = { opencode: 'auto-approve', cursor: 'no thinking' };
+const SUB = { opencode: 'opencode_auto', cursor: 'cursor_nothink' };
+export const SWE_FAIR = SWE.map((r) => (SUB[r.id] ? { ...SWE_VARIANTS[SUB[r.id]], label: r.label, tag: TAGS[r.id], variant: true } : r));

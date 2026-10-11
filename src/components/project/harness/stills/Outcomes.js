@@ -2,7 +2,7 @@ import React from 'react';
 import Fig from '../Fig';
 import Critter from '../Critter';
 import useInView from '../useInView';
-import { OUTCOMES } from '../why';
+import { OUTCOMES_FAIR as OUTCOMES } from '../why';
 
 // One square per task: fixed, wrong fix, or no fix at all.
 export default function Outcomes() {
@@ -12,11 +12,11 @@ export default function Outcomes() {
       innerRef={ref}
       className={`oc${on ? ' is-on' : ''}`}
       title="how each run ended"
-      caption={`Every harness hands in a wrong fix on ${Math.min(...OUTCOMES.map((r) => r.wrong))} to ${Math.max(...OUTCOMES.map((r) => r.wrong))} bugs. What separates them is how often a run ends with nothing.`}
+      caption={`Every harness hands in a wrong fix on ${Math.min(...OUTCOMES.map((r) => r.wrong))} to ${Math.max(...OUTCOMES.map((r) => r.wrong))} bugs. With the settings fixed, most runs end with an attempt; Aider, built for a person at the keyboard, stops most often.`}
     >
       {OUTCOMES.map((r, row) => (
         <div key={r.id} className="oc-row">
-          <div className="oc-who"><Critter className="oc-critter" outfit={r.outfit} /><span>{r.label}</span><b>{r.none}</b></div>
+          <div className="oc-who"><Critter className="oc-critter" outfit={r.outfit} /><span>{r.label}{r.tag && <em className="mr-tag">{r.tag}</em>}</span><b>{r.none}</b></div>
           <div className="oc-cells">
             {[...Array(r.fixed).fill('f'), ...Array(r.wrong).fill('w'), ...Array(r.none).fill('n')].map((k, n) => (
               <span key={n} className={`oc-cell is-${k}`} style={{ '--d': `${row * 0.12 + n * 0.012}s` }} />

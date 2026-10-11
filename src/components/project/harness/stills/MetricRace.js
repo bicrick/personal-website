@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Critter from '../Critter';
 import useInView from '../useInView';
 import Fig from '../Fig';
-import { SWE, SWE_N } from '../swebench';
+import { SWE_FAIR as SWE, SWE_N } from '../swebench';
 
 const METRICS = [
   { key: 'rate', tab: 'Success rate', note: `bugs fixed out of ${SWE_N}. Higher is better.`, fmt: (v) => `${v}%`, high: true },
@@ -12,10 +12,10 @@ const METRICS = [
 ];
 
 const CAPS = [
-  'Each rate is uncertain by about ±12 points, so only the ends of the list are clearly apart.',
+  'Each rate is uncertain by about ±12 points. The top five are within 4 points: a tie.',
   '*Cursor bills separately; its cost is estimated from its own token logs.',
   'Includes text re-read from the cache, which is cheap, so more tokens is not always more cost.',
-  'Only from runs under equal conditions: three at a time, same CPU and memory.',
+  'Equal-condition runs only. The two tagged reruns had a quieter machine, so their times flatter them a little.',
 ];
 
 export default function MetricRace() {
@@ -33,7 +33,7 @@ export default function MetricRace() {
   const best = met.high ? max : Math.min(...vals);
   const rows = [...SWE].sort((a, b) => (met.high ? b[met.key] - a[met.key] : a[met.key] - b[met.key]));
   return (
-    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="same model in every costume" caption={CAPS[m]}>
+    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="settings fixed" caption={CAPS[m]}>
       <div className="mr-tabs" role="tablist">
         {METRICS.map((x, i) => (
           <button key={x.key} type="button" role="tab" aria-selected={i === m} className={`mr-tab${i === m ? ' is-on' : ''}`} onClick={() => { setAuto(false); setM(i); }}>
@@ -50,7 +50,7 @@ export default function MetricRace() {
             <div key={r.id} className={`mr-row${v === best ? ' is-best' : ''}`} style={{ transform: `translateY(${pos * 52}px)` }}>
               <Critter className="mr-critter" outfit={r.outfit} mood={v === best ? 'happy' : 'open'} />
               <div className="mr-body">
-                <div className="mr-line"><span className="mr-name">{r.label}{met.key === 'usd' && r.est ? '*' : ''}</span><span className="mr-val">{met.fmt(v)}</span></div>
+                <div className="mr-line"><span className="mr-name">{r.label}{met.key === 'usd' && r.est ? '*' : ''}{r.tag && <em className="mr-tag">{r.tag}</em>}</span><span className="mr-val">{met.fmt(v)}</span></div>
                 <div className="mr-track"><span className="mr-fill" style={{ width: on ? `${(v / max) * 100}%` : 0 }} /></div>
               </div>
             </div>

@@ -4,22 +4,28 @@ import {
   Hero,
   ContextFill,
   Lineup,
+  Confounds,
   MetricRace,
   Outcomes,
   Checked,
-  TwoFiles,
   Stat,
 } from '../components/project/harness';
-import { SWE, SWE_N } from '../components/project/harness/swebench';
-import { OPENCODE_PERMISSION_STOPS, AIDER_HANDBACKS } from '../components/project/harness/why';
+import { SWE, SWE_N, SWE_VARIANTS, SWE_FAIR } from '../components/project/harness/swebench';
+import { OPENCODE_PERMISSION_STOPS } from '../components/project/harness/why';
 
 // Headline numbers come from the data modules, so the copy follows the data.
 const byRate = [...SWE].sort((a, b) => b.rate - a.rate);
 const best = byRate[0];
 const worst = byRate[byRate.length - 1];
-const aider = SWE.find((r) => r.id === 'aider');
-const cheapest = [...SWE].sort((a, b) => a.usd - b.usd)[0];
-const others = SWE.filter((r) => r.id !== 'aider').map((r) => r.cache);
+const get = (id) => SWE.find((r) => r.id === id);
+const oc = get('opencode');
+const cu = get('cursor');
+const ocA = SWE_VARIANTS.opencode_auto;
+const cuN = SWE_VARIANTS.cursor_nothink;
+const aider = SWE_FAIR.find((r) => r.id === 'aider');
+const top5 = SWE_FAIR.filter((r) => r.id !== 'aider').map((r) => r.rate);
+const caches = SWE_FAIR.filter((r) => r.id !== 'aider').map((r) => r.cache);
+const ratio = Math.round(aider.usd / ocA.usd);
 const cents = (v) => (v < 0.01 ? (v * 100).toFixed(2) : (v * 100).toFixed(1));
 
 function ContextShaping() {
@@ -55,72 +61,85 @@ function ContextShaping() {
       <Stat value={`${worst.rate}% → ${best.rate}%`} label={`bugs fixed, ${worst.label} to ${best.label}`} />
 
       <p>
-        A {best.rate - worst.rate}-point swing, with nothing changed but the wrapper. Here is what
-        each fix cost in money, in tokens (the chunks of text the model reads and writes) and in
-        time.
+        At first glance: a {best.rate - worst.rate}-point spread, with {best.label} on top. Same
+        model, so the wrapper must matter a lot. Before believing that, I checked the obvious
+        explanations.
       </p>
 
-      <MetricRace />
-
-      <h2>/ why</h2>
+      <h2>/ two settings</h2>
 
       <p>
-        I went through every run to see what the winners did differently. The first surprise:
-        they don&apos;t write fewer wrong fixes. They give up less.
-      </p>
-
-      <Outcomes />
-
-      <p>
-        Some of those empty runs are design choices. OpenCode stopped {OPENCODE_PERMISSION_STOPS}{' '}
-        times at a permission prompt, waiting for a yes nobody was there to give. Aider is built
-        for a person at the keyboard: in {AIDER_HANDBACKS} runs its last message asked
-        me to run the tests. Run unattended, both just stop.
+        Two of the gaps were settings, not design. OpenCode asks permission before some
+        commands, and with nobody at the keyboard it stopped {OPENCODE_PERMISSION_STOPS} times
+        waiting for a yes. With auto-approve on, it went from {oc.solved} to {ocA.solved} fixes.
       </p>
 
       <p>
-        The harnesses that run code on their own tend to check their work before calling it done.
+        Cursor had quietly picked a version of the model with extended thinking, extra private
+        reasoning before each answer, which no other harness got. With thinking off it went from{' '}
+        {cu.solved} to {cuN.solved}, and the three bugs only Cursor had fixed went with it.
+      </p>
+
+      <Confounds />
+
+      <Stat value={`${Math.min(...top5)}–${Math.max(...top5)}%`} label="the top five, settings fixed" />
+
+      <p>
+        With those fixed, five harnesses sit within {Math.max(...top5) - Math.min(...top5)} points,
+        well inside the uncertainty of {SWE_N} bugs. On success, a well-configured harness is a
+        well-configured harness. What moved the needle was defaults: how it behaves unattended,
+        how hard the model thinks.
+      </p>
+
+      <p>
+        Even big differences in habit wash out. SWE-agent ran the code after almost every edit;
+        mini-swe-agent, about two times in three. They fixed nearly the same number.
       </p>
 
       <Checked />
 
       <p>
-        And Cursor looks a little wider. On one bug, the five others all fixed the same file and
-        failed. Cursor&apos;s first search covered the whole folder.
+        And every harness hands in a wrong fix about as often. The runs differ mostly in how many
+        end with nothing at all.
       </p>
 
-      <TwoFiles />
-
-      <p>
-        Two cautions. Cursor ran its model with extra thinking switched on and its own built-in
-        skills, so part of its lead may not be the harness at all. And {SWE_N} bugs is a small
-        sample: only the ends of the ranking are clearly apart.
-      </p>
+      <Outcomes />
 
       <h2>/ cost</h2>
 
       <p>
-        Cost spread far more than success: {aider.label} paid {cents(aider.usd)}¢ per fix,{' '}
-        {cheapest.label} {cents(cheapest.usd)}¢. Providers charge a tenth for text that matches
-        what you sent last time. Five harnesses only add to the end of the window, so{' '}
-        {Math.min(...others)}–{Math.max(...others)}% of their input was that cheap repeat. Aider
-        rebuilds it every turn: {aider.cache}%.
+        Where the harness really differs is the bill. Here is each fix in money, tokens (the
+        chunks of text the model reads and writes) and time, with the two settings fixed.
+      </p>
+
+      <MetricRace />
+
+      <Stat value={`${ratio}×`} label={`${aider.label}'s cost per fix vs OpenCode (auto-approve)`} />
+
+      <p>
+        The reason is the context window. Providers charge a tenth for text that matches what you
+        sent last time. Five harnesses only add to the end of the window, so{' '}
+        {Math.min(...caches)}–{Math.max(...caches)}% of their input was that cheap repeat.{' '}
+        {aider.label} rebuilds its prompt every turn: {aider.cache}%. That is {cents(aider.usd)}¢
+        per fix against {cents(ocA.usd)}¢.
       </p>
 
       <h2>/ takeaway</h2>
 
       <p>
-        The model sets what&apos;s possible. The harness decides how much of it you get: whether
-        the model is allowed to keep going, whether it checks its work, how widely it looks, and
-        what you pay along the way. Before you upgrade the model, look at what your harness is
-        feeding it.
+        Before you blame or upgrade the model, check what the harness is feeding it and how it is
+        configured. Settings decide how often it succeeds. The expensive differences hide in how
+        it manages the context.
       </p>
 
       <p className="hs-note">
         Method: {SWE_N} SWE-bench Verified tasks, three runs at a time in 2 CPU / 4 GB containers,
-        every harness on its default settings. Minutes per fix use only runs under those equal
-        conditions. Success rates carry about ±12 points of uncertainty (95% Wilson). Cursor bills
-        outside my cost tracking, so its cost is estimated from its own logs. Analysis and every
+        every harness on its defaults, plus two reruns of all {SWE_N}: OpenCode with every
+        permission auto-approved, and Cursor with thinking off. The reruns had the machine
+        mostly to themselves, so their minutes per fix flatter them a little. Success rates
+        carry about ±12 points of uncertainty (95% Wilson). Cursor bills outside my cost
+        tracking, so its cost is estimated from its own logs.
+        Analysis and every
         log:{' '}
         <a href="https://github.com/bicrick/context-shaping/blob/claude/eager-noether-o13tek/docs/WHY_HARNESSES_DIFFER.md" target="_blank" rel="noopener noreferrer">
           github.com/bicrick/context-shaping

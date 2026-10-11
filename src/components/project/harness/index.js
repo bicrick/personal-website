@@ -7,5 +7,5 @@ export { default as ContextFill } from './stills/ContextFill';
 export { default as MetricRace } from './stills/MetricRace';
 export { default as Outcomes } from './stills/Outcomes';
 export { default as Checked } from './stills/Checked';
-export { default as TwoFiles } from './stills/TwoFiles';
+export { default as Confounds } from './stills/Confounds';
 export { Stat } from './Type';
