@@ -12,6 +12,9 @@ import {
   ToolsStill,
   ForgetStill,
   ToldStill,
+  SwePassRate,
+  SweCostScatter,
+  SweTokens,
   TaskCard,
   ResultBars,
   Duel,
@@ -200,6 +203,35 @@ function ContextShaping() {
           no verdict on Aider.
         </p>
         <ResultBars title="pass rate" sideLabel="per solve" rows={REAL_RESULTS} />
+      </Spread>
+
+      <Spread kicker="same model, six harnesses">
+        <p>
+          My 25 refactors are small and I wrote them. So I took 50 real bugs from SWE-bench
+          Verified and ran them through six off-the-shelf harnesses, all on Haiku 5.5. Same
+          containers, same limits, three runs at a time. One task couldn&apos;t be graded on my
+          box, so each harness got 49.
+        </p>
+        <p>
+          The harness alone moved the pass rate from 61% to 78%. That sounds big, but 49 tasks is
+          not many. The ranges overlap, so I&apos;d only trust the gap between the top and the bottom.
+        </p>
+        <SwePassRate />
+        <p>
+          Cost is where they really split. Most land around a cent per solved bug. Aider lands at
+          eight and a half.
+        </p>
+        <SweCostScatter />
+        <p>
+          It isn&apos;t sending the most tokens. It resends repo maps and whole files that almost
+          never hit the cache, so it pays full price every turn. mini-swe-agent, the barest loop
+          here, solves about as many as Claude Code on less than half the tokens.
+        </p>
+        <SweTokens />
+        <p>
+          Cursor bills outside my cost proxy, so its cost is estimated from its own token logs,
+          and it kept its built-in skills. Total spend for the whole run: $5.34.
+        </p>
       </Spread>
 
       <Spread kicker="all four levers">

@@ -16,3 +16,4 @@ export { default as TaskCard } from './stills/TaskCard';
 export { default as ResultBars } from './stills/ResultBars';
 export { default as Duel } from './stills/Duel';
 export { default as Headline } from './stills/Headline';
+export { SwePassRate, SweCostScatter, SweTokens } from './stills/SweFigures';
