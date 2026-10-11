@@ -9,7 +9,7 @@ const CAST = [
   { id: 'opencode', outfit: 'opencode' },
   { id: 'aider', outfit: 'aider' },
   { id: 'mini', outfit: 'mini' },
-  { id: 'swe', outfit: 'harness' },
+  { id: 'swe', outfit: 'swe' },
 ];
 
 export default function Lineup() {

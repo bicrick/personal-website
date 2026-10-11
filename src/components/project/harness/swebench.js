@@ -11,7 +11,7 @@ export const SWE_N = 49;
 
 export const SWE = [
   { id: 'cursor', label: 'Cursor', outfit: 'cursor', solved: 38, rate: 78, ci: [64, 87], usd: 0.0111, tok: 382576, min: 8.9, cache: 93, est: true },
-  { id: 'swe_agent', label: 'SWE-agent', outfit: 'harness', solved: 36, rate: 73, ci: [60, 84], usd: 0.0172, tok: 425722, min: 14.8, cache: 92 },
+  { id: 'swe_agent', label: 'SWE-agent', outfit: 'swe', solved: 36, rate: 73, ci: [60, 84], usd: 0.0172, tok: 425722, min: 14.8, cache: 92 },
   { id: 'claude_code', label: 'Claude Code', outfit: undefined, solved: 35, rate: 71, ci: [58, 82], usd: 0.012, tok: 456423, min: 7.6, cache: 93 },
   { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', solved: 34, rate: 69, ci: [55, 80], usd: 0.0076, tok: 196178, min: 6.0, cache: 91 },
   { id: 'opencode', label: 'OpenCode', outfit: 'opencode', solved: 31, rate: 63, ci: [49, 75], usd: 0.0055, tok: 149342, min: 5.8, cache: 90 },

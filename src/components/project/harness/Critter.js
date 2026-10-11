@@ -59,10 +59,13 @@ const OUTFITS = {
       ['o-hardhat-band', 'M8.5 -1.5h1v3.5h-1z'],
     ],
   },
-  harness: {
+  swe: {
     over: [
-      ['o-strap', 'M4 2h1v7H4zM13 2h1v7h-1zM3 7h12v1H3z'],
-      ['o-buckle', 'M8 6.5h2v2H8z'],
+      ['o-cap', 'M5.5 0h7v2.2h-7z'],
+      ['o-cap', 'M2 -1.6h14v1.4H2z'],
+      ['o-cap-btn', 'M8.5 -2h1v.6h-1z'],
+      ['o-tassel', 'M14.6 -0.4h.8v2.8h-.8zM14.2 2.2h1.6v1.4h-1.6z'],
+      ['o-glasses', 'M5 3h3v3H5zM5.7 3.7v1.6h1.6V3.7zM10 3h3v3h-3zM10.7 3.7v1.6h1.6V3.7zM8 4.1h2v.6H8z'],
     ],
   },
 };

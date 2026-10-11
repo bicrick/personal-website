@@ -35,11 +35,14 @@
 .o-visor-glow { fill: #3ce87a; }
 .o-hardhat { fill: #f2c230; }
 .o-hardhat-band { fill: #d9a514; }
-.o-strap { fill: #2a2b33; }
-.o-buckle { fill: #c9c7bf; }
+.o-cap { fill: #23232b; }
+.o-cap-btn { fill: #f6d55c; }
+.o-tassel { fill: #f6d55c; }
+.o-glasses { fill: #f4f2ec; fill-rule: evenodd; }
 
 html.is-dark .o-cape,
 html.is-dark .o-dark { fill: #34353f; }
+html.is-dark .o-cap { fill: #4a4b57; }
 
 .critter-leg,
 .cart-ride,
