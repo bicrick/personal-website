@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CritterBody } from '../project/harness/Critter';
 import useReducedMotion from '../project/useReducedMotion';
 import '../project/harness/Critter.css';
+import { OUTFITS } from '../project/harness/order';
 
 // The harness post's mark: the pixel Claude strapped into a harness,
 // dangling from a rope. A small spring sim drives it every frame: a gentle
@@ -19,7 +20,6 @@ const LEG_DAMP = 4;
 const STEP = 1 / 240;
 const DEG = 180 / Math.PI;
 // Costume loop: the five harnesses from the post, same art.
-const OUTFITS = [undefined, 'cursor', 'opencode', 'mini', 'swe'];
 const HOLD = 2.4; // seconds hanging in each costume
 const SPIN = 0.9; // seconds per full turn: front, edge, back, edge, next front
 

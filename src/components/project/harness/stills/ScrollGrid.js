@@ -4,12 +4,16 @@ import Stack from '../Stack';
 import Pinned from '../Pinned';
 import useReducedMotion from '../../useReducedMotion';
 import useScrollProgress from '../useScrollProgress';
-import { GRID_CELLS, GRID_ORDER, GRID_NONE, GRID_ALL } from '../grid';
+import { GRID_COLS, GRID_CELLS as RAW_CELLS, GRID_ORDER as RAW_ORDER, GRID_NONE, GRID_ALL } from '../grid';
 import { ROSTER } from '../roster';
 
 // 50 bugs x 5 harnesses. Scroll replays the runs in the order they finished
 // (yellow = working, then green or red), then pins the rows every harness
 // agreed on, then the few rows where they split.
+// Columns follow the shared ORDER (via ROSTER), not the data file's order.
+const PERM = ROSTER.map((h) => GRID_COLS.indexOf(h.id));
+const GRID_CELLS = RAW_CELLS.map((row) => PERM.map((i) => row[i]));
+const GRID_ORDER = RAW_ORDER.map(([r, c]) => [r, PERM.indexOf(c)]);
 const N = GRID_ORDER.length;
 const W = ROSTER.length;
 const RANK = {};

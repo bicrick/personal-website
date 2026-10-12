@@ -152,7 +152,7 @@ export default function Critter({ mood, walk, hop, outfit, className = '', label
 
 // A pixel cart. `load` is a list of [className, crates] columns; each
 // column is a stack of square crates, so a bigger load is a taller pile.
-// Wheels are square with a spoke that turns in quarter steps.
+// Wheels are plain squares.
 export function Cart({ x = 0, y = 0, width = 14, load = [], bob }) {
   const step = width / Math.max(load.length, 1);
   const size = Math.min(Math.max(step - 0.5, 0.8), 1.6);
@@ -160,7 +160,6 @@ export function Cart({ x = 0, y = 0, width = 14, load = [], bob }) {
   const wheel = (cx) => (
     <g className="cart-wheel-g" transform={`translate(${cx} 4)`}>
       <rect className="cart-wheel" x="-1.4" y="-1.4" width="2.8" height="2.8" />
-      <rect className="cart-spoke" x="-0.3" y="-1.1" width="0.6" height="2.2" />
     </g>
   );
   return (

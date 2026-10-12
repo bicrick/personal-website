@@ -6,11 +6,12 @@ import useReducedMotion from '../../useReducedMotion';
 import useScrollProgress from '../useScrollProgress';
 import { WHY } from '../swebench';
 import { ROSTER } from '../roster';
+import { byOrder } from '../order';
 
 // One harness at a time: how full its window is before any code (instructions
 // + tool list), how big it gets, and the habits that multiply it.
 const SCALE = 30000;
-const ITEMS = WHY.map((w) => ({ ...w, ...ROSTER.find((h) => h.id === w.id) }));
+const ITEMS = byOrder(WHY).map((w) => ({ ...w, ...ROSTER.find((h) => h.id === w.id) }));
 const TICKS = ITEMS.map((h, n) => ({ at: n / ITEMS.length, label: h.short }));
 const k = (n) => `${(n / 1000).toFixed(1)}k`;
 

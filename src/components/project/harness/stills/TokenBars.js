@@ -5,7 +5,7 @@ import useInView from '../useInView';
 import { ROSTER } from '../roster';
 
 // Tokens per fix, one row per harness, mini-swe-agent picked out.
-const rows = [...ROSTER].sort((a, b) => a.tok - b.tok);
+const rows = ROSTER; // shared ORDER, not sorted by value
 const MAX = Math.max(...rows.map((r) => r.tok));
 
 export default function TokenBars() {
