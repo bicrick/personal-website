@@ -14,6 +14,20 @@ export const PROJECTS = [
     featured: true,
   },
   {
+    title: 'same model, five harnesses',
+    description: 'one model in five coding harnesses, 50 real bugs',
+    timelineDescription:
+      'Claude Haiku 5.5 inside Claude Code, Cursor, OpenCode, SWE-agent, and mini-swe-agent on 50 SWE-bench Verified bugs. Same accuracy, very different token bills.',
+    livePreview: 'harness',
+    blogLink: '/projects/context-shaping',
+    appLink: 'https://github.com/bicrick/context-shaping',
+    appLabel: 'repo',
+    relevanceRank: 2,
+    dateRank: 0,
+    date: 'October 2026',
+    featured: true,
+  },
+  {
     title: 'cart-pole-autoresearch',
     description: 'agentic loops on cart-pole and pendulums',
     timelineDescription:
@@ -22,10 +36,9 @@ export const PROJECTS = [
     blogLink: '/projects/auto-research',
     appLink: 'https://cart-pole-autoresearch.vercel.app/#triple',
     appLabel: 'demo',
-    relevanceRank: 2,
+    relevanceRank: 3,
     dateRank: 1,
     date: 'September 2026',
-    featured: true,
   },
   {
     title: 'monocle',
@@ -36,7 +49,7 @@ export const PROJECTS = [
     blogLink: '/projects/monocle',
     appLink: 'https://github.com/bicrick/monocle',
     appLabel: 'repo',
-    relevanceRank: 3,
+    relevanceRank: 4,
     dateRank: 5,
     date: 'September 2026',
   },

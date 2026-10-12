@@ -34,7 +34,8 @@
 .featured-media canvas,
 .featured-media iframe,
 .featured-media .qwop-tile-preview,
-.featured-media .cart-pole-tile-preview {
+.featured-media .cart-pole-tile-preview,
+.featured-media .harness-tile-preview {
   display: block;
   width: 100%;
   height: 100%;

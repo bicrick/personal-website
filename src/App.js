@@ -41,10 +41,12 @@ function App() {
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/tracebench" element={<Tracebench />} />
-        <Route path="/writing/context-shaping" element={<ContextShaping />} />
-        <Route path="/writing/context-shaping/harnesses" element={<Navigate to="/writing/context-shaping#harnesses" replace />} />
-        <Route path="/writing/context-shaping/harnesses/:slug" element={<Navigate to="/writing/context-shaping#harnesses" replace />} />
-        <Route path="/projects/context-shaping" element={<Navigate to="/writing/context-shaping" replace />} />
+        <Route path="/projects/context-shaping" element={<ContextShaping />} />
+        <Route path="/projects/context-shaping/harnesses" element={<Navigate to="/projects/context-shaping#harnesses" replace />} />
+        <Route path="/projects/context-shaping/harnesses/:slug" element={<Navigate to="/projects/context-shaping#harnesses" replace />} />
+        <Route path="/writing/context-shaping" element={<Navigate to="/projects/context-shaping" replace />} />
+        <Route path="/writing/context-shaping/harnesses" element={<Navigate to="/projects/context-shaping#harnesses" replace />} />
+        <Route path="/writing/context-shaping/harnesses/:slug" element={<Navigate to="/projects/context-shaping#harnesses" replace />} />
         <Route path="/writing/agent-research-loops" element={<AgentResearchLoops />} />
         <Route path="/projects/agent-research-loops" element={<Navigate to="/writing/agent-research-loops" replace />} />
         <Route path="/heb" element={<Heb />} />

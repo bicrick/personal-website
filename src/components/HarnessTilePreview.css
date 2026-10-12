@@ -1,0 +1,11 @@
+.harness-tile-preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--card-wash);
+}
+.harness-tile-preview svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+.htp-cell { fill: #4a9c74; opacity: 0.35; }
+.htp-cell.is-miss { fill: #d4643b; }
+.htp-ground { fill: var(--rule); }
+.htp-rope { fill: var(--ink-muted); }
