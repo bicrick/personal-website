@@ -9,3 +9,4 @@ export { default as ScrollGrid } from './stills/ScrollGrid';
 export { default as WhyTokens } from './stills/WhyTokens';
 export { default as TokenBars } from './stills/TokenBars';
 export { Stat } from './Type';
+export { default as ResultsTable } from './stills/ResultsTable';

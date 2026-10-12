@@ -1,21 +1,10 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, MeetHarnesses, ScrollGrid, WhyTokens, TokenBars, Stat, Model } from '../components/project/harness';
-import { SWE_N, SWE_SAME } from '../components/project/harness/swebench';
+import { Hero, ContextBar, MeetHarnesses, ScrollGrid, WhyTokens, ResultsTable, Model } from '../components/project/harness';
+import { SWE_N } from '../components/project/harness/swebench';
 
-// Every number below comes from the data modules (same-settings runs, five harnesses).
-const lo = Math.min(...SWE_SAME.map((r) => r.rate));
-const hi = Math.max(...SWE_SAME.map((r) => r.rate));
-const spread = (k) => (Math.max(...SWE_SAME.map((r) => r[k])) / Math.min(...SWE_SAME.map((r) => r[k]))).toFixed(1);
-const by = (k, dir) => [...SWE_SAME].sort((x, y) => dir * (x[k] - y[k]))[0];
-const cents = (v) => `${(v * 100).toFixed(2)}¢`;
-const tokLo = by('tok', 1);
-const tokHi = by('tok', -1);
-const usdLo = by('usd', 1);
-const usdHi = by('usd', -1);
-const minLo = by('min', 1);
-const minHi = by('min', -1);
+// Every number in the post comes from the data modules (same-settings runs, five harnesses).
 
 function ContextShaping() {
   const { hash } = useLocation();
@@ -66,20 +55,9 @@ function ContextShaping() {
 
       <h2>/ results</h2>
 
-      <Stat value={`${lo}–${hi}%`} label="bugs fixed, all five harnesses" />
+      <p>On whether a bug gets fixed, it's a tie. The bill is a different story.</p>
 
-      <p>On whether a bug gets fixed, it is a tie. The bill is a different story.</p>
-
-      <Stat value={`${spread('tok')}×`} label={`tokens per fix, ${Math.round(tokLo.tok / 1000)}k for ${tokLo.label} to ${Math.round(tokHi.tok / 1000)}k for ${tokHi.label}`} />
-
-      <p>
-        Tokens are the chunks of text the model reads, roughly a word each, and you pay for every
-        one. Cost per fix runs {spread('usd')}× too, from {cents(usdLo.usd)} with {usdLo.label} to{' '}
-        {cents(usdHi.usd)} with {usdHi.label}. Time per fix runs {spread('min')}×, from{' '}
-        {minLo.min} minutes to {minHi.min}.
-      </p>
-
-      <TokenBars />
+      <ResultsTable />
 
       <h2>/ why tokens differ</h2>
 
