@@ -85,6 +85,14 @@ function ContextShaping() {
         harness decides how much you pay, in money and in time, to reach it.
       </p>
 
+      <p className="hs-note">
+        One caveat. These results aren&apos;t deterministic, since the model samples differently every
+        run, so the same harness can fix a bug once and miss it the next time. Each harness only got
+        one shot at each of the {SWE_N} bugs, which isn&apos;t a big enough sample to say much for sure,
+        and a gap of a few points could just be noise. This was a fun project to see if harnesses
+        really move performance that much, and for that it&apos;s good enough.
+      </p>
+
       <Hero />
 
       <p className="hs-note">
