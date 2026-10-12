@@ -46,7 +46,7 @@ function upsertLink(html, rel, href) {
 }
 
 function applySeo(html, seo) {
-  let next = html;
+  let next = html.replace(/<title>[^<]*<\/title>/i, `<title>${escapeAttr(seo.seoTitle)}</title>`);
   next = upsertMeta(next, 'name', 'title', seo.seoTitle);
   next = upsertMeta(next, 'name', 'description', seo.description);
   next = upsertMeta(next, 'name', 'keywords', seo.keywords);
