@@ -49,7 +49,8 @@ function ContextShaping() {
 
       <p>
         So I took one model, Claude Haiku 5.5, and put it in six different harnesses. Each one got
-        the same {SWE_N} real bugs from popular open-source projects, and each project&apos;s own
+        the same {SWE_N} real bugs from popular open-source projects, taken from{' '}
+        <a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench Verified</a>, and each project&apos;s own
         tests decided whether the fix worked.
       </p>
 

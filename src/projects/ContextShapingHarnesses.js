@@ -16,11 +16,12 @@ export function HarnessIndex() {
     >
       <div className="hx-list">
         {ROSTER.map((h) => (
-          <Link key={h.id} to={harnessHref(h)} className="hx-item">
-            <Critter className="hx-critter" outfit={h.outfit} />
-            <span><span className="hx-name">{h.label}</span><span className="hx-line">{h.line}</span></span>
+          <div key={h.id} className="hx-item">
+            <Link to={harnessHref(h)}><Critter className="hx-critter" outfit={h.outfit} /></Link>
+            <Link to={harnessHref(h)} className="hx-text"><span className="hx-name">{h.label}</span><span className="hx-line">{h.line}</span></Link>
             <span className="hx-num">{cents(h.usd)}<small>per fix</small></span>
-          </Link>
+            <a className="hx-visit" href={h.site} target="_blank" rel="noopener noreferrer" aria-label={`${h.label} official site`}>visit ↗</a>
+          </div>
         ))}
       </div>
     </ProjectDetail>
@@ -40,6 +41,7 @@ export function HarnessProfile() {
       abstract={h.line}
     >
       <Critter className="hx-hero" outfit={h.outfit} hop />
+      <a className="hx-visit hx-profile-visit" href={h.site} target="_blank" rel="noopener noreferrer">visit {h.label} ↗</a>
       <div className="hx-stats">
         <div><b>{h.solved}/50</b><span>bugs fixed</span></div>
         <div><b>{cents(h.usd)}</b><span>cost per fix</span></div>

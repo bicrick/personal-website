@@ -288,7 +288,7 @@
 .sg-cell.is-ok { background: var(--sg-ok); }
 .sg-cell.is-bad { background: var(--sg-bad); }
 .sg-cell.is-cost { background: color-mix(in srgb, var(--ink) calc(var(--a) * 100%), var(--paper)); }
-.sg-cell.is-dim { opacity: 0.18; }
+.sg-cell.is-dim { background: var(--sg-wait); opacity: 0.35; }
 .sg-foot { padding-top: 6px; margin-top: 6px; border-top: 1px solid var(--rule); text-align: center; font-family: var(--font-pixel); font-size: 11px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .sg-foot .is-hot { color: var(--sg-bad); }
 .sg-legend { margin-top: 6px; font-family: var(--font-pixel); font-size: 10px; color: var(--ink-muted); }
@@ -362,3 +362,20 @@
 @media (prefers-reduced-motion: reduce) {
   .sg-cell, .cx-seg, .cx-legend span, .cr-row, .tb-track i { transition: none; }
 }
+
+/* grid progress */
+.sg-prog { margin: -2px 0 10px; }
+.sg-prog-bar { position: relative; height: 3px; background: var(--ink-faint); }
+.sg-prog-bar i { position: absolute; inset: 0; background: var(--ink-muted); transform-origin: 0 50%; }
+.sg-prog-bar b { position: absolute; top: -2px; width: 1px; height: 7px; background: var(--paper); box-shadow: 0 0 0 0.5px var(--rule); }
+.sg-prog-lab { position: relative; height: 14px; margin-top: 4px; font-family: var(--font-pixel); font-size: 10px; color: var(--ink-muted); opacity: 0.7; }
+.sg-prog-lab span { position: absolute; top: 0; white-space: nowrap; padding-left: 3px; transition: color 0.4s ease; }
+.sg-prog-lab span.is-on { color: var(--ink); opacity: 1; }
+.sg-top { margin-bottom: 10px; }
+.hx-item { grid-template-columns: 44px 1fr auto auto; }
+.hx-visit { font-family: var(--font-pixel); font-size: 11px; color: var(--ink-muted); border: 1px solid var(--rule); padding: 3px 6px; text-decoration: none; white-space: nowrap; }
+.hx-visit:hover { color: var(--ink); border-color: var(--ink-muted); }
+.hx-row { position: relative; }
+.hx-profile-visit { display: inline-block; margin: 0 0 16px 12px; vertical-align: middle; }
+.hx-text { text-decoration: none; color: var(--ink); min-width: 0; }
+.hx-text:hover .hx-name { text-decoration: underline; }

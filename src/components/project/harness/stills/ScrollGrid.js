@@ -31,6 +31,14 @@ const CAPS = [
   'Now color each run by what it cost. Darker is pricier. Same fixes, very different bills.',
 ];
 
+const TICKS = [
+  { at: 0, label: 'replay' },
+  { at: 0.44, label: 'agreed' },
+  { at: 0.62, label: 'Aider' },
+  { at: 0.76, label: 'cost' },
+];
+const STAGE = [0, 0, 0, 1, 2, 3];
+
 function phase(p) {
   if (p < 0.04) return 0;
   if (p < 0.24) return 1;
@@ -108,6 +116,10 @@ export default function ScrollGrid() {
       <div className="sg-sticky">
         <figure className="sg-frame">
           <div className="sg-top"><span>50 bugs × 6 harnesses</span><Stack at={cost ? 1 : 0} items={['fixed', 'cost per fix']} /></div>
+          <div className="sg-prog" aria-hidden="true">
+            <div className="sg-prog-bar"><i style={{ transform: `scaleX(${prog})` }} />{TICKS.slice(1).map((t) => <b key={t.at} style={{ left: `${t.at * 100}%` }} />)}</div>
+            <div className="sg-prog-lab">{TICKS.map((t, n) => <span key={t.at} className={STAGE[ph] === n ? 'is-on' : ''} style={{ left: `${t.at * 100}%` }}>{t.label}</span>)}</div>
+          </div>
           {head}
           {grid(cost, false)}
           {foot(cost, false)}
