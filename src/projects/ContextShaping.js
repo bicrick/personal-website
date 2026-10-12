@@ -72,11 +72,12 @@ function ContextShaping() {
       <ResultsTable />
 
       <p>
-        SWE-agent edged ahead by a few bugs. Its transcripts suggest why: it almost always ran the
-        code after changing it, and when that check failed, it kept going. On one Sphinx bug, the
-        others all shipped fixes that looked right. Only SWE-agent rebuilt the docs, saw the link
-        was still wrong, threw its fix away and found the real cause. That fits with checking its own
-        work. With this few bugs, it isn&apos;t proof.
+        SWE-agent edged ahead, by one bug over Cursor. Checking its work isn&apos;t the whole story,
+        since Cursor and Claude Code also ran the code after almost every change. The difference was
+        what happened when that check failed: SWE-agent went back and revised its fix in 30% of its
+        runs, the others in 10 to 18%. On one Sphinx bug, the others all shipped fixes that looked
+        right. Only SWE-agent rebuilt the docs, saw the link was still wrong, threw its fix away and
+        found the real cause. With this few bugs, it isn&apos;t proof.
       </p>
 
       <CheckedFix />

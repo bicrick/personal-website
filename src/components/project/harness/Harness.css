@@ -450,7 +450,6 @@
 .cf-track { position: relative; height: 14px; background: var(--rule); border-radius: 2px; overflow: hidden; }
 .cf-bar { position: absolute; inset: 0 auto 0 0; background: var(--separator-muted); }
 .cf-bar.is-top { background: var(--bot); }
-.cf-none { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; font-style: italic; color: var(--ink-muted); }
 .cf-val { font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
 
 /* Header figure: the naturescape hanging-critter scene from the home tile,
