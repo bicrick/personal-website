@@ -241,9 +241,7 @@ html.is-dark .heb-llm-lines .is-error {
 }
 
 .heb-arch-app,
-.heb-arch-row > div,
-.heb-flow li,
-.heb-flow-node {
+.heb-arch-row > div {
   border: 1px solid var(--rule);
   background: var(--paper);
   text-align: center;
@@ -254,9 +252,7 @@ html.is-dark .heb-llm-lines .is-error {
 }
 
 .heb-arch-app span,
-.heb-arch-row span,
-.heb-flow-node span,
-.heb-flow li span {
+.heb-arch-row span {
   display: block;
   margin-top: 2px;
   color: var(--ink-muted);
@@ -287,72 +283,6 @@ html.is-dark .heb-llm-lines .is-error {
   background: var(--rule);
 }
 
-.heb-flow {
-  display: grid;
-  grid-template-columns: 1.05fr 28px 0.8fr 28px 1.25fr;
-  grid-template-areas:
-    "ks . kc . ko"
-    "sources rail-in bus rail-out orch";
-  column-gap: 8px;
-  row-gap: 8px;
-  align-items: center;
-}
-
-.heb-flow-kicker {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-muted);
-}
-
-.heb-flow-kicker.is-sources { grid-area: ks; }
-.heb-flow-kicker.is-bus { grid-area: kc; text-align: center; }
-.heb-flow-kicker.is-orch { grid-area: ko; }
-
-.heb-flow-sources { grid-area: sources; }
-.heb-flow-rail.is-in { grid-area: rail-in; }
-.heb-flow-node.is-bus { grid-area: bus; }
-.heb-flow-rail.is-out { grid-area: rail-out; }
-.heb-flow-node.is-orch { grid-area: orch; }
-
-.heb-flow ul {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.project-article .heb-flow ul,
-.project-article .heb-flow li {
-  margin: 0;
-  line-height: 1.35;
-  color: var(--ink);
-  font-size: 13px;
-}
-
-.heb-flow li,
-.heb-flow-node {
-  padding: 8px 10px;
-  font-size: 13px;
-}
-
-.heb-flow-rail {
-  position: relative;
-  height: 1px;
-  background: var(--rule);
-}
-
-.heb-flow-rail i {
-  position: absolute;
-  top: -3px;
-  left: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ink);
-}
-
 @media (max-width: 760px) {
   .heb-llm {
     grid-template-columns: 1fr;
@@ -364,30 +294,5 @@ html.is-dark .heb-llm-lines .is-error {
     gap: 8px;
     padding: 6px 8px;
     font-size: 12px;
-  }
-
-  .heb-flow {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "ks"
-      "sources"
-      "rail-in"
-      "kc"
-      "bus"
-      "rail-out"
-      "ko"
-      "orch";
-    justify-items: stretch;
-  }
-
-  .heb-flow-rail {
-    width: 1px;
-    height: 22px;
-    justify-self: center;
-  }
-
-  .heb-flow-rail i {
-    top: 0;
-    left: -3px;
   }
 }

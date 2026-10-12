@@ -3,10 +3,12 @@ import ProjectDetail from '../components/ProjectDetail';
 import HebSpread from '../components/heb/HebSpread';
 import ApiTrace from '../components/heb/stills/ApiTrace';
 import DatabaseTable from '../components/heb/stills/DatabaseTable';
+import EventBus from '../components/heb/stills/EventBus';
 import LogCause from '../components/heb/stills/LogCause';
 import OnePlace from '../components/heb/stills/OnePlace';
 import UiTicket from '../components/heb/stills/UiTicket';
 import RunHistory from '../components/heb/stills/RunHistory';
+import TerraformApply from '../components/heb/stills/TerraformApply';
 import WikiAsk from '../components/heb/stills/WikiAsk';
 import HebStack from '../components/heb/HebStack';
 import '../components/heb/Heb.css';
@@ -47,7 +49,7 @@ function Heb() {
 
       <HebSpread>
         <p>
-          Then the data. Postgres held the history, the DDL, the pipelines, and the logs. I learned to manage the database the jobs depended on.
+          Then the data. RDS Postgres on AWS held the history, the DDL, the pipelines, and the logs. I learned to manage the database the jobs depended on.
         </p>
         <DatabaseTable />
       </HebSpread>
@@ -75,35 +77,40 @@ function Heb() {
 
       <HebSpread>
         <p>
+          And now the real meat and potatoes. I went from managing the dashboard to building a heterogeneous orchestrator that tracks dependencies and enqueues jobs across platforms.
+        </p>
+        <EventBus />
+      </HebSpread>
+
+      <HebSpread>
+        <p>
           Composer, Argo, Databricks, and Informatica are separate systems. The jobs on each one still had to be tracked and monitored.
         </p>
         <p>
-          Those runs all go to the ebus. The dependency service feeds off that stream and can queue a new job, including one that runs on another platform. One orchestrator for all of them.
+          Those runs all go to the ebus, a Kafka event bus. The dependency service consumes off that stream, tracks what depends on what, and can queue a new job, including one that runs on another platform. One orchestrator for all of them.
         </p>
       </HebSpread>
 
       <HebSpread year="2025">
         <p>
-          Then the infrastructure. I learned to manage it with Terraform, so the plant was something I could change in code instead of by hand.
+          I picked up Terraform and started managing our infrastructure as code. I was promoted in early 2025, and I mentored junior engineers and helped run two rounds of interns.
         </p>
-        <p>
-          In early 2025 I was promoted. A lot of the growth after that was other people. I mentored junior engineers, and I ran two rounds of interns.
-        </p>
+        <TerraformApply />
       </HebSpread>
 
       <HebSpread>
         <p>
-          I brought in all of our jobs from Vertex AI. We use machine learning for projections and inventory management, which in a grocery store means knowing how much of what belongs on the shelf. Those jobs used to run out of sight in the cloud console. Now the pipelines, the schedules, and the endpoints sit next to everything else.
+          I also brought our Vertex AI jobs into the dashboard. These are the machine learning jobs behind our forecasting and inventory work. Their pipelines, schedules, and endpoints now sit next to everything else.
         </p>
         <RunHistory />
       </HebSpread>
 
       <HebSpread year="2026">
         <p>
-          I kept going on the Vertex side. Training information and training metrics are in the same place now, so anyone can see what ran, how it is going, and how it trained. When a job hits an error, the error is on the page. You do not need console access to find out why.
+          Training info and metrics are on the page too, along with any errors, so you do not need console access to see why a job failed.
         </p>
         <p>
-          I am leading the migration of our data platform to GCP, next to Vertex. The AWS systems stay in place while that move happens.
+          I am now leading the migration of our data platform to GCP. The AWS systems stay in place during the move.
         </p>
       </HebSpread>
 

@@ -15,7 +15,7 @@ function DatabaseTable() {
         <ellipse cx="24" cy="14" rx="10" ry="3" fill="none" stroke="currentColor" strokeWidth="1" />
       </svg>
       <div className="heb-db-sheet">
-        <div className="heb-db-name">postgres · jobs</div>
+        <div className="heb-db-name">rds postgres · jobs</div>
         <div className="heb-db-grid is-head">
           <span>id</span>
           <span>name</span>

@@ -5,7 +5,7 @@ function AwsDiagram() {
     <div className="heb-fig heb-arch" aria-hidden="true">
       <div className="heb-arch-app">
         app
-        <span>page · API · Postgres</span>
+        <span>page · API · RDS Postgres</span>
       </div>
       <div className="heb-arch-stem" />
       <div className="heb-arch-row">

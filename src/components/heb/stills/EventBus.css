@@ -1,0 +1,638 @@
+.heb-ebus {
+  --ebus-dur: 10s;
+  --ebus-poll: 3s;
+  --ebus-gap: 22px;
+  --e-wash: rgba(37, 99, 235, 0.08);
+  --e-red: #c11f32;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr) 0 minmax(0, 1.18fr);
+  grid-template-areas: "sensors bus link service";
+  column-gap: var(--ebus-gap);
+  align-items: stretch;
+  width: 100%;
+}
+
+html.is-dark .heb-ebus {
+  --e-wash: rgba(107, 158, 255, 0.14);
+  --e-red: #ff6b7d;
+}
+
+.heb-ebus-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+
+.heb-ebus-pane.is-sensors { grid-area: sensors; }
+.heb-ebus-pane.is-bus { grid-area: bus; }
+.heb-ebus-pane.is-service { grid-area: service; }
+
+.heb-ebus-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.heb-ebus-kicker.is-queue {
+  margin: 14px 0 6px;
+}
+
+/* sensors */
+
+.heb-ebus-sensors {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 6px;
+}
+
+.heb-ebus-sensor {
+  display: grid;
+  grid-template-columns: 8px auto minmax(12px, 1fr);
+  align-items: center;
+  column-gap: 8px;
+  min-height: 28px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.heb-ebus-sensor:nth-child(1) { --poll-delay: 0s; }
+.heb-ebus-sensor:nth-child(2) { --poll-delay: -2.25s; }
+.heb-ebus-sensor:nth-child(3) { --poll-delay: -1.5s; }
+.heb-ebus-sensor:nth-child(4) { --poll-delay: -0.75s; }
+
+.heb-ebus-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-muted);
+  animation: heb-ebus-blip var(--ebus-poll) linear infinite var(--poll-delay);
+}
+
+.heb-ebus-dot::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--link);
+  border-radius: 50%;
+  opacity: 0;
+  animation: heb-ebus-ring var(--ebus-poll) ease-out infinite var(--poll-delay);
+}
+
+.heb-ebus-wire {
+  position: relative;
+  height: 1px;
+  margin-right: calc(-1 * (var(--ebus-gap) + 13px));
+  background: var(--stipple-rule);
+}
+
+.heb-ebus-wire i,
+.heb-ebus-link i {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--link);
+  opacity: 0;
+}
+
+.heb-ebus-wire i {
+  animation: heb-ebus-hop-x var(--ebus-poll) linear infinite var(--poll-delay);
+}
+
+/* links */
+
+.heb-ebus-link {
+  position: relative;
+  height: 1px;
+  background: var(--stipple-rule);
+}
+
+.heb-ebus-link.is-in {
+  display: none;
+  grid-area: linkin;
+}
+
+.heb-ebus-link.is-out {
+  grid-area: link;
+  align-self: center;
+  margin-inline: calc(-1 * var(--ebus-gap));
+}
+
+.heb-ebus-link.is-out i {
+  animation: heb-ebus-send-x var(--ebus-dur) linear infinite;
+}
+
+/* ebus log */
+
+.heb-ebus-stream {
+  position: relative;
+  flex: 1;
+  min-height: 120px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+}
+
+.heb-ebus-events {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  animation: heb-ebus-scroll 16s linear infinite;
+}
+
+.heb-ebus-ev {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.heb-ebus-ev i {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-muted);
+}
+
+.heb-ebus-ev i.is-run { background: var(--link); }
+.heb-ebus-ev i.is-fail { background: var(--e-red); }
+
+.heb-ebus-ev span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* dependency service */
+
+.heb-ebus-job {
+  padding: 7px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+  animation: heb-ebus-job var(--ebus-dur) ease-in-out infinite;
+}
+
+.heb-ebus-job.is-b {
+  animation-name: heb-ebus-job-b;
+}
+
+.heb-ebus-job-name {
+  display: block;
+  overflow: hidden;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heb-ebus-job-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.heb-ebus-state {
+  display: grid;
+  justify-items: end;
+}
+
+.heb-ebus-state b {
+  grid-area: 1 / 1;
+  font-weight: 600;
+}
+
+.heb-ebus-state .is-before {
+  animation: heb-ebus-before var(--ebus-dur) ease-in-out infinite;
+}
+
+.heb-ebus-state .is-after {
+  color: var(--link);
+  opacity: 0;
+  animation: heb-ebus-after var(--ebus-dur) ease-in-out infinite;
+}
+
+.heb-ebus-job.is-b .is-before {
+  animation-name: heb-ebus-before-b;
+}
+
+.heb-ebus-job.is-b .is-after {
+  animation-name: heb-ebus-after-b;
+}
+
+.heb-ebus-dep {
+  position: relative;
+  width: 1px;
+  height: 16px;
+  margin-left: 18px;
+  background: var(--stipple-rule);
+}
+
+.heb-ebus-dep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--link);
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: heb-ebus-dep var(--ebus-dur) ease-in-out infinite;
+}
+
+.heb-ebus-slot {
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-family: ui-monospace, 'Courier New', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heb-ebus-slot.is-old {
+  color: var(--ink-muted);
+}
+
+.heb-ebus-slot-new {
+  display: grid;
+  margin-top: 4px;
+}
+
+.heb-ebus-slot-new > * {
+  grid-area: 1 / 1;
+}
+
+.heb-ebus-slot.is-hole {
+  border-style: dashed;
+  color: transparent;
+}
+
+.heb-ebus-slot.is-hole::before {
+  content: "\00a0";
+}
+
+.heb-ebus-slot.is-job {
+  border-color: var(--link);
+  background: var(--e-wash);
+  font-weight: 600;
+  opacity: 0;
+  animation: heb-ebus-enqueue var(--ebus-dur) ease-in-out infinite;
+}
+
+/* motion */
+
+@keyframes heb-ebus-blip {
+  0%,
+  14%,
+  100% {
+    background-color: var(--ink-muted);
+  }
+
+  2%,
+  8% {
+    background-color: var(--link);
+  }
+}
+
+@keyframes heb-ebus-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  30%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes heb-ebus-hop-x {
+  0%,
+  6% {
+    opacity: 0;
+    left: 0;
+  }
+
+  10% {
+    opacity: 1;
+    left: 0;
+  }
+
+  48% {
+    opacity: 1;
+    left: calc(100% - 7px);
+  }
+
+  54%,
+  100% {
+    opacity: 0;
+    left: calc(100% - 7px);
+  }
+}
+
+@keyframes heb-ebus-hop-y {
+  0%,
+  6% {
+    opacity: 0;
+    top: 0;
+  }
+
+  10% {
+    opacity: 1;
+    top: 0;
+  }
+
+  48% {
+    opacity: 1;
+    top: calc(100% - 7px);
+  }
+
+  54%,
+  100% {
+    opacity: 0;
+    top: calc(100% - 7px);
+  }
+}
+
+@keyframes heb-ebus-send-x {
+  0%,
+  14% {
+    opacity: 0;
+    left: 0;
+  }
+
+  17% {
+    opacity: 1;
+    left: 0;
+  }
+
+  29% {
+    opacity: 1;
+    left: calc(100% - 7px);
+  }
+
+  32%,
+  100% {
+    opacity: 0;
+    left: calc(100% - 7px);
+  }
+}
+
+@keyframes heb-ebus-send-y {
+  0%,
+  14% {
+    opacity: 0;
+    top: 0;
+  }
+
+  17% {
+    opacity: 1;
+    top: 0;
+  }
+
+  29% {
+    opacity: 1;
+    top: calc(100% - 7px);
+  }
+
+  32%,
+  100% {
+    opacity: 0;
+    top: calc(100% - 7px);
+  }
+}
+
+@keyframes heb-ebus-scroll {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes heb-ebus-job {
+  0%,
+  30%,
+  96%,
+  100% {
+    border-color: var(--rule);
+    background-color: var(--surface);
+  }
+
+  36%,
+  90% {
+    border-color: var(--link);
+    background-color: var(--e-wash);
+  }
+}
+
+@keyframes heb-ebus-job-b {
+  0%,
+  48%,
+  96%,
+  100% {
+    border-color: var(--rule);
+    background-color: var(--surface);
+  }
+
+  54%,
+  90% {
+    border-color: var(--link);
+    background-color: var(--e-wash);
+  }
+}
+
+@keyframes heb-ebus-before {
+  0%,
+  30%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+
+  36%,
+  90% {
+    opacity: 0;
+  }
+}
+
+@keyframes heb-ebus-after {
+  0%,
+  30%,
+  96%,
+  100% {
+    opacity: 0;
+  }
+
+  36%,
+  90% {
+    opacity: 1;
+  }
+}
+
+@keyframes heb-ebus-before-b {
+  0%,
+  48%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+
+  54%,
+  90% {
+    opacity: 0;
+  }
+}
+
+@keyframes heb-ebus-after-b {
+  0%,
+  48%,
+  96%,
+  100% {
+    opacity: 0;
+  }
+
+  54%,
+  90% {
+    opacity: 1;
+  }
+}
+
+@keyframes heb-ebus-dep {
+  0%,
+  36%,
+  96%,
+  100% {
+    transform: scaleY(0);
+  }
+
+  47%,
+  90% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes heb-ebus-enqueue {
+  0%,
+  58%,
+  96%,
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  66%,
+  90% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .heb-ebus {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "sensors"
+      "linkin"
+      "bus"
+      "link"
+      "service";
+    row-gap: 0;
+  }
+
+  .heb-ebus-wire {
+    margin-right: 0;
+  }
+
+  .heb-ebus-link,
+  .heb-ebus-link.is-in,
+  .heb-ebus-link.is-out {
+    display: block;
+    width: 1px;
+    height: 36px;
+    margin: 0;
+    justify-self: center;
+    align-self: auto;
+  }
+
+  .heb-ebus-link i {
+    top: 0;
+    left: -3px;
+  }
+
+  .heb-ebus-link.is-in i {
+    animation: heb-ebus-hop-y var(--ebus-poll) linear infinite;
+  }
+
+  .heb-ebus-link.is-out i {
+    animation-name: heb-ebus-send-y;
+  }
+
+  .heb-ebus-stream {
+    flex: none;
+    height: 96px;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heb-ebus *,
+  .heb-ebus *::after {
+    animation: none !important;
+  }
+
+  .heb-ebus-ev.is-copy {
+    display: none;
+  }
+
+  .heb-ebus-stream {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .heb-ebus-job {
+    border-color: var(--link);
+    background-color: var(--e-wash);
+  }
+
+  .heb-ebus-state .is-before {
+    opacity: 0;
+  }
+
+  .heb-ebus-state .is-after {
+    opacity: 1;
+  }
+
+  .heb-ebus-dep::after {
+    transform: none;
+  }
+
+  .heb-ebus-slot.is-job {
+    opacity: 1;
+  }
+}

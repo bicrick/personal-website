@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AWS = ['EKS', 'Postgres', 'the old UI'];
+const AWS = ['EKS', 'RDS Postgres', 'the old UI'];
 const GCP = ['Cloud Run', 'Firestore', 'Composer'];
 const METERS = ['92%', '74%', '41%'];
 
