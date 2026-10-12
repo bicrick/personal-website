@@ -456,3 +456,13 @@
 .cf-bar.is-top { background: var(--bot); }
 .cf-none { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; font-style: italic; color: var(--ink-muted); }
 .cf-val { font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+/* Header figure: the naturescape hanging-critter scene from the home tile,
+   at a fixed height so the page never shifts. */
+.hs-header-scene {
+  margin: 0 0 1.5rem;
+  height: 220px;
+}
+@media (min-width: 640px) {
+  .hs-header-scene { height: 280px; }
+}

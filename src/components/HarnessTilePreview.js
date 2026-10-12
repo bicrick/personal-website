@@ -42,7 +42,7 @@ function Tree({ x, y }) {
 const FAR = [[16, 10], [12, 14], [14, 17], [18, 13], [14, 9], [16, 12], [12, 16], [18, 19], [14, 14], [12, 10], [14, 12]];
 const MID = [[20, 5], [16, 8], [14, 10], [18, 7], [30, 3], [18, 6], [14, 9], [16, 7], [14, 5]];
 
-export default function HarnessTilePreview() {
+export default function HarnessTilePreview({ className = '' }) {
   const ref = useRef(null);
   const [live, setLive] = useState(false);
 
@@ -55,7 +55,7 @@ export default function HarnessTilePreview() {
   }, []);
 
   return (
-    <div ref={ref} className={`harness-tile-preview${live ? ' is-live' : ''}`}>
+    <div ref={ref} className={`harness-tile-preview${live ? ' is-live' : ''}${className ? ` ${className}` : ''}`}>
       <svg className="htp-scene" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" shapeRendering="crispEdges" focusable="false">
         <rect className="htp-sky-0" x="0" y="0" width={W} height={H} />
         <rect className="htp-sky-1" x="0" y="34" width={W} height={H} />

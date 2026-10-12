@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
 import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, CheckedFix, Model } from '../components/project/harness';
+import HarnessTilePreview from '../components/HarnessTilePreview';
 import { SWE_N } from '../components/project/harness/swebench';
 
 // Every number in the post comes from the data modules (same-settings runs, five harnesses).
@@ -24,7 +25,9 @@ function ContextShaping() {
       linkLabel="view repo"
       abstract="Everyone compares models. Almost nobody compares the thing wrapped around them."
     >
-      <Hero />
+      <figure className="hs-header-scene" aria-hidden="true">
+        <HarnessTilePreview />
+      </figure>
 
       <p>
         When a new AI model comes out, we line them up and argue about who is smartest. But you
@@ -73,6 +76,8 @@ function ContextShaping() {
         Harness engineering matters as much as model engineering. The model sets the ceiling. The
         harness decides how much you pay, in money and in time, to reach it.
       </p>
+
+      <Hero />
 
       <p className="hs-note">
         Method: {SWE_N} SWE-bench Verified bugs, <Model>Haiku 5.5</Model> with extended thinking off and every
