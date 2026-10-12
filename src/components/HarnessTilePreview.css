@@ -11,6 +11,10 @@
   --htp-leaf: #6f9775;
   --htp-trunk: #7a6450;
   --htp-grass: #76a07b;
+  --htp-ground: #c9d3b8;
+  --htp-ground-edge: #a9bb98;
+  --htp-shadow: #93a184;
+  --htp-frame: rgba(60, 80, 64, 0.22);
   position: relative;
   display: block;
   width: 100%;
@@ -32,6 +36,10 @@ html.is-dark .harness-tile-preview {
   --htp-leaf: #2b3e31;
   --htp-trunk: #4a3f35;
   --htp-grass: #3a5444;
+  --htp-ground: #2c3a31;
+  --htp-ground-edge: #3a4d40;
+  --htp-shadow: #1c261f;
+  --htp-frame: rgba(0, 0, 0, 0.35);
 }
 
 .htp-scene {
@@ -53,20 +61,22 @@ html.is-dark .harness-tile-preview {
 .htp-hill-near { fill: var(--htp-near); }
 .htp-leaf { fill: var(--htp-leaf); }
 .htp-trunk { fill: var(--htp-trunk); }
-.htp-grass { fill: var(--htp-grass); }
+.htp-ground { fill: var(--htp-ground); }
+.htp-ground-edge { fill: var(--htp-ground-edge); }
 
 /* Two copies of each cloud row side by side; slide one tile width and loop.
-   Far clouds drift slower than near ones for a little parallax. */
+   Smooth linear drift; far clouds slower than near ones for parallax. */
 .htp-clouds {
-  animation: htp-drift 160s steps(160) infinite;
+  animation: htp-drift 240s linear infinite;
   animation-play-state: paused;
+  will-change: transform;
 }
-.htp-clouds-near { animation-duration: 90s; animation-timing-function: steps(160); }
+.htp-clouds-near { animation-duration: 140s; }
 .harness-tile-preview.is-live .htp-clouds { animation-play-state: running; }
 
 @keyframes htp-drift {
-  from { transform: translateX(0); }
-  to { transform: translateX(-160px); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-160px, 0, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -88,5 +98,24 @@ html.is-dark .harness-tile-preview {
   width: auto;
 }
 
-/* the shadow sits on grass, so keep it dark in both themes */
-.harness-tile-preview .swing-shadow { background: #1f2a22; opacity: 0.2; }
+/* A thin inset frame, drawn over the scene and the critter. */
+.harness-tile-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 3px var(--htp-frame);
+  pointer-events: none;
+}
+
+/* The shadow sits fully on the flat ground: a stepped pixel shape in one
+   flat tone (SwingMark still shifts and scales it with the swing). */
+.harness-tile-preview .swing-shadow {
+  left: 22%;
+  right: 22%;
+  bottom: 0;
+  height: 6%;
+  border-radius: 0;
+  background: var(--htp-shadow);
+  opacity: 1;
+  clip-path: polygon(16% 0, 84% 0, 84% 34%, 100% 34%, 100% 66%, 84% 66%, 84% 100%, 16% 100%, 16% 66%, 0 66%, 0 34%, 16% 34%);
+}

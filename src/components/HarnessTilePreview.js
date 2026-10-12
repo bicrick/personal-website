@@ -39,9 +39,8 @@ function Tree({ x, y }) {
   );
 }
 
-const FAR = [[14, 14], [10, 18], [12, 21], [16, 17], [12, 13], [14, 16], [10, 20], [16, 23], [12, 19], [14, 15], [12, 12], [18, 16]];
-const MID = [[18, 9], [14, 12], [12, 14], [16, 11], [14, 8], [12, 10], [18, 13], [14, 15], [12, 12], [16, 9], [14, 11]];
-const NEAR = [[22, 4], [16, 6], [20, 5], [14, 3], [18, 5], [24, 6], [16, 4], [14, 5], [20, 3]];
+const FAR = [[16, 10], [12, 14], [14, 17], [18, 13], [14, 9], [16, 12], [12, 16], [18, 19], [14, 14], [12, 10], [14, 12]];
+const MID = [[20, 5], [16, 8], [14, 10], [18, 7], [30, 3], [18, 6], [14, 9], [16, 7], [14, 5]];
 
 export default function HarnessTilePreview() {
   const ref = useRef(null);
@@ -59,42 +58,34 @@ export default function HarnessTilePreview() {
     <div ref={ref} className={`harness-tile-preview${live ? ' is-live' : ''}`}>
       <svg className="htp-scene" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMax slice" shapeRendering="crispEdges" focusable="false">
         <rect className="htp-sky-0" x="0" y="0" width={W} height={H} />
-        <rect className="htp-sky-1" x="0" y="22" width={W} height={H} />
-        <rect className="htp-sky-2" x="0" y="38" width={W} height={H} />
-        <rect className="htp-sky-3" x="0" y="50" width={W} height={H} />
+        <rect className="htp-sky-1" x="0" y="34" width={W} height={H} />
         <g className="htp-sun">
-          <rect x="124" y="12" width="10" height="10" />
-          <rect x="122" y="14" width="14" height="6" />
-          <rect x="126" y="10" width="6" height="14" />
+          <rect x="126" y="12" width="8" height="8" />
+          <rect x="124" y="14" width="12" height="4" />
+          <rect x="128" y="10" width="4" height="12" />
         </g>
         <g className="htp-clouds htp-clouds-far">
           {[0, W].map((o) => (
             <g key={o} transform={`translate(${o} 0)`}>
-              <Cloud x={14} y={14} s={0.8} />
-              <Cloud x={96} y={8} s={0.7} />
+              <Cloud x={18} y={14} s={0.8} />
+              <Cloud x={98} y={24} s={0.7} />
             </g>
           ))}
         </g>
-        <g className="htp-hill-far">{hill(FAR, 66)}</g>
+        <g className="htp-hill-far">{hill(FAR, 60)}</g>
         <g className="htp-clouds htp-clouds-near">
           {[0, W].map((o) => (
             <g key={o} transform={`translate(${o} 0)`}>
-              <Cloud x={40} y={26} />
-              <Cloud x={130} y={32} s={0.9} />
+              <Cloud x={44} y={30} />
             </g>
           ))}
         </g>
-        <g className="htp-hill-mid">{hill(MID, 74)}</g>
-        <Tree x={20} y={64} />
-        <Tree x={27} y={66} />
-        <Tree x={132} y={61} />
-        <Tree x={142} y={64} />
-        <g className="htp-hill-near">{hill(NEAR, 82)}</g>
-        <g className="htp-grass">
-          {[8, 30, 52, 101, 118, 146].map((x) => (
-            <rect key={x} x={x} y={77} width="1" height="2" />
-          ))}
-        </g>
+        <g className="htp-hill-mid">{hill(MID, 70)}</g>
+        <Tree x={14} y={59} />
+        <Tree x={21} y={62} />
+        <Tree x={138} y={60} />
+        <rect className="htp-ground-edge" x="0" y="70" width={W} height="1" />
+        <rect className="htp-ground" x="0" y="71" width={W} height="19" />
       </svg>
       <div className="harness-tile-swing">
         <SwingMark />
