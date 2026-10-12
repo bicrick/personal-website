@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, MeetHarnesses, ScrollGrid, WhyTokens, ResultsTable, Model } from '../components/project/harness';
+import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, Model } from '../components/project/harness';
 import { SWE_N } from '../components/project/harness/swebench';
 
 // Every number in the post comes from the data modules (same-settings runs, five harnesses).
@@ -58,14 +58,6 @@ function ContextShaping() {
       <p>On whether a bug gets fixed, it's a tie. The bill is a different story.</p>
 
       <ResultsTable />
-
-      <h2>/ why tokens differ</h2>
-
-      <p>
-        It comes down to what each harness puts in the window, and how often it sends it.
-      </p>
-
-      <WhyTokens />
 
       <p>
         Harness engineering matters as much as model engineering. The model sets the ceiling. The
