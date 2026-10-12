@@ -11,7 +11,7 @@ function isDark() {
 
 // ?card=1 is the tinted panel: pale blue in light mode, navy in dark mode.
 function cardSrc(dark) {
-  return `${ORIGIN}/?embed=1&card=1&theme=${dark ? 'dark' : 'light'}#single`;
+  return `${ORIGIN}/?embed=1&card=1&theme=${dark ? 'dark' : 'light'}#double`;
 }
 
 function useNarrow() {
@@ -108,7 +108,7 @@ function CartPoleEmbed() {
         ) : null}
       </div>
       <figcaption>
-        The live reel, from one link through the quad.{' '}
+        The double pendulum, rolling between its four equilibria.{' '}
         <a href={FULL_HREF} target="_blank" rel="noopener noreferrer">
           Open the demo
         </a>
