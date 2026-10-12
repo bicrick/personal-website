@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, MeetHarnesses, ScrollGrid, WhyTokens, TokenBars, Stat } from '../components/project/harness';
+import { Hero, ContextBar, MeetHarnesses, ScrollGrid, WhyTokens, TokenBars, Stat, Model } from '../components/project/harness';
 import { SWE_N, SWE_SAME } from '../components/project/harness/swebench';
 
 // Every number below comes from the data modules (same-settings runs, five harnesses).
@@ -56,7 +56,7 @@ function ContextShaping() {
       <h2>/ the test</h2>
 
       <p>
-        I put the same model, Claude Haiku 5.5, inside all five and gave each the same {SWE_N} real
+        I put the same model, <Model />, inside all five and gave each the same {SWE_N} real
         bugs from popular open-source projects, taken from{' '}
         <a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench Verified</a>.
         Each project&apos;s own tests decided whether a fix worked. Here are all 250 runs.
@@ -95,7 +95,7 @@ function ContextShaping() {
       </p>
 
       <p className="hs-note">
-        Method: {SWE_N} SWE-bench Verified bugs, Haiku 5.5 with extended thinking off and every
+        Method: {SWE_N} SWE-bench Verified bugs, <Model>Haiku 5.5</Model> with extended thinking off and every
         command approved in all five, three runs at a time in identical containers. An earlier run
         on each harness&apos;s default settings is in the repo. Aider was left out because it
         expects a person or a test command in the loop, and these runs had neither. Cursor&apos;s

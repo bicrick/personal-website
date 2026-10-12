@@ -71,38 +71,48 @@ html.is-dark .o-cap { fill: #4a4b57; }
 
 .cart-tray { fill: var(--ink); }
 .cart-wheel { fill: var(--ink-muted); }
+.cart-spoke { fill: var(--paper); }
+.cart-load { opacity: 0.88; }
 .cart-load.c-msg { fill: var(--c-msg); }
 .cart-load.c-tool { fill: var(--c-tool); }
 .cart-load.c-mcp { fill: var(--c-mcp); }
 .cart-load.c-skill { fill: var(--c-skill); }
 .cart-load.c-sys { fill: var(--c-sys); }
 
-.cart.is-bob-1 .cart-ride { animation: cart-bob 0.5s ease-in-out infinite; }
-.cart.is-bob-2 .cart-ride { animation: cart-bob 0.5s ease-in-out -0.17s infinite; }
-.cart.is-bob-3 .cart-ride { animation: cart-bob 0.5s ease-in-out -0.34s infinite; }
+/* a slow, small rock, offset per cart so the train ripples */
+.cart.is-bob-1 .cart-ride { animation: cart-bob 1.2s steps(2, jump-none) infinite; }
+.cart.is-bob-2 .cart-ride { animation: cart-bob 1.2s steps(2, jump-none) -0.4s infinite; }
+.cart.is-bob-3 .cart-ride { animation: cart-bob 1.2s steps(2, jump-none) -0.8s infinite; }
 
 @keyframes cart-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-0.5px); }
+  50% { transform: translateY(-0.4px); }
 }
 
-.cart-rope line {
-  stroke: var(--ink-muted);
-  stroke-width: 0.6;
-}
+/* square wheels, spoke turning in quarter steps */
+.cart-spoke { transform-box: fill-box; transform-origin: 50% 50%; animation: cart-spin 0.8s steps(4) infinite; }
+@keyframes cart-spin { to { transform: rotate(180deg); } }
 
-.cart-ground rect { fill: var(--ink-muted); opacity: 0.5; }
-.cart-ground { animation: cart-ground 0.8s linear infinite; }
+.cart-rope rect { fill: var(--ink-muted); }
+
+.hero-rail { fill: var(--ink-muted); opacity: 0.6; }
+.hero-ties rect { fill: var(--ink-muted); opacity: 0.4; }
+.hero-ties { animation: cart-ground 1.6s linear infinite; }
 
 @keyframes cart-ground {
   from { transform: translateX(0); }
   to { transform: translateX(-8px); }
 }
 
+.hs-hero .hs-hero-svg { aspect-ratio: 96 / 34; }
+.hero-spin { transform-box: fill-box; transform-origin: 50% 50%; }
+.hs-hero.is-paused * { animation-play-state: paused !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .critter-leg,
   .cart-ride,
-  .cart-ground,
+  .cart-spoke,
+  .hero-ties,
   .critter-svg.is-hop > .critter {
     animation: none !important;
   }
