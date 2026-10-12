@@ -89,30 +89,59 @@ html.is-dark .o-cap { fill: #4a4b57; }
   50% { transform: translateY(-0.4px); }
 }
 
-/* square wheels, spoke turning in quarter steps */
-.cart-spoke { transform-box: fill-box; transform-origin: 50% 50%; animation: cart-spin 0.8s steps(4) infinite; }
-@keyframes cart-spin { to { transform: rotate(180deg); } }
-
-.cart-rope rect { fill: var(--ink-muted); }
-
+/* the hero: a bot dragging a wagon that carries a context window */
 .hero-rail { fill: var(--ink-muted); opacity: 0.6; }
-.hero-ties rect { fill: var(--ink-muted); opacity: 0.4; }
-.hero-ties { animation: cart-ground 1.6s linear infinite; }
+.hero-ties rect { fill: var(--ink-muted); opacity: 0.35; }
+.hero-ties { animation: hero-ties 1s linear infinite; }
+@keyframes hero-ties { to { transform: translateX(-8px); } }
 
-@keyframes cart-ground {
-  from { transform: translateX(0); }
-  to { transform: translateX(-8px); }
+.hero-k { font-family: var(--font-pixel); font-size: 2.6px; fill: var(--ink); }
+.hero-k .is-dim, .hero-k.is-dim { fill: var(--ink-muted); }
+.hero-frame { fill: var(--rule); }
+.hero-frame-in { fill: var(--paper); }
+.hero-seg { transition: width 0.6s steps(4), x 0.6s steps(4); }
+.hero-seg.is-sys { fill: var(--ink); }
+.hero-seg.is-tools { fill: var(--ink-muted); }
+.hero-bed { fill: var(--ink); }
+.hero-wheel { fill: var(--ink-muted); }
+.hero-rope rect, .hero-strap { fill: var(--ink); }
+
+/* one shared 4s pull cycle: rope taut, a slack beat where the wagon drifts
+   back a hair, then a tug that pulls it level again */
+.hero-wagon { animation: hero-lag 4s steps(1) infinite; }
+@keyframes hero-lag {
+  0%, 55% { transform: translateX(0); }
+  60%, 72% { transform: translateX(-0.6px); }
+  78%, 100% { transform: translateX(0); }
 }
+.hero-rope-a { animation: hero-sag 4s steps(1) infinite; }
+@keyframes hero-sag {
+  0%, 55% { transform: translateY(0); }
+  60%, 72% { transform: translateY(0.6px); }
+  78%, 100% { transform: translateY(0); }
+}
+/* leaning into the strap, steps in time with the ties */
+.hero-puller { transform-box: view-box; transform-origin: 72px 35px; transform: rotate(10deg); animation: hero-tug 4s steps(1) infinite; }
+@keyframes hero-tug {
+  0%, 72% { transform: rotate(10deg); }
+  76% { transform: rotate(14deg) translateX(0.5px); }
+  82%, 100% { transform: rotate(10deg); }
+}
+.hs-hero .critter.is-walk .critter-leg.is-a { animation-duration: 0.5s; }
+.hs-hero .critter.is-walk .critter-leg.is-b { animation-duration: 0.5s; animation-delay: -0.25s; }
+.hs-hero .hs-hero-svg { aspect-ratio: 96 / 32; }
 
-.hs-hero .hs-hero-svg { aspect-ratio: 96 / 34; }
 .hero-spin { transform-box: fill-box; transform-origin: 50% 50%; }
 .hs-hero.is-paused * { animation-play-state: paused !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .critter-leg,
   .cart-ride,
-  .cart-spoke,
   .hero-ties,
+  .hero-wagon,
+  .hero-rope-a,
+  .hero-puller,
+  .hero-seg,
   .critter-svg.is-hop > .critter {
     animation: none !important;
   }
