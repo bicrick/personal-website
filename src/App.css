@@ -562,7 +562,7 @@ section {
   aspect-ratio: 1;
   height: auto;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center center;
   border: 1px solid var(--rule);
   border-radius: 2px;
   box-shadow: 0 12px 32px var(--shadow);

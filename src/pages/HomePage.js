@@ -16,14 +16,20 @@ export default function HomePage() {
     >
       <div className="page-section-inner home-inner">
         <div className="home-compose">
-          <img
-            src={`${process.env.PUBLIC_URL}/about/headshot.jpg`}
-            alt="Patrick Brown"
-            className="home-pic"
-            width="320"
-            height="320"
-            draggable={false}
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcSet={`${process.env.PUBLIC_URL}/about/headshot.webp`}
+            />
+            <img
+              src={`${process.env.PUBLIC_URL}/about/headshot.jpg`}
+              alt="Patrick Brown"
+              className="home-pic"
+              width="320"
+              height="320"
+              draggable={false}
+            />
+          </picture>
           <div className="home-copy">
             <TypewriterHeading as="h2" className="home-heading">
               Patrick Brown
