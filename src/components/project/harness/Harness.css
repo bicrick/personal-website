@@ -442,7 +442,7 @@
   .rt-val { font-size: 17px; padding: 12px 2px; }
 }
 
-/* ---------- checked its fix ---------- */
+/* ---------- went back after a failed check ---------- */
 .cf-chart { height: 230px; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0; }
 .cf-row { display: grid; grid-template-columns: 26px 116px 1fr 40px; align-items: center; gap: 8px; height: 36px; }
 .cf-critter { width: 26px; height: 26px; }

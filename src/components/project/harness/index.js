@@ -10,4 +10,4 @@ export { default as WhyTokens } from './stills/WhyTokens';
 export { default as TokenBars } from './stills/TokenBars';
 export { Stat } from './Type';
 export { default as ResultsTable } from './stills/ResultsTable';
-export { default as CheckedFix } from './stills/CheckedFix';
+export { default as WentBack } from './stills/WentBack';

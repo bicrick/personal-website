@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, CheckedFix, Model } from '../components/project/harness';
+import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, WentBack, Model } from '../components/project/harness';
 import HarnessTilePreview from '../components/HarnessTilePreview';
 import { SWE_N } from '../components/project/harness/swebench';
 
@@ -74,13 +74,13 @@ function ContextShaping() {
       <p>
         SWE-agent edged ahead, by one bug over Cursor. Checking its work isn&apos;t the whole story,
         since Cursor and Claude Code also ran the code after almost every change. The difference was
-        what happened when that check failed: SWE-agent went back and revised its fix in 30% of its
+        what happened when that check failed: SWE-agent went back and changed its fix in 30% of its
         runs, the others in 10 to 18%. On one Sphinx bug, the others all shipped fixes that looked
         right. Only SWE-agent rebuilt the docs, saw the link was still wrong, threw its fix away and
         found the real cause. With this few bugs, it isn&apos;t proof.
       </p>
 
-      <CheckedFix />
+      <WentBack />
 
       <p>
         Harness engineering matters as much as model engineering. The model sets the ceiling. The
