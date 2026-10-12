@@ -20,7 +20,7 @@ export const PROJECTS = [
       'Claude Haiku 5.5 inside Claude Code, Cursor, OpenCode, SWE-agent, and mini-swe-agent on 50 SWE-bench Verified bugs. Same accuracy, very different token bills.',
     livePreview: 'harness',
     blogLink: '/projects/context-shaping',
-    appLink: 'https://github.com/bicrick/context-shaping',
+    appLink: 'https://github.com/bicrick/harness-bench',
     appLabel: 'repo',
     relevanceRank: 2,
     dateRank: 0,

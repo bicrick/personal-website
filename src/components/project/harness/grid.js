@@ -1,4 +1,4 @@
-// Five harnesses (Aider left out). Generated from bicrick/context-shaping results/swebench/summary_tokens.csv by
+// Five harnesses (Aider left out). Generated from bicrick/harness-bench results/swebench/summary_tokens.csv by
 // scripts in the post's repo (same-settings *_nothink rows + cursor_nothink; psf__requests-2317 excluded).
 // GRID_TASKS rows sorted by how many harnesses fixed them. GRID_CELLS[row][col] = [fixed, usd, wall_s].
 // GRID_ORDER = [row, col] in the order the runs actually finished (run folder mtime, measured from each harness's own first run so all five start together).

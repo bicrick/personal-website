@@ -20,7 +20,7 @@ function ContextShaping() {
       date="October 2026"
       backHref="/"
       backLabel="home"
-      linkHref="https://github.com/bicrick/context-shaping"
+      linkHref="https://github.com/bicrick/harness-bench"
       linkLabel="view repo"
       abstract="Everyone compares models. Almost nobody compares the thing wrapped around them."
     >
@@ -70,7 +70,7 @@ function ContextShaping() {
         on each harness&apos;s default settings is in the repo. Aider was left out because it
         expects a person or a test command in the loop, and these runs had neither. Cursor&apos;s
         cost is estimated from its own logs. Data and code:{' '}
-        <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">github.com/bicrick/context-shaping</a>.
+        <a href="https://github.com/bicrick/harness-bench" target="_blank" rel="noopener noreferrer">github.com/bicrick/harness-bench</a>.
       </p>
     </ProjectDetail>
   );

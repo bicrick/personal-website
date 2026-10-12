@@ -1,6 +1,6 @@
 // SWE-bench Verified, Haiku 5.5 in five harnesses, 50 tasks, same settings
 // (thinking off, every command approved, 3 at a time in 2 CPU / 4 GB containers).
-// From bicrick/context-shaping scripts/swebench_final.py (*_nothink rows + cursor_nothink;
+// From bicrick/harness-bench scripts/swebench_final.py (*_nothink rows + cursor_nothink;
 // psf__requests-2317 replaced by psf__requests-1142).
 // rate: solved / 50 (ci = 95% Wilson). usd: spend / solves (Cursor estimated from its own logs).
 // tok: all tokens / solves. min: wall minutes / solves. cache: cache_read / all input.

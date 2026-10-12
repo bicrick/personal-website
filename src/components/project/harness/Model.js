@@ -8,7 +8,7 @@ const LINES = [
 ];
 
 const DOCS =
-  'https://github.com/bicrick/context-shaping/blob/claude/eager-noether-o13tek/docs/SWEBENCH_PILOT.md';
+  'https://github.com/bicrick/harness-bench/blob/main/docs/SWEBENCH_PILOT.md';
 
 export default function Model({ children = 'Claude Haiku 5.5' }) {
   const id = useId();
