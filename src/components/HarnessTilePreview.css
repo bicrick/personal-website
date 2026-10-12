@@ -1,20 +1,20 @@
 .harness-tile-preview {
-  --htp-sky-0: #cfdde3;
-  --htp-sky-1: #d9e4e4;
-  --htp-sky-2: #e3e9e2;
-  --htp-sky-3: #eaece0;
-  --htp-sun: #f0d9a0;
-  --htp-cloud: #f7f7f2;
-  --htp-far: #b9c9bf;
-  --htp-mid: #9fbaa3;
-  --htp-near: #86a98a;
-  --htp-leaf: #6f9775;
-  --htp-trunk: #7a6450;
-  --htp-grass: #76a07b;
-  --htp-ground: #c9d3b8;
-  --htp-ground-edge: #a9bb98;
-  --htp-shadow: #93a184;
-  --htp-frame: rgba(60, 80, 64, 0.22);
+  --htp-sky-0: #3d9be9;
+  --htp-sky-1: #86c7f3;
+  --htp-sky-2: #86c7f3;
+  --htp-sky-3: #86c7f3;
+  --htp-sun: #ffd23f;
+  --htp-cloud: #ffffff;
+  --htp-far: #3e8e4c;
+  --htp-mid: #5bb553;
+  --htp-near: #5bb553;
+  --htp-leaf: #2b6a33;
+  --htp-trunk: #7a4a28;
+  --htp-grass: #9ad35a;
+  --htp-ground: #9ad35a;
+  --htp-ground-edge: #4c9a3a;
+  --htp-shadow: #4a7f26;
+  --htp-frame: rgba(0, 0, 0, 0.08);
   position: relative;
   display: block;
   width: 100%;
@@ -24,22 +24,22 @@
 }
 
 html.is-dark .harness-tile-preview {
-  --htp-sky-0: #2a3340;
-  --htp-sky-1: #2f3944;
-  --htp-sky-2: #343f47;
-  --htp-sky-3: #3a4449;
-  --htp-sun: #c9b685;
-  --htp-cloud: #4a5560;
-  --htp-far: #3d4d48;
-  --htp-mid: #36493f;
-  --htp-near: #2f4337;
-  --htp-leaf: #2b3e31;
-  --htp-trunk: #4a3f35;
-  --htp-grass: #3a5444;
-  --htp-ground: #2c3a31;
-  --htp-ground-edge: #3a4d40;
-  --htp-shadow: #1c261f;
-  --htp-frame: rgba(0, 0, 0, 0.35);
+  --htp-sky-0: #101d45;
+  --htp-sky-1: #1c3266;
+  --htp-sky-2: #1c3266;
+  --htp-sky-3: #1c3266;
+  --htp-sun: #f4e39a;
+  --htp-cloud: #3c5288;
+  --htp-far: #1b4734;
+  --htp-mid: #245f3f;
+  --htp-near: #245f3f;
+  --htp-leaf: #12361f;
+  --htp-trunk: #4a2e1c;
+  --htp-grass: #2e6a39;
+  --htp-ground: #2e6a39;
+  --htp-ground-edge: #1d4a2a;
+  --htp-shadow: #0c2214;
+  --htp-frame: rgba(0, 0, 0, 0.25);
 }
 
 .htp-scene {
@@ -103,7 +103,7 @@ html.is-dark .harness-tile-preview {
   content: '';
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 3px var(--htp-frame);
+  box-shadow: inset 0 0 0 1px var(--htp-frame);
   pointer-events: none;
 }
 
@@ -119,3 +119,11 @@ html.is-dark .harness-tile-preview {
   opacity: 1;
   clip-path: polygon(16% 0, 84% 0, 84% 34%, 100% 34%, 100% 66%, 84% 66%, 84% 100%, 16% 100%, 16% 66%, 0 66%, 0 34%, 16% 34%);
 }
+
+/* keep the hanging line crisp against the bright sky */
+.harness-tile-preview .swing-rope,
+.harness-tile-preview .swing-ring { fill: #1f1e1d; }
+.harness-tile-preview .swing-line { stroke: #1f1e1d; }
+html.is-dark .harness-tile-preview .swing-rope,
+html.is-dark .harness-tile-preview .swing-ring { fill: #e8e6df; }
+html.is-dark .harness-tile-preview .swing-line { stroke: #e8e6df; }
