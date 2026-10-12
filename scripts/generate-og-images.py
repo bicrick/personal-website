@@ -282,6 +282,14 @@ def make_project_cards():
         "tracebench-1200x630.jpg",
         fit="contain",
     )
+    split_card(
+        PUBLIC / "images" / "context-shaping" / "headline.png",
+        "is your harness making your model dumber?",
+        "Same cheap model, only the harness changed: 63% to 100%",
+        "context-shaping-1200x630.jpg",
+        fit="contain",
+        bg=None,
+    )
 
 
 if __name__ == "__main__":

@@ -164,6 +164,17 @@
     "imageHeight": 630,
     "type": "article"
   },
+  "/writing/context-shaping": {
+    "ogTitle": "is your harness making your model dumber?",
+    "seoTitle": "Is your harness making your model dumber? - bicrick",
+    "description": "Same cheap model, only the harness changed: Claude Haiku 5.5 went from 63% to 100% on multi-file refactors at about 1/32 the cost per solved task.",
+    "keywords": "bicrick, Patrick Brown, context shaping, harness, LLM, agents, evals, context engineering, Claude Haiku",
+    "imagePath": "/og/context-shaping-1200x630.jpg",
+    "imageAlt": "Is your harness making your model dumber? Naive full-repo prompt vs best harness",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
   "/writing/agent-research-loops": {
     "ogTitle": "agentic research loops",
     "seoTitle": "agentic research loops - bicrick",
