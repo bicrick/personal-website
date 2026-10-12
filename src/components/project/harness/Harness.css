@@ -397,7 +397,6 @@
 .wt-critter { width: 44px; flex: none; }
 .wt-lab { display: flex; justify-content: space-between; font-family: var(--font-pixel); font-size: 11px; color: var(--ink-muted); margin-bottom: -6px; }
 .wt-lab b { font-weight: 400; color: var(--ink); }
-.wt-bar.is-hidden { background: repeating-linear-gradient(45deg, var(--ink-faint) 0 4px, transparent 4px 8px); }
 .wt-key { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-pixel); font-size: 10px; color: var(--ink-muted); }
 .wt-key span { display: inline-flex; align-items: center; gap: 5px; }
 .wt-stats { display: grid; grid-template-columns: 1fr 1fr; margin: 0; border: 1px solid var(--rule); }

@@ -25,7 +25,9 @@ export const SWE_SAME = [
 // Cursor talks to its own servers, so only its tokens per fix (own logs) are known.
 export const WHY = [
   { id: 'claude_code', start: 24280, tools: 20, calls: 6.5, peak: 28653, resent: 87 },
-  { id: 'cursor', hidden: true },
+  // Cursor bypasses our proxy. Opening measured with /context in a matching test run (same clean HOME, git blocked,
+  // same model, real benchmark prompt, stopped after the first turn). Run totals from its own stream-json usage.
+  { id: 'cursor', start: 13400, measured: true, inPerBug: 131000, cached: 91 },
   { id: 'opencode', start: 11054, tools: 10, calls: 8, peak: 15779, resent: 84 },
   { id: 'swe_agent', start: 2197, tools: 3, calls: 13, peak: 9000, resent: 41 },
   { id: 'mini', start: 2448, tools: 1, calls: 7, peak: 6734, resent: 51 },
