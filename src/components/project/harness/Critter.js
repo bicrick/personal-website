@@ -155,7 +155,7 @@ export default function Critter({ mood, walk, hop, outfit, className = '', label
 // Wheels are square with a spoke that turns in quarter steps.
 export function Cart({ x = 0, y = 0, width = 14, load = [], bob }) {
   const step = width / Math.max(load.length, 1);
-  const size = Math.min(Math.max(step - 0.5, 0.8), 2.6);
+  const size = Math.min(Math.max(step - 0.5, 0.8), 1.6);
   const gap = step - size;
   const wheel = (cx) => (
     <g className="cart-wheel-g" transform={`translate(${cx} 4)`}>
