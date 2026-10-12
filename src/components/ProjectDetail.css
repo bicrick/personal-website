@@ -315,3 +315,11 @@
     display: block;
   }
 }
+
+.project-tldr {
+  margin: 0 0 12px;
+  max-width: 34em;
+  color: var(--ink-muted);
+  font-size: 17px;
+  line-height: 1.5;
+}

@@ -17,7 +17,8 @@ function ContextShaping() {
 
   return (
     <ProjectDetail
-      title="same model, five harnesses"
+      title="is your model being lobotomized by your harness?"
+      tldr="Short answer: no, probably not. But…"
       date="October 2026"
       backHref="/"
       backLabel="home"

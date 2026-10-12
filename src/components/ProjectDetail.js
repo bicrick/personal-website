@@ -19,6 +19,7 @@ function ProjectDetail({
   secondaryLinkLabel,
   secondaryLinkInternal = false,
   abstract,
+  tldr,
   backHref = '/projects',
   backLabel = 'projects',
   children,
@@ -44,6 +45,7 @@ function ProjectDetail({
             <TypewriterHeading as="h1" label={titleLabel} suffix={titleSuffix}>
               {title}
             </TypewriterHeading>
+            {tldr && <p className="project-tldr">{tldr}</p>}
             <div className="project-meta">
               {hasPrimary && (
                 <a href={linkHref} target="_blank" rel="noopener noreferrer">
