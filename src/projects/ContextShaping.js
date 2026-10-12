@@ -25,12 +25,17 @@ function ContextShaping() {
       linkLabel="view repo"
       abstract="Everyone compares models. Almost nobody compares the thing wrapped around them."
     >
-      <figure className="hs-header-scene" aria-hidden="true">
-        <HarnessTilePreview wide />
+      <figure className="hs-header">
+        <div className="hs-header-scene" aria-hidden="true">
+          <HarnessTilePreview wide />
+        </div>
+        <figcaption className="project-caption">
+          The little crab is the model; each outfit is a harness it&apos;s wearing.
+        </figcaption>
       </figure>
 
       <p>
-        When a new AI model comes out, we line them up and argue about who is smartest. But you
+        When a new AI model comes out, we line them up and argue about which is smartest. But you
         never talk to the model directly. You talk to a harness: the program that decides what the
         model sees, which tools it gets, and when it is done.
       </p>
@@ -41,7 +46,10 @@ function ContextShaping() {
 
       <h2>/ meet the harnesses</h2>
 
-      <p>Five popular ones, each with its own idea of how to help.</p>
+      <p>
+        Here are five popular harnesses, each running <Model/>. The little crab is the model;
+        the outfit is the harness it&apos;s wearing.
+      </p>
 
       <MeetHarnesses />
 

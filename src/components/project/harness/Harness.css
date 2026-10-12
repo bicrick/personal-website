@@ -380,16 +380,13 @@
 .hx-text { text-decoration: none; color: var(--ink); min-width: 0; }
 .hx-text:hover .hx-name { text-decoration: underline; }
 
-/* ================= v5: meet + why pinned sections ================= */
-.mh-rows { flex: 1; min-height: 0; display: grid; grid-template-rows: repeat(5, minmax(0, 1fr)); }
-.mh-row { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; border-bottom: 1px solid var(--rule); opacity: 0.12; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; min-height: 0; overflow: hidden; }
-.mh-row.is-on { opacity: 1; transform: none; }
+/* ================= v5: meet harnesses (static list) + why pinned ================= */
+.mh-row { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; border-bottom: 1px solid var(--rule); padding: 12px 0; }
 .mh-row:last-child { border-bottom: 0; }
 .mh-critter { width: 40px; }
 .mh-name { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 16px; color: var(--ink); }
 .mh-text p { margin: 3px 0 0; font-size: 14px !important; line-height: 1.35; color: var(--ink-muted); }
 .mh-static { border: 1px solid var(--rule); padding: 0 12px; margin: 12px 0 28px; }
-.mh-static .mh-row { padding: 12px 0; }
 .wt-stack { flex: 1; min-height: 0; }
 .wt-slide { display: flex; flex-direction: column; gap: 10px; }
 .wt-who { display: flex; align-items: center; gap: 10px; font-size: 17px; }
@@ -407,10 +404,9 @@
 .wt-stats dd { margin: 2px 0 0; font-family: var(--font-pixel); font-size: 18px; color: var(--ink); }
 .wt-say { margin: 0; font-size: 15px !important; line-height: 1.45; color: var(--ink); }
 .wt-static .wt-frame { height: auto; margin: 0 0 16px; }
-.mh .sg-frame { max-height: 640px; } .wt .sg-frame { max-height: 580px; }
+.wt .sg-frame { max-height: 580px; }
 .sg-prog-lab span { font-size: 10px; }
-@media (max-width: 420px) { .mh .sg-prog-lab span, .wt .sg-prog-lab span { font-size: 9px; padding-left: 2px; } }
-@media (prefers-reduced-motion: reduce) { .mh-row { transition: none; } }
+@media (max-width: 420px) { .wt .sg-prog-lab span { font-size: 9px; padding-left: 2px; } }
 
 /* <Model/>: dotted term with a short run-setup panel */
 .md-term { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; cursor: help; text-decoration: underline dotted var(--ink-muted); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -458,11 +454,13 @@
 .cf-val { font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
 
 /* Header figure: the naturescape hanging-critter scene from the home tile,
-   at a fixed height so the page never shifts. */
-.hs-header-scene {
-  margin: 0 0 1.5rem;
+   at a fixed height so the page never shifts. Caption sits underneath. */
+.hs-header { margin: 0 0 1.5rem; }
+.hs-header .hs-header-scene {
+  margin: 0;
   height: 220px;
 }
+.hs-header .project-caption { margin: 8px 0 0; }
 @media (min-width: 640px) {
-  .hs-header-scene { height: 280px; }
+  .hs-header .hs-header-scene { height: 280px; }
 }
