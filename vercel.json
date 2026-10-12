@@ -1,8 +1,14 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/writing/context-shaping", "destination": "/projects/harness-bench", "permanent": true },
+    { "source": "/projects/context-shaping", "destination": "/projects/harness-bench", "permanent": true },
+    { "source": "/writing/context-shaping/:path*", "destination": "/projects/harness-bench#harnesses", "permanent": true },
+    { "source": "/projects/context-shaping/:path*", "destination": "/projects/harness-bench#harnesses", "permanent": true }
+  ],
   "rewrites": [
     {
-      "source": "/((?!api/|.*\\.pdf$).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
