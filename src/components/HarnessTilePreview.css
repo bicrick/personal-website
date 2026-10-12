@@ -76,7 +76,7 @@ html.is-dark .harness-tile-preview {
 
 @keyframes htp-drift {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-160px, 0, 0); }
+  to { transform: translate3d(var(--htp-loop, -160px), 0, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

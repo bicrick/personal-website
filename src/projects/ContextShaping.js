@@ -26,7 +26,7 @@ function ContextShaping() {
       abstract="Everyone compares models. Almost nobody compares the thing wrapped around them."
     >
       <figure className="hs-header-scene" aria-hidden="true">
-        <HarnessTilePreview />
+        <HarnessTilePreview wide />
       </figure>
 
       <p>
