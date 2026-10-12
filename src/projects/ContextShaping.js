@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, Model } from '../components/project/harness';
+import { Hero, ContextBar, MeetHarnesses, ScrollGrid, ResultsTable, CheckedFix, Model } from '../components/project/harness';
 import { SWE_N } from '../components/project/harness/swebench';
 
 // Every number in the post comes from the data modules (same-settings runs, five harnesses).
@@ -58,6 +58,16 @@ function ContextShaping() {
       <p>On whether a bug gets fixed, it's a tie. The bill is a different story.</p>
 
       <ResultsTable />
+
+      <p>
+        SWE-agent edged ahead by a few bugs. Its transcripts suggest why: it almost always ran the
+        code after changing it, and when that check failed, it kept going. On one Sphinx bug, the
+        others all shipped fixes that looked right. Only SWE-agent rebuilt the docs, saw the link
+        was still wrong, threw its fix away and found the real cause. That fits with checking its own
+        work. With this few bugs, it isn&apos;t proof.
+      </p>
+
+      <CheckedFix />
 
       <p>
         Harness engineering matters as much as model engineering. The model sets the ceiling. The

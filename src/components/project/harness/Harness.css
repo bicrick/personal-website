@@ -445,3 +445,14 @@
   .rt-name { font-size: 11px; }
   .rt-val { font-size: 17px; padding: 12px 2px; }
 }
+
+/* ---------- checked its fix ---------- */
+.cf-chart { height: 230px; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0; }
+.cf-row { display: grid; grid-template-columns: 26px 116px 1fr 40px; align-items: center; gap: 8px; height: 36px; }
+.cf-critter { width: 26px; height: 26px; }
+.cf-name { font-size: 14px; color: var(--ink); white-space: nowrap; }
+.cf-track { position: relative; height: 14px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.cf-bar { position: absolute; inset: 0 auto 0 0; background: var(--separator-muted); }
+.cf-bar.is-top { background: var(--bot); }
+.cf-none { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 12px; font-style: italic; color: var(--ink-muted); }
+.cf-val { font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
