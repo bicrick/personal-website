@@ -1,10 +1,76 @@
 .harness-tile-preview {
+  --htp-sky-0: #cfdde3;
+  --htp-sky-1: #d9e4e4;
+  --htp-sky-2: #e3e9e2;
+  --htp-sky-3: #eaece0;
+  --htp-sun: #f0d9a0;
+  --htp-cloud: #f7f7f2;
+  --htp-far: #b9c9bf;
+  --htp-mid: #9fbaa3;
+  --htp-near: #86a98a;
+  --htp-leaf: #6f9775;
+  --htp-trunk: #7a6450;
+  --htp-grass: #76a07b;
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--paper);
+  background: var(--htp-sky-0);
+}
+
+html.is-dark .harness-tile-preview {
+  --htp-sky-0: #2a3340;
+  --htp-sky-1: #2f3944;
+  --htp-sky-2: #343f47;
+  --htp-sky-3: #3a4449;
+  --htp-sun: #c9b685;
+  --htp-cloud: #4a5560;
+  --htp-far: #3d4d48;
+  --htp-mid: #36493f;
+  --htp-near: #2f4337;
+  --htp-leaf: #2b3e31;
+  --htp-trunk: #4a3f35;
+  --htp-grass: #3a5444;
+}
+
+.htp-scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.htp-sky-0 { fill: var(--htp-sky-0); }
+.htp-sky-1 { fill: var(--htp-sky-1); }
+.htp-sky-2 { fill: var(--htp-sky-2); }
+.htp-sky-3 { fill: var(--htp-sky-3); }
+.htp-sun { fill: var(--htp-sun); }
+.htp-clouds { fill: var(--htp-cloud); }
+.htp-hill-far { fill: var(--htp-far); }
+.htp-hill-mid { fill: var(--htp-mid); }
+.htp-hill-near { fill: var(--htp-near); }
+.htp-leaf { fill: var(--htp-leaf); }
+.htp-trunk { fill: var(--htp-trunk); }
+.htp-grass { fill: var(--htp-grass); }
+
+/* Two copies of each cloud row side by side; slide one tile width and loop.
+   Far clouds drift slower than near ones for a little parallax. */
+.htp-clouds {
+  animation: htp-drift 160s steps(160) infinite;
+  animation-play-state: paused;
+}
+.htp-clouds-near { animation-duration: 90s; animation-timing-function: steps(160); }
+.harness-tile-preview.is-live .htp-clouds { animation-play-state: running; }
+
+@keyframes htp-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-160px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .htp-clouds { animation: none; }
 }
 
 /* Hang from the top edge; the rope runs off the top of the tile. */
@@ -21,3 +87,6 @@
   height: 100%;
   width: auto;
 }
+
+/* the shadow sits on grass, so keep it dark in both themes */
+.harness-tile-preview .swing-shadow { background: #1f2a22; opacity: 0.2; }
