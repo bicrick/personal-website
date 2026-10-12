@@ -1,20 +1,14 @@
 import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 
-// Run configuration, from the logged requests in context-shaping
-// (runs/*/*_nothink/calls.jsonl req + normalized, sbr/proxy.py, sbr/harnesses.py, sbr/config.py).
-const ROWS = [
-  ['model', 'claude-haiku-5-5'],
-  ['route', 'Four harnesses: Anthropic API via a logging proxy. Cursor: via its own servers as \u201cHaiku 5.5 High No Thinking\u201d'],
-  ['thinking', 'Off: stripped at the proxy, 2,390 of 2,390 calls checked; Cursor 0 of 50 runs'],
-  ['effort', 'Dropped (Claude Code asked medium, OpenCode low)'],
-  ['sampling', 'Harness defaults: SWE-agent temperature 1.0, others none sent'],
-  ['max output', '128k; OpenCode 32k'],
-  ['context', '1M; Cursor 300K'],
-  ['limits', '$0.50 per bug, 5 min per call'],
-  ['machine', '2 CPU, 4 GB, 3 runs at a time'],
-  ['approvals', 'All commands auto-approved'],
-  ['run', 'Oct 11, 2026'],
+const LINES = [
+  'Same model in all five: claude-haiku-5-5',
+  'Thinking off for every run',
+  'Every command auto-approved',
+  '$0.50 budget per bug, same machine for every run (2 CPU, 4 GB)',
 ];
+
+const DOCS =
+  'https://github.com/bicrick/context-shaping/blob/claude/eager-noether-o13tek/docs/SWEBENCH_PILOT.md';
 
 export default function Model({ children = 'Claude Haiku 5.5' }) {
   const id = useId();
@@ -81,8 +75,19 @@ export default function Model({ children = 'Claude Haiku 5.5' }) {
           onPointerEnter={() => { hover.current = true; }}
           onPointerLeave={(e) => { if (e.pointerType === 'mouse') { hover.current = false; setOpen(false); } }}
         >
-          <span className="md-head">run configuration</span>
-          {ROWS.map(([k, v]) => <span key={k} className="md-row"><span className="md-k">{k}</span><span className="md-v">{v}</span></span>)}
+          <span className="md-head">how we ran it</span>
+          {LINES.map((line) => (
+            <span key={line} className="md-line">{line}</span>
+          ))}
+          <a
+            className="md-more"
+            href={DOCS}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Full settings in the repo ↗
+          </a>
         </span>
       )}
     </span>
