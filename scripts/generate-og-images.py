@@ -282,14 +282,7 @@ def make_project_cards():
         "tracebench-1200x630.jpg",
         fit="contain",
     )
-    split_card(
-        PUBLIC / "images" / "context-shaping" / "headline.png",
-        "is your harness making your model dumber?",
-        "Same cheap model, only the harness changed: 63% to 100%",
-        "context-shaping-1200x630.jpg",
-        fit="contain",
-        bg=None,
-    )
+    # harness-bench card: public/og/harness-bench-v2-1200x630.png (Playwright render of the post header)
 
 
 if __name__ == "__main__":
