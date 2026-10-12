@@ -2,10 +2,8 @@ import './Critter.css';
 import './Harness.css';
 
 export { default as Hero } from './stills/Hero';
-export { default as Lineup } from './stills/Lineup';
-export { default as ContextFill } from './stills/ContextFill';
-export { default as MetricRace } from './stills/MetricRace';
-export { default as Outcomes } from './stills/Outcomes';
-export { default as Checked } from './stills/Checked';
-export { default as Confounds } from './stills/Confounds';
+export { default as ContextBar } from './stills/ContextBar';
+export { default as ScrollGrid } from './stills/ScrollGrid';
+export { default as CacheRace } from './stills/CacheRace';
+export { default as TokenBars } from './stills/TokenBars';
 export { Stat } from './Type';
