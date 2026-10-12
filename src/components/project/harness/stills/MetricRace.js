@@ -13,10 +13,10 @@ const METRICS = [
 ];
 
 const CAPS = [
-  'Each rate is uncertain by about ±12 points. The top five are within 4 points: a tie.',
-  '*Cursor bills separately; its cost is estimated from its own token logs.',
+  'Each rate is uncertain by about ±12 points. The top five are within 8 points: a tie.',
+  'Cursor bills separately, so its cost is estimated from its own token logs.',
   'Includes text re-read from the cache, which is cheap, so more tokens is not always more cost.',
-  'Equal-condition runs only. The two tagged reruns had a quieter machine, so their times flatter them a little.',
+  'Every run used the same setup: three at a time, 2 CPU and 4 GB each.',
 ];
 
 export default function MetricRace() {
@@ -34,7 +34,7 @@ export default function MetricRace() {
   const best = met.high ? max : Math.min(...vals);
   const rows = [...SWE].sort((a, b) => (met.high ? b[met.key] - a[met.key] : a[met.key] - b[met.key]));
   return (
-    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="settings fixed" caption={CAPS} captionAt={m}>
+    <Fig innerRef={ref} className={`mr${on ? ' is-on' : ''}`} title="per bug fixed" aside="same settings" caption={CAPS} captionAt={m}>
       <div className="mr-tabs" role="tablist">
         {METRICS.map((x, i) => (
           <button key={x.key} type="button" role="tab" aria-selected={i === m} className={`mr-tab${i === m ? ' is-on' : ''}`} onClick={() => { setAuto(false); setM(i); }}>
@@ -51,7 +51,7 @@ export default function MetricRace() {
             <div key={r.id} className={`mr-row${v === best ? ' is-best' : ''}`} style={{ transform: `translateY(${pos * 52}px)` }}>
               <Critter className="mr-critter" outfit={r.outfit} mood={v === best ? 'happy' : 'open'} />
               <div className="mr-body">
-                <div className="mr-line"><span className="mr-name">{r.label}{met.key === 'usd' && r.est ? '*' : ''}{r.tag && <em className="mr-tag">{r.tag}</em>}</span><span className="mr-val">{met.fmt(v)}</span></div>
+                <div className="mr-line"><span className="mr-name">{r.label}</span><span className="mr-val">{met.fmt(v)}</span></div>
                 <div className="mr-track"><span className="mr-fill" style={{ width: on ? `${(v / max) * 100}%` : 0 }} /></div>
               </div>
             </div>

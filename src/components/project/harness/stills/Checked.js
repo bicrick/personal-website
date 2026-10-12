@@ -13,12 +13,12 @@ export default function Checked() {
       className={`ck${on ? ' is-on' : ''}`}
       title="ran the code after editing"
       aside="share of runs"
-      caption="Only measurable for the three harnesses that keep step-by-step logs. Very different habits, nearly the same success rate."
+      caption="Only measurable for the three harnesses that keep step-by-step logs. Very different habits, similar success rates."
     >
       {CHECKED.map((r, n) => (
         <div key={r.id} className="ck-row" style={{ '--d': `${n * 0.2}s` }}>
           <Critter className="ck-critter" outfit={r.outfit} />
-          <span className="ck-name">{r.label}{r.tag && <em className="mr-tag">{r.tag}</em>} <span className="ck-rate">· fixed {r.rate}%</span></span>
+          <span className="ck-name">{r.label} <span className="ck-rate">· fixed {r.rate}%</span></span>
           <div className="ck-track"><span className="ck-fill" style={{ '--w': `${r.pct}%` }} /></div>
           <b className="ck-val">{r.pct}%</b>
         </div>

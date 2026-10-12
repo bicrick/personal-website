@@ -39,9 +39,19 @@ export const CHECKED_VARIANTS = {
 };
 export const TWO_FILES_NOTHINK = { cursor_nothink: { files: ['mysql/base.py'], solved: false } };
 
-// Fair lineup for the figures: variants stand in for their originals.
-const OSUB = { opencode: 'opencode_auto', cursor: 'cursor_nothink' };
-const OTAG = { opencode: 'auto-approve', cursor: 'no thinking' };
-export const OUTCOMES_FAIR = OUTCOMES.map((r) => (OSUB[r.id] ? { ...OUTCOMES_VARIANTS[OSUB[r.id]], label: r.label, tag: OTAG[r.id] } : r))
-  .sort((a, b) => b.fixed - a.fixed || a.none - b.none);
-export const CHECKED_FAIR = CHECKED.map((r) => (r.id === 'cursor' ? { ...CHECKED_VARIANTS.cursor_nothink, label: r.label, tag: 'no thinking' } : r));
+// Same settings (thinking off, every command approved; *_nothink rows): THE result.
+export const OUTCOMES_SAME = [
+  { id: 'swe_agent', label: 'SWE-agent', outfit: 'swe', fixed: 37, wrong: 13, none: 0 },
+  { id: 'cursor', label: 'Cursor', outfit: 'cursor', fixed: 35, wrong: 15, none: 0 },
+  { id: 'opencode', label: 'OpenCode', outfit: 'opencode', fixed: 35, wrong: 14, none: 1 },
+  { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', fixed: 34, wrong: 16, none: 0 },
+  { id: 'claude_code', label: 'Claude Code', outfit: undefined, fixed: 33, wrong: 15, none: 2 },
+  { id: 'aider', label: 'Aider', outfit: 'aider', fixed: 26, wrong: 19, none: 5 },
+];
+export const CHECKED_SAME = [
+  { id: 'swe_agent', label: 'SWE-agent', outfit: 'swe', pct: 98, rate: 74 },
+  { id: 'cursor', label: 'Cursor', outfit: 'cursor', pct: 80, rate: 70 },
+  { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', pct: 64, rate: 68 },
+];
+export const OUTCOMES_FAIR = OUTCOMES_SAME;
+export const CHECKED_FAIR = CHECKED_SAME;

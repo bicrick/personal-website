@@ -10,22 +10,31 @@ import {
   Checked,
   Stat,
 } from '../components/project/harness';
-import { SWE, SWE_N, SWE_VARIANTS, SWE_FAIR } from '../components/project/harness/swebench';
-import { OPENCODE_PERMISSION_STOPS } from '../components/project/harness/why';
+import { SWE, SWE_N, SWE_SAME } from '../components/project/harness/swebench';
+import { OPENCODE_PERMISSION_STOPS, OUTCOMES_SAME } from '../components/project/harness/why';
 
 // Headline numbers come from the data modules, so the copy follows the data.
+// SWE = each harness on its defaults; SWE_SAME = all six on the same settings (the result).
 const byRate = [...SWE].sort((a, b) => b.rate - a.rate);
 const best = byRate[0];
 const worst = byRate[byRate.length - 1];
 const get = (id) => SWE.find((r) => r.id === id);
+const same = (id) => SWE_SAME.find((r) => r.id === id);
 const oc = get('opencode');
 const cu = get('cursor');
-const ocA = SWE_VARIANTS.opencode_auto;
-const cuN = SWE_VARIANTS.cursor_nothink;
-const aider = SWE_FAIR.find((r) => r.id === 'aider');
-const top5 = SWE_FAIR.filter((r) => r.id !== 'aider').map((r) => r.rate);
-const caches = SWE_FAIR.filter((r) => r.id !== 'aider').map((r) => r.cache);
-const ratio = Math.round(aider.usd / ocA.usd);
+const ai = get('aider');
+const ocS = same('opencode');
+const cuS = same('cursor');
+const aider = same('aider');
+const rest = SWE_SAME.filter((r) => r.id !== 'aider');
+const top5 = rest.map((r) => r.rate);
+const caches = rest.map((r) => r.cache);
+const cheapest = [...SWE_SAME].sort((a, b) => a.usd - b.usd)[0];
+const ratio = Math.round(aider.usd / cheapest.usd);
+const wrongRest = OUTCOMES_SAME.filter((r) => r.id !== 'aider').map((r) => r.wrong);
+const wrongAider = OUTCOMES_SAME.find((r) => r.id === 'aider').wrong;
+const sweS = same('swe_agent');
+const miniS = same('mini');
 const cents = (v) => (v < 0.01 ? (v * 100).toFixed(2) : (v * 100).toFixed(1));
 
 function ContextShaping() {
@@ -66,41 +75,47 @@ function ContextShaping() {
         explanations.
       </p>
 
-      <h2>/ two settings</h2>
+      <h2>/ same settings</h2>
 
       <p>
-        Two of the gaps were settings, not design. OpenCode asks permission before some
-        commands, and with nobody at the keyboard it stopped {OPENCODE_PERMISSION_STOPS} times
-        waiting for a yes. With auto-approve on, it went from {oc.solved} to {ocA.solved} fixes.
+        But the harnesses were not running on the same settings. OpenCode asks permission before
+        some commands, and with nobody at the keyboard it stopped {OPENCODE_PERMISSION_STOPS} times
+        waiting for a yes. And Haiku 5.5 can use extended thinking, extra private reasoning before
+        each answer. Every harness had it switched on by default, each to its own degree.
       </p>
 
       <p>
-        Cursor had quietly picked a version of the model with extended thinking, extra private
-        reasoning before each answer, which no other harness got. With thinking off it went from{' '}
-        {cu.solved} to {cuN.solved}, and the three bugs only Cursor had fixed went with it.
+        So I ran all six again on all {SWE_N} bugs with the same settings: thinking off and every
+        command approved. Cursor fell from {cu.solved} to {cuS.solved} fixes, and the three bugs
+        only it had fixed went with it. OpenCode, no longer stuck at permission prompts, rose from{' '}
+        {oc.solved} to {ocS.solved}. {aider.label} lost the most, {ai.solved} to {aider.solved}.
       </p>
 
       <Confounds />
 
-      <Stat value={`${Math.min(...top5)}–${Math.max(...top5)}%`} label="the top five, settings fixed" />
+      <Stat value={`${Math.min(...top5)}–${Math.max(...top5)}%`} label="the top five, same settings" />
 
       <p>
-        With those fixed, five harnesses sit within {Math.max(...top5) - Math.min(...top5)} points,
-        well inside the uncertainty of {SWE_N} bugs. On success, a well-configured harness is a
-        well-configured harness. What moved the needle was defaults: how it behaves unattended,
-        how hard the model thinks.
+        On the same settings, five harnesses sit within {Math.max(...top5) - Math.min(...top5)}{' '}
+        points, inside the uncertainty of {SWE_N} bugs. Most of the first-glance ranking came from
+        defaults: how a harness behaves unattended, and how hard it lets the model think.
+        {' '}{aider.label} is the one clear gap at {aider.rate}%. It is built for a person who runs
+        the tests and answers its questions, and it asks the model only about twice per bug.
+        Without thinking, that first answer is wrong more often.
       </p>
 
       <p>
-        Even big differences in habit wash out. SWE-agent ran the code after almost every edit;
-        mini-swe-agent, about two times in three. They fixed nearly the same number.
+        Even big differences in habit mostly wash out. SWE-agent ran the code after almost every
+        edit; mini-swe-agent, about two times in three. They fixed {sweS.solved} and{' '}
+        {miniS.solved}.
       </p>
 
       <Checked />
 
       <p>
-        And every harness hands in a wrong fix about as often. The runs differ mostly in how many
-        end with nothing at all.
+        With every command approved, almost every run ends with an attempt. The top five hand in
+        a wrong fix on {Math.min(...wrongRest)} to {Math.max(...wrongRest)} bugs; {aider.label},{' '}
+        {wrongAider}.
       </p>
 
       <Outcomes />
@@ -109,36 +124,36 @@ function ContextShaping() {
 
       <p>
         Where the harness really differs is the bill. Here is each fix in money, tokens (the
-        chunks of text the model reads and writes) and time, with the two settings fixed.
+        chunks of text the model reads and writes) and time, with all six on the same settings.
       </p>
 
       <MetricRace />
 
-      <Stat value={`${ratio}×`} label={`${aider.label}'s cost per fix vs OpenCode (auto-approve)`} />
+      <Stat value={`${ratio}×`} label={`${aider.label}'s cost per fix vs ${cheapest.label}`} />
 
       <p>
         The reason is the context window. Providers charge a tenth for text that matches what you
         sent last time. Five harnesses only add to the end of the window, so{' '}
         {Math.min(...caches)}–{Math.max(...caches)}% of their input was that cheap repeat.{' '}
         {aider.label} rebuilds its prompt every turn: {aider.cache}%. That is {cents(aider.usd)}¢
-        per fix against {cents(ocA.usd)}¢.
+        per fix against {cents(cheapest.usd)}¢ for {cheapest.label}.
       </p>
 
       <h2>/ takeaway</h2>
 
       <p>
         Before you blame or upgrade the model, check what the harness is feeding it and how it is
-        configured. Settings decide how often it succeeds. The expensive differences hide in how
+        configured. Defaults decided most of who looked best. The expensive differences hide in how
         it manages the context.
       </p>
 
       <p className="hs-note">
-        Method: {SWE_N} SWE-bench Verified tasks, three runs at a time in 2 CPU / 4 GB containers,
-        every harness on its defaults, plus two reruns of all {SWE_N}: OpenCode with every
-        permission auto-approved, and Cursor with thinking off. The reruns had the machine
-        mostly to themselves, so their minutes per fix flatter them a little. Success rates
-        carry about ±12 points of uncertainty (95% Wilson). Cursor bills outside my cost
-        tracking, so its cost is estimated from its own logs.
+        Method: {SWE_N} SWE-bench Verified tasks, three runs at a time in 2 CPU / 4 GB containers.
+        Every harness ran all {SWE_N} twice: on its own defaults, then on the same settings, with
+        thinking off (enforced on every request to the model, and for Cursor by its no-thinking
+        version of Haiku 5.5) and every command approved. The figures after the first show the
+        same-settings runs. Success rates carry about ±12 points of uncertainty (95% Wilson).
+        Cursor bills outside my cost tracking, so its cost is estimated from its own logs.
         Analysis and every
         log:{' '}
         <a href="https://github.com/bicrick/context-shaping/blob/claude/eager-noether-o13tek/docs/WHY_HARNESSES_DIFFER.md" target="_blank" rel="noopener noreferrer">

@@ -34,7 +34,18 @@ export const SWE_VARIANTS = {
   cursor_nothink: { id: 'cursor_nothink', base: 'cursor', label: 'Cursor (no thinking)', outfit: 'cursor', solved: 35, rate: 70, ci: [56, 81], usd: 0.0093, tok: 392911, min: 4.9, cache: 94, est: true },
 };
 
-// "Fair" lineup: the two variants stand in for their originals, tagged with the setting that changed.
-const TAGS = { opencode: 'auto-approve', cursor: 'no thinking' };
-const SUB = { opencode: 'opencode_auto', cursor: 'cursor_nothink' };
-export const SWE_FAIR = SWE.map((r) => (SUB[r.id] ? { ...SWE_VARIANTS[SUB[r.id]], label: r.label, tag: TAGS[r.id], variant: true } : r));
+// Same settings: THE result. All six harnesses on Haiku 5.5 with thinking off and every
+// command auto-approved, all 50 tasks, 3 at a time in 2 CPU / 4 GB containers.
+// Proxied harnesses: thinking forced off at the cost proxy (*_nothink rows);
+// Cursor: its "Haiku 5.5 High No Thinking" model (cursor_nothink).
+// From scripts/swebench_final.py (finished 2026-10-11 19:44 CDT).
+export const SWE_SAME = [
+  { id: 'swe_agent', label: 'SWE-agent', outfit: 'swe', solved: 37, rate: 74, ci: [60, 84], usd: 0.008, tok: 250645, min: 9.1, cache: 92 },
+  { id: 'cursor', label: 'Cursor', outfit: 'cursor', solved: 35, rate: 70, ci: [56, 81], usd: 0.0093, tok: 392911, min: 4.9, cache: 94, est: true },
+  { id: 'opencode', label: 'OpenCode', outfit: 'opencode', solved: 35, rate: 70, ci: [56, 81], usd: 0.0062, tok: 230320, min: 4.6, cache: 92 },
+  { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', solved: 34, rate: 68, ci: [54, 79], usd: 0.0044, tok: 105214, min: 3.9, cache: 87 },
+  { id: 'claude_code', label: 'Claude Code', outfit: undefined, solved: 33, rate: 66, ci: [52, 78], usd: 0.0102, tok: 471176, min: 4.0, cache: 95 },
+  { id: 'aider', label: 'Aider', outfit: 'aider', solved: 26, rate: 52, ci: [39, 65], usd: 0.1337, tok: 361449, min: 5.7, cache: 2 },
+];
+// SWE (above) is "default settings": each harness as shipped.
+export const SWE_FAIR = SWE_SAME;

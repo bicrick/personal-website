@@ -12,11 +12,11 @@ export default function Outcomes() {
       innerRef={ref}
       className={`oc${on ? ' is-on' : ''}`}
       title="how each run ended"
-      caption={`Every harness hands in a wrong fix on ${Math.min(...OUTCOMES.map((r) => r.wrong))} to ${Math.max(...OUTCOMES.map((r) => r.wrong))} bugs. With the settings fixed, most runs end with an attempt; Aider, built for a person at the keyboard, stops most often.`}
+      caption={`On the same settings, almost every run hands in a fix. The top five hand in a wrong one on ${Math.min(...OUTCOMES.filter((r) => r.id !== 'aider').map((r) => r.wrong))} to ${Math.max(...OUTCOMES.filter((r) => r.id !== 'aider').map((r) => r.wrong))} bugs; Aider, built for a person at the keyboard, ends empty and wrong most often.`}
     >
       {OUTCOMES.map((r, row) => (
         <div key={r.id} className="oc-row">
-          <div className="oc-who"><Critter className="oc-critter" outfit={r.outfit} /><span>{r.label}{r.tag && <em className="mr-tag">{r.tag}</em>}</span><b>{r.none}</b></div>
+          <div className="oc-who"><Critter className="oc-critter" outfit={r.outfit} /><span>{r.label}</span><b>{r.none}</b></div>
           <div className="oc-cells">
             {[...Array(r.fixed).fill('f'), ...Array(r.wrong).fill('w'), ...Array(r.none).fill('n')].map((k, n) => (
               <span key={n} className={`oc-cell is-${k}`} style={{ '--d': `${row * 0.12 + n * 0.012}s` }} />
