@@ -14,14 +14,19 @@ export const SWE_SAME = [
   { id: 'claude_code', label: 'Claude Code', outfit: undefined, solved: 33, rate: 66, ci: [52, 78], usd: 0.0102, tok: 471176, min: 4.0, cache: 95 },
 ];
 
-// What sits in the window before the model reads any code: the first request
-// that carries tools (system prompt + tool definitions + the bug report), median
-// over all 50 tasks, from runs/<task>/<harness>_nothink/calls.jsonl.
-// tools = tool definitions sent; calls = median requests per bug.
-// Cursor talks to its own servers, so its requests are not logged.
-export const WINDOW_START = [
-  { id: 'claude_code', label: 'Claude Code', outfit: undefined, start: 24280, tools: 20, calls: 6.5 },
-  { id: 'opencode', label: 'OpenCode', outfit: 'opencode', start: 11054, tools: 10, calls: 7 },
-  { id: 'mini', label: 'mini-swe-agent', outfit: 'mini', start: 2448, tools: 1, calls: 7 },
-  { id: 'swe_agent', label: 'SWE-agent', outfit: 'swe', start: 2197, tools: 3, calls: 13 },
+// Why tokens differ, per harness, from runs/<task>/<harness>_nothink/calls.jsonl
+// (medians over all 50 tasks):
+// start = prompt tokens of the first request that carries tools (instructions +
+//         tool definitions + the bug report), before any code is read;
+// tools = tool definitions sent; calls = requests to the model per bug;
+// peak  = largest single request (how big the window gets);
+// resent = start x calls / total prompt tokens per bug: share of everything sent
+//          that is the opening, sent again.
+// Cursor talks to its own servers, so only its tokens per fix (own logs) are known.
+export const WHY = [
+  { id: 'claude_code', start: 24280, tools: 20, calls: 6.5, peak: 28653, resent: 87 },
+  { id: 'cursor', hidden: true },
+  { id: 'opencode', start: 11054, tools: 10, calls: 8, peak: 15779, resent: 84 },
+  { id: 'swe_agent', start: 2197, tools: 3, calls: 13, peak: 9000, resent: 41 },
+  { id: 'mini', start: 2448, tools: 1, calls: 7, peak: 6734, resent: 51 },
 ];

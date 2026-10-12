@@ -2,12 +2,11 @@ import { SWE_SAME } from './swebench';
 
 // The five harnesses, in grid column order (matches GRID_COLS).
 export const ROSTER = [
-  { id: 'swe_agent', slug: 'swe-agent', site: 'https://swe-agent.com/', short: 'SWE-agent', line: 'Purpose-built commands to view, search and edit, and it tests after nearly every change.' },
-  { id: 'cursor', slug: 'cursor', site: 'https://cursor.com/cli', short: 'Cursor', line: "An editor's agent, run here from the command line." },
-  { id: 'opencode', slug: 'opencode', site: 'https://opencode.ai/', short: 'OpenCode', line: 'An open-source terminal agent that only ever adds to the end of the conversation.' },
-  { id: 'mini', slug: 'mini-swe-agent', site: 'https://mini-swe-agent.com/', short: 'mini', line: 'Nothing but a shell. One tool, a short prompt, and a loop.' },
-  { id: 'claude_code', slug: 'claude-code', site: 'https://claude.com/product/claude-code', short: 'Claude', line: 'A full toolbox: files, search, edits, todos and sub-agents.' },
+  { id: 'swe_agent', short: 'SWE-agent', site: 'https://swe-agent.com/', line: 'A research agent from Princeton, the team behind the test itself. The model gets a few purpose-built commands to view, search and edit files.' },
+  { id: 'cursor', short: 'Cursor', site: 'https://cursor.com/cli', line: 'The agent inside the popular AI code editor, run here from the command line instead of the editor.' },
+  { id: 'opencode', short: 'OpenCode', site: 'https://opencode.ai/', line: 'An open-source coding agent for the terminal, with about ten tools for the model to use.' },
+  { id: 'mini', short: 'mini', site: 'https://mini-swe-agent.com/', line: 'The Princeton team\u2019s stripped-down version. The model gets a shell and nothing else.' },
+  { id: 'claude_code', short: 'Claude', site: 'https://claude.com/product/claude-code', line: 'Anthropic\u2019s own coding agent, with a big toolbox: reading, searching, editing, to-do lists and helpers.' },
 ].map((h) => ({ ...h, ...SWE_SAME.find((r) => r.id === h.id) }));
 
-export const harnessHref = (h) => `/writing/context-shaping/harnesses/${h.slug}`;
-export const cents = (usd) => `${(usd * 100).toFixed(usd < 0.1 ? 2 : 1)}¢`;
+export const cents = (usd) => `${(usd * 100).toFixed(2)}¢`;
