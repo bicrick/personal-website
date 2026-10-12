@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CritterBody } from '../project/harness/Critter';
 import useReducedMotion from '../project/useReducedMotion';
 import '../project/harness/Critter.css';
+import './SwingMark.css';
 import { OUTFITS } from '../project/harness/order';
 
 // The harness post's mark: the pixel Claude strapped into a harness,

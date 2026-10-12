@@ -1,11 +1,23 @@
 .harness-tile-preview {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  background: var(--card-wash);
+  overflow: hidden;
+  background: var(--paper);
 }
-.harness-tile-preview svg { display: block; width: 100%; height: 100%; overflow: hidden; }
-.htp-cell { fill: #4a9c74; opacity: 0.35; }
-.htp-cell.is-miss { fill: #d4643b; }
-.htp-ground { fill: var(--rule); }
-.htp-rope { fill: var(--ink-muted); }
+
+/* Hang from the top edge; the rope runs off the top of the tile. */
+.harness-tile-swing {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  height: 86%;
+  aspect-ratio: 24 / 29.5;
+  transform: translateX(-50%);
+}
+
+.harness-tile-swing .swing-mark {
+  height: 100%;
+  width: auto;
+}
