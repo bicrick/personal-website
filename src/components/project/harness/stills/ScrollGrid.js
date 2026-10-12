@@ -7,45 +7,41 @@ import useScrollProgress from '../useScrollProgress';
 import { GRID_CELLS, GRID_ORDER, GRID_NONE, GRID_ALL } from '../grid';
 import { ROSTER, harnessHref, cents } from '../roster';
 
-// The spine: 50 bugs x 6 harnesses. Scroll replays the runs in the order they
+// The spine: 50 bugs x 5 harnesses. Scroll replays the runs in the order they
 // finished (yellow = working, then green or red), pins the rows every harness
 // agreed on, then re-colors every cell by what that run cost.
 const N = GRID_ORDER.length;
 const RANK = {};
 GRID_ORDER.forEach(([r, c], i) => { RANK[`${r}-${c}`] = i; });
-const AIDER = ROSTER.findIndex((h) => h.id === 'aider');
 const unanimous = (r) => {
   const s = GRID_CELLS[r].reduce((n, x) => n + x[0], 0);
-  return s === 0 || s === 6;
+  return s === 0 || s === ROSTER.length;
 };
-const LO = Math.log10(0.001);
-const HI = Math.log10(0.1);
-const shade = (usd) => Math.min(1, Math.max(0.06, (Math.log10(Math.max(usd, 0.001)) - LO) / (HI - LO)));
+const LO = Math.log10(0.0008);
+const HI = Math.log10(0.03);
+const shade = (usd) => Math.min(1, Math.max(0.06, (Math.log10(Math.max(usd, 0.0008)) - LO) / (HI - LO)));
 
 const CAPS = [
   'Each row is a bug. Each column is a harness. Scroll to run them.',
   'Yellow is working. Green is fixed. Red is not.',
   'Same model, and nearly the same picture in every column.',
   `Most rows are one color all the way across. ${GRID_ALL} bugs every harness fixed. ${GRID_NONE} that none did. The bug decides more than the harness.`,
-  'Aider\u2019s column is the redder one.',
-  'Now color each run by what it cost. Darker is pricier. Same fixes, very different bills.',
+  'Now color each run by what it cost. Darker is pricier. Same fixes, different bills.',
 ];
 
 const TICKS = [
   { at: 0, label: 'replay' },
-  { at: 0.44, label: 'agreed' },
-  { at: 0.62, label: 'Aider' },
-  { at: 0.76, label: 'cost' },
+  { at: 0.5, label: 'agreed' },
+  { at: 0.74, label: 'cost' },
 ];
-const STAGE = [0, 0, 0, 1, 2, 3];
+const STAGE = [0, 0, 0, 1, 2];
 
 function phase(p) {
   if (p < 0.04) return 0;
-  if (p < 0.24) return 1;
-  if (p < 0.44) return 2;
-  if (p < 0.62) return 3;
-  if (p < 0.76) return 4;
-  return 5;
+  if (p < 0.26) return 1;
+  if (p < 0.5) return 2;
+  if (p < 0.74) return 3;
+  return 4;
 }
 
 export default function ScrollGrid() {
@@ -53,8 +49,8 @@ export default function ScrollGrid() {
   const { ref, p } = useScrollProgress(!reduce);
   const prog = reduce ? 0.6 : p;
   const ph = reduce ? 3 : phase(prog);
-  const k = Math.min(1, prog / 0.42) * (N + 8);
-  const cost = !reduce && ph === 5;
+  const k = Math.min(1, prog / 0.46) * (N + 8);
+  const cost = !reduce && ph === 4;
 
   const live = useMemo(() => ROSTER.map((_, c) => {
     let fixed = 0;
@@ -69,7 +65,7 @@ export default function ScrollGrid() {
         let cls = 'is-wait';
         if (static_ || i < k - 8) cls = ok ? 'is-ok' : 'is-bad';
         else if (i < k) cls = 'is-run';
-        const dim = !useCost && !static_ && ((ph === 3 && !unanimous(r)) || (ph === 4 && c !== AIDER));
+        const dim = !useCost && !static_ && ph === 3 && !unanimous(r);
         return (
           <i
             key={`${r}-${c}`}
@@ -95,7 +91,7 @@ export default function ScrollGrid() {
   const foot = (useCost, static_) => (
     <div className="sg-foot">
       {ROSTER.map((h, c) => (
-        <span key={h.id} className={c === AIDER && ph === 4 ? 'is-hot' : ''}>
+        <span key={h.id}>
           <Stack at={useCost ? 1 : 0} items={[`${static_ ? h.solved : live[c]}/50`, `${cents(h.usd)}`]} />
         </span>
       ))}
@@ -106,16 +102,16 @@ export default function ScrollGrid() {
     return (
       <div className="sg-static">
         <figure className="sg-frame">{head}{grid(false, true)}{foot(false, true)}<figcaption>{CAPS[3]}</figcaption></figure>
-        <figure className="sg-frame">{head}{grid(true, true)}{foot(true, true)}<figcaption>{CAPS[5]} Bottom row: cost per fix.</figcaption></figure>
+        <figure className="sg-frame">{head}{grid(true, true)}{foot(true, true)}<figcaption>{CAPS[4]} Bottom row: cost per fix.</figcaption></figure>
       </div>
     );
   }
 
   return (
-    <section ref={ref} className="sg" aria-label="Fifty bugs, six harnesses">
+    <section ref={ref} className="sg" aria-label="Fifty bugs, five harnesses">
       <div className="sg-sticky">
         <figure className="sg-frame">
-          <div className="sg-top"><span>50 bugs × 6 harnesses</span><Stack at={cost ? 1 : 0} items={['fixed', 'cost per fix']} /></div>
+          <div className="sg-top"><span>50 bugs × 5 harnesses</span><Stack at={cost ? 1 : 0} items={['fixed', 'cost per fix']} /></div>
           <div className="sg-prog" aria-hidden="true">
             <div className="sg-prog-bar"><i style={{ transform: `scaleX(${prog})` }} />{TICKS.slice(1).map((t) => <b key={t.at} style={{ left: `${t.at * 100}%` }} />)}</div>
             <div className="sg-prog-lab">{TICKS.map((t, n) => <span key={t.at} className={STAGE[ph] === n ? 'is-on' : ''} style={{ left: `${t.at * 100}%` }}>{t.label}</span>)}</div>
@@ -126,7 +122,7 @@ export default function ScrollGrid() {
           <div className="sg-legend">
             <Stack at={cost ? 1 : 0} items={[
               <><span><i className="sg-sw is-run" />working</span><span><i className="sg-sw is-ok" />fixed</span><span><i className="sg-sw is-bad" />not fixed</span></>,
-              <><span><i className="sg-sw is-cost" style={{ '--a': 0.06 }} />0.1¢</span><span><i className="sg-sw is-cost" style={{ '--a': 0.5 }} />1¢</span><span><i className="sg-sw is-cost" style={{ '--a': 1 }} />10¢ and up</span></>,
+              <><span><i className="sg-sw is-cost" style={{ '--a': 0.06 }} />0.1¢</span><span><i className="sg-sw is-cost" style={{ '--a': 0.5 }} />0.5¢</span><span><i className="sg-sw is-cost" style={{ '--a': 1 }} />3¢ and up</span></>,
             ]} />
           </div>
           <figcaption className="sg-cap"><Stack at={ph} items={CAPS} /></figcaption>

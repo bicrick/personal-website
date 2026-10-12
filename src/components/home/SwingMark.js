@@ -18,8 +18,8 @@ const LEG_K = 40;
 const LEG_DAMP = 4;
 const STEP = 1 / 240;
 const DEG = 180 / Math.PI;
-// Costume loop: the six harnesses from the post, same art.
-const OUTFITS = [undefined, 'cursor', 'opencode', 'aider', 'mini', 'swe'];
+// Costume loop: the five harnesses from the post, same art.
+const OUTFITS = [undefined, 'cursor', 'opencode', 'mini', 'swe'];
 const HOLD = 2.4; // seconds hanging in each costume
 const SPIN = 0.9; // seconds per full turn: front, edge, back, edge, next front
 

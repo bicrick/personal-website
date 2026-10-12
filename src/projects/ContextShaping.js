@@ -1,28 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
-import { Hero, ContextBar, ScrollGrid, CacheRace, TokenBars, Stat } from '../components/project/harness';
-import { SWE_N, SWE_SAME } from '../components/project/harness/swebench';
+import { Hero, ContextBar, ScrollGrid, StartWindow, TokenBars, Stat } from '../components/project/harness';
+import { SWE_N, SWE_SAME, WINDOW_START } from '../components/project/harness/swebench';
 import { GRID_NONE, GRID_ALL } from '../components/project/harness/grid';
 
-// Every number below comes from the data modules (same-settings runs).
+// Every number below comes from the data modules (same-settings runs, five harnesses).
 const same = (id) => SWE_SAME.find((r) => r.id === id);
-const aider = same('aider');
 const mini = same('mini');
-const rest = SWE_SAME.filter((r) => r.id !== 'aider');
-const lo = Math.min(...rest.map((r) => r.rate));
-const hi = Math.max(...rest.map((r) => r.rate));
-const caches = rest.map((r) => r.cache);
-const spread = (k) => Math.max(...SWE_SAME.map((r) => r[k])) / Math.min(...SWE_SAME.map((r) => r[k]));
-const costX = Math.round(spread('usd'));
-const tokX = spread('tok').toFixed(1);
-const minX = Math.round(spread('min') * 10) / 10;
-const topTok = [...SWE_SAME].sort((a, b) => b.tok - a.tok)[0];
+const lo = Math.min(...SWE_SAME.map((r) => r.rate));
+const hi = Math.max(...SWE_SAME.map((r) => r.rate));
+const spread = (k) => (Math.max(...SWE_SAME.map((r) => r[k])) / Math.min(...SWE_SAME.map((r) => r[k]))).toFixed(1);
+const costX = spread('usd');
+const tokX = spread('tok');
+const minX = spread('min');
+const cents = (v) => `${(v * 100).toFixed(2)}¢`;
+const cheap = [...SWE_SAME].sort((x, y) => x.usd - y.usd)[0];
+const dear = [...SWE_SAME].sort((x, y) => y.usd - x.usd)[0];
+const topTok = [...SWE_SAME].sort((x, y) => y.tok - x.tok)[0];
+const win = (id) => WINDOW_START.find((r) => r.id === id);
+const big = win('claude_code');
+const small = win('mini');
+const k = (n) => `${(n / 1000).toFixed(1)}k`;
 
 function ContextShaping() {
   return (
     <ProjectDetail
-      title="same model, six harnesses"
+      title="same model, five harnesses"
       date="October 2026"
       backHref="/"
       backLabel="home"
@@ -48,67 +52,62 @@ function ContextShaping() {
       <ContextBar />
 
       <p>
-        So I took one model, Claude Haiku 5.5, and put it in six different harnesses. Each one got
+        So I took one model, Claude Haiku 5.5, and put it in five different harnesses. Each one got
         the same {SWE_N} real bugs from popular open-source projects, taken from{' '}
         <a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer">SWE-bench Verified</a>, and each project&apos;s own
         tests decided whether the fix worked.
       </p>
 
-      <p className="hs-big">Here are all 300 runs.</p>
+      <p className="hs-big">Here are all 250 runs.</p>
 
       <ScrollGrid />
 
       <Stat value={`${GRID_ALL} and ${GRID_NONE}`} label={`bugs that every harness fixed, and that none did, out of ${SWE_N}`} />
 
       <p>
-        On whether the bug gets fixed, five of the six land between {lo}% and {hi}%. That is a tie.
-        The bug matters far more than the wrapper. Aider is the exception at {aider.rate}%. It was
-        built for a person at the keyboard: it suggests an edit and hands control back, asking the
-        model only about twice per bug. With nobody there, the model never gets a second look at
-        its own fix.
+        All five land between {lo}% and {hi}%. At {SWE_N} bugs, that is a tie. Whether a bug gets
+        fixed depends far more on the bug than on the wrapper.
       </p>
 
-      <Stat value={`${costX}×`} label="the gap in cost per fix, same model, same bugs" />
+      <Stat value={`${tokX}×`} label="the gap in tokens read per fix, same model, same bugs" />
 
       <p>
-        Then the bill. Cost per fix spans {costX} times. Words read per fix span {tokX} times, and
-        time per fix more than {Math.floor(minX)} times. Same model, same answers. In model
-        terms, a {costX}× price drop would be called a new generation.
+        The bill is a different story. To land the same fixes, the busiest harness read {tokX} times
+        as many tokens (chunks of text, roughly a word each) as the leanest one. Cost per fix runs from {cents(cheap.usd)} to{' '}
+        {cents(dear.usd)}, {costX} times, and time per fix varies {minX} times.
       </p>
 
-      <p className="hs-big">Why? The cache.</p>
+      <p className="hs-big">Why? What&apos;s already in the window.</p>
 
       <p>
-        AI providers charge a tenth of the price for text you already sent them last time. A
-        harness that only adds to the end of the window gets that discount on almost everything:{' '}
-        {Math.min(...caches)} to {Math.max(...caches)}% of what these five sent was a cheap repeat.
-        Aider rebuilds its whole prompt every turn, so only {aider.cache}% was.
+        Before the model sees a single line of code, the harness has already filled the window
+        with instructions and a list of tools. {big.label} hands it {big.tools} tools and about{' '}
+        {k(big.start)} tokens. mini-swe-agent hands it one tool, a shell, and {k(small.start)}.
+        That opening gets sent again with every message, so it adds up.
       </p>
 
-      <CacheRace />
+      <StartWindow />
 
-      <p className="hs-big">The smallest one nearly won.</p>
+      <p className="hs-big">The smallest one kept up.</p>
 
       <p>
-        mini-swe-agent gives the model one thing, a shell. No special tools, no clever prompt. It
-        fixed {mini.solved} of {SWE_N}, within a few of the best, while reading the fewest words of
-        any harness. {topTok.label} read {(topTok.tok / mini.tok).toFixed(1)} times as much for
-        fewer fixes.
+        With nothing but a shell and a short prompt, mini-swe-agent fixed {mini.solved} of{' '}
+        {SWE_N}, a few behind the best, while reading the fewest tokens and finishing fastest.{' '}
+        {topTok.label} read {(topTok.tok / mini.tok).toFixed(1)} times as much for one fewer fix.
       </p>
 
       <TokenBars />
 
       <p>
-        Harness engineering matters as much as model engineering. The model sets the ceiling.
-        The harness decides what it costs to get there, and whether you get there at all. You can
-        dig into each one on{' '}
-        <Link to="/writing/context-shaping/harnesses">the harness pages</Link>.
+        Harness engineering matters as much as model engineering. The model sets the ceiling. The
+        harness decides how much you pay, in money and time, to reach it. You can dig into each one
+        on <Link to="/writing/context-shaping/harnesses">the harness pages</Link>.
       </p>
 
       <p className="hs-note">
         Method: {SWE_N} SWE-bench Verified bugs, Haiku 5.5 with extended thinking off and every
-        command approved in all six, three runs at a time in identical containers. An earlier run
-        on each harness&apos;s default settings is in the repo. Cursor&apos;s cost is estimated from
+        command approved in all five, three runs at a time in identical containers. An earlier run
+        on each harness&apos;s default settings is in the repo. Aider was left out because it expects a person or a test command in the loop, and these runs had neither. Cursor&apos;s cost is estimated from
         its own logs. Data and code:{' '}
         <a href="https://github.com/bicrick/context-shaping" target="_blank" rel="noopener noreferrer">github.com/bicrick/context-shaping</a>.
       </p>

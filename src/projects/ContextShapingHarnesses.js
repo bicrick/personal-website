@@ -8,10 +8,10 @@ import '../components/project/harness';
 export function HarnessIndex() {
   return (
     <ProjectDetail
-      title="the six harnesses"
+      title="the five harnesses"
       date="October 2026"
       backHref="/writing/context-shaping"
-      backLabel="same model, six harnesses"
+      backLabel="same model, five harnesses"
       abstract="Same model inside each. One idea apiece, and what a fix cost."
     >
       <div className="hx-list">
@@ -37,7 +37,7 @@ export function HarnessProfile() {
       title={h.label.toLowerCase()}
       date="October 2026"
       backHref="/writing/context-shaping/harnesses"
-      backLabel="the six harnesses"
+      backLabel="the five harnesses"
       abstract={h.line}
     >
       <Critter className="hx-hero" outfit={h.outfit} hop />

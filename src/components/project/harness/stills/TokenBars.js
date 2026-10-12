@@ -12,7 +12,7 @@ const MAX = Math.max(...rows.map((r) => r.tok));
 export default function TokenBars() {
   const { ref, on } = useInView();
   return (
-    <Fig innerRef={ref} className={`tb${on ? ' is-on' : ''}`} title="words read per fix" aside="thousands of tokens" caption="mini-swe-agent reads the least to land almost the same fixes.">
+    <Fig innerRef={ref} className={`tb${on ? ' is-on' : ''}`} title="tokens read per fix" aside="thousands of tokens" caption="mini-swe-agent reads the least to land almost the same fixes.">
       {rows.map((r, n) => (
         <Link key={r.id} to={harnessHref(r)} className={`tb-row${r.id === 'mini' ? ' is-hot' : ''}`} style={{ '--w': `${(r.tok / MAX) * 100}%`, '--d': `${n * 0.08}s` }}>
           <Critter className="tb-critter" outfit={r.outfit} />
