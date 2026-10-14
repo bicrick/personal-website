@@ -1,12 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { featuredProjects } from '../../constants/projects';
 import QwopTilePreview from '../QwopTilePreview';
 import HarnessTilePreview from '../HarnessTilePreview';
+import TapestryTilePreview, { THUMB_VARIANTS } from '../TapestryTilePreview';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
 import './FeaturedProjects.css';
 
-function FeaturedMedia({ project }) {
+function FeaturedMedia({ project, tapestryThumb }) {
+  if (project.livePreview === 'tapestry') {
+    return <TapestryTilePreview variant={tapestryThumb || project.tapestryThumb || 'a'} />;
+  }
   if (project.livePreview === 'qwop') {
     return <QwopTilePreview />;
   }
@@ -30,6 +34,9 @@ function FeaturedMedia({ project }) {
 
 export default function FeaturedProjects() {
   const projects = featuredProjects();
+  const [params] = useSearchParams();
+  const thumbParam = (params.get('thumb') || '').toLowerCase();
+  const tapestryThumb = THUMB_VARIANTS.includes(thumbParam) ? thumbParam : undefined;
 
   return (
     <section className="home-block" aria-label="featured projects">
@@ -42,7 +49,7 @@ export default function FeaturedProjects() {
           <li key={project.blogLink}>
             <Link to={project.blogLink} className="featured-card">
               <div className="featured-media" aria-hidden="true">
-                <FeaturedMedia project={project} />
+                <FeaturedMedia project={project} tapestryThumb={tapestryThumb} />
               </div>
               <div className="featured-copy">
                 <h3>{project.title}</h3>

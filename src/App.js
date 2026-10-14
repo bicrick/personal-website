@@ -16,6 +16,7 @@ import Monocle from './projects/Monocle';
 import Tracebench from './projects/Tracebench';
 import ContextShaping from './projects/ContextShaping';
 import AgentResearchLoops from './projects/AgentResearchLoops';
+import InfiniteTapestry from './projects/InfiniteTapestry';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
@@ -24,6 +25,7 @@ import CareerPage from './pages/CareerPage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ContactPage from './pages/ContactPage';
+import TapestryThumbsPage from './pages/TapestryThumbsPage';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/tracebench" element={<Tracebench />} />
+        <Route path="/projects/infinite-tapestry" element={<InfiniteTapestry />} />
+        <Route path="/projects/infinite-tapestry/thumbs" element={<TapestryThumbsPage />} />
         <Route path="/projects/harness-bench" element={<ContextShaping />} />
         <Route path="/projects/context-shaping" element={<Navigate to="/projects/harness-bench" replace />} />
         <Route path="/projects/context-shaping/harnesses" element={<Navigate to="/projects/harness-bench#harnesses" replace />} />
