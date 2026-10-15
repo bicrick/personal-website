@@ -20,11 +20,11 @@ export const SURROUND = {
  */
 export const REFL_VAR = [0.55, 0.25, 1.25, 1.35, 1.12, 0.18];
 
-/** about.css --bh and band-refl height ratio */
-export const BAND_HEIGHT = 'clamp(200px, 32vw, 320px)';
-export const REFL_HEIGHT_RATIO = 0.42;
-/** about.css .band-refl mask alphas */
-export const REFL_MASK = 'linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.2) 35%, transparent)';
+/** Compact article demo band + reflection (not the about-page giant square). */
+export const BAND_HEIGHT = 'clamp(88px, 12vw, 118px)';
+export const REFL_HEIGHT_RATIO = 0.48;
+export const REFL_MASK =
+  'linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.22) 40%, transparent 92%)';
 
 /** style.css --ease */
 export const EASE = 'cubic-bezier(.2,.7,.2,1)';
@@ -37,12 +37,6 @@ export const VEIL = {
 
 /** #amb-blobs opacity factor from style.css */
 export const AMB_BLOB_OPACITY = 0.55;
-
-/** about.css sheen */
-export const SHEEN_RGB = '255,240,215';
-export const SHEEN_PEAK = 0.1;
-export const SHEEN_MID = 0.07;
-export const SHEEN_PERIOD_S = 14;
 
 /** client.js amb blob sample interval */
 export const AMB_SAMPLE_MS = 2500;

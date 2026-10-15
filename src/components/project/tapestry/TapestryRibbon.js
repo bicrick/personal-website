@@ -24,8 +24,8 @@ function prefersReducedMotion() {
 }
 
 /**
- * Article ribbon demo styled like the production live viewer:
- * surround field, ambient colour blobs, glow, sheen, lights, veil, reflection.
+ * Compact article ribbon demo: short band + reflection fade.
+ * Ambient glow, lights, veil, reflection; no about-page sheen sweep.
  * Scroll speed = config.scroll_speed (30 world px/s) scaled to display.
  * No zoom.
  */
@@ -389,7 +389,6 @@ export default function TapestryRibbon({
           <div className="it-band-lights" aria-hidden="true">
             {Array.from({ length: 8 }, (_, i) => <i key={i} />)}
           </div>
-          <div className="it-band-sheen" aria-hidden="true" />
           <div className="it-band-veil" aria-hidden="true" />
           <span className={`it-ribbon-hint${hintGone ? ' is-gone' : ''}`}>
             drag to pan

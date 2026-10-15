@@ -15,7 +15,10 @@
 }
 
 .it-ribbon {
-  --it-bh: clamp(200px, 32vw, 320px);
+  /* Compact band: just tall enough for the strip + reflection fade */
+  --it-bh: clamp(88px, 12vw, 118px);
+  --it-glow-h: 22px;
+  --it-refl-h: calc(var(--it-bh) * 0.48);
   --it-ease: cubic-bezier(.2, .7, .2, 1);
   --it-surr: 5, 5, 6;
   --it-empty: #050506;
@@ -33,8 +36,8 @@ html:not(.is-dark) .it-ribbon {
   background: var(--it-empty);
   border: 1px solid var(--rule);
   overflow: hidden;
-  /* glow above + band + reflection below */
-  padding-top: 72px;
+  /* tight crop: thin glow spill above, band, reflection fade below */
+  padding-top: var(--it-glow-h);
 }
 
 html:not(.is-dark) .it-ribbon-frame {
@@ -60,14 +63,14 @@ html:not(.is-dark) .it-ribbon-frame {
 
 .it-amb-blobs .ab-top {
   top: 0;
-  height: 72px;
+  height: var(--it-glow-h);
   -webkit-mask-image: linear-gradient(to top, #000, transparent 85%);
   mask-image: linear-gradient(to top, #000, transparent 85%);
 }
 
 .it-amb-blobs .ab-bot {
-  top: calc(72px + var(--it-bh));
-  bottom: 0;
+  top: calc(var(--it-glow-h) + var(--it-bh));
+  height: var(--it-refl-h);
   -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
   mask-image: linear-gradient(to bottom, #000, transparent 85%);
 }
@@ -76,7 +79,7 @@ html:not(.is-dark) .it-ribbon-frame {
   position: absolute;
   width: 55%;
   height: 140%;
-  max-height: 220px;
+  max-height: 100px;
   border-radius: 50%;
   will-change: transform;
   background: radial-gradient(closest-side, var(--c, rgba(255, 176, 82, 0.55)), transparent);
@@ -95,13 +98,13 @@ html:not(.is-dark) .it-ribbon-frame {
   to { transform: translate3d(5%, 3%, 0) scale(1.12); }
 }
 
-/* Soft glow spilling above the band — about.css .band .glow */
+/* Soft glow spilling above the band — kept tight to the crop */
 .it-band-glow {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  height: 72px;
+  height: var(--it-glow-h);
   pointer-events: none;
   overflow: hidden;
   opacity: 0.5;
@@ -116,9 +119,9 @@ html:not(.is-dark) .it-band-glow {
 
 .it-band-glow i {
   position: absolute;
-  bottom: -50px;
+  bottom: -28px;
   width: 46%;
-  height: 120px;
+  height: 64px;
   border-radius: 50%;
   will-change: transform;
   background: radial-gradient(closest-side, rgba(255, 176, 82, 0.55), transparent);
@@ -173,9 +176,9 @@ html:not(.is-dark) .it-band-glow {
 
 .it-band-lights i {
   position: absolute;
-  width: 110px;
-  height: 110px;
-  margin: -55px;
+  width: 64px;
+  height: 64px;
+  margin: -32px;
   border-radius: 50%;
   opacity: 0;
   will-change: opacity, transform;
@@ -195,39 +198,6 @@ html:not(.is-dark) .it-band-glow {
 @keyframes it-twinkle {
   0%, 100% { opacity: 0; transform: scale(0.7); }
   50% { opacity: 0.85; transform: scale(1); }
-}
-
-/* Sheen — about.css .band .sheen (14s, rgba(255,240,215,.07/.1)) */
-.it-band-sheen {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.it-band-sheen::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 30%;
-  will-change: transform;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    rgba(255, 240, 215, 0.07) 45%,
-    rgba(255, 240, 215, 0.1) 50%,
-    transparent
-  );
-  animation: it-sheen 14s ease-in-out infinite;
-  transform: translateX(-120%);
-}
-
-@keyframes it-sheen {
-  0%, 55% { transform: translateX(-120%); }
-  100% { transform: translateX(420%); }
 }
 
 /* Vignette / veil — style.css .veil */
@@ -257,11 +227,11 @@ html:not(.is-dark) .it-band-veil {
 
 .it-ribbon-hint {
   position: absolute;
-  left: 10px;
-  bottom: 8px;
+  left: 8px;
+  bottom: 4px;
   z-index: 6;
-  padding: 2px 8px;
-  font-size: 12px;
+  padding: 1px 6px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.75);
   background: rgba(0, 0, 0, 0.4);
   pointer-events: none;
@@ -273,15 +243,23 @@ html:not(.is-dark) .it-band-veil {
   opacity: 0;
 }
 
-/* Reflection under the band — about.css .band-refl */
+/* Reflection under the band — visible then fade out */
 .it-band-refl {
   position: relative;
-  height: calc(var(--it-bh) * 0.42);
+  height: var(--it-refl-h);
   overflow: hidden;
   pointer-events: none;
   z-index: 2;
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2) 35%, transparent);
-  mask-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2) 35%, transparent);
+  -webkit-mask-image: linear-gradient(
+    rgba(0, 0, 0, 0.58),
+    rgba(0, 0, 0, 0.22) 40%,
+    transparent 92%
+  );
+  mask-image: linear-gradient(
+    rgba(0, 0, 0, 0.58),
+    rgba(0, 0, 0, 0.22) 40%,
+    transparent 92%
+  );
 }
 
 .it-band-refl canvas {
@@ -332,8 +310,7 @@ html:not(.is-dark) .it-band-refl canvas {
 @media (prefers-reduced-motion: reduce) {
   .it-amb-blobs i,
   .it-band-glow i,
-  .it-band-lights i,
-  .it-band-sheen::before {
+  .it-band-lights i {
     animation: none;
   }
 
@@ -344,22 +321,8 @@ html:not(.is-dark) .it-band-refl canvas {
 
 @media (max-width: 760px) {
   .it-ribbon {
-    --it-bh: clamp(180px, 48vw, 260px);
-  }
-
-  .it-ribbon-frame {
-    padding-top: 48px;
-  }
-
-  .it-band-glow {
-    height: 48px;
-  }
-
-  .it-amb-blobs .ab-top {
-    height: 48px;
-  }
-
-  .it-amb-blobs .ab-bot {
-    top: calc(48px + var(--it-bh));
+    --it-bh: clamp(72px, 22vw, 100px);
+    --it-glow-h: 16px;
+    --it-refl-h: calc(var(--it-bh) * 0.5);
   }
 }
