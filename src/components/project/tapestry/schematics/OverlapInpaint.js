@@ -1,10 +1,9 @@
 import React from 'react';
-import { LabelChip, SCHEMATIC } from './schematicAssets';
+import { LabelChip, SCHEMATIC, StippleImage } from './schematicAssets';
 import './schematics.css';
 
 /**
- * Overlap + inpaint join with real scene crops and hatched inpaint overlay.
- * Knobs match admin: seam_px, bridge_strength.
+ * Overlap + inpaint join with stippled scene crops and hatched inpaint overlay.
  */
 export default function OverlapInpaint() {
   const vbW = 720;
@@ -38,8 +37,11 @@ export default function OverlapInpaint() {
           </clipPath>
         </defs>
 
-        <image
-          href={SCHEMATIC.joinPrev}
+        <rect className="it-schematic-stipple-wash" x={leftX} y={y} width={leftW} height={h} />
+        <rect className="it-schematic-stipple-wash" x={rightX} y={y} width={rightW} height={h} />
+
+        <StippleImage
+          stem={SCHEMATIC.joinPrev}
           x={leftX}
           y={y}
           width={leftW}
@@ -47,8 +49,8 @@ export default function OverlapInpaint() {
           preserveAspectRatio="xMaxYMid slice"
           clipPath="url(#it-join-prev)"
         />
-        <image
-          href={SCHEMATIC.joinNew}
+        <StippleImage
+          stem={SCHEMATIC.joinNew}
           x={rightX}
           y={y}
           width={rightW}
@@ -57,22 +59,21 @@ export default function OverlapInpaint() {
           clipPath="url(#it-join-new)"
         />
 
-        {/* Soft crossfade veil over seam_px */}
         <rect
           x={joinX - seamW}
           y={y}
           width={seamW}
           height={h}
           fill="var(--paper)"
-          opacity="0.22"
+          opacity="0.18"
         />
 
-        {/* Inpaint hatch on real pixels */}
+        {/* Hatch on top of stipple — stays legible */}
         <g clipPath="url(#it-join-hatch)">
           {hatchLines.map((dx) => (
             <line
               key={dx}
-              className="it-schematic-hatch"
+              className="it-schematic-hatch it-schematic-hatch-strong"
               x1={joinX - seamW + dx}
               y1={y}
               x2={joinX - seamW + dx - 18}

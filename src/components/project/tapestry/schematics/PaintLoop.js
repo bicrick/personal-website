@@ -1,5 +1,5 @@
 import React from 'react';
-import { LabelChip, SCHEMATIC } from './schematicAssets';
+import { LabelChip, SCHEMATIC, StippleImage } from './schematicAssets';
 import './schematics.css';
 
 const STEPS = [
@@ -10,7 +10,7 @@ const STEPS = [
   { id: 'store', label: 'store', thumb: 4 },
 ];
 
-/** Paint loop with tiny real strip thumbnails in each step. */
+/** Paint loop with tiny pre-baked stipple thumbnails. */
 export default function PaintLoop() {
   const vbW = 720;
   const vbH = 132;
@@ -39,13 +39,13 @@ export default function PaintLoop() {
                 width={boxW}
                 height={boxH}
               />
-              <image
-                href={SCHEMATIC.loop[step.thumb]}
+              <rect className="it-schematic-stipple-wash" x={tx} y={ty} width={thumb} height={thumb} />
+              <StippleImage
+                stem={SCHEMATIC.loop[step.thumb]}
                 x={tx}
                 y={ty}
                 width={thumb}
                 height={thumb}
-                preserveAspectRatio="xMidYMid slice"
               />
               <rect
                 className="it-schematic-stroke-faint"

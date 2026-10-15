@@ -1,8 +1,8 @@
 import React from 'react';
-import { LabelChip, SCHEMATIC } from './schematicAssets';
+import { LabelChip, SCHEMATIC, StippleImage } from './schematicAssets';
 import './schematics.css';
 
-/** Strip / window geometry with real desaturated strip crops. */
+/** Strip / window geometry with pre-baked stipple fills. */
 export default function StripGeometry() {
   const vbW = 720;
   const vbH = 230;
@@ -24,9 +24,6 @@ export default function StripGeometry() {
       <svg viewBox={`0 0 ${vbW} ${vbH}`} role="img">
         <title>Strip geometry</title>
         <defs>
-          <clipPath id="it-geom-win">
-            <rect x={winX} y={y} width={winW} height={h} />
-          </clipPath>
           <clipPath id="it-geom-ctx">
             <rect x={winX} y={y} width={ctxKeep} height={h} />
           </clipPath>
@@ -48,22 +45,23 @@ export default function StripGeometry() {
           window 1024×1024
         </text>
 
-        <image
-          href={SCHEMATIC.geomContext}
+        {/* Soft wash behind stipple so empty paper never shows through gaps */}
+        <rect className="it-schematic-stipple-wash" x={winX} y={y} width={winW} height={h} />
+
+        <StippleImage
+          stem={SCHEMATIC.geomContext}
           x={winX}
           y={y}
           width={ctxKeep}
           height={h}
-          preserveAspectRatio="xMidYMid slice"
           clipPath="url(#it-geom-ctx)"
         />
-        <image
-          href={SCHEMATIC.geomRepaint}
+        <StippleImage
+          stem={SCHEMATIC.geomRepaint}
           x={winX + ctxKeep}
           y={y}
           width={repaintW}
           height={h}
-          preserveAspectRatio="xMidYMid slice"
           clipPath="url(#it-geom-rep)"
         />
         <rect
@@ -72,15 +70,14 @@ export default function StripGeometry() {
           width={repaintW}
           height={h}
           fill="url(#it-hatch-geom)"
-          opacity="0.55"
+          opacity="0.7"
         />
-        <image
-          href={SCHEMATIC.geomNew}
+        <StippleImage
+          stem={SCHEMATIC.geomNew}
           x={winX + contextW}
           y={y}
           width={newW}
           height={h}
-          preserveAspectRatio="xMidYMid slice"
           clipPath="url(#it-geom-new)"
         />
 
@@ -101,13 +98,13 @@ export default function StripGeometry() {
         <LabelChip x={winX + ctxKeep + repaintW / 2} y={y + h / 2} text="128" />
         <LabelChip x={winX + contextW + newW / 2} y={y + h / 2} text="new 256" />
 
-        <image
-          href={SCHEMATIC.geomEmit}
+        <rect className="it-schematic-stipple-wash" x={stripX} y={y + h + 18} width={stripW} height={22} />
+        <StippleImage
+          stem={SCHEMATIC.geomEmit}
           x={stripX}
           y={y + h + 18}
           width={stripW}
           height={22}
-          preserveAspectRatio="xMidYMid slice"
         />
         <rect className="it-schematic-stroke" x={stripX} y={y + h + 18} width={stripW} height={22} fill="none" />
         <rect
@@ -116,7 +113,7 @@ export default function StripGeometry() {
           y={y + h + 18}
           width={overlapW}
           height={22}
-          opacity="0.35"
+          opacity="0.28"
         />
         <LabelChip x={stripX + overlapW / 2} y={y + h + 29} text="overlap 192" />
         <LabelChip x={stripX + overlapW + newW / 2} y={y + h + 29} text="strip 256×1024" />

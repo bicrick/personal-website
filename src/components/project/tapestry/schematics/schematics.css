@@ -127,3 +127,14 @@ html.is-dark .it-schematic-chip {
   letter-spacing: 0.02em;
   fill: var(--ink);
 }
+
+/* Soft wash under stipple so transparent gaps read as paper, not void */
+.it-schematic-stipple-wash {
+  fill: color-mix(in srgb, var(--ink-muted) 6%, var(--paper));
+  stroke: none;
+}
+
+.it-schematic-hatch-strong {
+  opacity: 0.7;
+  stroke-width: 1;
+}
