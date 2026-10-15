@@ -15,17 +15,15 @@
 }
 
 /*
-  Virtual viewport sized so the live band (~30–70vh) + reflection below
-  fill a short wide window after scale. Tuned against the live layout.
+  Iframe is full embed width; taller than the window. Shifted up so the
+  live band (~30–70vh) + reflection sit in a short crop.
 */
 .it-embed {
   --it-embed-h: clamp(104px, 15vw, 148px);
-  --it-vw: 1280px;
-  --it-vh: 800px;
-  /* Crop starts near band-top; height covers band + reflection fade */
-  --it-crop-top: 0.27;
-  --it-crop-h: 0.55;
-  --it-scale: calc(var(--it-embed-h) / (var(--it-crop-h) * var(--it-vh)));
+  /* Fraction of iframe height visible in the window */
+  --it-visible: 0.48;
+  /* Where the crop starts (matches live --band-top ≈ 0.30) */
+  --it-crop-top: 0.28;
 
   position: relative;
   height: var(--it-embed-h);
@@ -41,21 +39,17 @@ html:not(.is-dark) .it-embed {
 
 .it-embed-scaler {
   position: absolute;
-  left: 50%;
-  top: 0;
-  width: var(--it-vw);
-  height: var(--it-vh);
-  transform: translateX(-50%)
-    translateY(calc(var(--it-crop-top) * var(--it-vh) * -1 * var(--it-scale)))
-    scale(var(--it-scale));
-  transform-origin: top center;
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
 .it-embed-iframe {
-  display: block;
+  position: absolute;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(var(--it-embed-h) / var(--it-visible));
+  top: calc(var(--it-embed-h) / var(--it-visible) * var(--it-crop-top) * -1);
   border: 0;
   pointer-events: none;
   background: transparent;
@@ -92,9 +86,7 @@ html:not(.is-dark) .it-embed {
 @media (max-width: 760px) {
   .it-embed {
     --it-embed-h: clamp(88px, 26vw, 120px);
-    --it-vw: 900px;
-    --it-vh: 700px;
+    --it-visible: 0.5;
     --it-crop-top: 0.28;
-    --it-crop-h: 0.52;
   }
 }
