@@ -68,7 +68,8 @@ function themePalette(dark) {
       cream: '#efe9df',
       // about.css dark glow opacity ~0.5
       glowAlpha: 0.42,
-      sheenPeak: 0.1,
+      // about.css sheen uses rgba(255,240,215,.07–.10); slightly stronger on cream tracks
+      sheenPeak: 0.14,
       reflPeak: 0.28,
     };
   }
@@ -79,7 +80,7 @@ function themePalette(dark) {
     cream: '#1a1612',
     // about.css light: .band .glow { opacity: .38 }
     glowAlpha: 0.32,
-    sheenPeak: 0.08,
+    sheenPeak: 0.12,
     reflPeak: 0.2,
   };
 }
@@ -108,6 +109,7 @@ export default function TapestryTilePreview({ className = '' }) {
     const palette = themePalette(dark);
     const maskLayer = document.createElement('canvas');
     const sheenLayer = document.createElement('canvas');
+    const outlineLayer = document.createElement('canvas');
 
     // Soft colour blobs sampled once from the ribbon (production #amb-blobs / .band .glow)
     const glowColors = [
@@ -145,14 +147,34 @@ export default function TapestryTilePreview({ className = '' }) {
       });
     };
 
-    const strokeOutline = (ctx) => {
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+    const strokeOutline = (ctx, w, h, fit, dpr) => {
+      // Build woven overlay on an offscreen layer so under-grooves can punch
+      // transparent (painting shows between cream tracks), matching mark-cream.png.
+      const octx = ensureLayer(outlineLayer, w, h, dpr);
+      octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      octx.clearRect(0, 0, w, h);
+      octx.save();
+      octx.translate(fit.ox, fit.oy);
+      octx.scale(fit.scale, fit.scale);
+      octx.lineCap = 'round';
+      octx.lineJoin = 'round';
       MARK_OUTLINE_STROKES.forEach(({ key, width, role }) => {
-        ctx.lineWidth = width;
-        ctx.strokeStyle = role === 'cream' ? palette.cream : palette.under;
-        ctx.stroke(paths[key]);
+        octx.lineWidth = width;
+        if (role === 'cream') {
+          octx.globalCompositeOperation = 'source-over';
+          octx.strokeStyle = palette.cream;
+          octx.stroke(paths[key]);
+        } else {
+          octx.globalCompositeOperation = 'destination-out';
+          octx.strokeStyle = '#000';
+          octx.stroke(paths[key]);
+        }
       });
+      octx.restore();
+      ctx.save();
+      ctx.globalAlpha = 0.94;
+      ctx.drawImage(outlineLayer, 0, 0, w, h);
+      ctx.restore();
     };
 
     const drawScrollingRibbon = (ctx, w, h, time, speed = 26) => {
@@ -263,7 +285,8 @@ export default function TapestryTilePreview({ className = '' }) {
       cctx.restore();
 
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
+      // Dark: screen lifts cream tracks; light: soft-light keeps the sweep subtle on dark weave
+      ctx.globalCompositeOperation = dark ? 'screen' : 'soft-light';
       ctx.drawImage(sheenLayer, 0, 0, w, h);
       ctx.restore();
     };
@@ -324,13 +347,9 @@ export default function TapestryTilePreview({ className = '' }) {
       drawGlow(ctx, w, h, fit, time);
       drawReflection(ctx, w, h, layer, fit);
       ctx.drawImage(layer, 0, 0, w, h);
+      strokeOutline(ctx, w, h, fit, dpr);
+      // Gloss sweep last so it reads across cream tracks + painting (about.css .band .sheen)
       drawSheen(ctx, w, h, fit, time);
-
-      ctx.save();
-      ctx.translate(fit.ox, fit.oy);
-      ctx.scale(fit.scale, fit.scale);
-      strokeOutline(ctx);
-      ctx.restore();
     };
 
     const tick = (now) => {

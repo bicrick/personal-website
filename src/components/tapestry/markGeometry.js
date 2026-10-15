@@ -27,20 +27,18 @@ export const MARK_MASK_STROKES = [
 ];
 
 /**
- * Full woven stroke stack from mark.svg (outer → inner).
- * role "under" = dark plate (#0b0b0d); role "cream" = #efe9df weave.
- * Width 0 entries from the SVG are omitted.
+ * Woven overlay strokes from mark.svg (outer → inner), drawn ON TOP of the
+ * masked painting. The solid under-plate (width 9 / bridge 10) is omitted here —
+ * that silhouette is the mask; overlaying it opaque would hide the ribbon.
+ * role "under" = groove (#0b0b0d); role "cream" = #efe9df weave track.
  */
 export const MARK_OUTLINE_STROKES = [
-  { key: 'right', width: 9, role: 'under' },
   { key: 'right', width: 6.4, role: 'cream' },
   { key: 'right', width: 4, role: 'under' },
   { key: 'right', width: 1.3, role: 'cream' },
-  { key: 'left', width: 9, role: 'under' },
   { key: 'left', width: 6.4, role: 'cream' },
   { key: 'left', width: 4, role: 'under' },
   { key: 'left', width: 1.3, role: 'cream' },
-  { key: 'bridge', width: 10, role: 'under' },
   { key: 'weave', width: 6.4, role: 'cream' },
   { key: 'weave', width: 4, role: 'under' },
   { key: 'weave', width: 1.3, role: 'cream' },
