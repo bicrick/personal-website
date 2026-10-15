@@ -1,8 +1,8 @@
-import React, { useId } from 'react';
+import React from 'react';
 
 const BASE = `${process.env.PUBLIC_URL}/images/infinite-tapestry/schematic`;
 
-/** Pre-baked monochrome stipple masks (scripts/stipple-schematics.py). */
+/** Pre-baked monochrome stipple alpha masks (scripts/stipple-schematics.py). */
 export const SCHEMATIC = {
   geomContext: `${BASE}/geom-context`,
   geomRepaint: `${BASE}/geom-repaint`,
@@ -14,8 +14,8 @@ export const SCHEMATIC = {
 };
 
 /**
- * Monochrome stipple fill via SVG mask + currentColor.
- * Mask PNGs are white-on-black luminance only (no source tint).
+ * Dense monochrome stipple via CSS mask-image + currentColor.
+ * Alpha PNGs are white opaque dots on transparent (no source tint).
  * Theme CSS sets .it-schematic color → dark dots on light, light on dark.
  */
 export function StippleImage({
@@ -27,41 +27,36 @@ export function StippleImage({
   clipPath,
   preserveAspectRatio = 'xMidYMid slice',
 }) {
-  const uid = useId().replace(/:/g, '');
-  const maskId = `it-stipple-${uid}`;
   const href = `${stem}-stipple-mask.png`;
+  const pos =
+    preserveAspectRatio.includes('xMax')
+      ? 'right center'
+      : preserveAspectRatio.includes('xMin')
+        ? 'left center'
+        : 'center center';
+  const size = preserveAspectRatio.includes('meet') ? 'contain' : 'cover';
 
   return (
     <g className="it-stipple-ink" clipPath={clipPath}>
-      <defs>
-        <mask
-          id={maskId}
-          maskUnits="userSpaceOnUse"
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-        >
-          {/* Black = hide, white = show currentColor ink */}
-          <rect x={x} y={y} width={width} height={height} fill="#000" />
-          <image
-            href={href}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            preserveAspectRatio={preserveAspectRatio}
-          />
-        </mask>
-      </defs>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill="currentColor"
-        mask={`url(#${maskId})`}
-      />
+      <foreignObject x={x} y={y} width={width} height={height}>
+        <div
+          xmlns="http://www.w3.org/1999/xhtml"
+          className="it-stipple-fill"
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'currentColor',
+            WebkitMaskImage: `url(${href})`,
+            maskImage: `url(${href})`,
+            WebkitMaskSize: size,
+            maskSize: size,
+            WebkitMaskPosition: pos,
+            maskPosition: pos,
+            WebkitMaskRepeat: 'no-repeat',
+            maskRepeat: 'no-repeat',
+          }}
+        />
+      </foreignObject>
     </g>
   );
 }

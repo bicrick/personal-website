@@ -29,6 +29,15 @@ html.is-dark .it-schematic {
   color: inherit;
 }
 
+/* Dense alpha-PNG stipple painted via CSS mask-image + currentColor */
+.it-stipple-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  pointer-events: none;
+}
+
 .it-schematic svg {
   display: block;
   width: 100%;
