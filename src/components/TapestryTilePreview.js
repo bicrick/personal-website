@@ -19,7 +19,7 @@ const SHEEN_RGB = '255,240,215';
  * Thumbnail area is much smaller → density-matched crisp 1–2px stars.
  */
 const STAR_SPACING = 7.5; // CSS px, ≈ intro cell at typical display scale
-const STAR_CROSS_FRAC = 0.18;
+const STAR_CROSS_FRAC = 0.12;
 
 function loadImage(src, fallback) {
   const trySrc = (url) => new Promise((resolve, reject) => {
