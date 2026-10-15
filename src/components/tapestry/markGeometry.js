@@ -4,9 +4,6 @@
  * Source file: public/images/infinite-tapestry/brand/mark.svg
  * (byte-identical to mark-plain.svg path geometry and to
  * https://infinitetapestry.app/brand/mark.svg from uploads/it-brand.tgz)
- *
- * Do not approximate or substitute a generic infinity — stroke these paths
- * at the listed widths exactly as in the SVG.
  */
 
 export const MARK_VIEWBOX = 64;
@@ -18,30 +15,32 @@ export const MARK_PATH_D = {
   weave: 'M18 42c5 0 9-3 14-10s9-10 14-10',
 };
 
-/** Outer silhouette strokes used for destination-in masking (from mark.svg). */
+/**
+ * Outermost silhouette from mark.svg (stroke-width 9 / 10 / 6.4), scaled up
+ * so the infinity band is a chunky cutout at thumbnail size.
+ */
+export const MASK_WIDTH_SCALE = 1.55;
+
+/** Solid fill strokes for destination-in (painting cutout). */
 export const MARK_MASK_STROKES = [
-  { key: 'right', width: 9 },
-  { key: 'left', width: 9 },
-  { key: 'bridge', width: 10 },
-  { key: 'weave', width: 6.4 },
+  { key: 'right', width: 9 * MASK_WIDTH_SCALE },
+  { key: 'left', width: 9 * MASK_WIDTH_SCALE },
+  { key: 'bridge', width: 10 * MASK_WIDTH_SCALE },
+  { key: 'weave', width: 6.4 * MASK_WIDTH_SCALE },
 ];
 
+/** Outer rim thickness in viewBox units (paired with mask widths). */
+export const OUTLINE_RIM = 1.15;
+
 /**
- * Woven overlay strokes from mark.svg (outer → inner), drawn ON TOP of the
- * masked painting. The solid under-plate (width 9 / bridge 10) is omitted here —
- * that silhouette is the mask; overlaying it opaque would hide the ribbon.
- * role "under" = groove (#0b0b0d); role "cream" = #efe9df weave track.
+ * Woven over/under crossing from mark.svg — thin strokes only, drawn after
+ * the rim so the painting stays visible in the thick band.
  */
-export const MARK_OUTLINE_STROKES = [
-  { key: 'right', width: 6.4, role: 'cream' },
-  { key: 'right', width: 4, role: 'under' },
-  { key: 'right', width: 1.3, role: 'cream' },
-  { key: 'left', width: 6.4, role: 'cream' },
-  { key: 'left', width: 4, role: 'under' },
-  { key: 'left', width: 1.3, role: 'cream' },
-  { key: 'weave', width: 6.4, role: 'cream' },
-  { key: 'weave', width: 4, role: 'under' },
-  { key: 'weave', width: 1.3, role: 'cream' },
+export const MARK_CROSSING_STROKES = [
+  { key: 'bridge', width: 2.8, role: 'under' },
+  { key: 'weave', width: 1.8, role: 'cream' },
+  { key: 'weave', width: 0.85, role: 'under' },
+  { key: 'weave', width: 0.45, role: 'cream' },
 ];
 
 export function createMarkPaths() {
@@ -53,11 +52,10 @@ export function createMarkPaths() {
   };
 }
 
-export function fitMark(w, h, pad = 0.1) {
+export function fitMark(w, h, pad = 0.05) {
   const box = MARK_VIEWBOX;
   const scale = (Math.min(w, h) * (1 - pad * 2)) / box;
   const ox = (w - box * scale) / 2;
-  // Lift slightly so a soft reflection can sit under the mark
   const oy = (h - box * scale) / 2 - h * 0.02;
   return { scale, ox, oy };
 }

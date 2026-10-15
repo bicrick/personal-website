@@ -86,8 +86,9 @@ function InfiniteTapestry() {
 
       <p>
         The first 1,269 strips (0–1268) were an OG era on SD 1.5. Strip 1269 is where SDXL
-        starts. The scrolling ribbon above is a build-time bake of real SDXL strips from the
-        public history feed — SFW scenes only, no runtime hotlink.
+        starts. The scrolling ribbon above is a build-time bake of consecutive live SDXL
+        strips from 11&nbsp;PM CT on Oct&nbsp;13, 2026 onward — SFW only, joins intact, no
+        runtime hotlink.
       </p>
 
       <picture>
