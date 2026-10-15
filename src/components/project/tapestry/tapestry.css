@@ -293,9 +293,14 @@ html:not(.is-dark) .it-band-veil {
   display: block;
   transform: scaleY(-1);
   transform-origin: top center;
-  /* exposure lift akin to REFL_VAR gain/sat — slight brighten */
-  filter: saturate(1.12) brightness(1.12);
-  opacity: 0.85;
+  /* REFL_VAR: sat 1.12, gain 1.35 (dark) / ~1.18 (light) from client.js */
+  filter: saturate(1.12) brightness(1.35);
+  opacity: 0.95;
+}
+
+html:not(.is-dark) .it-band-refl canvas {
+  filter: saturate(1.12) brightness(1.18);
+  opacity: 0.9;
 }
 
 .it-ribbon-controls {
