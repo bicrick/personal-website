@@ -134,8 +134,8 @@ function seedStars(w, h) {
         // Normalised lattice with intro-style jitter
         x: (i + 0.2 + 0.6 * r0) / cols,
         y: (j + 0.2 + 0.6 * r1) / rows,
-        // intro gl_PointSize base ≈ 1.6px; keep crisp 1–2px
-        size: 1 + r0 * 1.0,
+        // intro gl_PointSize base ≈ 1.6px; integer 1–2px for crisp pixels
+        size: r0 < 0.55 ? 1 : 2,
         phase: r1 * Math.PI * 2,
         // intro: fract(a.w + .02 * sin(uT * .7 + r.y * 6.28)) + slow drift
         speed: 0.55 + r0 * 0.5,
@@ -143,7 +143,7 @@ function seedStars(w, h) {
         driftY: (r1 - 0.5) * 0.01,
         // intro alpha: uMote * (.25 + .35 * r.x)
         baseA: 0.25 + 0.35 * r0,
-        cross: r1 < STAR_CROSS_FRAC,
+        cross: r1 < STAR_CROSS_FRAC && r0 >= 0.55,
         twinkle: 0.7 + r0 * 1.1,
       });
     }
@@ -362,6 +362,7 @@ export default function TapestryTilePreview({ className = '' }) {
         starsKey = key;
       }
       ctx.save();
+      ctx.imageSmoothingEnabled = false;
       ctx.globalCompositeOperation = dark ? 'screen' : 'source-over';
       const rgb = palette.sparkle;
       for (let i = 0; i < stars.length; i += 1) {
@@ -372,20 +373,19 @@ export default function TapestryTilePreview({ className = '' }) {
         const x = ((s.x + (reduced ? 0 : time * s.driftX)) % 1 + 1) % 1;
         const y = ((s.y + (reduced ? 0 : time * s.driftY)
           + (reduced ? 0 : 0.02 * Math.sin(time * s.speed + s.phase))) % 1 + 1) % 1;
-        const px = Math.round(x * w) + 0.5;
-        const py = Math.round(y * h) + 0.5;
+        const px = Math.floor(x * w);
+        const py = Math.floor(y * h);
         const a = Math.min(1, palette.sparklePeak * s.baseA * flicker);
         ctx.fillStyle = `rgba(${rgb},${a})`;
-        const half = s.size * 0.5;
-        // Sharp square point — no blur / radial soft gradient
-        ctx.fillRect(px - half, py - half, s.size, s.size);
+        // Sharp integer pixel point — no blur / radial soft gradient
+        ctx.fillRect(px, py, s.size, s.size);
         if (s.cross && !reduced) {
-          const arm = 1 + s.size * 0.85;
-          const thin = Math.max(1, Math.round(s.size * 0.35));
-          const crossA = a * (0.35 + 0.45 * flicker);
+          const arm = 2;
+          const crossA = a * (0.4 + 0.4 * flicker);
           ctx.fillStyle = `rgba(${rgb},${crossA})`;
-          ctx.fillRect(px - arm, py - thin * 0.5, arm * 2, thin);
-          ctx.fillRect(px - thin * 0.5, py - arm, thin, arm * 2);
+          // Tiny 4-point twinkle cross (1px arms)
+          ctx.fillRect(px - arm, py, arm * 2 + s.size, 1);
+          ctx.fillRect(px, py - arm, 1, arm * 2 + s.size);
         }
       }
       ctx.restore();
