@@ -220,6 +220,7 @@
   font-size: 13.5px;
   line-height: 18px;
   border-radius: 6px;
+  overflow-wrap: anywhere;
   animation: mqd-in 0.3s ease both;
 }
 
@@ -359,7 +360,13 @@
 }
 
 .mqd-input-caret {
+  flex: none;
   color: var(--link);
+}
+
+.mqd-input-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .mqd-input-text em {
@@ -370,12 +377,12 @@
 .mqd-input.is-typing .mqd-input-text::after {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 12px;
+  width: 1.5px;
+  height: 13px;
   margin-left: 2px;
   vertical-align: -2px;
-  background: var(--ink);
-  animation: mqd-blink 0.9s steps(1) infinite;
+  background: var(--link);
+  animation: mqd-blink 1.06s steps(1) infinite;
 }
 
 @keyframes mqd-blink {

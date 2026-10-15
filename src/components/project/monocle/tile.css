@@ -49,38 +49,65 @@
 }
 
 .mqt-prompt {
+  --mqt-ink: #1c1d21;
+  --mqt-accent: #2f6fe4;
   position: absolute;
   left: 50%;
-  bottom: 5.2cqw;
+  bottom: 4.6cqw;
   transform: translateX(-50%);
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
-  gap: 1.6cqw;
-  max-width: 88cqw;
-  padding: 2cqw 3.6cqw;
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 3.4cqw;
-  line-height: 1.2;
-  color: #f2f3f5;
-  background: rgba(17, 18, 23, 0.92);
-  border-radius: 1.6cqw;
-  box-shadow: 0 1.4cqw 4cqw rgba(0, 0, 0, 0.4);
-  white-space: nowrap;
+  align-items: flex-start;
+  gap: 1.4cqw;
+  width: max-content;
+  max-width: calc(100% - 8cqw);
+  padding: 1.7cqw 2.6cqw 1.7cqw 2.2cqw;
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 3cqw, 15px);
+  line-height: 1.4;
+  color: var(--mqt-ink);
+  background: rgba(252, 251, 248, 0.94);
+  border: 1px solid rgba(20, 22, 28, 0.12);
+  border-radius: 1.4cqw;
+  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+
+html.is-dark .mqt-prompt {
+  --mqt-ink: #eceef2;
+  --mqt-accent: #7aa7ff;
+  background: rgba(16, 17, 21, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1cqw 3cqw rgba(0, 0, 0, 0.45);
 }
 
 .mqt-caret {
-  color: #4f8dff;
+  flex: none;
+  color: var(--mqt-accent);
+}
+
+.mqt-text {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .mqt-text::after {
   content: '';
   display: inline-block;
-  width: 0.55em;
-  height: 1em;
-  margin-left: 0.2em;
-  vertical-align: -0.12em;
-  background: #f2f3f5;
-  animation: mqt-blink 1s steps(1) infinite;
+  width: 0.12em;
+  min-width: 1.5px;
+  height: 1.05em;
+  margin-left: 0.12em;
+  vertical-align: -0.16em;
+  background: var(--mqt-accent);
+  animation: mqt-blink 1.06s steps(1) infinite;
 }
 
 @keyframes mqt-blink {
