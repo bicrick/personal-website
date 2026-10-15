@@ -16,9 +16,9 @@
 
 .it-ribbon {
   /* Compact band: just tall enough for the strip + reflection fade */
-  --it-bh: clamp(88px, 12vw, 118px);
-  --it-glow-h: 22px;
-  --it-refl-h: calc(var(--it-bh) * 0.48);
+  --it-bh: clamp(84px, 11vw, 112px);
+  --it-glow-h: 10px;
+  --it-refl-h: calc(var(--it-bh) * 0.46);
   --it-ease: cubic-bezier(.2, .7, .2, 1);
   --it-surr: 5, 5, 6;
   --it-empty: #050506;
@@ -119,9 +119,9 @@ html:not(.is-dark) .it-band-glow {
 
 .it-band-glow i {
   position: absolute;
-  bottom: -28px;
+  bottom: -20px;
   width: 46%;
-  height: 64px;
+  height: 48px;
   border-radius: 50%;
   will-change: transform;
   background: radial-gradient(closest-side, rgba(255, 176, 82, 0.55), transparent);
@@ -321,8 +321,8 @@ html:not(.is-dark) .it-band-refl canvas {
 
 @media (max-width: 760px) {
   .it-ribbon {
-    --it-bh: clamp(72px, 22vw, 100px);
-    --it-glow-h: 16px;
-    --it-refl-h: calc(var(--it-bh) * 0.5);
+    --it-bh: clamp(68px, 20vw, 96px);
+    --it-glow-h: 8px;
+    --it-refl-h: calc(var(--it-bh) * 0.48);
   }
 }

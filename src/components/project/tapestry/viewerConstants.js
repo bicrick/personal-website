@@ -21,8 +21,8 @@ export const SURROUND = {
 export const REFL_VAR = [0.55, 0.25, 1.25, 1.35, 1.12, 0.18];
 
 /** Compact article demo band + reflection (not the about-page giant square). */
-export const BAND_HEIGHT = 'clamp(88px, 12vw, 118px)';
-export const REFL_HEIGHT_RATIO = 0.48;
+export const BAND_HEIGHT = 'clamp(84px, 11vw, 112px)';
+export const REFL_HEIGHT_RATIO = 0.46;
 export const REFL_MASK =
   'linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.22) 40%, transparent 92%)';
 
