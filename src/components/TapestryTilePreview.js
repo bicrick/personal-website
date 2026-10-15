@@ -14,12 +14,14 @@ const RIBBON_FALLBACK = `${IMG}/ribbon-thumb.jpg`;
 const SHEEN_PERIOD = 14;
 const SHEEN_RGB = '255,240,215';
 /**
- * Dense starfield scaled from infinitetapestry.app intro.js:
- * full-screen uses N≈12000 over SPAN×BANDW with ~1.6px points.
- * Thumbnail area is much smaller → density-matched crisp 1–2px stars.
+ * Starfield after infinitetapestry.app intro.js: jittered lattice of
+ * 1.6px·(.85+.3r) points at alpha .25+.35r, drifting in x with a slow y wobble.
+ * Lattice cell is shrunk for the thumbnail so the field stays dense.
  */
-const STAR_SPACING = 7.5; // CSS px, ≈ intro cell at typical display scale
-const STAR_CROSS_FRAC = 0.12;
+const STAR_SPACING = 4.8;
+const STAR_CROSS_FRAC = 0.04;
+const STAR_ALPHA_BUCKETS = 24;
+const RIBBON_SPEED = 12;
 
 function loadImage(src, fallback) {
   const trySrc = (url) => new Promise((resolve, reject) => {
@@ -70,9 +72,9 @@ function themePalette(dark) {
       glowAlpha: 0.42,
       sheenPeak: 0.14,
       reflPeak: 0.28,
-      // intro.js: mote = vec3(1.) on dark
       sparkle: '255,255,255',
-      sparklePeak: 0.72,
+      sparklePeak: 1,
+      hairline: 'rgba(255,255,255,0.42)',
     };
   }
   return {
@@ -80,9 +82,9 @@ function themePalette(dark) {
     glowAlpha: 0.32,
     sheenPeak: 0.12,
     reflPeak: 0.2,
-    // intro.js: mote = vec3(.08) on light — slightly lifted for cream paper contrast
-    sparkle: '18,18,20',
-    sparklePeak: 0.7,
+    sparkle: '20,20,20',
+    sparklePeak: 1,
+    hairline: 'rgba(20,20,20,0.5)',
   };
 }
 
@@ -112,9 +114,31 @@ function buildSolidMask(paths, cssW, cssH, dpr, fit) {
 }
 
 /**
- * Jittered lattice like intro.js (cols×rows over the tile), density ≈ STAR_SPACING.
+ * Ring of `radius` device px just outside the mask (covers the inner holes too),
+ * made by dilating the mask and punching the original back out.
  */
-function seedStars(w, h) {
+function buildMaskHairline(mask, radius, color) {
+  const canvas = document.createElement('canvas');
+  canvas.width = mask.width;
+  canvas.height = mask.height;
+  const ctx = canvas.getContext('2d');
+  for (let dx = -radius; dx <= radius; dx += 1) {
+    for (let dy = -radius; dy <= radius; dy += 1) {
+      if (dx * dx + dy * dy <= radius * radius + 1) ctx.drawImage(mask, dx, dy);
+    }
+  }
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.drawImage(mask, 0, 0);
+  ctx.globalCompositeOperation = 'source-in';
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
+/**
+ * Jittered lattice like intro.js: (i + .2 + .6·rnd)·cell. Sizes are in device px.
+ */
+function seedStars(w, h, dpr) {
   const cell = STAR_SPACING;
   const cols = Math.max(8, Math.ceil(w / cell));
   const rows = Math.max(6, Math.ceil(h / cell));
@@ -128,23 +152,22 @@ function seedStars(w, h) {
   };
   for (let i = 0; i < cols; i += 1) {
     for (let j = 0; j < rows; j += 1) {
+      const jx = rnd();
+      const jy = rnd();
       const r0 = rnd();
       const r1 = rnd();
+      // intro points are 1.6px with an exp(-d²·9) falloff; ~1.1px is the visible core
+      const size = Math.max(1, Math.round(1.1 * dpr * (0.85 + 0.3 * r0)));
       out.push({
-        // Normalised lattice with intro-style jitter
-        x: (i + 0.2 + 0.6 * r0) / cols,
-        y: (j + 0.2 + 0.6 * r1) / rows,
-        // intro gl_PointSize base ≈ 1.6px; integer 1–2px for crisp pixels
-        size: r0 < 0.55 ? 1 : 2,
+        x: (i + 0.2 + 0.6 * jx) / cols,
+        y: (j + 0.2 + 0.6 * jy) / rows,
+        size,
         phase: r1 * Math.PI * 2,
-        // intro: fract(a.w + .02 * sin(uT * .7 + r.y * 6.28)) + slow drift
-        speed: 0.55 + r0 * 0.5,
-        driftX: (r0 - 0.5) * 0.012,
-        driftY: (r1 - 0.5) * 0.01,
-        // intro alpha: uMote * (.25 + .35 * r.x)
+        // intro: x drift uT·6·(r.x−.5) world px/s ≈ ±3 screen px/s
+        driftX: 6 * (r0 - 0.5),
         baseA: 0.25 + 0.35 * r0,
-        cross: r1 < STAR_CROSS_FRAC && r0 >= 0.55,
-        twinkle: 0.7 + r0 * 1.1,
+        cross: rnd() < STAR_CROSS_FRAC && r0 > 0.5,
+        twinkle: 0.6 + rnd() * 1.2,
       });
     }
   }
@@ -167,6 +190,7 @@ export default function TapestryTilePreview({ className = '' }) {
     let ribbon = null;
     let solidMask = null;
     let solidMaskKey = '';
+    let hairline = null;
     let t0 = performance.now();
     const reduced = prefersReducedMotion();
     const paths = createMarkPaths();
@@ -217,7 +241,7 @@ export default function TapestryTilePreview({ className = '' }) {
       return ctx;
     };
 
-    const drawScrollingRibbon = (ctx, w, h, time, speed = 28) => {
+    const drawScrollingRibbon = (ctx, w, h, time, speed = RIBBON_SPEED) => {
       if (!ribbon || !ribbon.naturalWidth) {
         ctx.fillStyle = palette.bg;
         ctx.fillRect(0, 0, w, h);
@@ -273,12 +297,13 @@ export default function TapestryTilePreview({ className = '' }) {
       const key = `${Math.round(w)}x${Math.round(h)}@${dpr}`;
       if (!solidMask || solidMaskKey !== key) {
         solidMask = buildSolidMask(paths, w, h, dpr, fit);
+        hairline = buildMaskHairline(solidMask, Math.max(1, Math.round(dpr)), palette.hairline);
         solidMaskKey = key;
       }
 
       const lctx = ensureSize(paintLayer, w, h, dpr);
       lctx.clearRect(0, 0, w, h);
-      drawScrollingRibbon(lctx, w, h, time, 28);
+      drawScrollingRibbon(lctx, w, h, time, RIBBON_SPEED);
 
       lctx.globalCompositeOperation = 'destination-in';
       lctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -351,41 +376,65 @@ export default function TapestryTilePreview({ className = '' }) {
       ctx.fillRect(0, reflTop, w, reflH + 1);
     };
 
+    const buckets = Array.from({ length: STAR_ALPHA_BUCKETS }, () => []);
+    const bucketStyles = buckets.map((_, b) => (
+      `rgba(${palette.sparkle},${(palette.sparklePeak * (b + 0.5)) / STAR_ALPHA_BUCKETS})`
+    ));
+
     /**
-     * Crisp intro-scaled starfield: 1–2px hard points (no soft radial blobs),
-     * some with a tiny 4-point twinkle cross; opacity flicker like intro motes.
+     * Hard device-pixel points batched by quantised alpha so thousands of stars
+     * cost a couple dozen fillStyle changes per frame.
      */
-    const drawStars = (ctx, w, h, time) => {
-      const key = `${Math.round(w)}x${Math.round(h)}`;
+    const drawStars = (ctx, w, h, time, dpr) => {
+      const key = `${Math.round(w)}x${Math.round(h)}@${dpr}`;
       if (starsKey !== key) {
-        stars = seedStars(w, h);
+        stars = seedStars(w, h, dpr);
         starsKey = key;
       }
-      ctx.save();
-      ctx.imageSmoothingEnabled = false;
-      ctx.globalCompositeOperation = dark ? 'screen' : 'source-over';
-      const rgb = palette.sparkle;
+      const cw = Math.round(w * dpr);
+      const ch = Math.round(h * dpr);
+      const wobble = h * 0.02 * dpr;
+      buckets.forEach((b) => { b.length = 0; });
       for (let i = 0; i < stars.length; i += 1) {
         const s = stars[i];
         const flicker = reduced
-          ? 0.7
-          : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(time * s.twinkle + s.phase));
-        const x = ((s.x + (reduced ? 0 : time * s.driftX)) % 1 + 1) % 1;
-        const y = ((s.y + (reduced ? 0 : time * s.driftY)
-          + (reduced ? 0 : 0.02 * Math.sin(time * s.speed + s.phase))) % 1 + 1) % 1;
-        const px = Math.floor(x * w);
-        const py = Math.floor(y * h);
-        const a = Math.min(1, palette.sparklePeak * s.baseA * flicker);
-        ctx.fillStyle = `rgba(${rgb},${a})`;
-        // Sharp integer pixel point — no blur / radial soft gradient
-        ctx.fillRect(px, py, s.size, s.size);
-        if (s.cross && !reduced) {
-          const arm = 2;
-          const crossA = a * (0.4 + 0.4 * flicker);
-          ctx.fillStyle = `rgba(${rgb},${crossA})`;
-          // Tiny 4-point twinkle cross (1px arms)
-          ctx.fillRect(px - arm, py, arm * 2 + s.size, 1);
-          ctx.fillRect(px, py - arm, 1, arm * 2 + s.size);
+          ? 0.8
+          : 0.6 + 0.4 * Math.sin(time * s.twinkle + s.phase);
+        const a = Math.min(0.999, s.baseA * flicker);
+        const xOff = reduced ? 0 : time * s.driftX * dpr;
+        const yOff = reduced ? 0 : wobble * Math.sin(time * 0.7 + s.phase);
+        s.px = Math.floor((((s.x * cw + xOff) % cw) + cw) % cw);
+        s.py = Math.floor((((s.y * ch + yOff) % ch) + ch) % ch);
+        s.a = a;
+        buckets[Math.floor(a * STAR_ALPHA_BUCKETS)].push(s);
+      }
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+      ctx.globalCompositeOperation = 'source-over';
+      const arm = Math.max(2, Math.round(2 * dpr));
+      const line = Math.max(1, Math.round(dpr * 0.75));
+      for (let b = 0; b < buckets.length; b += 1) {
+        const list = buckets[b];
+        if (list.length) {
+          ctx.fillStyle = bucketStyles[b];
+          for (let i = 0; i < list.length; i += 1) {
+            const s = list[i];
+            ctx.fillRect(s.px, s.py, s.size, s.size);
+          }
+        }
+      }
+      if (!reduced) {
+        for (let i = 0; i < stars.length; i += 1) {
+          const s = stars[i];
+          if (s.cross) {
+            const crossA = s.a * 0.55;
+            ctx.fillStyle = bucketStyles[Math.floor(crossA * STAR_ALPHA_BUCKETS)];
+            const cx = s.px + Math.floor((s.size - line) / 2);
+            const cy = s.py + Math.floor((s.size - line) / 2);
+            ctx.fillRect(cx - arm, cy, arm * 2 + line, line);
+            ctx.fillRect(cx, cy - arm, line, arm * 2 + line);
+          }
         }
       }
       ctx.restore();
@@ -413,10 +462,10 @@ export default function TapestryTilePreview({ className = '' }) {
 
       const { layer, fit } = buildCutout(w, h, dpr, time);
       drawGlow(ctx, w, h, fit, time);
-      drawStars(ctx, w, h, time);
+      drawStars(ctx, w, h, time, dpr);
       drawReflection(ctx, w, h, layer, fit);
       ctx.drawImage(layer, 0, 0, w, h);
-      // No woven outline — cutout only
+      if (hairline) ctx.drawImage(hairline, 0, 0, w, h);
       drawSheen(ctx, w, h, fit, time, dpr);
     };
 
