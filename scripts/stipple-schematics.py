@@ -32,8 +32,8 @@ CROPS = [
     *[f"loop-{i}" for i in range(5)],
 ]
 
-POINTS_PER_KPIX = 10.0
-LLOYD_ITERS = 12
+POINTS_PER_KPIX = 22.0
+LLOYD_ITERS = 10
 GRID_CAP = 160  # long-edge of Lloyd working grid
 RNG = np.random.default_rng(0x1A5E)
 
@@ -141,7 +141,7 @@ def render_png(
         yy, xx = np.ogrid[y0:y1, x0:x1]
         dist2 = (xx - cx) ** 2 + (yy - cy) ** 2
         a = np.exp(-dist2 / (2.0 * (rr * 0.55) ** 2))
-        peak = 0.58 if dark_dots else 0.5
+        peak = 0.78 if dark_dots else 0.68
         alpha[y0:y1, x0:x1] = np.maximum(alpha[y0:y1, x0:x1], a * peak)
 
     alpha = np.clip(alpha, 0, 1)
@@ -164,11 +164,11 @@ def stipple_image(path: Path) -> None:
     lum = luminance(arr)
 
     n = int(max(64, (w * h / 1000.0) * POINTS_PER_KPIX))
-    n = min(n, 3200)
+    n = min(n, 6000)
     print(f"  {path.stem}: {w}x{h}, {n} points")
 
-    dens_light = np.clip((1.0 - lum) ** 1.35, 0.025, 1.0)
-    dens_dark = np.clip(lum ** 1.35, 0.025, 1.0)
+    dens_light = np.clip((1.0 - lum) ** 1.15, 0.04, 1.0)
+    dens_dark = np.clip(lum ** 1.15, 0.04, 1.0)
 
     for dens, dark_dots, suffix in (
         (dens_light, True, "stipple-light"),
@@ -178,7 +178,7 @@ def stipple_image(path: Path) -> None:
         pts = lloyd(dens, pts, LLOYD_ITERS)
         pts[:, 0] = np.clip(pts[:, 0], 0.5, w - 0.5)
         pts[:, 1] = np.clip(pts[:, 1], 0.5, h - 0.5)
-        rad = radii_for(pts, dens, base=0.78 if max(w, h) > 100 else 0.68)
+        rad = radii_for(pts, dens, base=0.92 if max(w, h) > 100 else 0.8)
         out = render_png(pts, rad, (w, h), dark_dots=dark_dots, scale=2)
         out_path = OUT_DIR / f"{path.stem}-{suffix}.png"
         out.save(out_path, "PNG", optimize=True)
