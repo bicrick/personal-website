@@ -1,7 +1,24 @@
-/* Anthropic-style inline schematics for Infinite Tapestry */
+/* Anthropic-style inline schematics for Infinite Tapestry.
+   Dot-grid / mote field mirrors the opening of infinitetapestry.app's loader:
+   dark motes on light, light motes on dark — very low alpha. */
 
 .it-schematic {
+  --it-mote: rgba(20, 20, 22, 0.11);
+  --it-mote-soft: rgba(20, 20, 22, 0.055);
   margin: 20px 0 8px;
+  padding: 18px 12px 14px;
+  background-color: transparent;
+  /* jittered lattice: two slightly offset grids, soft discs */
+  background-image:
+    radial-gradient(circle, var(--it-mote) 0.55px, transparent 0.7px),
+    radial-gradient(circle, var(--it-mote-soft) 0.45px, transparent 0.65px);
+  background-size: 14px 14px, 21px 21px;
+  background-position: 0 0, 7px 5px;
+}
+
+html.is-dark .it-schematic {
+  --it-mote: rgba(255, 255, 255, 0.1);
+  --it-mote-soft: rgba(255, 255, 255, 0.045);
 }
 
 .it-schematic svg {

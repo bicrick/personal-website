@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   createMarkPaths,
   fitMark,
-  MARK_CROSSING_STROKES,
   MARK_MASK_STROKES,
   MARK_VIEWBOX,
 } from './tapestry/markGeometry';
@@ -14,6 +13,7 @@ const RIBBON_FALLBACK = `${IMG}/ribbon-thumb.jpg`;
 
 const SHEEN_PERIOD = 14;
 const SHEEN_RGB = '255,240,215';
+const SPARKLE_COUNT = 28;
 
 function loadImage(src, fallback) {
   const trySrc = (url) => new Promise((resolve, reject) => {
@@ -61,26 +61,27 @@ function themePalette(dark) {
   if (dark) {
     return {
       bg: '#0b0b0d',
-      under: '#0b0b0d',
-      cream: '#efe9df',
       glowAlpha: 0.42,
       sheenPeak: 0.14,
       reflPeak: 0.28,
+      sparkle: '255,248,236',
+      sparklePeak: 0.55,
     };
   }
   return {
     bg: '#f4efe7',
-    under: '#f4efe7',
-    cream: '#1a1612',
     glowAlpha: 0.32,
     sheenPeak: 0.12,
     reflPeak: 0.2,
+    sparkle: '40,36,28',
+    sparklePeak: 0.35,
   };
 }
 
 /**
  * Rasterize the official mark.svg outermost strokes into a solid alpha mask.
  * Built once per size; reused for destination-in each frame.
+ * No woven outline is drawn — cutout only.
  */
 function buildSolidMask(paths, cssW, cssH, dpr, fit) {
   const cw = Math.round(cssW * dpr);
@@ -102,6 +103,30 @@ function buildSolidMask(paths, cssW, cssH, dpr, fit) {
   return canvas;
 }
 
+function seedSparkles(count) {
+  const out = [];
+  let h = 0x9e3779b9;
+  const rnd = () => {
+    h ^= h << 13;
+    h ^= h >>> 17;
+    h ^= h << 5;
+    return (h >>> 0) / 4294967296;
+  };
+  for (let i = 0; i < count; i += 1) {
+    out.push({
+      x: rnd(),
+      y: rnd(),
+      r: 0.4 + rnd() * 1.1,
+      phase: rnd() * Math.PI * 2,
+      speed: 0.08 + rnd() * 0.18,
+      driftX: (rnd() - 0.5) * 0.04,
+      driftY: -0.015 - rnd() * 0.035,
+      twinkle: 0.6 + rnd() * 1.4,
+    });
+  }
+  return out;
+}
+
 export default function TapestryTilePreview({ className = '' }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
@@ -114,6 +139,7 @@ export default function TapestryTilePreview({ className = '' }) {
 
     let alive = true;
     let raf = 0;
+    let visible = true;
     let ribbon = null;
     let solidMask = null;
     let solidMaskKey = '';
@@ -123,6 +149,7 @@ export default function TapestryTilePreview({ className = '' }) {
     const palette = themePalette(dark);
     const paintLayer = document.createElement('canvas');
     const sheenLayer = document.createElement('canvas');
+    const sparkles = seedSparkles(SPARKLE_COUNT);
 
     const glowColors = [
       [255, 176, 82],
@@ -228,7 +255,6 @@ export default function TapestryTilePreview({ className = '' }) {
       lctx.clearRect(0, 0, w, h);
       drawScrollingRibbon(lctx, w, h, time, 28);
 
-      // destination-in with a pre-rasterized solid mask (mark.svg outermost strokes)
       lctx.globalCompositeOperation = 'destination-in';
       lctx.setTransform(1, 0, 0, 1, 0, 0);
       lctx.drawImage(solidMask, 0, 0);
@@ -300,27 +326,28 @@ export default function TapestryTilePreview({ className = '' }) {
       ctx.fillRect(0, reflTop, w, reflH + 1);
     };
 
-    const strokeOutline = (ctx, fit) => {
+    /** Soft drifting motes — live canvas, not video. */
+    const drawSparkles = (ctx, w, h, time) => {
       ctx.save();
-      ctx.translate(fit.ox, fit.oy);
-      ctx.scale(fit.scale, fit.scale);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.globalCompositeOperation = 'source-over';
-      // Official mark.svg 1.3 cream highlight
-      ctx.globalAlpha = 0.95;
-      ctx.strokeStyle = palette.cream;
-      ['right', 'left', 'weave'].forEach((key) => {
-        ctx.lineWidth = 1.3;
-        ctx.stroke(paths[key]);
+      ctx.globalCompositeOperation = dark ? 'screen' : 'multiply';
+      sparkles.forEach((s) => {
+        const life = reduced
+          ? 0.45
+          : 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * s.twinkle + s.phase));
+        const x = ((s.x + (reduced ? 0 : time * s.driftX)) % 1 + 1) % 1;
+        const y = ((s.y + (reduced ? 0 : time * s.driftY) + Math.sin(time * s.speed + s.phase) * 0.02) % 1 + 1) % 1;
+        const px = x * w;
+        const py = y * h;
+        const r = s.r * (0.7 + life * 0.6);
+        const a = palette.sparklePeak * life * 0.55;
+        const grad = ctx.createRadialGradient(px, py, 0, px, py, r * 2.4);
+        grad.addColorStop(0, `rgba(${palette.sparkle},${a})`);
+        grad.addColorStop(1, `rgba(${palette.sparkle},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(px, py, r * 2.4, 0, Math.PI * 2);
+        ctx.fill();
       });
-      MARK_CROSSING_STROKES.forEach(({ key, width, role }) => {
-        ctx.lineWidth = width;
-        ctx.globalAlpha = role === 'cream' ? 0.95 : 0.85;
-        ctx.strokeStyle = role === 'cream' ? palette.cream : palette.under;
-        ctx.stroke(paths[key]);
-      });
-      ctx.globalAlpha = 1;
       ctx.restore();
     };
 
@@ -346,21 +373,34 @@ export default function TapestryTilePreview({ className = '' }) {
 
       const { layer, fit } = buildCutout(w, h, dpr, time);
       drawGlow(ctx, w, h, fit, time);
+      drawSparkles(ctx, w, h, time);
       drawReflection(ctx, w, h, layer, fit);
       ctx.drawImage(layer, 0, 0, w, h);
-      strokeOutline(ctx, fit);
+      // No woven outline — cutout only
       drawSheen(ctx, w, h, fit, time, dpr);
     };
 
     const tick = (now) => {
-      draw(now);
+      if (!alive) return;
+      if (visible) {
+        draw(now);
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = 0;
+      }
+    };
+
+    const resume = () => {
+      if (!alive || raf) return;
+      t0 = performance.now() - ((performance.now() - t0) % 1000);
       raf = requestAnimationFrame(tick);
     };
 
     assets.finally(() => {
       if (!alive) return;
       t0 = performance.now();
-      raf = requestAnimationFrame(tick);
+      if (visible) raf = requestAnimationFrame(tick);
+      else draw(performance.now());
     });
 
     const onResize = () => {
@@ -370,10 +410,24 @@ export default function TapestryTilePreview({ className = '' }) {
     };
     window.addEventListener('resize', onResize);
 
+    let io;
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) resume();
+        else if (raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      }, { threshold: 0.05 });
+      io.observe(wrap);
+    }
+
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
+      io?.disconnect();
     };
   }, [dark]);
 

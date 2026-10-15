@@ -29,20 +29,6 @@ export const MARK_MASK_STROKES = [
   { key: 'weave', width: 6.4 * MASK_WIDTH_SCALE },
 ];
 
-/** Outer rim thickness in viewBox units (paired with mask widths). */
-export const OUTLINE_RIM = 1.15;
-
-/**
- * Woven over/under crossing from mark.svg — thin strokes only, drawn after
- * the rim so the painting stays visible in the thick band.
- */
-export const MARK_CROSSING_STROKES = [
-  { key: 'bridge', width: 2.8, role: 'under' },
-  { key: 'weave', width: 1.8, role: 'cream' },
-  { key: 'weave', width: 0.85, role: 'under' },
-  { key: 'weave', width: 0.45, role: 'cream' },
-];
-
 export function createMarkPaths() {
   return {
     right: new Path2D(MARK_PATH_D.right),
