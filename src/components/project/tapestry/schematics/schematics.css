@@ -4,7 +4,7 @@
 
 .it-schematic {
   /* Stipple ink via currentColor: dark dots on light, light dots on dark */
-  color: rgba(18, 18, 20, 0.78);
+  color: rgba(18, 18, 20, 0.88);
   --it-mote: rgba(20, 20, 22, 0.11);
   --it-mote-soft: rgba(20, 20, 22, 0.055);
   margin: 20px 0 8px;
@@ -19,7 +19,7 @@
 }
 
 html.is-dark .it-schematic {
-  color: rgba(248, 246, 240, 0.72);
+  color: rgba(248, 246, 240, 0.82);
   --it-mote: rgba(255, 255, 255, 0.1);
   --it-mote-soft: rgba(255, 255, 255, 0.045);
 }
