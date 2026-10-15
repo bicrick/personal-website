@@ -80,9 +80,9 @@ function themePalette(dark) {
     glowAlpha: 0.32,
     sheenPeak: 0.12,
     reflPeak: 0.2,
-    // intro.js: mote = vec3(.08) on light
-    sparkle: '20,20,20',
-    sparklePeak: 0.55,
+    // intro.js: mote = vec3(.08) on light — slightly lifted for cream paper contrast
+    sparkle: '18,18,20',
+    sparklePeak: 0.7,
   };
 }
 
