@@ -20,10 +20,10 @@
 */
 .it-embed {
   --it-embed-h: clamp(104px, 15vw, 148px);
-  /* Fraction of iframe height visible in the window */
-  --it-visible: 0.48;
-  /* Where the crop starts (matches live --band-top ≈ 0.30) */
-  --it-crop-top: 0.28;
+  /* Fraction of iframe height visible in the window (band ~40vh + refl) */
+  --it-visible: 0.46;
+  /* Align near live --band-top (~0.30); keep composer chrome out */
+  --it-crop-top: 0.27;
 
   position: relative;
   height: var(--it-embed-h);
