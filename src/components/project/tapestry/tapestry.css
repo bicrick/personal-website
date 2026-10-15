@@ -277,8 +277,22 @@ html:not(.is-dark) .it-band-veil {
 }
 
 html:not(.is-dark) .it-band-refl canvas {
-  filter: saturate(1.12) brightness(1.18);
-  opacity: 0.9;
+  filter: saturate(1.15) brightness(1.22);
+  opacity: 0.98;
+}
+
+/* Soften light-mode empty surround so reflection reads as ink, not blank paper */
+html:not(.is-dark) .it-band-refl {
+  -webkit-mask-image: linear-gradient(
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.28) 42%,
+    transparent 94%
+  );
+  mask-image: linear-gradient(
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.28) 42%,
+    transparent 94%
+  );
 }
 
 .it-ribbon-controls {
