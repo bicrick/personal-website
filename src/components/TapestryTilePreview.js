@@ -110,18 +110,27 @@ function buildSolidMask(paths, cssW, cssH, dpr, fit) {
     ctx.lineWidth = width;
     ctx.stroke(paths[key]);
   });
+  return mirrorLeftHalf(canvas);
+}
 
-  // Mirror the left half onto the right in device pixels so both lobes and holes match exactly.
+/** Copy the left half onto the right in device pixels so both sides match exactly. */
+function mirrorLeftHalf(canvas) {
+  const cw = canvas.width;
+  const ch = canvas.height;
   const half = Math.floor(cw / 2);
   const left = document.createElement('canvas');
   left.width = half;
   left.height = ch;
   left.getContext('2d').drawImage(canvas, 0, 0, half, ch, 0, 0, half, ch);
+  const ctx = canvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-over';
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(cw - half, 0, half, ch);
   ctx.setTransform(-1, 0, 0, 1, cw, 0);
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(left, 0, 0);
+  ctx.restore();
   return canvas;
 }
 
@@ -144,7 +153,7 @@ function buildMaskHairline(mask, radius, color) {
   ctx.globalCompositeOperation = 'source-in';
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  return canvas;
+  return mirrorLeftHalf(canvas);
 }
 
 function smoothstep(e0, e1, x) {
