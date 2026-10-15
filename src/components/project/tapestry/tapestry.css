@@ -1,4 +1,4 @@
-/* Compact live iframe embed — band + reflection crop of infinitetapestry.app */
+/* 16:9 live iframe embed of infinitetapestry.app */
 
 .it-demo {
   margin: 28px 0 24px;
@@ -14,22 +14,19 @@
   font-style: italic;
 }
 
-/*
-  Iframe is full embed width; taller than the window. Shifted up so the
-  live band (~30–70vh) + reflection sit in a short crop.
-*/
+.it-demo figcaption a {
+  color: inherit;
+}
+
 .it-embed {
-  --it-embed-h: clamp(104px, 15vw, 148px);
-  /*
-    Live landscape ribbon: band ≈ 17–77% of iframe height (ribbon=0.6),
-    reflection fades below. Crop that slice; keep composer chrome out.
-  */
-  --it-visible: 0.68;
-  --it-crop-top: 0.14;
+  --it-vw: 1600;
+  --it-vh: 900;
 
   position: relative;
-  height: var(--it-embed-h);
+  width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  container-type: inline-size;
   background: #050506;
   border: 1px solid var(--rule);
 }
@@ -39,56 +36,22 @@ html:not(.is-dark) .it-embed {
   border-color: color-mix(in srgb, var(--rule) 80%, #c9b8a0);
 }
 
+/* Desktop layout size, shrunk to the visible 16:9 box. Transform does not
+   change the iframe's layout viewport, so the live site still sees 1600×900. */
 .it-embed-scaler {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: calc(var(--it-vw) * 1px);
+  height: calc(var(--it-vh) * 1px);
+  transform-origin: top left;
+  transform: scale(calc(100cqw / (var(--it-vw) * 1px)));
 }
 
 .it-embed-iframe {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: calc(var(--it-embed-h) / var(--it-visible));
-  top: calc(var(--it-embed-h) / var(--it-visible) * var(--it-crop-top) * -1);
-  border: 0;
-  pointer-events: none;
-  background: transparent;
-}
-
-/* Full-size hit target — opens the live site */
-.it-embed-link {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
   display: block;
-  cursor: pointer;
-  text-decoration: none;
-  color: transparent;
-}
-
-.it-embed-link-text {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
+  width: calc(var(--it-vw) * 1px);
+  height: calc(var(--it-vh) * 1px);
   border: 0;
-}
-
-.it-embed-link:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: -2px;
-}
-
-@media (max-width: 760px) {
-  .it-embed {
-    --it-embed-h: clamp(88px, 26vw, 120px);
-    --it-visible: 0.7;
-    --it-crop-top: 0.12;
-  }
+  background: transparent;
 }

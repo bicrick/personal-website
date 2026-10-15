@@ -3,39 +3,39 @@ import './tapestry.css';
 
 const LIVE = 'https://infinitetapestry.app';
 
+/* Layout viewport inside the frame. The live site goes full-bleed below 520px tall. */
+const VIEW_W = 1600;
+const VIEW_H = 900;
+
 /**
- * Compact non-interactive live embed of infinitetapestry.app.
- * Scaled/cropped to a short band+reflection window; click-through opens the site.
- * Live theme follows OS / its own localStorage (no theme URL param).
+ * 16:9 live embed of infinitetapestry.app.
+ * The iframe lays out at a desktop size, then scales down into the frame
+ * so the ribbon, light bands, and reflections stay in view.
  */
-export default function TapestryRibbon({
-  caption = 'Live from infinitetapestry.app — click to open the full viewer.',
-}) {
+export default function TapestryRibbon() {
   return (
     <figure className="it-demo">
       <div className="it-embed">
-        <div className="it-embed-scaler" aria-hidden="true">
+        <div className="it-embed-scaler">
           <iframe
             className="it-embed-iframe"
             src={LIVE}
             title="Infinite Tapestry live painting"
+            width={VIEW_W}
+            height={VIEW_H}
             loading="lazy"
-            tabIndex={-1}
             referrerPolicy="no-referrer-when-downgrade"
-            allow=""
+            allow="fullscreen"
           />
         </div>
-        <a
-          className="it-embed-link"
-          href={LIVE}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open Infinite Tapestry live site"
-        >
-          <span className="it-embed-link-text">Open infinitetapestry.app</span>
-        </a>
       </div>
-      {caption ? <figcaption>{caption}</figcaption> : null}
+      <figcaption>
+        Live from{' '}
+        <a href={LIVE} target="_blank" rel="noopener noreferrer">
+          infinitetapestry.app
+        </a>
+        .
+      </figcaption>
     </figure>
   );
 }
