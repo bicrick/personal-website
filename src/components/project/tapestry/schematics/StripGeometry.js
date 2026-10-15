@@ -1,16 +1,14 @@
 import React from 'react';
+import { LabelChip, SCHEMATIC } from './schematicAssets';
 import './schematics.css';
 
-/** Strip / window geometry: 256×1024 strip, 1024 window, 192 overlap, 128 repaint. */
+/** Strip / window geometry with real desaturated strip crops. */
 export default function StripGeometry() {
-  // Proportional layout (px units in viewBox):
-  // context 768 + new 256 = 1024 window
-  // overlap 192 on left of emitted strip; repaint band 128 into context
   const vbW = 720;
-  const vbH = 220;
+  const vbH = 230;
   const y = 48;
   const h = 96;
-  const scale = 0.55; // 1024 * 0.55 ≈ 563
+  const scale = 0.55;
   const winX = 80;
   const winW = 1024 * scale;
   const contextW = 768 * scale;
@@ -19,92 +17,76 @@ export default function StripGeometry() {
   const repaintW = 128 * scale;
   const stripX = winX + contextW - overlapW;
   const stripW = overlapW + newW;
+  const ctxKeep = contextW - repaintW;
 
   return (
     <figure className="it-schematic" aria-label="Strip geometry schematic">
       <svg viewBox={`0 0 ${vbW} ${vbH}`} role="img">
         <title>Strip geometry</title>
+        <defs>
+          <clipPath id="it-geom-win">
+            <rect x={winX} y={y} width={winW} height={h} />
+          </clipPath>
+          <clipPath id="it-geom-ctx">
+            <rect x={winX} y={y} width={ctxKeep} height={h} />
+          </clipPath>
+          <clipPath id="it-geom-rep">
+            <rect x={winX + ctxKeep} y={y} width={repaintW} height={h} />
+          </clipPath>
+          <clipPath id="it-geom-new">
+            <rect x={winX + contextW} y={y} width={newW} height={h} />
+          </clipPath>
+          <pattern id="it-hatch-geom" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line className="it-schematic-hatch" x1="0" y1="0" x2="0" y2="7" />
+          </pattern>
+        </defs>
 
-        {/* Window outline */}
-        <rect
-          className="it-schematic-stroke"
-          x={winX}
-          y={y}
-          width={winW}
-          height={h}
-        />
-
-        {/* Context (kept) */}
-        <rect
-          className="it-schematic-fill-faint"
-          x={winX}
-          y={y}
-          width={contextW - repaintW}
-          height={h}
-        />
-
-        {/* Repaint band */}
-        <rect
-          className="it-schematic-fill-mask"
-          x={winX + contextW - repaintW}
-          y={y}
-          width={repaintW}
-          height={h}
-        />
-
-        {/* New slot */}
-        <rect
-          className="it-schematic-fill-soft"
-          x={winX + contextW}
-          y={y}
-          width={newW}
-          height={h}
-        />
-
-        {/* Emitted strip bracket under window */}
-        <rect
-          className="it-schematic-stroke"
-          x={stripX}
-          y={y + h + 18}
-          width={stripW}
-          height={22}
-        />
-        <rect
-          className="it-schematic-fill-overlap"
-          x={stripX}
-          y={y + h + 18}
-          width={overlapW}
-          height={22}
-        />
-
-        {/* Dimension ticks: window */}
-        <line
-          className="it-schematic-stroke-faint"
-          x1={winX}
-          y1={y - 14}
-          x2={winX + winW}
-          y2={y - 14}
-        />
+        <line className="it-schematic-stroke-faint" x1={winX} y1={y - 14} x2={winX + winW} y2={y - 14} />
         <line className="it-schematic-stroke-faint" x1={winX} y1={y - 18} x2={winX} y2={y - 10} />
-        <line
-          className="it-schematic-stroke-faint"
-          x1={winX + winW}
-          y1={y - 18}
-          x2={winX + winW}
-          y2={y - 10}
-        />
+        <line className="it-schematic-stroke-faint" x1={winX + winW} y1={y - 18} x2={winX + winW} y2={y - 10} />
         <text className="it-schematic-label" x={winX + winW / 2} y={y - 20} textAnchor="middle">
           window 1024×1024
         </text>
 
-        {/* Height label */}
-        <line
-          className="it-schematic-stroke-faint"
-          x1={winX - 16}
-          y1={y}
-          x2={winX - 16}
-          y2={y + h}
+        <image
+          href={SCHEMATIC.geomContext}
+          x={winX}
+          y={y}
+          width={ctxKeep}
+          height={h}
+          preserveAspectRatio="xMidYMid slice"
+          clipPath="url(#it-geom-ctx)"
         />
+        <image
+          href={SCHEMATIC.geomRepaint}
+          x={winX + ctxKeep}
+          y={y}
+          width={repaintW}
+          height={h}
+          preserveAspectRatio="xMidYMid slice"
+          clipPath="url(#it-geom-rep)"
+        />
+        <rect
+          x={winX + ctxKeep}
+          y={y}
+          width={repaintW}
+          height={h}
+          fill="url(#it-hatch-geom)"
+          opacity="0.55"
+        />
+        <image
+          href={SCHEMATIC.geomNew}
+          x={winX + contextW}
+          y={y}
+          width={newW}
+          height={h}
+          preserveAspectRatio="xMidYMid slice"
+          clipPath="url(#it-geom-new)"
+        />
+
+        <rect className="it-schematic-stroke" x={winX} y={y} width={winW} height={h} fill="none" />
+
+        <line className="it-schematic-stroke-faint" x1={winX - 16} y1={y} x2={winX - 16} y2={y + h} />
         <text
           className="it-schematic-label"
           x={winX - 22}
@@ -115,33 +97,29 @@ export default function StripGeometry() {
           1024
         </text>
 
-        {/* Region labels */}
-        <text className="it-schematic-label" x={winX + (contextW - repaintW) / 2} y={y + h / 2 + 4} textAnchor="middle">
-          context 768
-        </text>
-        <text
-          className="it-schematic-label"
-          x={winX + contextW - repaintW / 2}
-          y={y + h / 2 + 4}
-          textAnchor="middle"
-        >
-          128
-        </text>
-        <text
-          className="it-schematic-label"
-          x={winX + contextW + newW / 2}
-          y={y + h / 2 + 4}
-          textAnchor="middle"
-        >
-          new 256
-        </text>
+        <LabelChip x={winX + ctxKeep / 2} y={y + h / 2} text="context 768" />
+        <LabelChip x={winX + ctxKeep + repaintW / 2} y={y + h / 2} text="128" />
+        <LabelChip x={winX + contextW + newW / 2} y={y + h / 2} text="new 256" />
 
-        <text className="it-schematic-label" x={stripX + overlapW / 2} y={y + h + 33} textAnchor="middle">
-          overlap 192
-        </text>
-        <text className="it-schematic-label" x={stripX + overlapW + newW / 2} y={y + h + 33} textAnchor="middle">
-          strip 256×1024
-        </text>
+        <image
+          href={SCHEMATIC.geomEmit}
+          x={stripX}
+          y={y + h + 18}
+          width={stripW}
+          height={22}
+          preserveAspectRatio="xMidYMid slice"
+        />
+        <rect className="it-schematic-stroke" x={stripX} y={y + h + 18} width={stripW} height={22} fill="none" />
+        <rect
+          className="it-schematic-fill-overlap"
+          x={stripX}
+          y={y + h + 18}
+          width={overlapW}
+          height={22}
+          opacity="0.35"
+        />
+        <LabelChip x={stripX + overlapW / 2} y={y + h + 29} text="overlap 192" />
+        <LabelChip x={stripX + overlapW + newW / 2} y={y + h + 29} text="strip 256×1024" />
         <text className="it-schematic-label" x={stripX + stripW / 2} y={y + h + 58} textAnchor="middle">
           emitted file 448×1024
         </text>

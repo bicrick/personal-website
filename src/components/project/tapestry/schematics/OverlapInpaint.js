@@ -1,9 +1,10 @@
 import React from 'react';
+import { LabelChip, SCHEMATIC } from './schematicAssets';
 import './schematics.css';
 
 /**
- * Overlap + inpaint join, keyed to admin knobs:
- * seam_px (join width / crossfade), bridge_strength (repaint), +128 px into new scene.
+ * Overlap + inpaint join with real scene crops and hatched inpaint overlay.
+ * Knobs match admin: seam_px, bridge_strength.
  */
 export default function OverlapInpaint() {
   const vbW = 720;
@@ -14,55 +15,60 @@ export default function OverlapInpaint() {
   const leftW = 280;
   const rightX = 280;
   const rightW = 300;
-  const seamPx = 192;
-  const scale = 1.1;
-  const seamW = seamPx * scale * 0.55;
+  const seamW = 192 * 0.55;
   const joinX = rightX;
   const hatchW = seamW + 128 * 0.55;
 
   const hatchLines = [];
-  for (let i = 0; i < hatchW; i += 7) {
-    hatchLines.push(i);
-  }
+  for (let i = 0; i < hatchW; i += 7) hatchLines.push(i);
 
   return (
     <figure className="it-schematic" aria-label="Overlap and inpaint join schematic">
       <svg viewBox={`0 0 ${vbW} ${vbH}`} role="img">
         <title>Overlap and inpaint</title>
         <defs>
-          <clipPath id="it-join-clip">
+          <clipPath id="it-join-prev">
+            <rect x={leftX} y={y} width={leftW} height={h} />
+          </clipPath>
+          <clipPath id="it-join-new">
+            <rect x={rightX} y={y} width={rightW} height={h} />
+          </clipPath>
+          <clipPath id="it-join-hatch">
             <rect x={joinX - seamW} y={y} width={hatchW} height={h} />
           </clipPath>
         </defs>
 
-        {/* Old scene */}
-        <rect className="it-schematic-fill-faint" x={leftX} y={y} width={leftW} height={h} />
-        <text className="it-schematic-label" x={leftX + 70} y={y + h / 2 + 4} textAnchor="middle">
-          previous scene
-        </text>
+        <image
+          href={SCHEMATIC.joinPrev}
+          x={leftX}
+          y={y}
+          width={leftW}
+          height={h}
+          preserveAspectRatio="xMaxYMid slice"
+          clipPath="url(#it-join-prev)"
+        />
+        <image
+          href={SCHEMATIC.joinNew}
+          x={rightX}
+          y={y}
+          width={rightW}
+          height={h}
+          preserveAspectRatio="xMinYMid slice"
+          clipPath="url(#it-join-new)"
+        />
 
-        {/* New scene */}
-        <rect className="it-schematic-fill-faint" x={rightX} y={y} width={rightW} height={h} />
-        <text
-          className="it-schematic-label"
-          x={rightX + rightW - 70}
-          y={y + h / 2 + 4}
-          textAnchor="middle"
-        >
-          new scene
-        </text>
-
-        {/* Overlap / crossfade band */}
+        {/* Soft crossfade veil over seam_px */}
         <rect
-          className="it-schematic-fill-overlap"
           x={joinX - seamW}
           y={y}
           width={seamW}
           height={h}
+          fill="var(--paper)"
+          opacity="0.22"
         />
 
-        {/* Inpaint / repaint hatch over join zone */}
-        <g clipPath="url(#it-join-clip)">
+        {/* Inpaint hatch on real pixels */}
+        <g clipPath="url(#it-join-hatch)">
           {hatchLines.map((dx) => (
             <line
               key={dx}
@@ -75,16 +81,20 @@ export default function OverlapInpaint() {
           ))}
         </g>
 
-        {/* Join outline */}
+        <rect className="it-schematic-stroke" x={leftX} y={y} width={leftW} height={h} fill="none" />
+        <rect className="it-schematic-stroke" x={rightX} y={y} width={rightW} height={h} fill="none" />
         <rect
           className="it-schematic-accent"
           x={joinX - seamW}
           y={y}
           width={hatchW}
           height={h}
+          fill="none"
         />
 
-        {/* Crossfade underline (yellow in admin = ink here) */}
+        <LabelChip x={leftX + 72} y={y + h / 2} text="previous scene" />
+        <LabelChip x={rightX + rightW - 64} y={y + h / 2} text="new scene" />
+
         <line
           className="it-schematic-accent"
           x1={joinX - seamW}
@@ -104,7 +114,6 @@ export default function OverlapInpaint() {
           inpaint mask · bridge_strength
         </text>
 
-        {/* Knob callouts */}
         <text className="it-schematic-label" x={60} y={y + h + 52}>
           join width 32–192 px
         </text>

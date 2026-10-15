@@ -109,3 +109,21 @@ html.is-dark .it-schematic {
   font-style: normal;
   font-family: var(--font-pixel);
 }
+
+/* Mono label chips over image fills */
+.it-schematic-chip {
+  fill: color-mix(in srgb, var(--paper) 88%, transparent);
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+html.is-dark .it-schematic-chip {
+  fill: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.it-schematic-chip-label {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  fill: var(--ink);
+}
