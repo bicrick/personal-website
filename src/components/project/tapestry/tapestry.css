@@ -20,10 +20,12 @@
 */
 .it-embed {
   --it-embed-h: clamp(104px, 15vw, 148px);
-  /* Fraction of iframe height visible in the window (band ~40vh + refl) */
-  --it-visible: 0.46;
-  /* Align near live --band-top (~0.30); keep composer chrome out */
-  --it-crop-top: 0.27;
+  /*
+    Live landscape ribbon: band ≈ 17–77% of iframe height (ribbon=0.6),
+    reflection fades below. Crop that slice; keep composer chrome out.
+  */
+  --it-visible: 0.68;
+  --it-crop-top: 0.14;
 
   position: relative;
   height: var(--it-embed-h);
@@ -86,7 +88,7 @@ html:not(.is-dark) .it-embed {
 @media (max-width: 760px) {
   .it-embed {
     --it-embed-h: clamp(88px, 26vw, 120px);
-    --it-visible: 0.5;
-    --it-crop-top: 0.28;
+    --it-visible: 0.44;
+    --it-crop-top: 0.29;
   }
 }
