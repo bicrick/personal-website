@@ -111,7 +111,7 @@ export default function ProjectTile({
   }, [isExpanded, onCollapse, fineHover]);
 
   const media = project.livePreview === 'tapestry' ? (
-    <TapestryTilePreview variant={project.tapestryThumb || 'a'} />
+    <TapestryTilePreview />
   ) : project.livePreview === 'qwop' ? (
     <QwopTilePreview title={project.title} />
   ) : project.livePreview === 'harness' ? (

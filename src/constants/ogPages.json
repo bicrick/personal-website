@@ -207,16 +207,5 @@
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"
-  },
-  "/projects/infinite-tapestry/thumbs": {
-    "ogTitle": "infinite tapestry thumbnail mockups",
-    "seoTitle": "infinite tapestry thumbnail mockups - bicrick",
-    "description": "Three homepage-card treatments for Infinite Tapestry built around the official infinity mark.",
-    "keywords": "bicrick, Infinite Tapestry, thumbnail, infinity mark",
-    "imagePath": "/og/infinite-tapestry-1200x630.jpg",
-    "imageAlt": "Infinite Tapestry thumbnail mockups",
-    "imageWidth": 1200,
-    "imageHeight": 630,
-    "type": "article"
   }
 }

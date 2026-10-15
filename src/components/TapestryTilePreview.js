@@ -1,18 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  createMarkPaths,
+  fitMark,
+  MARK_MASK_STROKES,
+  MARK_OUTLINE_STROKES,
+  MARK_VIEWBOX,
+} from './tapestry/markGeometry';
 import './TapestryTilePreview.css';
 
 const IMG = `${process.env.PUBLIC_URL}/images/infinite-tapestry`;
-const BRAND = `${IMG}/brand`;
-const RIBBON = `${IMG}/ribbon-scroll.webp`;
-const RIBBON_FALLBACK = `${IMG}/ribbon-scroll.jpg`;
-const MASK = `${BRAND}/mask-infinity.png`;
-const MARK_CREAM = `${BRAND}/mark-cream.png`;
+const RIBBON = `${IMG}/ribbon-thumb.webp`;
+const RIBBON_FALLBACK = `${IMG}/ribbon-thumb.jpg`;
 
-export const THUMB_VARIANTS = ['a', 'b', 'c'];
-
-/** Official infinity stroke used by the mark (viewBox 0..64). */
-const INFINITY_D =
-  'M18 42c5 0 9-3 14-10s9-10 14-10a10 10 0 0 1 0 20c-5 0-9-3-14-10s-9-10-14-10a10 10 0 0 0 0 20z';
+/** Production about.css `.band .sheen` timing (14s gloss sweep). */
+const SHEEN_PERIOD = 14;
+/** Production sheen gradient colors. */
+const SHEEN_RGB = '255,240,215';
 
 function loadImage(src, fallback) {
   return new Promise((resolve, reject) => {
@@ -38,21 +41,58 @@ function prefersReducedMotion() {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function isSiteDark() {
+  return typeof document !== 'undefined'
+    && document.documentElement.classList.contains('is-dark');
+}
+
+function useSiteDark() {
+  const [dark, setDark] = useState(isSiteDark);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const sync = () => setDark(root.classList.contains('is-dark'));
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  return dark;
+}
+
+function themePalette(dark) {
+  if (dark) {
+    return {
+      bg: '#0b0b0d',
+      under: '#0b0b0d',
+      cream: '#efe9df',
+      // about.css dark glow opacity ~0.5
+      glowAlpha: 0.42,
+      sheenPeak: 0.1,
+      reflPeak: 0.28,
+    };
+  }
+  // Light: match production surround + inverted mark (dark weave on cream field)
+  return {
+    bg: '#f4efe7',
+    under: '#f4efe7',
+    cream: '#1a1612',
+    // about.css light: .band .glow { opacity: .38 }
+    glowAlpha: 0.32,
+    sheenPeak: 0.08,
+    reflPeak: 0.2,
+  };
+}
+
 /**
- * Homepage / preview thumbnail for Infinite Tapestry.
- * variant: 'a' | 'b' | 'c'
- *   a — painting scrolls along the infinity loop path
- *   b — painting scrolls inside the infinity mark as a mask
- *   c — infinity stroke draws itself while strips paint in behind
+ * Homepage thumbnail for Infinite Tapestry (variant B only):
+ * calm ribbon scrolls inside the official woven infinity mask, with
+ * production-matched sheen + ambient glow + soft reflection.
  */
-export default function TapestryTilePreview({
-  variant = 'a',
-  className = '',
-  showBadge = true,
-}) {
+export default function TapestryTilePreview({ className = '' }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
-  const v = THUMB_VARIANTS.includes(variant) ? variant : 'a';
+  const dark = useSiteDark();
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -62,195 +102,202 @@ export default function TapestryTilePreview({
     let alive = true;
     let raf = 0;
     let ribbon = null;
-    let mask = null;
-    let mark = null;
     let t0 = performance.now();
     const reduced = prefersReducedMotion();
-    const path = new Path2D(INFINITY_D);
+    const paths = createMarkPaths();
+    const palette = themePalette(dark);
+    const maskLayer = document.createElement('canvas');
+    const sheenLayer = document.createElement('canvas');
 
-    const assets = Promise.all([
-      loadImage(RIBBON, RIBBON_FALLBACK),
-      loadImage(MASK),
-      loadImage(MARK_CREAM),
-    ]).then(([r, m, c]) => {
+    // Soft colour blobs sampled once from the ribbon (production #amb-blobs / .band .glow)
+    const glowColors = [
+      [255, 176, 82],
+      [70, 140, 200],
+      [220, 140, 100],
+    ];
+
+    const assets = loadImage(RIBBON, RIBBON_FALLBACK).then((r) => {
       if (!alive) return;
       ribbon = r;
-      mask = m;
-      mark = c;
+      try {
+        const s = document.createElement('canvas');
+        s.width = 6;
+        s.height = 2;
+        const sctx = s.getContext('2d', { willReadFrequently: true });
+        sctx.drawImage(r, 0, 0, 6, 2);
+        const d = sctx.getImageData(0, 0, 6, 2).data;
+        for (let n = 0; n < 3; n += 1) {
+          const o = n * 8;
+          glowColors[n] = [d[o], d[o + 1], d[o + 2]];
+        }
+      } catch (_) {
+        /* keep fallback amber/teal */
+      }
     }).catch(() => {});
 
-    const drawScrollingRibbon = (ctx, w, h, time, speed = 28) => {
+    const strokeMask = (ctx) => {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#fff';
+      MARK_MASK_STROKES.forEach(({ key, width }) => {
+        ctx.lineWidth = width;
+        ctx.stroke(paths[key]);
+      });
+    };
+
+    const strokeOutline = (ctx) => {
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      MARK_OUTLINE_STROKES.forEach(({ key, width, role }) => {
+        ctx.lineWidth = width;
+        ctx.strokeStyle = role === 'cream' ? palette.cream : palette.under;
+        ctx.stroke(paths[key]);
+      });
+    };
+
+    const drawScrollingRibbon = (ctx, w, h, time, speed = 26) => {
       if (!ribbon) {
-        ctx.fillStyle = '#0b0b0d';
+        ctx.fillStyle = palette.bg;
         ctx.fillRect(0, 0, w, h);
-        return { drawW: w };
+        return;
       }
       const scale = h / ribbon.height;
       const drawW = ribbon.width * scale;
       const drawH = h;
-      let x = reduced ? -drawW * 0.15 : -((time * speed) % drawW);
+      let x = reduced ? -drawW * 0.18 : -((time * speed) % drawW);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
       while (x < w) {
         ctx.drawImage(ribbon, x, 0, drawW, drawH);
         x += drawW;
       }
-      return { drawW };
     };
 
-    const fitInfinity = (w, h, pad = 0.14) => {
-      const box = 64;
-      const scale = Math.min(w, h) * (1 - pad * 2) / box;
-      const ox = (w - box * scale) / 2;
-      const oy = (h - box * scale) / 2;
-      return { scale, ox, oy };
+    /** Production about.css sheen keyframes: hold 55%, then sweep -120% → 420%. */
+    const sheenProgress = (time) => {
+      if (reduced) return 0.35;
+      const cycle = (time % SHEEN_PERIOD) / SHEEN_PERIOD;
+      if (cycle < 0.55) return 0;
+      return (cycle - 0.55) / 0.45;
     };
 
-    const drawA = (ctx, w, h, time) => {
-      // Dark field + faint full ribbon underlay
-      ctx.fillStyle = '#0b0b0d';
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalAlpha = 0.22;
-      drawScrollingRibbon(ctx, w, h, time, 18);
-      ctx.globalAlpha = 1;
-
-      if (!ribbon) return;
-      const { scale, ox, oy } = fitInfinity(w, h, 0.1);
-      // Pattern that scrolls: sample ribbon into a pattern space
-      const bandH = Math.max(28, Math.round(Math.min(w, h) * 0.16));
-      const off = document.createElement('canvas');
-      off.width = Math.max(64, Math.floor(ribbon.width * (bandH / ribbon.height)));
-      off.height = bandH;
-      const octx = off.getContext('2d');
-      octx.drawImage(ribbon, 0, 0, off.width, off.height);
-      const pattern = ctx.createPattern(off, 'repeat');
-      if (!pattern) return;
-
-      const shift = reduced ? 0 : (time * 42) % off.width;
-      // Stroke infinity with scrolling pattern
+    const drawGlow = (ctx, w, h, fit, time) => {
+      // Soft colour spill around the mark — compositor-style blobs from production .band .glow
+      const cx = fit.ox + (MARK_VIEWBOX * fit.scale) / 2;
+      const cy = fit.oy + (MARK_VIEWBOX * fit.scale) / 2;
+      const R = Math.min(w, h) * 0.55;
+      const drift = reduced ? 0 : Math.sin(time * (Math.PI * 2) / 38) * R * 0.04;
+      const positions = [
+        [cx - R * 0.55 + drift, cy + R * 0.05],
+        [cx + drift * 0.6, cy - R * 0.08],
+        [cx + R * 0.5 - drift, cy + R * 0.02],
+      ];
       ctx.save();
-      ctx.translate(ox, oy);
-      ctx.scale(scale, scale);
-      // Widen stroke in path units so it reads at card size
-      ctx.lineWidth = 11;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      // Map pattern into path space
-      const patScale = 1 / scale;
-      pattern.setTransform(new DOMMatrix()
-        .translate(-shift * patScale, 0)
-        .scale(patScale * (bandH / off.height), patScale * (bandH / off.height)));
-      ctx.strokeStyle = pattern;
-      ctx.stroke(path);
-
-      // Cream woven outline on top (official mark feel)
-      ctx.lineWidth = 1.3;
-      ctx.strokeStyle = '#efe9df';
-      ctx.globalAlpha = 0.95;
-      ctx.stroke(path);
-      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = dark ? 'screen' : 'multiply';
+      positions.forEach(([x, y], i) => {
+        const [r, g, b] = glowColors[i];
+        const rad = R * (0.55 + i * 0.08);
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, rad);
+        const a = palette.glowAlpha * (0.55 + 0.15 * i);
+        grad.addColorStop(0, `rgba(${r},${g},${b},${a})`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      });
       ctx.restore();
-
-      // Soft vignette
-      const g = ctx.createRadialGradient(w * 0.5, h * 0.5, Math.min(w, h) * 0.2, w * 0.5, h * 0.5, Math.min(w, h) * 0.75);
-      g.addColorStop(0, 'rgba(11,11,13,0)');
-      g.addColorStop(1, 'rgba(11,11,13,0.55)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
     };
 
-    const drawB = (ctx, w, h, time) => {
-      ctx.fillStyle = '#0b0b0d';
-      ctx.fillRect(0, 0, w, h);
+    const ensureLayer = (layer, w, h, dpr) => {
+      const cw = Math.round(w * dpr);
+      const ch = Math.round(h * dpr);
+      if (layer.width !== cw || layer.height !== ch) {
+        layer.width = cw;
+        layer.height = ch;
+      }
+      return layer.getContext('2d');
+    };
 
-      // Paint scrolling ribbon into a layer, then mask to infinity
-      const layer = document.createElement('canvas');
-      layer.width = canvas.width;
-      layer.height = canvas.height;
-      const lctx = layer.getContext('2d');
-      const dpr = canvas.width / w;
+    const buildMaskedLayer = (w, h, dpr, time) => {
+      const lctx = ensureLayer(maskLayer, w, h, dpr);
       lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawScrollingRibbon(lctx, w, h, time, 30);
+      lctx.clearRect(0, 0, w, h);
+      drawScrollingRibbon(lctx, w, h, time, 28);
 
-      if (mask) {
-        lctx.globalCompositeOperation = 'destination-in';
-        const { scale, ox, oy } = fitInfinity(w, h, 0.08);
-        // mask image is 0..64 content; draw scaled
-        lctx.drawImage(mask, ox, oy, 64 * scale, 64 * scale);
-      }
-
-      ctx.drawImage(layer, 0, 0, w, h);
-
-      // Cream mark outline for definition
-      if (mark) {
-        const { scale, ox, oy } = fitInfinity(w, h, 0.08);
-        ctx.globalAlpha = 0.92;
-        ctx.drawImage(mark, ox, oy, 64 * scale, 64 * scale);
-        ctx.globalAlpha = 1;
-      }
+      const fit = fitMark(w, h, 0.1);
+      lctx.save();
+      lctx.translate(fit.ox, fit.oy);
+      lctx.scale(fit.scale, fit.scale);
+      lctx.globalCompositeOperation = 'destination-in';
+      strokeMask(lctx);
+      lctx.restore();
+      return { layer: maskLayer, fit };
     };
 
-    const drawC = (ctx, w, h, time) => {
-      ctx.fillStyle = '#0b0b0d';
-      ctx.fillRect(0, 0, w, h);
+    const drawSheen = (ctx, w, h, fit, time) => {
+      const p = sheenProgress(time);
+      if (p <= 0 && !reduced) return;
+      // 30% band, gradient at 100deg — matches .band .sheen::before
+      const bandW = w * 0.3;
+      const x = -bandW + p * (w + bandW * 4.2);
+      const peak = palette.sheenPeak;
+      const dpr = ctx.canvas.width / w;
+      const cctx = ensureLayer(sheenLayer, w, h, dpr);
+      cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cctx.clearRect(0, 0, w, h);
 
-      // Strips paint in left → right (looping)
-      const cycle = reduced ? 1 : ((time * 0.22) % 1.35);
-      const reveal = Math.min(1, cycle / 1);
+      const grad = cctx.createLinearGradient(x, 0, x + bandW, h * 0.15);
+      grad.addColorStop(0, `rgba(${SHEEN_RGB},0)`);
+      grad.addColorStop(0.45, `rgba(${SHEEN_RGB},${peak * 0.7})`);
+      grad.addColorStop(0.5, `rgba(${SHEEN_RGB},${peak})`);
+      grad.addColorStop(1, `rgba(${SHEEN_RGB},0)`);
+      cctx.fillStyle = grad;
+      cctx.fillRect(x, 0, bandW, h);
+
+      cctx.save();
+      cctx.translate(fit.ox, fit.oy);
+      cctx.scale(fit.scale, fit.scale);
+      cctx.globalCompositeOperation = 'destination-in';
+      strokeMask(cctx);
+      cctx.restore();
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.drawImage(sheenLayer, 0, 0, w, h);
+      ctx.restore();
+    };
+
+    const drawReflection = (ctx, w, h, layer, fit) => {
+      // Soft flipped mirror under the mark — production .band-refl falloff
+      // (alpha ~0.55 at the edge, exponential fade; about.css .band-refl)
+      const markH = MARK_VIEWBOX * fit.scale;
+      const markTop = fit.oy;
+      const reflTop = markTop + markH + markH * 0.02;
+      const reflH = markH * 0.42;
+
       ctx.save();
       ctx.beginPath();
-      ctx.rect(0, 0, w * reveal, h);
+      ctx.rect(0, reflTop, w, reflH);
       ctx.clip();
-      drawScrollingRibbon(ctx, w, h, time, 16);
+      ctx.translate(0, reflTop);
+      ctx.scale(1, -1);
+      ctx.globalAlpha = palette.reflPeak;
+      // Draw the mark region flipped: source y from markTop..markTop+markH
+      ctx.drawImage(
+        layer,
+        0, markTop * (layer.height / h), layer.width, markH * (layer.height / h),
+        0, -markH, w, markH,
+      );
       ctx.restore();
 
-      // Leading paint edge
-      if (!reduced && reveal < 1) {
-        const gx = w * reveal;
-        const grad = ctx.createLinearGradient(gx - 18, 0, gx + 8, 0);
-        grad.addColorStop(0, 'rgba(239,233,223,0)');
-        grad.addColorStop(0.6, 'rgba(239,233,223,0.35)');
-        grad.addColorStop(1, 'rgba(239,233,223,0)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(gx - 18, 0, 26, h);
-      }
-
-      // Infinity stroke draws itself
-      const { scale, ox, oy } = fitInfinity(w, h, 0.12);
-      const drawProgress = reduced ? 1 : Math.min(1, Math.max(0, (cycle - 0.08) / 0.85));
-      ctx.save();
-      ctx.translate(ox, oy);
-      ctx.scale(scale, scale);
-      // Approximate path length in viewBox units
-      const pathLen = 118;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.setLineDash([pathLen * drawProgress, pathLen]);
-      ctx.lineDashOffset = 0;
-
-      // Dark under-stroke
-      ctx.strokeStyle = '#0b0b0d';
-      ctx.lineWidth = 9;
-      ctx.stroke(path);
-      // Cream weave
-      ctx.strokeStyle = '#efe9df';
-      ctx.lineWidth = 6.4;
-      ctx.stroke(path);
-      ctx.strokeStyle = '#0b0b0d';
-      ctx.lineWidth = 4;
-      ctx.stroke(path);
-      ctx.strokeStyle = '#efe9df';
-      ctx.lineWidth = 1.3;
-      ctx.stroke(path);
-      ctx.restore();
-
-      // After a full draw, hold briefly then loop (handled by cycle wrap)
-      if (reveal >= 1 && mark && drawProgress >= 1) {
-        const fit = fitInfinity(w, h, 0.12);
-        ctx.globalAlpha = 0.2;
-        ctx.drawImage(mark, fit.ox, fit.oy, 64 * fit.scale, 64 * fit.scale);
-        ctx.globalAlpha = 1;
-      }
+      const cover = ctx.createLinearGradient(0, reflTop, 0, reflTop + reflH);
+      const bg = dark ? '11,11,13' : '244,239,231';
+      cover.addColorStop(0, `rgba(${bg},0)`);
+      cover.addColorStop(0.35, `rgba(${bg},0.45)`);
+      cover.addColorStop(1, `rgba(${bg},1)`);
+      ctx.fillStyle = cover;
+      ctx.fillRect(0, reflTop, w, reflH + 1);
     };
 
     const draw = (now) => {
@@ -269,9 +316,21 @@ export default function TapestryTilePreview({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const time = (now - t0) / 1000;
 
-      if (v === 'b') drawB(ctx, w, h, time);
-      else if (v === 'c') drawC(ctx, w, h, time);
-      else drawA(ctx, w, h, time);
+      ctx.fillStyle = palette.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      const { layer, fit } = buildMaskedLayer(w, h, dpr, time);
+
+      drawGlow(ctx, w, h, fit, time);
+      drawReflection(ctx, w, h, layer, fit);
+      ctx.drawImage(layer, 0, 0, w, h);
+      drawSheen(ctx, w, h, fit, time);
+
+      ctx.save();
+      ctx.translate(fit.ox, fit.oy);
+      ctx.scale(fit.scale, fit.scale);
+      strokeOutline(ctx);
+      ctx.restore();
     };
 
     const tick = (now) => {
@@ -293,17 +352,16 @@ export default function TapestryTilePreview({
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
     };
-  }, [v]);
+  }, [dark]);
 
   return (
     <div
       ref={wrapRef}
-      className={`tapestry-tile-preview is-${v}${className ? ` ${className}` : ''}`}
+      className={`tapestry-tile-preview${className ? ` ${className}` : ''}`}
       aria-hidden="true"
-      data-thumb={v}
+      data-thumb="b"
     >
       <canvas ref={canvasRef} />
-      {showBadge ? <span className="tapestry-tile-live">live</span> : null}
     </div>
   );
 }

@@ -5,8 +5,6 @@ export const PROJECTS = [
     timelineDescription:
       'An endless horizontal AI painting streamed live from a single RTX 4090. Visitors type ideas; Auto fills the gaps. RealVisXL on SDXL, ~2.7s per strip.',
     livePreview: 'tapestry',
-    // Temporary default thumb mockup until Patrick picks A/B/C.
-    tapestryThumb: 'a',
     blogLink: '/projects/infinite-tapestry',
     appLink: 'https://infinitetapestry.app',
     appLabel: 'live',
