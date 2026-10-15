@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import QwopTilePreview from './QwopTilePreview';
 import HarnessTilePreview from './HarnessTilePreview';
+import TapestryTilePreview from './TapestryTilePreview';
 import { CartPoleTilePreview } from './CartPoleEmbed';
 import './ProjectTile.css';
 
@@ -109,7 +110,9 @@ export default function ProjectTile({
     };
   }, [isExpanded, onCollapse, fineHover]);
 
-  const media = project.livePreview === 'qwop' ? (
+  const media = project.livePreview === 'tapestry' ? (
+    <TapestryTilePreview />
+  ) : project.livePreview === 'qwop' ? (
     <QwopTilePreview title={project.title} />
   ) : project.livePreview === 'harness' ? (
     <HarnessTilePreview />

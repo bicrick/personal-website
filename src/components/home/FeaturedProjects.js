@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { featuredProjects } from '../../constants/projects';
 import QwopTilePreview from '../QwopTilePreview';
 import HarnessTilePreview from '../HarnessTilePreview';
+import TapestryTilePreview from '../TapestryTilePreview';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
 import './FeaturedProjects.css';
 
 function FeaturedMedia({ project }) {
+  if (project.livePreview === 'tapestry') {
+    return <TapestryTilePreview />;
+  }
   if (project.livePreview === 'qwop') {
     return <QwopTilePreview />;
   }

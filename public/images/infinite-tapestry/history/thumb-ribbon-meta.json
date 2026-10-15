@@ -1,0 +1,42 @@
+{
+  "bakedAt": "2026-10-15T00:36:07.957Z",
+  "cutoffIso": "2026-10-14T04:00:00+00:00",
+  "cutoffNote": "11 PM CT Oct 13, 2026 = 04:00 UTC Oct 14",
+  "cutoffStrip": 30632,
+  "startStrip": 45332,
+  "historySession": "live-sdxl",
+  "liveEdge": 58878,
+  "sdxlGlobalStart": 1269,
+  "eras": [
+    {
+      "id": "og",
+      "session": "live",
+      "label": "OG era · SD 1.5",
+      "a": 0,
+      "t0": "2026-10-12T07:59:16.801339+00:00",
+      "b": 1268,
+      "t1": "2026-10-12T08:40:59.865904+00:00",
+      "n": 1269,
+      "g0": 0
+    },
+    {
+      "id": "sdxl",
+      "session": "live-sdxl",
+      "label": "SDXL",
+      "a": 0,
+      "t0": "2026-10-12T08:36:15.375276+00:00",
+      "b": 58079,
+      "t1": "2026-10-14T23:57:05+00:00",
+      "n": 58080,
+      "g0": 1269
+    }
+  ],
+  "rule": "Only consecutive live-sdxl strips at/after cutoff; joins use live overlap.",
+  "purpose": "homepage thumb B infinity cutout",
+  "stripCount": 36,
+  "first": 45332,
+  "last": 45367,
+  "width": 3675,
+  "height": 400,
+  "consecutive": true
+}

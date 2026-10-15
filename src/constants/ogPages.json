@@ -196,5 +196,16 @@
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"
+  },
+  "/projects/infinite-tapestry": {
+    "ogTitle": "infinite tapestry",
+    "seoTitle": "infinite tapestry - an endless live AI painting - bicrick",
+    "description": "One endless horizontal painting, painted live on a single RTX 4090. Visitors type ideas word for word. Auto fills the queue.",
+    "keywords": "bicrick, Patrick Brown, Infinite Tapestry, SDXL, RealVisXL, live AI painting, endless canvas",
+    "imagePath": "/og/infinite-tapestry-1200x630.jpg",
+    "imageAlt": "Infinite Tapestry infinity mark over a stretch of the live painting",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
   }
 }
