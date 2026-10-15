@@ -98,20 +98,25 @@ function Keyboard({ rows, onKey }) {
     <div className="mq-kb">
       {KEY_ROWS.map((row, i) => (
         <div key={i} className="mq-kb-row">
-          {row.map((k) => (
-            <button
-              key={k}
-              type="button"
-              tabIndex={-1}
-              className={`mq-key${k.length > 1 ? ' is-wide' : ''}${status[k] ? ` is-${status[k]}` : ''}`}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={onKey ? () => onKey(k) : undefined}
-              disabled={!onKey}
-              aria-label={k === 'BACK' ? 'backspace' : k.toLowerCase()}
-            >
-              {k === 'BACK' ? '\u232B' : k === 'ENTER' ? 'enter' : k}
-            </button>
-          ))}
+          {row.map((k) => {
+            const className = `mq-key${k.length > 1 ? ' is-wide' : ''}${status[k] ? ` is-${status[k]}` : ''}`;
+            const label = k === 'BACK' ? '\u232B' : k === 'ENTER' ? 'enter' : k;
+            // Read-only keyboards (home tile) sit inside a tile <button>, so no nested buttons.
+            if (!onKey) return <span key={k} className={className}>{label}</span>;
+            return (
+              <button
+                key={k}
+                type="button"
+                tabIndex={-1}
+                className={className}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => onKey(k)}
+                aria-label={k === 'BACK' ? 'backspace' : k.toLowerCase()}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       ))}
     </div>

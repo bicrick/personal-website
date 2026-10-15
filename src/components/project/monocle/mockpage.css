@@ -302,8 +302,9 @@
     transform 0.1s ease;
 }
 
-.mq-key:disabled {
-  cursor: default;
+.mq-key:disabled,
+span.mq-key {
+  cursor: inherit;
   opacity: 1;
 }
 
