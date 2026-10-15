@@ -10,7 +10,7 @@ export const ORIGINAL = {
   title: 'Wordle',
   subtitle: 'Guess the hidden word in six tries',
   steps: [],
-  patch: '',
+  patch: null,
 };
 
 export const THEMES = [
@@ -28,22 +28,18 @@ export const THEMES = [
       'patch: css + overlay + 2 ops',
       'applied. game state untouched',
     ],
-    patch: `{
-  "message": "Torch-lit scriptorium.",
-  "css": "body { background: #120c08 }
-          .tile { background: #e6d5b4;
-                  border: 2px solid #3a2616 }
-          .key  { font-family: Georgia, serif }",
-  "overlayHtml": "<div class=torch-l/><div class=torch-r/>
-                  <div class=vignette/>",
-  "ops": [
-    { "type": "restyle", "selector": "h1",
-      "css": { "letter-spacing": ".3em" } },
-    { "type": "insert", "selector": "header",
-      "position": "after",
-      "html": "<p>Guess the hidden word</p>" }
-  ]
-}`,
+    patch: {
+      css: [
+        'body { background: #120c08 }',
+        '.tile { background: #e6d5b4; border: 2px solid #3a2616 }',
+        '.key { font-family: Georgia, serif }',
+      ],
+      overlay: 'Torch glow on both sides and a dark vignette.',
+      ops: [
+        { type: 'restyle', selector: 'h1', note: 'wide letter spacing' },
+        { type: 'insert', selector: 'header', note: 'adds a subtitle line after it' },
+      ],
+    },
   },
   {
     id: 'terminal',
@@ -59,24 +55,19 @@ export const THEMES = [
       'patch: css + scanline overlay + 3 ops',
       'applied. game state untouched',
     ],
-    patch: `{
-  "message": "CRT, 1982.",
-  "css": "body { background: #031007;
-                 font-family: ui-monospace }
-          .tile { background: transparent;
-                  border: 1px solid #1f6b35;
-                  color: #4dff7c }",
-  "overlayHtml": "<div class=scanlines/><div class=glow/>",
-  "ops": [
-    { "type": "restyle", "selector": ".board",
-      "css": { "border-radius": "0" } },
-    { "type": "restyle", "selector": ".key",
-      "css": { "border": "1px solid #1f6b35" } },
-    { "type": "insert", "selector": "header",
-      "position": "after",
-      "html": "<p>attempts remaining: 6</p>" }
-  ]
-}`,
+    patch: {
+      css: [
+        'body { background: #031007; font-family: monospace }',
+        '.tile { background: transparent; border: 1px solid #1f6b35 }',
+        '.tile { color: #4dff7c }',
+      ],
+      overlay: 'Scanlines and a soft green glow.',
+      ops: [
+        { type: 'restyle', selector: '.board', note: 'square corners' },
+        { type: 'restyle', selector: '.key', note: 'thin green outline' },
+        { type: 'insert', selector: 'header', note: 'adds an attempts counter' },
+      ],
+    },
   },
   {
     id: 'newsprint',
@@ -92,29 +83,24 @@ export const THEMES = [
       'patch: css + grain overlay + 2 ops',
       'applied. game state untouched',
     ],
-    patch: `{
-  "message": "Stop the presses.",
-  "css": "body { background: #e9dfc8;
-                 color: #1c1a16 }
-          h1 { font-family: Georgia, serif;
-               text-transform: uppercase }
-          .tile { background: #f6efdc;
-                  border: 1px solid #1c1a16 }",
-  "overlayHtml": "<div class=grain/><div class=rules/>",
-  "ops": [
-    { "type": "restyle", "selector": ".key",
-      "css": { "border-radius": "0" } },
-    { "type": "insert", "selector": "header",
-      "position": "after",
-      "html": "<p>Late edition</p>" }
-  ]
-}`,
+    patch: {
+      css: [
+        'body { background: #e9dfc8; color: #1c1a16 }',
+        'h1 { font-family: Georgia, serif; text-transform: uppercase }',
+        '.tile { background: #f6efdc; border: 1px solid #1c1a16 }',
+      ],
+      overlay: 'Paper grain and faint column rules.',
+      ops: [
+        { type: 'restyle', selector: '.key', note: 'square corners' },
+        { type: 'insert', selector: 'header', note: 'adds a "late edition" line' },
+      ],
+    },
   },
   {
     id: 'ocean',
     reply: 'Twenty thousand leagues. The timer is still running.',
     label: 'deep sea',
-    prompt: 'put the whole page at the bottom of the ocean',
+    prompt: 'put this page at the bottom of the ocean',
     title: 'Deep Wordle',
     subtitle: 'Dive for the hidden word',
     steps: [
@@ -124,21 +110,18 @@ export const THEMES = [
       'patch: css + overlay + three.js runtime',
       'applied. game state untouched',
     ],
-    patch: `{
-  "message": "Twenty thousand leagues.",
-  "css": "body { background: linear-gradient(
-                    #0b4a6e, #031b2e) }
-          .tile { background: rgba(160,225,235,.16);
-                  border: 1px solid #5fd0dd }",
-  "overlayHtml": "<div class=caustics/><span class=bubble/>",
-  "runtime": "monacle.three.ensure();
-              monacle.three.setBackground(0x031b2e);
-              monacle.three.add(bubbles)",
-  "ops": [
-    { "type": "restyle", "selector": ".key",
-      "css": { "backdrop-filter": "blur(4px)" } }
-  ]
-}`,
+    patch: {
+      css: [
+        'body { background: #0b4a6e }',
+        '.tile { background: rgba(160, 225, 235, .16) }',
+        '.tile { border: 1px solid #5fd0dd }',
+      ],
+      overlay: 'Drifting caustic light.',
+      ops: [
+        { type: 'restyle', selector: '.key', note: 'frosted glass blur' },
+      ],
+      runtime: 'Three.js stage with fog and rising bubbles.',
+    },
   },
 ];
 

@@ -131,14 +131,21 @@
 /* ---- side panel ---- */
 
 .mqd-panel {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   min-width: 0;
+  min-height: 460px;
   border: 1px solid var(--rule);
   background: var(--surface);
   border-radius: 6px;
   box-shadow: 0 10px 30px var(--shadow);
   overflow: hidden;
+}
+
+.mqd-panel-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .mqd-panel-head {
@@ -196,8 +203,8 @@
 }
 
 .mqd-body {
-  flex: 1 1 auto;
-  min-height: 150px;
+  flex: 1 1 0;
+  min-height: 0;
   padding: 12px;
   overflow: auto;
 }
@@ -235,7 +242,7 @@
   background: var(--card-wash);
 }
 
-.mqd-steps {
+.mqd .mqd-steps {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -244,7 +251,8 @@
   gap: 6px;
 }
 
-.mqd-steps li {
+.mqd .mqd-steps li {
+  margin: 0;
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -264,15 +272,15 @@
   background: var(--stipple-rule);
 }
 
-.mqd-steps li.is-done .mqd-step-dot {
+.mqd .mqd-steps li.is-done .mqd-step-dot {
   background: #2f9e5b;
 }
 
-.mqd-steps li.is-active {
+.mqd .mqd-steps li.is-active {
   color: var(--ink);
 }
 
-.mqd-steps li.is-active .mqd-step-dot {
+.mqd .mqd-steps li.is-active .mqd-step-dot {
   background: var(--link);
   animation: mqd-pulse 0.9s ease-in-out infinite;
 }
@@ -282,27 +290,127 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.mqd-patch pre {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  font-size: 10.5px;
-  line-height: 14.5px;
-  white-space: pre-wrap;
-  word-break: break-word;
+.mqd-patch {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mqd-patch-intro {
+  font-size: 12.5px;
+  line-height: 17px;
   color: var(--ink);
 }
 
-.mqd-patch-note {
-  margin: 8px 0 0;
-  font-size: 12px;
+.mqd-psec {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mqd-psec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+
+.mqd-psec-label {
+  padding: 1px 7px;
+  font-family: var(--font-pixel);
+  font-size: 10.5px;
+  color: var(--link);
+  background: color-mix(in srgb, var(--link) 9%, transparent);
+  border-radius: 4px;
+}
+
+.mqd-psec-hint {
+  font-size: 11.5px;
   color: var(--ink-muted);
-  font-style: italic;
+}
+
+.mqd-psec-code {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 9px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  line-height: 15px;
+  color: var(--ink);
+  background: var(--card-wash);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+}
+
+.mqd-psec-code span {
+  overflow-wrap: anywhere;
+}
+
+.mqd-psec-text {
+  font-size: 12.5px;
+  line-height: 17px;
+  color: var(--ink);
+}
+
+.mqd .mqd-psec-ops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mqd .mqd-psec-ops li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 7px;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.mqd .mqd-psec-ops li::before {
+  display: none;
+}
+
+.mqd-op-type {
+  font-family: var(--font-pixel);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+}
+
+.mqd-op-sel {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.mqd-op-note {
+  color: var(--ink-muted);
+}
+
+.mqd-link {
+  appearance: none;
+  display: block;
+  margin: 6px 0 0;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  color: var(--link);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .mqd-chips {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 6px;
   padding: 10px 12px 8px;
   border-top: 1px solid var(--rule);
@@ -310,7 +418,8 @@
 
 .mqd-chips button {
   appearance: none;
-  padding: 4px 10px;
+  padding: 5px 10px;
+  text-align: center;
   font: inherit;
   font-family: var(--font-pixel);
   font-size: 11.5px;
@@ -339,7 +448,7 @@
 }
 
 .mqd-chips .mqd-chip-undo {
-  margin-left: auto;
+  grid-column: 1 / -1;
   border-style: dashed;
 }
 
@@ -386,6 +495,9 @@
   .mqd-stage {
     grid-template-columns: minmax(0, 1fr);
   }
+  .mqd-panel {
+    min-height: 520px;
+  }
   .mqd-viewport {
     aspect-ratio: 5 / 6;
   }
@@ -394,7 +506,7 @@
 @media (prefers-reduced-motion: reduce) {
   .mqd-msg,
   .mqd-steps li,
-  .mqd-steps li.is-active .mqd-step-dot {
+  .mqd .mqd-steps li.is-active .mqd-step-dot {
     animation: none;
   }
 }

@@ -9,9 +9,9 @@ import './tile.css';
 const ORDER = ['medieval', 'terminal', 'newsprint', 'ocean', 'original'];
 const PROMPTS = {
   medieval: 'make this medieval themed',
-  terminal: 'turn this into a green phosphor terminal',
-  newsprint: 'make it a 1920s newspaper puzzle page',
-  ocean: 'put the whole page at the bottom of the ocean',
+  terminal: 'turn this into a phosphor terminal',
+  newsprint: 'make it a 1920s newspaper page',
+  ocean: 'put it at the bottom of the ocean',
   original: 'put it back the way it was',
 };
 
@@ -114,9 +114,10 @@ export default function MonocleTilePreview() {
       ) : null}
       {next ? <i className={`mqt-edge${wiping ? ' is-wiping' : ''}`} /> : null}
       <MonocleMark size={28} className="mqt-mark" />
-      <div className="mqt-prompt">
+      <div className={`mqt-prompt${next ? ' is-sent' : ''}`}>
         <span className="mqt-caret">{'>'}</span>
         <span className="mqt-text">{prompt || '\u00a0'}</span>
+        <span className="mqt-enter">enter</span>
       </div>
     </div>
   );
