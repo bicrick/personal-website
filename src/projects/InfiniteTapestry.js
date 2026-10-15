@@ -18,7 +18,9 @@ function InfiniteTapestry() {
       backHref="/"
       backLabel="home"
       linkHref="https://infinitetapestry.app"
-      linkLabel="open live"
+      linkLabel="live"
+      secondaryLinkHref="https://infinitetapestry.app/about"
+      secondaryLinkLabel="about"
       abstract="256×1024 strips, ~2.7 s each. Adjacent strips overlap; the join is inpainted. Auto paints when the queue is empty. A visitor idea is taken word for word."
     >
       <TapestryRibbon />
@@ -53,8 +55,8 @@ function InfiniteTapestry() {
       <StorageServing />
 
       <p>
-        The ribbon above is a build-time bake of consecutive SFW SDXL strips from
-        11&nbsp;PM CT on Oct&nbsp;13, 2026 onward.
+        The window above embeds the live site (SFW SDXL strips). Homepage thumbnail
+        and schematics use a build-time bake from 11&nbsp;PM CT on Oct&nbsp;13, 2026 onward.
       </p>
 
       <p>

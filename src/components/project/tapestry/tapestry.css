@@ -1,4 +1,4 @@
-/* Infinite Tapestry article demo — values from it-viewer about.css / style.css / client.js */
+/* Compact live iframe embed — band + reflection crop of infinitetapestry.app */
 
 .it-demo {
   margin: 28px 0 24px;
@@ -14,352 +14,81 @@
   font-style: italic;
 }
 
-.it-ribbon {
-  --it-bh: clamp(200px, 32vw, 320px);
-  --it-ease: cubic-bezier(.2, .7, .2, 1);
-  --it-surr: 5, 5, 6;
-  --it-empty: #050506;
-  --it-amb-a: 1;
-  margin: 8px 0 28px;
-}
+/*
+  Iframe is full embed width; taller than the window. Shifted up so the
+  live band (~30–70vh) + reflection sit in a short crop.
+*/
+.it-embed {
+  --it-embed-h: clamp(104px, 15vw, 148px);
+  /*
+    Live landscape ribbon: band ≈ 17–77% of iframe height (ribbon=0.6),
+    reflection fades below. Crop that slice; keep composer chrome out.
+  */
+  --it-visible: 0.68;
+  --it-crop-top: 0.14;
 
-html:not(.is-dark) .it-ribbon {
-  --it-surr: 244, 239, 231;
-  --it-empty: #f4efe7;
-}
-
-.it-ribbon-frame {
   position: relative;
-  background: var(--it-empty);
-  border: 1px solid var(--rule);
+  height: var(--it-embed-h);
   overflow: hidden;
-  /* glow above + band + reflection below */
-  padding-top: 72px;
+  background: #050506;
+  border: 1px solid var(--rule);
 }
 
-html:not(.is-dark) .it-ribbon-frame {
+html:not(.is-dark) .it-embed {
+  background: #f4efe7;
   border-color: color-mix(in srgb, var(--rule) 80%, #c9b8a0);
 }
 
-/* Ambient colour blobs — style.css #amb-blobs */
-.it-amb-blobs {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: calc(var(--it-amb-a, 1) * 0.55);
-  transition: opacity 0.9s var(--it-ease);
-  z-index: 0;
-}
-
-.it-amb-blobs .ab {
-  position: absolute;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-}
-
-.it-amb-blobs .ab-top {
-  top: 0;
-  height: 72px;
-  -webkit-mask-image: linear-gradient(to top, #000, transparent 85%);
-  mask-image: linear-gradient(to top, #000, transparent 85%);
-}
-
-.it-amb-blobs .ab-bot {
-  top: calc(72px + var(--it-bh));
-  bottom: 0;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
-  mask-image: linear-gradient(to bottom, #000, transparent 85%);
-}
-
-.it-amb-blobs i {
-  position: absolute;
-  width: 55%;
-  height: 140%;
-  max-height: 220px;
-  border-radius: 50%;
-  will-change: transform;
-  background: radial-gradient(closest-side, var(--c, rgba(255, 176, 82, 0.55)), transparent);
-  transition: --c 3s ease;
-  animation: it-ab-drift 38s ease-in-out infinite alternate;
-}
-
-.it-amb-blobs .ab-top i { bottom: -40%; }
-.it-amb-blobs .ab-bot i { top: -40%; }
-.it-amb-blobs i:nth-child(1) { left: -12%; }
-.it-amb-blobs i:nth-child(2) { left: 22%; animation-duration: 47s; animation-delay: -12s; }
-.it-amb-blobs i:nth-child(3) { left: 56%; animation-duration: 42s; animation-delay: -25s; }
-
-@keyframes it-ab-drift {
-  from { transform: translate3d(-4%, 0, 0) scale(1); }
-  to { transform: translate3d(5%, 3%, 0) scale(1.12); }
-}
-
-/* Soft glow spilling above the band — about.css .band .glow */
-.it-band-glow {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 72px;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: 0.5;
-  z-index: 1;
-  -webkit-mask-image: linear-gradient(to top, #000, transparent);
-  mask-image: linear-gradient(to top, #000, transparent);
-}
-
-html:not(.is-dark) .it-band-glow {
-  opacity: 0.38;
-}
-
-.it-band-glow i {
-  position: absolute;
-  bottom: -50px;
-  width: 46%;
-  height: 120px;
-  border-radius: 50%;
-  will-change: transform;
-  background: radial-gradient(closest-side, rgba(255, 176, 82, 0.55), transparent);
-  animation: it-ab-drift 38s ease-in-out infinite alternate;
-}
-
-.it-band-glow i:nth-child(1) { left: -6%; }
-.it-band-glow i:nth-child(2) {
-  left: 28%;
-  background: radial-gradient(closest-side, rgba(70, 110, 255, 0.45), transparent);
-  animation-duration: 47s;
-  animation-delay: -12s;
-}
-.it-band-glow i:nth-child(3) {
-  left: 60%;
-  animation-duration: 42s;
-  animation-delay: -25s;
-}
-
-/* The painting band */
-.it-band {
-  position: relative;
-  height: var(--it-bh);
-  overflow: hidden;
-  cursor: grab;
-  touch-action: none;
-  z-index: 2;
-  background: #0a0a0c;
-}
-
-.it-band.is-dragging {
-  cursor: grabbing;
-}
-
-.it-band-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Twinkling motes — about.css .band .lights */
-.it-band-lights {
+.it-embed-scaler {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  mix-blend-mode: screen;
-  z-index: 3;
 }
 
-.it-band-lights i {
+.it-embed-iframe {
   position: absolute;
-  width: 110px;
-  height: 110px;
-  margin: -55px;
-  border-radius: 50%;
-  opacity: 0;
-  will-change: opacity, transform;
-  background: radial-gradient(closest-side, rgba(255, 214, 150, 0.55), rgba(255, 170, 80, 0.12) 45%, transparent);
-  animation: it-twinkle 9s ease-in-out infinite;
-}
-
-.it-band-lights i:nth-child(1) { left: 8%; top: 30%; }
-.it-band-lights i:nth-child(2) { left: 21%; top: 68%; animation-delay: -2s; animation-duration: 11s; }
-.it-band-lights i:nth-child(3) { left: 36%; top: 22%; animation-delay: -5s; }
-.it-band-lights i:nth-child(4) { left: 49%; top: 58%; animation-delay: -7s; animation-duration: 12s; }
-.it-band-lights i:nth-child(5) { left: 62%; top: 35%; animation-delay: -3s; animation-duration: 10s; }
-.it-band-lights i:nth-child(6) { left: 74%; top: 72%; animation-delay: -8s; }
-.it-band-lights i:nth-child(7) { left: 86%; top: 26%; animation-delay: -1s; animation-duration: 13s; }
-.it-band-lights i:nth-child(8) { left: 94%; top: 60%; animation-delay: -6s; }
-
-@keyframes it-twinkle {
-  0%, 100% { opacity: 0; transform: scale(0.7); }
-  50% { opacity: 0.85; transform: scale(1); }
-}
-
-/* Sheen — about.css .band .sheen (14s, rgba(255,240,215,.07/.1)) */
-.it-band-sheen {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.it-band-sheen::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 30%;
-  will-change: transform;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    rgba(255, 240, 215, 0.07) 45%,
-    rgba(255, 240, 215, 0.1) 50%,
-    transparent
-  );
-  animation: it-sheen 14s ease-in-out infinite;
-  transform: translateX(-120%);
-}
-
-@keyframes it-sheen {
-  0%, 55% { transform: translateX(-120%); }
-  100% { transform: translateX(420%); }
-}
-
-/* Vignette / veil — style.css .veil */
-.it-band-veil {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    transparent 18%,
-    transparent 70%,
-    rgba(0, 0, 0, 0.45)
-  );
-}
-
-html:not(.is-dark) .it-band-veil {
-  background: linear-gradient(
-    to bottom,
-    rgba(244, 239, 231, 0.4),
-    transparent 18%,
-    transparent 70%,
-    rgba(244, 239, 231, 0.5)
-  );
-}
-
-.it-ribbon-hint {
-  position: absolute;
-  left: 10px;
-  bottom: 8px;
-  z-index: 6;
-  padding: 2px 8px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.4s var(--it-ease);
-}
-
-.it-ribbon-hint.is-gone {
-  opacity: 0;
-}
-
-/* Reflection under the band — about.css .band-refl */
-.it-band-refl {
-  position: relative;
-  height: calc(var(--it-bh) * 0.42);
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 2;
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2) 35%, transparent);
-  mask-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2) 35%, transparent);
-}
-
-.it-band-refl canvas {
-  position: absolute;
-  top: 0;
   left: 0;
   width: 100%;
-  height: var(--it-bh);
+  height: calc(var(--it-embed-h) / var(--it-visible));
+  top: calc(var(--it-embed-h) / var(--it-visible) * var(--it-crop-top) * -1);
+  border: 0;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Full-size hit target — opens the live site */
+.it-embed-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: block;
-  transform: scaleY(-1);
-  transform-origin: top center;
-  /* REFL_VAR: sat 1.12, gain 1.35 (dark) / ~1.18 (light) from client.js */
-  filter: saturate(1.12) brightness(1.35);
-  opacity: 0.95;
-}
-
-html:not(.is-dark) .it-band-refl canvas {
-  filter: saturate(1.12) brightness(1.18);
-  opacity: 0.9;
-}
-
-.it-ribbon-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 8px 0 0;
-}
-
-.it-ribbon-controls button {
-  appearance: none;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  color: var(--ink-muted);
-  font: inherit;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  padding: 0.35rem 0.7rem;
   cursor: pointer;
-  transition: color 0.25s var(--it-ease), border-color 0.25s var(--it-ease);
+  text-decoration: none;
+  color: transparent;
 }
 
-.it-ribbon-controls button:hover,
-.it-ribbon-controls button.is-on {
-  color: var(--ink);
-  border-color: var(--ink-muted);
+.it-embed-link-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .it-amb-blobs i,
-  .it-band-glow i,
-  .it-band-lights i,
-  .it-band-sheen::before {
-    animation: none;
-  }
-
-  .it-band-lights i {
-    opacity: 0.35;
-  }
+.it-embed-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
 }
 
 @media (max-width: 760px) {
-  .it-ribbon {
-    --it-bh: clamp(180px, 48vw, 260px);
-  }
-
-  .it-ribbon-frame {
-    padding-top: 48px;
-  }
-
-  .it-band-glow {
-    height: 48px;
-  }
-
-  .it-amb-blobs .ab-top {
-    height: 48px;
-  }
-
-  .it-amb-blobs .ab-bot {
-    top: calc(48px + var(--it-bh));
+  .it-embed {
+    --it-embed-h: clamp(88px, 26vw, 120px);
+    --it-visible: 0.7;
+    --it-crop-top: 0.12;
   }
 }
