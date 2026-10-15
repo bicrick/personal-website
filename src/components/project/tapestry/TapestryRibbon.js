@@ -29,7 +29,7 @@ export default function TapestryRibbon({
           className="it-embed-link"
           href={LIVE}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           aria-label="Open Infinite Tapestry live site"
         >
           <span className="it-embed-link-text">Open infinitetapestry.app</span>
