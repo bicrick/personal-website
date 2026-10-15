@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """
-Pre-bake weighted-Voronoi (Lloyd) stipple renders of schematic strip crops.
+Pre-bake monochrome weighted-Voronoi (Lloyd) stipple masks for schematic crops.
 
-Outputs transparent PNGs (no runtime cost in the app):
-  *-stipple-light.png  — dark dots for light theme
-  *-stipple-dark.png   — light dots for dark theme
+Outputs a single luminance mask per crop:
+  *-stipple-mask.png  — white dots on black (no source colour/tint)
 
-Algorithm: importance-sample by luminance density, then Lloyd relax on a
-downsampled density field (discrete weighted centroidal Voronoi). Soft
-gaussian discs match the article mote aesthetic.
+The app paints these via SVG mask + fill="currentColor" so light mode gets
+dark dots and dark mode gets light dots from theme CSS alone.
 """
 
 from __future__ import annotations
@@ -34,7 +32,7 @@ CROPS = [
 
 POINTS_PER_KPIX = 22.0
 LLOYD_ITERS = 10
-GRID_CAP = 160  # long-edge of Lloyd working grid
+GRID_CAP = 160
 RNG = np.random.default_rng(0x1A5E)
 
 
@@ -52,7 +50,6 @@ def downsample_density(density: np.ndarray, cap: int = GRID_CAP) -> tuple[np.nda
     im = Image.fromarray((np.clip(density, 0, 1) * 255).astype(np.uint8), "L")
     im = im.resize((nw, nh), Image.Resampling.BOX)
     dens = np.asarray(im, dtype=np.float64) / 255.0
-    # Preserve mass roughly
     dens *= (h * w) / max(1, nh * nw)
     return dens, scale
 
@@ -67,10 +64,6 @@ def sample_points(density: np.ndarray, n: int) -> np.ndarray:
 
 
 def lloyd(density: np.ndarray, pts: np.ndarray, iters: int) -> np.ndarray:
-    """
-    Discrete weighted Lloyd on a downsampled density grid.
-    Nearest-site assignment via tiled chunk distance (no scipy).
-    """
     dens, scale = downsample_density(density)
     h, w = dens.shape
     pts_w = pts * scale if scale < 1 else pts.copy()
@@ -79,8 +72,6 @@ def lloyd(density: np.ndarray, pts: np.ndarray, iters: int) -> np.ndarray:
     pix = np.column_stack([(xs + 0.5).ravel(), (ys + 0.5).ravel()])
     mass = dens.ravel()
     n_pix = pix.shape[0]
-
-    # Process pixels in chunks to bound memory
     chunk = 8000
 
     for _ in range(iters):
@@ -88,7 +79,6 @@ def lloyd(density: np.ndarray, pts: np.ndarray, iters: int) -> np.ndarray:
         assign = np.empty(n_pix, dtype=np.int32)
         for start in range(0, n_pix, chunk):
             end = min(n_pix, start + chunk)
-            # (chunk, n) distances
             d = pix[start:end, None, :] - pts_w[None, :, :]
             dist2 = (d * d).sum(axis=2)
             assign[start:end] = dist2.argmin(axis=1)
@@ -117,17 +107,16 @@ def radii_for(pts: np.ndarray, density: np.ndarray, base: float = 0.8) -> np.nda
     return base * (0.62 + 0.55 * d)
 
 
-def render_png(
+def render_mask(
     pts: np.ndarray,
     radii: np.ndarray,
     size: tuple[int, int],
-    *,
-    dark_dots: bool,
     scale: int = 2,
 ) -> Image.Image:
+    """White soft discs on black — pure monochrome luminance mask for SVG masking."""
     w, h = size
     W, H = w * scale, h * scale
-    alpha = np.zeros((H, W), dtype=np.float32)
+    ink = np.zeros((H, W), dtype=np.float32)
 
     for (x, y), r in zip(pts, radii):
         cx, cy = x * scale, y * scale
@@ -141,17 +130,11 @@ def render_png(
         yy, xx = np.ogrid[y0:y1, x0:x1]
         dist2 = (xx - cx) ** 2 + (yy - cy) ** 2
         a = np.exp(-dist2 / (2.0 * (rr * 0.55) ** 2))
-        peak = 0.78 if dark_dots else 0.68
-        alpha[y0:y1, x0:x1] = np.maximum(alpha[y0:y1, x0:x1], a * peak)
+        ink[y0:y1, x0:x1] = np.maximum(ink[y0:y1, x0:x1], a)
 
-    alpha = np.clip(alpha, 0, 1)
-    rgb = (20, 20, 22) if dark_dots else (248, 246, 240)
-    rgba = np.zeros((H, W, 4), dtype=np.uint8)
-    rgba[..., 0] = rgb[0]
-    rgba[..., 1] = rgb[1]
-    rgba[..., 2] = rgb[2]
-    rgba[..., 3] = (alpha * 255).astype(np.uint8)
-    im = Image.fromarray(rgba, "RGBA")
+    ink = np.clip(ink, 0, 1)
+    gray = (ink * 255).astype(np.uint8)
+    im = Image.fromarray(gray, "L")
     if scale != 1:
         im = im.resize((w, h), Image.Resampling.LANCZOS)
     return im
@@ -163,30 +146,34 @@ def stipple_image(path: Path) -> None:
     h, w = arr.shape[:2]
     lum = luminance(arr)
 
+    # Density from luminance only — no chroma. Darker → more ink (classic stipple).
+    dens = np.clip((1.0 - lum) ** 1.15, 0.04, 1.0)
+
     n = int(max(64, (w * h / 1000.0) * POINTS_PER_KPIX))
     n = min(n, 6000)
     print(f"  {path.stem}: {w}x{h}, {n} points")
 
-    dens_light = np.clip((1.0 - lum) ** 1.15, 0.04, 1.0)
-    dens_dark = np.clip(lum ** 1.15, 0.04, 1.0)
-
-    for dens, dark_dots, suffix in (
-        (dens_light, True, "stipple-light"),
-        (dens_dark, False, "stipple-dark"),
-    ):
-        pts = sample_points(dens, n)
-        pts = lloyd(dens, pts, LLOYD_ITERS)
-        pts[:, 0] = np.clip(pts[:, 0], 0.5, w - 0.5)
-        pts[:, 1] = np.clip(pts[:, 1], 0.5, h - 0.5)
-        rad = radii_for(pts, dens, base=0.92 if max(w, h) > 100 else 0.8)
-        out = render_png(pts, rad, (w, h), dark_dots=dark_dots, scale=2)
-        out_path = OUT_DIR / f"{path.stem}-{suffix}.png"
-        out.save(out_path, "PNG", optimize=True)
-        print(f"    -> {out_path.name} ({out_path.stat().st_size // 1024} KB)")
+    pts = sample_points(dens, n)
+    pts = lloyd(dens, pts, LLOYD_ITERS)
+    pts[:, 0] = np.clip(pts[:, 0], 0.5, w - 0.5)
+    pts[:, 1] = np.clip(pts[:, 1], 0.5, h - 0.5)
+    rad = radii_for(pts, dens, base=0.92 if max(w, h) > 100 else 0.8)
+    out = render_mask(pts, rad, (w, h), scale=2)
+    out_path = OUT_DIR / f"{path.stem}-stipple-mask.png"
+    out.save(out_path, "PNG", optimize=True)
+    print(f"    -> {out_path.name} ({out_path.stat().st_size // 1024} KB)")
 
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Remove prior dual-colour theme renders if present
+    for old in OUT_DIR.glob("*-stipple-light.png"):
+        old.unlink()
+        print(f"removed {old.name}")
+    for old in OUT_DIR.glob("*-stipple-dark.png"):
+        old.unlink()
+        print(f"removed {old.name}")
+
     for name in CROPS:
         src = SRC_DIR / f"{name}.webp"
         if not src.exists():

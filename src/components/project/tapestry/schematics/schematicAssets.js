@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useId } from 'react';
 
 const BASE = `${process.env.PUBLIC_URL}/images/infinite-tapestry/schematic`;
 
-/** Pre-baked weighted-Voronoi stipple PNGs (scripts/stipple-schematics.py). */
+/** Pre-baked monochrome stipple masks (scripts/stipple-schematics.py). */
 export const SCHEMATIC = {
   geomContext: `${BASE}/geom-context`,
   geomRepaint: `${BASE}/geom-repaint`,
@@ -13,26 +13,10 @@ export const SCHEMATIC = {
   loop: [0, 1, 2, 3, 4].map((i) => `${BASE}/loop-${i}`),
 };
 
-function isSiteDark() {
-  return typeof document !== 'undefined'
-    && document.documentElement.classList.contains('is-dark');
-}
-
-function useSiteDark() {
-  const [dark, setDark] = useState(isSiteDark);
-  useEffect(() => {
-    const root = document.documentElement;
-    const sync = () => setDark(root.classList.contains('is-dark'));
-    const observer = new MutationObserver(sync);
-    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-  return dark;
-}
-
 /**
- * Theme-aware stipple fill: dark dots on light, light dots on dark.
- * Assets are pre-baked PNGs — no runtime stippling.
+ * Monochrome stipple fill via SVG mask + currentColor.
+ * Mask PNGs are white-on-black luminance only (no source tint).
+ * Theme CSS sets .it-schematic color → dark dots on light, light on dark.
  */
 export function StippleImage({
   stem,
@@ -43,20 +27,42 @@ export function StippleImage({
   clipPath,
   preserveAspectRatio = 'xMidYMid slice',
 }) {
-  const dark = useSiteDark();
-  // *-stipple-light.png = dark dots (for light UI)
-  // *-stipple-dark.png  = light dots (for dark UI)
-  const href = `${stem}-stipple-${dark ? 'dark' : 'light'}.png`;
+  const uid = useId().replace(/:/g, '');
+  const maskId = `it-stipple-${uid}`;
+  const href = `${stem}-stipple-mask.png`;
+
   return (
-    <image
-      href={href}
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      preserveAspectRatio={preserveAspectRatio}
-      clipPath={clipPath}
-    />
+    <g className="it-stipple-ink" clipPath={clipPath}>
+      <defs>
+        <mask
+          id={maskId}
+          maskUnits="userSpaceOnUse"
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+        >
+          {/* Black = hide, white = show currentColor ink */}
+          <rect x={x} y={y} width={width} height={height} fill="#000" />
+          <image
+            href={href}
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            preserveAspectRatio={preserveAspectRatio}
+          />
+        </mask>
+      </defs>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill="currentColor"
+        mask={`url(#${maskId})`}
+      />
+    </g>
   );
 }
 

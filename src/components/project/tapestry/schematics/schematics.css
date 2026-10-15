@@ -3,6 +3,8 @@
    dark motes on light, light motes on dark — very low alpha. */
 
 .it-schematic {
+  /* Stipple ink via currentColor: dark dots on light, light dots on dark */
+  color: rgba(18, 18, 20, 0.78);
   --it-mote: rgba(20, 20, 22, 0.11);
   --it-mote-soft: rgba(20, 20, 22, 0.055);
   margin: 20px 0 8px;
@@ -17,8 +19,14 @@
 }
 
 html.is-dark .it-schematic {
+  color: rgba(248, 246, 240, 0.72);
   --it-mote: rgba(255, 255, 255, 0.1);
   --it-mote-soft: rgba(255, 255, 255, 0.045);
+}
+
+.it-stipple-ink {
+  /* inherits currentColor from .it-schematic — monochrome only */
+  color: inherit;
 }
 
 .it-schematic svg {
