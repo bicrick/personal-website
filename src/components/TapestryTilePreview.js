@@ -14,13 +14,13 @@ const RIBBON_FALLBACK = `${IMG}/ribbon-thumb.jpg`;
 const SHEEN_PERIOD = 14;
 const SHEEN_RGB = '255,240,215';
 /**
- * Starfield after infinitetapestry.app intro.js: jittered lattice of
- * 1.6px·(.85+.3r) points at alpha .25+.35r, drifting in x with a slow y wobble.
- * Lattice cell is shrunk for the thumbnail so the field stays dense.
+ * Starfield ported from the infinitetapestry.app intro (v6 "halftone bloom",
+ * star phase): N = 20000 uniformly random stars over the viewport, so the tile
+ * keeps the same density per CSS px as a 1440×900 screen.
  */
-const STAR_SPACING = 4.8;
-const STAR_CROSS_FRAC = 0.04;
-const STAR_ALPHA_BUCKETS = 24;
+const INTRO_STARS = 20000;
+const INTRO_REF_AREA = 1440 * 900;
+const INTRO_MOTE_RAMP = 0.7;
 const RIBBON_SPEED = 12;
 
 function loadImage(src, fallback) {
@@ -72,8 +72,8 @@ function themePalette(dark) {
       glowAlpha: 0.42,
       sheenPeak: 0.14,
       reflPeak: 0.28,
-      sparkle: '255,255,255',
-      sparklePeak: 1,
+      // intro mote: vec3(.96, .95, .9)
+      star: [245, 242, 230],
       hairline: 'rgba(255,255,255,0.42)',
     };
   }
@@ -82,8 +82,8 @@ function themePalette(dark) {
     glowAlpha: 0.32,
     sheenPeak: 0.12,
     reflPeak: 0.2,
-    sparkle: '20,20,20',
-    sparklePeak: 1,
+    // intro mote: vec3(.1)
+    star: [26, 26, 26],
     hairline: 'rgba(20,20,20,0.5)',
   };
 }
@@ -110,6 +110,27 @@ function buildSolidMask(paths, cssW, cssH, dpr, fit) {
     ctx.lineWidth = width;
     ctx.stroke(paths[key]);
   });
+  return mirrorLeftHalf(canvas);
+}
+
+/** Copy the left half onto the right in device pixels so both sides match exactly. */
+function mirrorLeftHalf(canvas) {
+  const cw = canvas.width;
+  const ch = canvas.height;
+  const half = Math.floor(cw / 2);
+  const left = document.createElement('canvas');
+  left.width = half;
+  left.height = ch;
+  left.getContext('2d').drawImage(canvas, 0, 0, half, ch, 0, 0, half, ch);
+  const ctx = canvas.getContext('2d');
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(cw - half, 0, half, ch);
+  ctx.setTransform(-1, 0, 0, 1, cw, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(left, 0, 0);
+  ctx.restore();
   return canvas;
 }
 
@@ -132,16 +153,22 @@ function buildMaskHairline(mask, radius, color) {
   ctx.globalCompositeOperation = 'source-in';
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  return canvas;
+  return mirrorLeftHalf(canvas);
+}
+
+function smoothstep(e0, e1, x) {
+  const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+  return t * t * (3 - 2 * t);
 }
 
 /**
- * Jittered lattice like intro.js: (i + .2 + .6·rnd)·cell. Sizes are in device px.
+ * Same per-star randoms as intro.js: a.z/a.w = start position, r.x = dimming,
+ * r.y = size / alpha / twinkle phase / drift. Size is the intro's gl_PointSize
+ * (intro canvas runs at ≤1.5× DPR) converted to device px.
  */
 function seedStars(w, h, dpr) {
-  const cell = STAR_SPACING;
-  const cols = Math.max(8, Math.ceil(w / cell));
-  const rows = Math.max(6, Math.ceil(h / cell));
+  const count = Math.round((INTRO_STARS * w * h) / INTRO_REF_AREA);
+  const introPx = dpr / Math.min(dpr, 1.5);
   const out = [];
   let seed = 0x9e3779b9;
   const rnd = () => {
@@ -150,28 +177,51 @@ function seedStars(w, h, dpr) {
     seed ^= seed << 5;
     return (seed >>> 0) / 4294967296;
   };
-  for (let i = 0; i < cols; i += 1) {
-    for (let j = 0; j < rows; j += 1) {
-      const jx = rnd();
-      const jy = rnd();
-      const r0 = rnd();
-      const r1 = rnd();
-      // intro points are 1.6px with an exp(-d²·9) falloff; ~1.1px is the visible core
-      const size = Math.max(1, Math.round(1.1 * dpr * (0.85 + 0.3 * r0)));
-      out.push({
-        x: (i + 0.2 + 0.6 * jx) / cols,
-        y: (j + 0.2 + 0.6 * jy) / rows,
-        size,
-        phase: r1 * Math.PI * 2,
-        // intro: x drift uT·6·(r.x−.5) world px/s ≈ ±3 screen px/s
-        driftX: 6 * (r0 - 0.5),
-        baseA: 0.25 + 0.35 * r0,
-        cross: rnd() < STAR_CROSS_FRAC && r0 > 0.5,
-        twinkle: 0.6 + rnd() * 1.2,
-      });
-    }
+  for (let n = 0; n < count; n += 1) {
+    const ax = rnd();
+    const ay = rnd();
+    const rx = rnd();
+    const ry = rnd();
+    const pointSize = Math.max(1, 1.7 * (0.75 + 0.5 * ry) * (0.9 + 0.2 * ry));
+    out.push({
+      ax,
+      ay,
+      ry,
+      size: Math.round(pointSize * introPx * 8) / 8,
+      baseA: (0.22 + 0.45 * ry) * (1 - 0.75 * smoothstep(0.35, 0.8, rx)),
+    });
   }
   return out;
+}
+
+/**
+ * Point sprite matching the intro fragment shader: hard disc,
+ * alpha = 1 − smoothstep(.41, .5, |pointCoord − .5|), sampled at pixel centres.
+ */
+function buildStarSprite(size, rgb) {
+  // Odd dimension keeps the centre on a pixel centre, so 1px stars stay solid.
+  const dim = 2 * Math.ceil(size / 2) + 1;
+  const c = dim / 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = dim;
+  canvas.height = dim;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.createImageData(dim, dim);
+  for (let j = 0; j < dim; j += 1) {
+    for (let i = 0; i < dim; i += 1) {
+      const u = (i + 0.5 - c) / size;
+      const v = (j + 0.5 - c) / size;
+      const inside = Math.abs(u) <= 0.5 && Math.abs(v) <= 0.5;
+      const a = inside ? 1 - smoothstep(0.41, 0.5, Math.hypot(u, v)) : 0;
+      const o = (j * dim + i) * 4;
+      img.data[o] = rgb[0];
+      img.data[o + 1] = rgb[1];
+      img.data[o + 2] = rgb[2];
+      img.data[o + 3] = Math.round(a * 255);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return { canvas, c };
 }
 
 export default function TapestryTilePreview({ className = '' }) {
@@ -376,65 +426,46 @@ export default function TapestryTilePreview({ className = '' }) {
       ctx.fillRect(0, reflTop, w, reflH + 1);
     };
 
-    const buckets = Array.from({ length: STAR_ALPHA_BUCKETS }, () => []);
-    const bucketStyles = buckets.map((_, b) => (
-      `rgba(${palette.sparkle},${(palette.sparklePeak * (b + 0.5)) / STAR_ALPHA_BUCKETS})`
-    ));
+    const sprites = new Map();
+    let moteStart = null;
 
     /**
-     * Hard device-pixel points batched by quantised alpha so thousands of stars
-     * cost a couple dozen fillStyle changes per frame.
+     * intro.js star phase (e = 0), per star:
+     *   x = fract(a.z + t·(r.y − .5)·.004)·W, y = fract(a.w + .01·sin(t·.5 + r.y·2π))·H
+     *   alpha = mote·(.22 + .45·r.y)·(.72 + .28·sin(t·1.7 + r.y·40))·(1 − .75·smoothstep(.35, .8, r.x))
      */
     const drawStars = (ctx, w, h, time, dpr) => {
       const key = `${Math.round(w)}x${Math.round(h)}@${dpr}`;
       if (starsKey !== key) {
         stars = seedStars(w, h, dpr);
+        stars.forEach((s) => {
+          if (!sprites.has(s.size)) sprites.set(s.size, buildStarSprite(s.size, palette.star));
+          s.sprite = sprites.get(s.size);
+        });
         starsKey = key;
       }
+      const now = performance.now();
+      if (moteStart == null) moteStart = now;
+      const mote = reduced ? 1 : Math.min(1, (now - moteStart) / 1000 / INTRO_MOTE_RAMP);
+      const t = reduced ? 0 : time;
       const cw = Math.round(w * dpr);
       const ch = Math.round(h * dpr);
-      const wobble = h * 0.02 * dpr;
-      buckets.forEach((b) => { b.length = 0; });
-      for (let i = 0; i < stars.length; i += 1) {
-        const s = stars[i];
-        const flicker = reduced
-          ? 0.8
-          : 0.6 + 0.4 * Math.sin(time * s.twinkle + s.phase);
-        const a = Math.min(0.999, s.baseA * flicker);
-        const xOff = reduced ? 0 : time * s.driftX * dpr;
-        const yOff = reduced ? 0 : wobble * Math.sin(time * 0.7 + s.phase);
-        s.px = Math.floor((((s.x * cw + xOff) % cw) + cw) % cw);
-        s.py = Math.floor((((s.y * ch + yOff) % ch) + ch) % ch);
-        s.a = a;
-        buckets[Math.floor(a * STAR_ALPHA_BUCKETS)].push(s);
-      }
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.imageSmoothingEnabled = false;
       ctx.globalCompositeOperation = 'source-over';
-      const arm = Math.max(2, Math.round(2 * dpr));
-      const line = Math.max(1, Math.round(dpr * 0.75));
-      for (let b = 0; b < buckets.length; b += 1) {
-        const list = buckets[b];
-        if (list.length) {
-          ctx.fillStyle = bucketStyles[b];
-          for (let i = 0; i < list.length; i += 1) {
-            const s = list[i];
-            ctx.fillRect(s.px, s.py, s.size, s.size);
-          }
-        }
-      }
-      if (!reduced) {
-        for (let i = 0; i < stars.length; i += 1) {
-          const s = stars[i];
-          if (s.cross) {
-            const crossA = s.a * 0.55;
-            ctx.fillStyle = bucketStyles[Math.floor(crossA * STAR_ALPHA_BUCKETS)];
-            const cx = s.px + Math.floor((s.size - line) / 2);
-            const cy = s.py + Math.floor((s.size - line) / 2);
-            ctx.fillRect(cx - arm, cy, arm * 2 + line, line);
-            ctx.fillRect(cx, cy - arm, line, arm * 2 + line);
-          }
+      for (let i = 0; i < stars.length; i += 1) {
+        const s = stars[i];
+        const twinkle = 0.72 + 0.28 * Math.sin(t * 1.7 + s.ry * 40);
+        const a = mote * s.baseA * twinkle;
+        if (a >= 0.004) {
+          const fx = s.ax + t * (s.ry - 0.5) * 0.004;
+          const fy = s.ay + 0.01 * Math.sin(t * 0.5 + s.ry * Math.PI * 2);
+          const x = (fx - Math.floor(fx)) * cw;
+          const y = (fy - Math.floor(fy)) * ch;
+          const { canvas: img, c } = s.sprite;
+          ctx.globalAlpha = a;
+          ctx.drawImage(img, Math.floor(x) + 0.5 - c, Math.floor(y) + 0.5 - c);
         }
       }
       ctx.restore();

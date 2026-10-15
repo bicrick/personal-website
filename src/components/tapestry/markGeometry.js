@@ -21,12 +21,14 @@ export const MARK_PATH_D = {
  */
 export const MASK_WIDTH_SCALE = 1.55;
 
-/** Solid fill strokes for destination-in (painting cutout). */
+/**
+ * Solid fill strokes for destination-in (painting cutout): the two lobes' outer
+ * 9-wide strokes. Bridge/weave are left out — in mark.svg the bridge is a
+ * background-coloured over/under gap on one diagonal, which skews the silhouette.
+ */
 export const MARK_MASK_STROKES = [
   { key: 'right', width: 9 * MASK_WIDTH_SCALE },
   { key: 'left', width: 9 * MASK_WIDTH_SCALE },
-  { key: 'bridge', width: 10 * MASK_WIDTH_SCALE },
-  { key: 'weave', width: 6.4 * MASK_WIDTH_SCALE },
 ];
 
 export function createMarkPaths() {
