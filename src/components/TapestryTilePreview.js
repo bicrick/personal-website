@@ -13,7 +13,13 @@ const RIBBON_FALLBACK = `${IMG}/ribbon-thumb.jpg`;
 
 const SHEEN_PERIOD = 14;
 const SHEEN_RGB = '255,240,215';
-const SPARKLE_COUNT = 28;
+/**
+ * Dense starfield scaled from infinitetapestry.app intro.js:
+ * full-screen uses N≈12000 over SPAN×BANDW with ~1.6px points.
+ * Thumbnail area is much smaller → density-matched crisp 1–2px stars.
+ */
+const STAR_SPACING = 7.5; // CSS px, ≈ intro cell at typical display scale
+const STAR_CROSS_FRAC = 0.18;
 
 function loadImage(src, fallback) {
   const trySrc = (url) => new Promise((resolve, reject) => {
@@ -64,8 +70,9 @@ function themePalette(dark) {
       glowAlpha: 0.42,
       sheenPeak: 0.14,
       reflPeak: 0.28,
-      sparkle: '255,248,236',
-      sparklePeak: 0.55,
+      // intro.js: mote = vec3(1.) on dark
+      sparkle: '255,255,255',
+      sparklePeak: 0.72,
     };
   }
   return {
@@ -73,8 +80,9 @@ function themePalette(dark) {
     glowAlpha: 0.32,
     sheenPeak: 0.12,
     reflPeak: 0.2,
-    sparkle: '40,36,28',
-    sparklePeak: 0.35,
+    // intro.js: mote = vec3(.08) on light
+    sparkle: '20,20,20',
+    sparklePeak: 0.55,
   };
 }
 
@@ -103,26 +111,42 @@ function buildSolidMask(paths, cssW, cssH, dpr, fit) {
   return canvas;
 }
 
-function seedSparkles(count) {
+/**
+ * Jittered lattice like intro.js (cols×rows over the tile), density ≈ STAR_SPACING.
+ */
+function seedStars(w, h) {
+  const cell = STAR_SPACING;
+  const cols = Math.max(8, Math.ceil(w / cell));
+  const rows = Math.max(6, Math.ceil(h / cell));
   const out = [];
-  let h = 0x9e3779b9;
+  let seed = 0x9e3779b9;
   const rnd = () => {
-    h ^= h << 13;
-    h ^= h >>> 17;
-    h ^= h << 5;
-    return (h >>> 0) / 4294967296;
+    seed ^= seed << 13;
+    seed ^= seed >>> 17;
+    seed ^= seed << 5;
+    return (seed >>> 0) / 4294967296;
   };
-  for (let i = 0; i < count; i += 1) {
-    out.push({
-      x: rnd(),
-      y: rnd(),
-      r: 0.4 + rnd() * 1.1,
-      phase: rnd() * Math.PI * 2,
-      speed: 0.08 + rnd() * 0.18,
-      driftX: (rnd() - 0.5) * 0.04,
-      driftY: -0.015 - rnd() * 0.035,
-      twinkle: 0.6 + rnd() * 1.4,
-    });
+  for (let i = 0; i < cols; i += 1) {
+    for (let j = 0; j < rows; j += 1) {
+      const r0 = rnd();
+      const r1 = rnd();
+      out.push({
+        // Normalised lattice with intro-style jitter
+        x: (i + 0.2 + 0.6 * r0) / cols,
+        y: (j + 0.2 + 0.6 * r1) / rows,
+        // intro gl_PointSize base ≈ 1.6px; keep crisp 1–2px
+        size: 1 + r0 * 1.0,
+        phase: r1 * Math.PI * 2,
+        // intro: fract(a.w + .02 * sin(uT * .7 + r.y * 6.28)) + slow drift
+        speed: 0.55 + r0 * 0.5,
+        driftX: (r0 - 0.5) * 0.012,
+        driftY: (r1 - 0.5) * 0.01,
+        // intro alpha: uMote * (.25 + .35 * r.x)
+        baseA: 0.25 + 0.35 * r0,
+        cross: r1 < STAR_CROSS_FRAC,
+        twinkle: 0.7 + r0 * 1.1,
+      });
+    }
   }
   return out;
 }
@@ -149,7 +173,8 @@ export default function TapestryTilePreview({ className = '' }) {
     const palette = themePalette(dark);
     const paintLayer = document.createElement('canvas');
     const sheenLayer = document.createElement('canvas');
-    const sparkles = seedSparkles(SPARKLE_COUNT);
+    let stars = [];
+    let starsKey = '';
 
     const glowColors = [
       [255, 176, 82],
@@ -326,28 +351,43 @@ export default function TapestryTilePreview({ className = '' }) {
       ctx.fillRect(0, reflTop, w, reflH + 1);
     };
 
-    /** Soft drifting motes — live canvas, not video. */
-    const drawSparkles = (ctx, w, h, time) => {
+    /**
+     * Crisp intro-scaled starfield: 1–2px hard points (no soft radial blobs),
+     * some with a tiny 4-point twinkle cross; opacity flicker like intro motes.
+     */
+    const drawStars = (ctx, w, h, time) => {
+      const key = `${Math.round(w)}x${Math.round(h)}`;
+      if (starsKey !== key) {
+        stars = seedStars(w, h);
+        starsKey = key;
+      }
       ctx.save();
-      ctx.globalCompositeOperation = dark ? 'screen' : 'multiply';
-      sparkles.forEach((s) => {
-        const life = reduced
-          ? 0.45
-          : 0.25 + 0.75 * (0.5 + 0.5 * Math.sin(time * s.twinkle + s.phase));
+      ctx.globalCompositeOperation = dark ? 'screen' : 'source-over';
+      const rgb = palette.sparkle;
+      for (let i = 0; i < stars.length; i += 1) {
+        const s = stars[i];
+        const flicker = reduced
+          ? 0.7
+          : 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(time * s.twinkle + s.phase));
         const x = ((s.x + (reduced ? 0 : time * s.driftX)) % 1 + 1) % 1;
-        const y = ((s.y + (reduced ? 0 : time * s.driftY) + Math.sin(time * s.speed + s.phase) * 0.02) % 1 + 1) % 1;
-        const px = x * w;
-        const py = y * h;
-        const r = s.r * (0.7 + life * 0.6);
-        const a = palette.sparklePeak * life * 0.55;
-        const grad = ctx.createRadialGradient(px, py, 0, px, py, r * 2.4);
-        grad.addColorStop(0, `rgba(${palette.sparkle},${a})`);
-        grad.addColorStop(1, `rgba(${palette.sparkle},0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(px, py, r * 2.4, 0, Math.PI * 2);
-        ctx.fill();
-      });
+        const y = ((s.y + (reduced ? 0 : time * s.driftY)
+          + (reduced ? 0 : 0.02 * Math.sin(time * s.speed + s.phase))) % 1 + 1) % 1;
+        const px = Math.round(x * w) + 0.5;
+        const py = Math.round(y * h) + 0.5;
+        const a = Math.min(1, palette.sparklePeak * s.baseA * flicker);
+        ctx.fillStyle = `rgba(${rgb},${a})`;
+        const half = s.size * 0.5;
+        // Sharp square point — no blur / radial soft gradient
+        ctx.fillRect(px - half, py - half, s.size, s.size);
+        if (s.cross && !reduced) {
+          const arm = 1 + s.size * 0.85;
+          const thin = Math.max(1, Math.round(s.size * 0.35));
+          const crossA = a * (0.35 + 0.45 * flicker);
+          ctx.fillStyle = `rgba(${rgb},${crossA})`;
+          ctx.fillRect(px - arm, py - thin * 0.5, arm * 2, thin);
+          ctx.fillRect(px - thin * 0.5, py - arm, thin, arm * 2);
+        }
+      }
       ctx.restore();
     };
 
@@ -373,7 +413,7 @@ export default function TapestryTilePreview({ className = '' }) {
 
       const { layer, fit } = buildCutout(w, h, dpr, time);
       drawGlow(ctx, w, h, fit, time);
-      drawSparkles(ctx, w, h, time);
+      drawStars(ctx, w, h, time);
       drawReflection(ctx, w, h, layer, fit);
       ctx.drawImage(layer, 0, 0, w, h);
       // No woven outline — cutout only

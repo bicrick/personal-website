@@ -18,7 +18,9 @@ function InfiniteTapestry() {
       backHref="/"
       backLabel="home"
       linkHref="https://infinitetapestry.app"
-      linkLabel="open live"
+      linkLabel="live"
+      secondaryLinkHref="https://infinitetapestry.app/about"
+      secondaryLinkLabel="about"
       abstract="256×1024 strips, ~2.7 s each. Adjacent strips overlap; the join is inpainted. Auto paints when the queue is empty. A visitor idea is taken word for word."
     >
       <TapestryRibbon />

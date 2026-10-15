@@ -88,7 +88,7 @@ html:not(.is-dark) .it-embed {
 @media (max-width: 760px) {
   .it-embed {
     --it-embed-h: clamp(88px, 26vw, 120px);
-    --it-visible: 0.44;
-    --it-crop-top: 0.29;
+    --it-visible: 0.7;
+    --it-crop-top: 0.12;
   }
 }
