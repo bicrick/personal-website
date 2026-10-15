@@ -1,23 +1,25 @@
 import React from 'react';
+import { LabelChip, SCHEMATIC, StippleImage } from './schematicAssets';
 import './schematics.css';
 
 const STEPS = [
-  { id: 'prompt', label: 'prompt' },
-  { id: 'source', label: 'Auto / visitor' },
-  { id: 'gpu', label: 'SDXL' },
-  { id: 'stitch', label: 'stitch' },
-  { id: 'store', label: 'store' },
+  { id: 'prompt', label: 'prompt', thumb: 0 },
+  { id: 'source', label: 'Auto / visitor', thumb: 1 },
+  { id: 'gpu', label: 'SDXL', thumb: 2 },
+  { id: 'stitch', label: 'stitch', thumb: 3 },
+  { id: 'store', label: 'store', thumb: 4 },
 ];
 
-/** Paint loop: prompt → Auto/visitor → SDXL → stitch → store. */
+/** Paint loop with tiny pre-baked stipple thumbnails. */
 export default function PaintLoop() {
   const vbW = 720;
-  const vbH = 110;
+  const vbH = 132;
   const boxW = 108;
-  const boxH = 40;
-  const y = 28;
+  const boxH = 64;
+  const y = 20;
   const gap = (vbW - 48 - STEPS.length * boxW) / (STEPS.length - 1);
   const startX = 24;
+  const thumb = 28;
 
   return (
     <figure className="it-schematic" aria-label="Paint loop schematic">
@@ -26,6 +28,8 @@ export default function PaintLoop() {
         {STEPS.map((step, i) => {
           const x = startX + i * (boxW + gap);
           const nextX = x + boxW + gap;
+          const tx = x + 10;
+          const ty = y + 10;
           return (
             <g key={step.id}>
               <rect
@@ -35,14 +39,23 @@ export default function PaintLoop() {
                 width={boxW}
                 height={boxH}
               />
-              <text
-                className="it-schematic-label it-schematic-label-ink"
-                x={x + boxW / 2}
-                y={y + boxH / 2 + 4}
-                textAnchor="middle"
-              >
-                {step.label}
-              </text>
+              <rect className="it-schematic-stipple-wash" x={tx} y={ty} width={thumb} height={thumb} />
+              <StippleImage
+                stem={SCHEMATIC.loop[step.thumb]}
+                x={tx}
+                y={ty}
+                width={thumb}
+                height={thumb}
+              />
+              <rect
+                className="it-schematic-stroke-faint"
+                x={tx}
+                y={ty}
+                width={thumb}
+                height={thumb}
+                fill="none"
+              />
+              <LabelChip x={x + boxW / 2 + 8} y={y + boxH - 14} text={step.label} />
               {i < STEPS.length - 1 ? (
                 <g>
                   <line
