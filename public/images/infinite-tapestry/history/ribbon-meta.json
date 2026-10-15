@@ -1,0 +1,123 @@
+{
+  "bakedAt": "2026-10-15T00:07:40.756Z",
+  "historySession": "live-sdxl",
+  "liveEdge": 58282,
+  "sdxlGlobalStart": 1269,
+  "eras": [
+    {
+      "id": "og",
+      "session": "live",
+      "label": "OG era \u00b7 SD 1.5",
+      "a": 0,
+      "t0": "2026-10-12T07:59:16.801339+00:00",
+      "b": 1268,
+      "t1": "2026-10-12T08:40:59.865904+00:00",
+      "n": 1269,
+      "g0": 0
+    },
+    {
+      "id": "sdxl",
+      "session": "live-sdxl",
+      "label": "SDXL",
+      "a": 0,
+      "t0": "2026-10-12T08:36:15.375276+00:00",
+      "b": 58079,
+      "t1": "2026-10-14T23:57:05+00:00",
+      "n": 58080,
+      "g0": 1269
+    }
+  ],
+  "note": "SD1.5-era strips (0\u20131268) were not baked: originals live in Supabase Storage and the history feed did not expose public image URLs. R2 live/strips is not used for that era. This ribbon is SDXL-only, curated SFW from the history feed.",
+  "scenes": [
+    {
+      "a": 5270,
+      "label": "sea-glass lighthouse at dusk",
+      "text": "a lighthouse made of sea glass at dusk",
+      "handle": "tide-0342",
+      "day": "2026-10-12",
+      "stripCount": 8,
+      "first": 5270,
+      "last": 5277
+    },
+    {
+      "a": 6827,
+      "label": "labradors in a field of daisies",
+      "text": "Labradors playing in a field of daises",
+      "handle": "wanderer-3779",
+      "day": "2026-10-12",
+      "stripCount": 8,
+      "first": 6827,
+      "last": 6834
+    },
+    {
+      "a": 15678,
+      "label": "ancient china",
+      "text": "Ancient china",
+      "handle": "turbulentmarrow",
+      "day": "2026-10-13",
+      "stripCount": 8,
+      "first": 15678,
+      "last": 15685
+    },
+    {
+      "a": 24070,
+      "label": "glass lighthouse of jellyfish",
+      "text": "a glass lighthouse full of tiny glowing jellyfish",
+      "handle": "tide-0342",
+      "day": "2026-10-13",
+      "stripCount": 8,
+      "first": 24070,
+      "last": 24077
+    },
+    {
+      "a": 26913,
+      "label": "fantasy landscape",
+      "text": "Fantasy landscape",
+      "handle": "meadow-8560",
+      "day": "2026-10-13",
+      "stripCount": 8,
+      "first": 26913,
+      "last": 26920
+    },
+    {
+      "a": 45332,
+      "label": "nature landscapes",
+      "text": "nature landscapes",
+      "handle": "meadow-8957",
+      "day": "2026-10-14",
+      "stripCount": 8,
+      "first": 45332,
+      "last": 45339
+    },
+    {
+      "a": 45338,
+      "label": "hyperrealistic coral reef",
+      "text": "hyperrealistc coral reaf",
+      "handle": "meadow-8957",
+      "day": "2026-10-14",
+      "stripCount": 8,
+      "first": 45338,
+      "last": 45345
+    },
+    {
+      "a": 45849,
+      "label": "cats in baseball hats",
+      "text": "Cats wearing baseball hats",
+      "handle": "meadow-8957",
+      "day": "2026-10-14",
+      "stripCount": 8,
+      "first": 45849,
+      "last": 45856
+    },
+    {
+      "a": 56148,
+      "label": "dogs running steeplechase",
+      "text": "Dogs running steeplechase",
+      "handle": "Balala",
+      "day": "2026-10-14",
+      "stripCount": 8,
+      "first": 56148,
+      "last": 56155
+    }
+  ]
+}

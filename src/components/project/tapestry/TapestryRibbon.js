@@ -6,7 +6,7 @@ const SRC = `${IMG}/ribbon-scroll.webp`;
 const FALLBACK = `${IMG}/ribbon-scroll.jpg`;
 
 export default function TapestryRibbon({
-  caption = 'Drag to pan. Scroll or pinch to zoom. Real strips from the live tapestry, stitched with the same overlap the site uses.',
+  caption = 'Drag to pan. Scroll or pinch to zoom. Baked from the public history feed (SFW SDXL scenes), stitched with the same overlap the live site uses.',
 }) {
   const stageRef = useRef(null);
   const canvasRef = useRef(null);

@@ -84,6 +84,12 @@ function InfiniteTapestry() {
         When a visitor types an idea, the painter gets it word for word.
       </p>
 
+      <p>
+        The first 1,269 strips (0–1268) were an OG era on SD 1.5. Strip 1269 is where SDXL
+        starts. The scrolling ribbon above is a build-time bake of real SDXL strips from the
+        public history feed — SFW scenes only, no runtime hotlink.
+      </p>
+
       <picture>
         <source type="image/webp" srcSet={`${IMG}/hero-nile.webp`} />
         <img
