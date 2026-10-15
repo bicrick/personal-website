@@ -1,4 +1,4 @@
-/* Infinite Tapestry article demo — values from it-viewer about.css / style.css / client.js */
+/* Compact live iframe embed — band + reflection crop of infinitetapestry.app */
 
 .it-demo {
   margin: 28px 0 24px;
@@ -14,329 +14,87 @@
   font-style: italic;
 }
 
-.it-ribbon {
-  /* Compact band: just tall enough for the strip + reflection fade */
-  --it-bh: clamp(84px, 11vw, 112px);
-  --it-glow-h: 10px;
-  --it-refl-h: calc(var(--it-bh) * 0.46);
-  --it-ease: cubic-bezier(.2, .7, .2, 1);
-  --it-surr: 5, 5, 6;
-  --it-empty: #050506;
-  --it-amb-a: 1;
-  margin: 8px 0 28px;
-}
+/*
+  Virtual viewport sized so the live band (~30–70vh) + reflection below
+  fill a short wide window after scale. Tuned against the live layout.
+*/
+.it-embed {
+  --it-embed-h: clamp(104px, 15vw, 148px);
+  --it-vw: 1280px;
+  --it-vh: 800px;
+  /* Crop starts near band-top; height covers band + reflection fade */
+  --it-crop-top: 0.27;
+  --it-crop-h: 0.55;
+  --it-scale: calc(var(--it-embed-h) / (var(--it-crop-h) * var(--it-vh)));
 
-html:not(.is-dark) .it-ribbon {
-  --it-surr: 244, 239, 231;
-  --it-empty: #f4efe7;
-}
-
-.it-ribbon-frame {
   position: relative;
-  background: var(--it-empty);
-  border: 1px solid var(--rule);
+  height: var(--it-embed-h);
   overflow: hidden;
-  /* tight crop: thin glow spill above, band, reflection fade below */
-  padding-top: var(--it-glow-h);
+  background: #050506;
+  border: 1px solid var(--rule);
 }
 
-html:not(.is-dark) .it-ribbon-frame {
+html:not(.is-dark) .it-embed {
+  background: #f4efe7;
   border-color: color-mix(in srgb, var(--rule) 80%, #c9b8a0);
 }
 
-/* Ambient colour blobs — style.css #amb-blobs */
-.it-amb-blobs {
+.it-embed-scaler {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: calc(var(--it-amb-a, 1) * 0.55);
-  transition: opacity 0.9s var(--it-ease);
-  z-index: 0;
-}
-
-.it-amb-blobs .ab {
-  position: absolute;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-}
-
-.it-amb-blobs .ab-top {
+  left: 50%;
   top: 0;
-  height: var(--it-glow-h);
-  -webkit-mask-image: linear-gradient(to top, #000, transparent 85%);
-  mask-image: linear-gradient(to top, #000, transparent 85%);
-}
-
-.it-amb-blobs .ab-bot {
-  top: calc(var(--it-glow-h) + var(--it-bh));
-  height: var(--it-refl-h);
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
-  mask-image: linear-gradient(to bottom, #000, transparent 85%);
-}
-
-.it-amb-blobs i {
-  position: absolute;
-  width: 55%;
-  height: 140%;
-  max-height: 100px;
-  border-radius: 50%;
-  will-change: transform;
-  background: radial-gradient(closest-side, var(--c, rgba(255, 176, 82, 0.55)), transparent);
-  transition: --c 3s ease;
-  animation: it-ab-drift 38s ease-in-out infinite alternate;
-}
-
-.it-amb-blobs .ab-top i { bottom: -40%; }
-.it-amb-blobs .ab-bot i { top: -40%; }
-.it-amb-blobs i:nth-child(1) { left: -12%; }
-.it-amb-blobs i:nth-child(2) { left: 22%; animation-duration: 47s; animation-delay: -12s; }
-.it-amb-blobs i:nth-child(3) { left: 56%; animation-duration: 42s; animation-delay: -25s; }
-
-@keyframes it-ab-drift {
-  from { transform: translate3d(-4%, 0, 0) scale(1); }
-  to { transform: translate3d(5%, 3%, 0) scale(1.12); }
-}
-
-/* Soft glow spilling above the band — kept tight to the crop */
-.it-band-glow {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: var(--it-glow-h);
+  width: var(--it-vw);
+  height: var(--it-vh);
+  transform: translateX(-50%)
+    translateY(calc(var(--it-crop-top) * var(--it-vh) * -1 * var(--it-scale)))
+    scale(var(--it-scale));
+  transform-origin: top center;
   pointer-events: none;
-  overflow: hidden;
-  opacity: 0.5;
-  z-index: 1;
-  -webkit-mask-image: linear-gradient(to top, #000, transparent);
-  mask-image: linear-gradient(to top, #000, transparent);
 }
 
-html:not(.is-dark) .it-band-glow {
-  opacity: 0.38;
-}
-
-.it-band-glow i {
-  position: absolute;
-  bottom: -20px;
-  width: 46%;
-  height: 48px;
-  border-radius: 50%;
-  will-change: transform;
-  background: radial-gradient(closest-side, rgba(255, 176, 82, 0.55), transparent);
-  animation: it-ab-drift 38s ease-in-out infinite alternate;
-}
-
-.it-band-glow i:nth-child(1) { left: -6%; }
-.it-band-glow i:nth-child(2) {
-  left: 28%;
-  background: radial-gradient(closest-side, rgba(70, 110, 255, 0.45), transparent);
-  animation-duration: 47s;
-  animation-delay: -12s;
-}
-.it-band-glow i:nth-child(3) {
-  left: 60%;
-  animation-duration: 42s;
-  animation-delay: -25s;
-}
-
-/* The painting band */
-.it-band {
-  position: relative;
-  height: var(--it-bh);
-  overflow: hidden;
-  cursor: grab;
-  touch-action: none;
-  z-index: 2;
-  background: #0a0a0c;
-}
-
-.it-band.is-dragging {
-  cursor: grabbing;
-}
-
-.it-band-canvas {
-  position: absolute;
-  inset: 0;
+.it-embed-iframe {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  border: 0;
+  pointer-events: none;
+  background: transparent;
 }
 
-/* Twinkling motes — about.css .band .lights */
-.it-band-lights {
+/* Full-size hit target — opens the live site */
+.it-embed-link {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  z-index: 3;
-}
-
-.it-band-lights i {
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: -32px;
-  border-radius: 50%;
-  opacity: 0;
-  will-change: opacity, transform;
-  background: radial-gradient(closest-side, rgba(255, 214, 150, 0.55), rgba(255, 170, 80, 0.12) 45%, transparent);
-  animation: it-twinkle 9s ease-in-out infinite;
-}
-
-.it-band-lights i:nth-child(1) { left: 8%; top: 30%; }
-.it-band-lights i:nth-child(2) { left: 21%; top: 68%; animation-delay: -2s; animation-duration: 11s; }
-.it-band-lights i:nth-child(3) { left: 36%; top: 22%; animation-delay: -5s; }
-.it-band-lights i:nth-child(4) { left: 49%; top: 58%; animation-delay: -7s; animation-duration: 12s; }
-.it-band-lights i:nth-child(5) { left: 62%; top: 35%; animation-delay: -3s; animation-duration: 10s; }
-.it-band-lights i:nth-child(6) { left: 74%; top: 72%; animation-delay: -8s; }
-.it-band-lights i:nth-child(7) { left: 86%; top: 26%; animation-delay: -1s; animation-duration: 13s; }
-.it-band-lights i:nth-child(8) { left: 94%; top: 60%; animation-delay: -6s; }
-
-@keyframes it-twinkle {
-  0%, 100% { opacity: 0; transform: scale(0.7); }
-  50% { opacity: 0.85; transform: scale(1); }
-}
-
-/* Vignette / veil — style.css .veil */
-.it-band-veil {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    transparent 18%,
-    transparent 70%,
-    rgba(0, 0, 0, 0.45)
-  );
-}
-
-html:not(.is-dark) .it-band-veil {
-  background: linear-gradient(
-    to bottom,
-    rgba(244, 239, 231, 0.4),
-    transparent 18%,
-    transparent 70%,
-    rgba(244, 239, 231, 0.5)
-  );
-}
-
-.it-ribbon-hint {
-  position: absolute;
-  left: 8px;
-  bottom: 4px;
-  z-index: 6;
-  padding: 1px 6px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.4s var(--it-ease);
-}
-
-.it-ribbon-hint.is-gone {
-  opacity: 0;
-}
-
-/* Reflection under the band — visible then fade out */
-.it-band-refl {
-  position: relative;
-  height: var(--it-refl-h);
-  overflow: hidden;
-  pointer-events: none;
   z-index: 2;
-  -webkit-mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.58),
-    rgba(0, 0, 0, 0.22) 40%,
-    transparent 92%
-  );
-  mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.58),
-    rgba(0, 0, 0, 0.22) 40%,
-    transparent 92%
-  );
-}
-
-.it-band-refl canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--it-bh);
   display: block;
-  transform: scaleY(-1);
-  transform-origin: top center;
-  /* REFL_VAR: sat 1.12, gain 1.35 (dark) / ~1.18 (light) from client.js */
-  filter: saturate(1.12) brightness(1.35);
-  opacity: 0.95;
-}
-
-html:not(.is-dark) .it-band-refl canvas {
-  filter: saturate(1.15) brightness(1.22);
-  opacity: 0.98;
-}
-
-/* Soften light-mode empty surround so reflection reads as ink, not blank paper */
-html:not(.is-dark) .it-band-refl {
-  -webkit-mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.28) 42%,
-    transparent 94%
-  );
-  mask-image: linear-gradient(
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.28) 42%,
-    transparent 94%
-  );
-}
-
-.it-ribbon-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 8px 0 0;
-}
-
-.it-ribbon-controls button {
-  appearance: none;
-  border: 1px solid var(--rule);
-  background: var(--surface);
-  color: var(--ink-muted);
-  font: inherit;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  padding: 0.35rem 0.7rem;
   cursor: pointer;
-  transition: color 0.25s var(--it-ease), border-color 0.25s var(--it-ease);
+  text-decoration: none;
+  color: transparent;
 }
 
-.it-ribbon-controls button:hover,
-.it-ribbon-controls button.is-on {
-  color: var(--ink);
-  border-color: var(--ink-muted);
+.it-embed-link-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .it-amb-blobs i,
-  .it-band-glow i,
-  .it-band-lights i {
-    animation: none;
-  }
-
-  .it-band-lights i {
-    opacity: 0.35;
-  }
+.it-embed-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
 }
 
 @media (max-width: 760px) {
-  .it-ribbon {
-    --it-bh: clamp(68px, 20vw, 96px);
-    --it-glow-h: 8px;
-    --it-refl-h: calc(var(--it-bh) * 0.48);
+  .it-embed {
+    --it-embed-h: clamp(88px, 26vw, 120px);
+    --it-vw: 900px;
+    --it-vh: 700px;
+    --it-crop-top: 0.28;
+    --it-crop-h: 0.52;
   }
 }
