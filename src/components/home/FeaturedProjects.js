@@ -4,6 +4,7 @@ import { featuredProjects } from '../../constants/projects';
 import QwopTilePreview from '../QwopTilePreview';
 import HarnessTilePreview from '../HarnessTilePreview';
 import TapestryTilePreview from '../TapestryTilePreview';
+import { MonocleTilePreview } from '../project/monocle';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
 import './FeaturedProjects.css';
 
@@ -16,6 +17,9 @@ function FeaturedMedia({ project }) {
   }
   if (project.livePreview === 'harness') {
     return <HarnessTilePreview />;
+  }
+  if (project.livePreview === 'monocle') {
+    return <MonocleTilePreview />;
   }
   if (project.livePreview === 'cartpole') {
     return <CartPoleTilePreview />;

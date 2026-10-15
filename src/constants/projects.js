@@ -58,6 +58,7 @@ export const PROJECTS = [
     description: 'restyle the live tab with your local Cursor CLI',
     timelineDescription:
       'A Chrome extension that restyles the page you are looking at using your local Cursor CLI. Site JS and media keep running.',
+    livePreview: 'monocle',
     image: `${process.env.PUBLIC_URL}/images/monocle/monocle-1600x900.png`,
     blogLink: '/projects/monocle',
     appLink: 'https://github.com/bicrick/monocle',

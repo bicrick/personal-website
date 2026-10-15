@@ -1,0 +1,92 @@
+.mqt {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+  background: #fff;
+}
+
+.mqt-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.mqt-top {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.1s cubic-bezier(0.55, 0, 0.25, 1);
+}
+
+.mqt-top.is-wiping {
+  clip-path: inset(0 0 0 0);
+}
+
+.mqt-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 14px 3px rgba(120, 190, 255, 0.85);
+  opacity: 0;
+  transform: translateX(0);
+  transition: transform 1.1s cubic-bezier(0.55, 0, 0.25, 1), opacity 0.2s ease;
+}
+
+.mqt-edge.is-wiping {
+  opacity: 1;
+  transform: translateX(100cqw);
+}
+
+.mqt-mark {
+  position: absolute;
+  top: 3.2cqw;
+  left: 3.2cqw;
+  width: 5.4cqw;
+  height: 5.4cqw;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.mqt-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 5.2cqw;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  max-width: 88cqw;
+  padding: 2cqw 3.6cqw;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 3.4cqw;
+  line-height: 1.2;
+  color: #f2f3f5;
+  background: rgba(17, 18, 23, 0.92);
+  border-radius: 1.6cqw;
+  box-shadow: 0 1.4cqw 4cqw rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.mqt-caret {
+  color: #4f8dff;
+}
+
+.mqt-text::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 0.2em;
+  vertical-align: -0.12em;
+  background: #f2f3f5;
+  animation: mqt-blink 1s steps(1) infinite;
+}
+
+@keyframes mqt-blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqt-text::after { animation: none; }
+}

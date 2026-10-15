@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import QwopTilePreview from './QwopTilePreview';
 import HarnessTilePreview from './HarnessTilePreview';
 import TapestryTilePreview from './TapestryTilePreview';
+import { MonocleTilePreview } from './project/monocle';
 import { CartPoleTilePreview } from './CartPoleEmbed';
 import './ProjectTile.css';
 
@@ -116,6 +117,8 @@ export default function ProjectTile({
     <QwopTilePreview title={project.title} />
   ) : project.livePreview === 'harness' ? (
     <HarnessTilePreview />
+  ) : project.livePreview === 'monocle' ? (
+    <MonocleTilePreview />
   ) : project.livePreview === 'cartpole' ? (
     <CartPoleTilePreview />
   ) : project.image ? (
