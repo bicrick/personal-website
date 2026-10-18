@@ -188,15 +188,19 @@
   text-anchor: end;
 }
 
-/* Bot */
+/* Bot. Eyes are holes in the bloub mask, so the paper path shows through. */
 
 .grok-bot-head {
   fill: var(--bot);
 }
 
-/* Eyes are cutouts, like the marketplace marks: they show the page behind. */
-.grok-bot-eye {
+.bloub-paper {
   fill: var(--paper);
+}
+
+.bloub-outline {
+  fill: none;
+  pointer-events: none;
 }
 
 .grok-bot-link {
@@ -213,9 +217,9 @@
   filter: brightness(1.12);
 }
 
-.grok-bot-link:focus-visible .grok-bot-head {
+.grok-bot-link:focus-visible .bloub-outline {
   stroke: var(--link);
-  stroke-width: 10;
+  stroke-width: 8.75;
 }
 
 /* Timeline. 14s loop, each step owns a quarter: arrive, hold ~18 percent, travel. */
