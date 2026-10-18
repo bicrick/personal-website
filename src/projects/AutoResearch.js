@@ -87,7 +87,7 @@ function AutoResearch() {
 
       <p>
         Failure mode on PPO: a loose reward gets hacked. The policy finds a high score that is not the behavior you wanted. That is why the loop had to rewrite the next experiment after it had seen the run. The longer note is{' '}
-        <Link to="/writing/agent-research-loops">auto-research loops for reinforcement learning</Link>.
+        <Link to="/writing/agent-research-loops">auto research loops for reinforcement learning with Grok Bot</Link>.
       </p>
     </ProjectDetail>
   );

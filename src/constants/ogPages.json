@@ -77,12 +77,12 @@
     "type": "article"
   },
   "/projects/qwop-python": {
-    "ogTitle": "qwop-python",
-    "seoTitle": "qwop-python - beat the HTML5 QWOP world record with RL - bicrick",
+    "ogTitle": "qwop world record with reinforcement learning",
+    "seoTitle": "qwop world record with reinforcement learning - bicrick",
     "description": "QWOP world record with RL.",
     "keywords": "bicrick, Patrick Brown, qwop-python, QWOP, world record, Gymnasium, reinforcement learning, Box2D, PPO, HTML5, grok bot",
     "imagePath": "/og/qwop-python-1200x630.jpg",
-    "imageAlt": "qwop-python",
+    "imageAlt": "qwop world record with reinforcement learning",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"
@@ -165,12 +165,12 @@
     "type": "article"
   },
   "/writing/agent-research-loops": {
-    "ogTitle": "auto-research loops for reinforcement learning",
-    "seoTitle": "auto-research loops for reinforcement learning - bicrick",
+    "ogTitle": "auto research loops for reinforcement learning with Grok Bot",
+    "seoTitle": "auto research loops for reinforcement learning with Grok Bot - bicrick",
     "description": "An agent on the training farm that reshapes rewards and curricula so the next run avoids the last policy's cheat.",
     "keywords": "bicrick, Patrick Brown, auto-research loops for reinforcement learning, agentic research loops, auto research, grok bot, RL, QWOP, cart-pole",
     "imagePath": "/og/agent-research-loops-1200x630.jpg",
-    "imageAlt": "auto-research loops for reinforcement learning: farm, observe, shape, enqueue",
+    "imageAlt": "auto research loops for reinforcement learning with Grok Bot: farm, observe, shape, enqueue",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

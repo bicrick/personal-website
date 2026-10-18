@@ -1,7 +1,7 @@
 export const PROJECTS = [
   {
     title: 'infinite tapestry',
-    description: 'one endless painting, painted live on a 4090',
+    description: 'an endless painting driven and guided by the internet',
     timelineDescription:
       'An endless horizontal AI painting streamed live from a single RTX 4090. Visitors type ideas; Auto fills the gaps. RealVisXL on SDXL, ~2.7s per strip.',
     livePreview: 'tapestry',
@@ -14,8 +14,8 @@ export const PROJECTS = [
     featured: true,
   },
   {
-    title: 'qwop-python',
-    description: 'beat the QWOP world record with an agentic research loop',
+    title: 'qwop world record with reinforcement learning',
+    description: 'fully custom gym and agentic research loop',
     timelineDescription:
       'Reverse-engineered minified QWOP into a headless Python gym, then beat the official world record at 45.167s with a grok-bot research loop.',
     livePreview: 'qwop',
