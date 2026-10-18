@@ -74,42 +74,9 @@
   color: var(--link);
 }
 
-/* Second piece mirrors the first: the live mark sits on the right, still
-   inside the row so a swing cannot leave the page. */
-.writing-row.is-mark-right {
-  grid-template-columns: minmax(0, 1fr) 6rem;
-}
-
-.writing-row.is-mark-right .writing-media {
-  order: 2;
-  overflow: clip;
-}
-
-/* Same ink as the page, so the figure flips with the theme. Eyes stay
-   cutouts, like the other writing mark. */
-.writing-media .swing-mark .critter-fill,
-.writing-media .swing-mark .critter-leg,
-.writing-media .swing-mark .critter-shade,
-.writing-media .swing-mark [class^="o-"] {
-  fill: var(--ink);
-}
-
-.writing-media .swing-mark .critter-eye,
-.writing-media .swing-mark .o-white,
-.writing-media .swing-mark .o-glasses,
-.writing-media .swing-mark .o-visor-glow,
-.writing-media .swing-mark .o-emblem,
-.writing-media .swing-mark .o-star {
-  fill: var(--paper);
-}
-
 @media (max-width: 800px) {
   .writing-row {
     grid-template-columns: 4.75rem minmax(0, 1fr);
-  }
-
-  .writing-row.is-mark-right {
-    grid-template-columns: minmax(0, 1fr) 4.75rem;
   }
 }
 

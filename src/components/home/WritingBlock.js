@@ -20,10 +20,10 @@ export default function WritingBlock() {
             <li key={piece.path}>
               <Link
                 to={piece.path}
-                className={`writing-row${piece.markSide === 'right' ? ' is-mark-right' : ''}`}
+                className="writing-row"
               >
                 <span className="writing-media" aria-hidden="true">
-                  <Mark />
+                  <Mark plain={piece.mark === 'harness'} />
                 </span>
                 <span className="writing-copy">
                   <span className="writing-title">{piece.title}</span>

@@ -13,6 +13,5 @@ export const WRITING = [
     path: '/projects/harness-bench',
     date: 'October 2026',
     mark: 'harness',
-    markSide: 'right',
   },
 ];

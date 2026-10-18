@@ -27,7 +27,7 @@ const SPIN = 0.9; // seconds per full turn: front, edge, back, edge, next front
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const pickAmp = () => 0.04 + Math.random() * 0.07;
 
-export default function SwingMark() {
+export default function SwingMark({ plain = false }) {
   const rootRef = useRef(null);
   const armRef = useRef(null);
   const bodyRef = useRef(null);
@@ -86,6 +86,8 @@ export default function SwingMark() {
     };
 
     const spin = () => {
+      // The writing mark stays the plain Claude. The tile still spins costumes.
+      if (plain) return 1;
       // 0..HOLD hang, then one horizontal turn; swap costume when edge-on
       const t = s.clock - HOLD;
       if (t < 0) return 1;
@@ -165,7 +167,7 @@ export default function SwingMark() {
       row.removeEventListener('pointermove', onMove);
       row.removeEventListener('pointerenter', onEnter);
     };
-  }, [reduce]);
+  }, [reduce, plain]);
 
   return (
     <span ref={rootRef} className="swing-mark" aria-hidden="true">
@@ -177,7 +179,7 @@ export default function SwingMark() {
             <path className="swing-ring" d="M14 10h2v2h-2zM14.6 10.6h.8v.8h-.8z" fillRule="evenodd" />
             <path className="swing-line" d="M10.4 14.2L14.4 11.8M19.6 14.2L15.6 11.8" />
             <g ref={spinRef} className="swing-spin">
-              <CritterBody x={6} y={12} outfit={reduce ? undefined : OUTFITS[look]} back={!reduce && back} legsRef={legsRef} />
+              <CritterBody x={6} y={12} outfit={plain || reduce ? undefined : OUTFITS[look]} back={!plain && !reduce && back} legsRef={legsRef} />
             </g>
           </g>
         </svg>
