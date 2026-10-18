@@ -8,6 +8,30 @@
   pointer-events: none;
 }
 
+.qwop-tile-preview-record {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  gap: 0.38em;
+  margin: 0;
+  padding: 0.28rem 0.42rem 0.22rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+}
+
+.qwop-tile-preview-record-label {
+  color: var(--ink-muted);
+}
+
 .qwop-tile-preview-canvas {
   display: block;
   width: 100%;

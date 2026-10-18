@@ -23,11 +23,10 @@ export default function WritingBlock() {
                 className="writing-row"
               >
                 <span className="writing-media" aria-hidden="true">
-                  <Mark plain={piece.mark === 'harness'} />
+                  <Mark />
                 </span>
                 <span className="writing-copy">
                   <span className="writing-title">{piece.title}</span>
-                  <span className="writing-description">{piece.description}</span>
                   <span className="writing-date">{piece.date}</span>
                 </span>
               </Link>
