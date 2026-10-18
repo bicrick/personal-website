@@ -11,12 +11,13 @@ const VIEW_H = 900;
  * 16:9 live embed of infinitetapestry.app.
  * The iframe lays out at a desktop size, then scales down into the frame
  * so the ribbon, light bands, and reflections stay in view.
+ * Nothing inside the frame accepts input. The cover link opens the live site.
  */
 export default function TapestryRibbon() {
   return (
     <figure className="it-demo">
       <div className="it-embed">
-        <div className="it-embed-scaler">
+        <div className="it-embed-scaler" inert="">
           <iframe
             className="it-embed-iframe"
             src={LIVE}
@@ -25,9 +26,19 @@ export default function TapestryRibbon() {
             height={VIEW_H}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            allow="fullscreen"
+            tabIndex={-1}
+            aria-hidden="true"
           />
         </div>
+        <a
+          className="it-embed-hit"
+          href={LIVE}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open the live Infinite Tapestry"
+        >
+          <span className="it-embed-hit-label">Open the live Infinite Tapestry</span>
+        </a>
       </div>
       <figcaption>
         Live from{' '}

@@ -25,7 +25,9 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  overflow: hidden;
+  /* clip, not hidden: hidden would make this a scroll container, and iOS can
+     give the drag to it instead of the page. */
+  overflow: clip;
   container-type: inline-size;
   background: #050506;
   border: 1px solid var(--rule);
@@ -40,12 +42,14 @@ html:not(.is-dark) .it-embed {
    change the iframe's layout viewport, so the live site still sees 1600×900. */
 .it-embed-scaler {
   position: absolute;
+  z-index: 0;
   top: 0;
   left: 0;
   width: calc(var(--it-vw) * 1px);
   height: calc(var(--it-vh) * 1px);
   transform-origin: top left;
   transform: scale(calc(100cqw / (var(--it-vw) * 1px)));
+  pointer-events: none;
 }
 
 .it-embed-iframe {
@@ -54,4 +58,47 @@ html:not(.is-dark) .it-embed {
   height: calc(var(--it-vh) * 1px);
   border: 0;
   background: transparent;
+  pointer-events: none;
+}
+
+/* Covers the visible frame, including on iOS where a transformed iframe can
+   still take touches unless something with a background sits above it. */
+.it-embed-hit {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+.it-embed-hit:after,
+.it-embed-hit:hover:after {
+  content: none;
+}
+
+.it-embed-hit:focus {
+  outline: none;
+}
+
+.it-embed-hit:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: -3px;
+}
+
+.it-embed-hit-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
