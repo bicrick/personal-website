@@ -118,7 +118,7 @@ export default function SwingMark({ plain = false }) {
       armRef.current.style.transform = `rotate(${s.th * DEG}deg)`;
       const stretch = clamp(s.y * 0.04, -0.04, 0.04);
       bodyRef.current.style.transform = `translateY(${s.y}px) rotate(${clamp(s.ph * DEG, -12, 12)}deg) scale(${1 - stretch * 0.5}, ${1 + stretch})`;
-      ropeRef.current.setAttribute('height', `${12.6 + s.y}`);
+      ropeRef.current.setAttribute('height', `${(plain ? 8.7 : 12.6) + s.y}`);
       legsRef.current.style.transform = `skewX(${clamp(-s.ps * DEG, -24, 24)}deg)`;
       // positive rotation swings the critter left, so the shadow follows -sin
       const x = -Math.sin(s.th);
@@ -170,11 +170,11 @@ export default function SwingMark({ plain = false }) {
   }, [reduce, plain]);
 
   return (
-    <span ref={rootRef} className="swing-mark" aria-hidden="true">
+    <span ref={rootRef} className={`swing-mark${plain ? ' is-framed' : ''}`} aria-hidden="true">
       <span ref={shadowRef} className="swing-shadow" />
       <span ref={armRef} className="swing-arm">
         <svg className="swing-svg" viewBox="3 0 24 29.5" focusable="false">
-          <rect ref={ropeRef} className="swing-rope" x="14.6" y="-2" width="0.8" height="12.6" />
+          <rect ref={ropeRef} className="swing-rope" x="14.6" y={plain ? 1.9 : -2} width="0.8" height={plain ? 8.7 : 12.6} />
           <g ref={bodyRef} className="swing-body">
             <path className="swing-ring" d="M14 10h2v2h-2zM14.6 10.6h.8v.8h-.8z" fillRule="evenodd" />
             <path className="swing-line" d="M10.4 14.2L14.4 11.8M19.6 14.2L15.6 11.8" />
@@ -184,6 +184,13 @@ export default function SwingMark({ plain = false }) {
           </g>
         </svg>
       </span>
+      {plain && (
+        <svg className="swing-frame-svg" viewBox="3 0 24 29.5" focusable="false" aria-hidden="true">
+          <path className="swing-line swing-frame-leg" d="M6.2 8.2 L11.2 2.05" />
+          <path className="swing-line swing-frame-leg" d="M23.8 8.2 L18.8 2.05" />
+          <rect className="swing-rope" x="10.2" y="1.35" width="9.6" height="1.15" />
+        </svg>
+      )}
     </span>
   );
 }
