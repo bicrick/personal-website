@@ -207,7 +207,7 @@ def make_page_cards():
     )
     split_card(
         PUBLIC / "images" / "agent-research-loops" / "loop-card.png",
-        "agentic research loops",
+        "auto-research loops for reinforcement learning",
         "An agent that reshapes rewards so the next run avoids the last cheat",
         "agent-research-loops-1200x630.jpg",
         fit="contain",

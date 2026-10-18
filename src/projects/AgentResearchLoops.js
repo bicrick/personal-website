@@ -11,7 +11,7 @@ import ProjectPair from '../components/project/ProjectPair';
 function AgentResearchLoops() {
   return (
     <ProjectDetail
-      title="agentic research loops"
+      title="auto-research loops for reinforcement learning"
       date="October 2026"
       backHref="/"
       backLabel="home"

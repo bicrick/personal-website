@@ -165,12 +165,12 @@
     "type": "article"
   },
   "/writing/agent-research-loops": {
-    "ogTitle": "agentic research loops",
-    "seoTitle": "agentic research loops - bicrick",
+    "ogTitle": "auto-research loops for reinforcement learning",
+    "seoTitle": "auto-research loops for reinforcement learning - bicrick",
     "description": "An agent on the training farm that reshapes rewards and curricula so the next run avoids the last policy's cheat.",
-    "keywords": "bicrick, Patrick Brown, agentic research loops, auto research, grok bot, RL, QWOP, cart-pole",
+    "keywords": "bicrick, Patrick Brown, auto-research loops for reinforcement learning, agentic research loops, auto research, grok bot, RL, QWOP, cart-pole",
     "imagePath": "/og/agent-research-loops-1200x630.jpg",
-    "imageAlt": "agentic research loops: farm, observe, shape, enqueue",
+    "imageAlt": "auto-research loops for reinforcement learning: farm, observe, shape, enqueue",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"
