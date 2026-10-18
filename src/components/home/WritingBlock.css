@@ -41,10 +41,6 @@
   fill: var(--bot);
 }
 
-.writing-bot-eye {
-  fill: var(--paper);
-}
-
 .writing-copy {
   display: flex;
   flex-direction: column;
