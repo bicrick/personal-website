@@ -1,5 +1,5 @@
 import React from 'react';
-import { LabelChip, SCHEMATIC, StippleImage } from './schematicAssets';
+import { LabelChip, SCHEMATIC, SchematicStage, StippleImage } from './schematicAssets';
 import './schematics.css';
 
 const STEPS = [
@@ -21,63 +21,79 @@ export default function PaintLoop() {
   const startX = 24;
   const thumb = 28;
 
+  const boxes = STEPS.map((step, i) => {
+    const x = startX + i * (boxW + gap);
+    const tx = x + 10;
+    const ty = y + 10;
+    return { ...step, i, x, tx, ty, nextX: x + boxW + gap };
+  });
+
   return (
     <figure className="it-schematic" aria-label="Paint loop schematic">
-      <svg viewBox={`0 0 ${vbW} ${vbH}`} role="img">
-        <title>Paint loop</title>
-        {STEPS.map((step, i) => {
-          const x = startX + i * (boxW + gap);
-          const nextX = x + boxW + gap;
-          const tx = x + 10;
-          const ty = y + 10;
-          return (
-            <g key={step.id}>
-              <rect
-                className="it-schematic-fill-faint"
-                x={x}
-                y={y}
-                width={boxW}
-                height={boxH}
-              />
-              <rect className="it-schematic-stipple-wash" x={tx} y={ty} width={thumb} height={thumb} />
+      <SchematicStage
+        vbW={vbW}
+        vbH={vbH}
+        title="Paint loop"
+        under={
+          <>
+            {boxes.map((step) => (
+              <g key={step.id}>
+                <rect className="it-schematic-fill-faint" x={step.x} y={y} width={boxW} height={boxH} />
+                <rect className="it-schematic-stipple-wash" x={step.tx} y={step.ty} width={thumb} height={thumb} />
+              </g>
+            ))}
+          </>
+        }
+        stipples={
+          <>
+            {boxes.map((step) => (
               <StippleImage
+                key={step.id}
                 stem={SCHEMATIC.loop[step.thumb]}
-                x={tx}
-                y={ty}
+                x={step.tx}
+                y={step.ty}
                 width={thumb}
                 height={thumb}
               />
-              <rect
-                className="it-schematic-stroke-faint"
-                x={tx}
-                y={ty}
-                width={thumb}
-                height={thumb}
-                fill="none"
-              />
-              <LabelChip x={x + boxW / 2 + 8} y={y + boxH - 14} text={step.label} />
-              {i < STEPS.length - 1 ? (
-                <g>
-                  <line
-                    className="it-schematic-arrow"
-                    x1={x + boxW + 4}
-                    y1={y + boxH / 2}
-                    x2={nextX - 8}
-                    y2={y + boxH / 2}
-                  />
-                  <polyline
-                    className="it-schematic-arrow"
-                    points={`${nextX - 14},${y + boxH / 2 - 5} ${nextX - 6},${y + boxH / 2} ${nextX - 14},${y + boxH / 2 + 5}`}
-                  />
-                </g>
-              ) : null}
-            </g>
-          );
-        })}
-        <text className="it-schematic-label" x={vbW / 2} y={y + boxH + 28} textAnchor="middle">
-          RealVisXL · one RTX 4090 · ~2.7 s / strip · 18 steps · CFG 6
-        </text>
-      </svg>
+            ))}
+          </>
+        }
+        over={
+          <>
+            {boxes.map((step) => (
+              <g key={step.id}>
+                <rect
+                  className="it-schematic-stroke-faint"
+                  x={step.tx}
+                  y={step.ty}
+                  width={thumb}
+                  height={thumb}
+                  fill="none"
+                />
+                <LabelChip x={step.x + boxW / 2 + 8} y={y + boxH - 14} text={step.label} />
+                {step.i < STEPS.length - 1 ? (
+                  <g>
+                    <line
+                      className="it-schematic-arrow"
+                      x1={step.x + boxW + 4}
+                      y1={y + boxH / 2}
+                      x2={step.nextX - 8}
+                      y2={y + boxH / 2}
+                    />
+                    <polyline
+                      className="it-schematic-arrow"
+                      points={`${step.nextX - 14},${y + boxH / 2 - 5} ${step.nextX - 6},${y + boxH / 2} ${step.nextX - 14},${y + boxH / 2 + 5}`}
+                    />
+                  </g>
+                ) : null}
+              </g>
+            ))}
+            <text className="it-schematic-label" x={vbW / 2} y={y + boxH + 28} textAnchor="middle">
+              RealVisXL · one RTX 4090 · ~2.7 s / strip · 18 steps · CFG 6
+            </text>
+          </>
+        }
+      />
     </figure>
   );
 }
