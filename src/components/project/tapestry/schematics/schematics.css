@@ -24,18 +24,19 @@ html.is-dark .it-schematic {
   --it-mote-soft: rgba(255, 255, 255, 0.045);
 }
 
-.it-stipple-ink {
-  /* inherits currentColor from .it-schematic — monochrome only */
-  color: inherit;
-}
-
-/* Dense alpha-PNG stipple painted via CSS mask-image + currentColor */
+/* Dense alpha-PNG stipple painted via CSS mask-image + currentColor.
+   Position comes from inline percentages of the stage (the viewBox). */
 .it-stipple-fill {
+  position: absolute;
   display: block;
-  width: 100%;
-  height: 100%;
+  overflow: hidden;
   background-color: currentColor;
   pointer-events: none;
+}
+
+.it-schematic-stage {
+  position: relative;
+  width: 100%;
 }
 
 .it-schematic svg {
@@ -44,6 +45,24 @@ html.is-dark .it-schematic {
   height: auto;
   max-width: 100%;
   overflow: visible;
+}
+
+/* Strokes, hatches, and labels. Same viewBox as the stage SVG, stacked on
+   top of the percentage-positioned stipples. */
+.it-schematic svg.it-schematic-front {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.it-schematic-overlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .it-schematic-label {
