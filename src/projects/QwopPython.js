@@ -161,7 +161,7 @@ function QwopPython() {
 
       <p>
         That loop is the product. The gym is an RL environment built by reverse-engineering a 13,000-line minified game with coding agents. The same pattern is written up in the{' '}
-        <Link to="/writing/agent-research-loops">agentic research loops</Link> note.
+        <Link to="/writing/agent-research-loops">auto-research loops for reinforcement learning</Link> note.
       </p>
 
       <h2>/ conclusions</h2>

@@ -39,6 +39,7 @@ export const PROJECTS = [
     relevanceRank: 3,
     dateRank: 1,
     date: 'October 2026',
+    unlisted: true,
   },
   {
     title: 'cart-pole-autoresearch',

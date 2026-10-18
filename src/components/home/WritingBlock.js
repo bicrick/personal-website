@@ -18,7 +18,10 @@ export default function WritingBlock() {
           const Mark = MARKS[piece.mark] || GrokBotMark;
           return (
             <li key={piece.path}>
-              <Link to={piece.path} className="writing-row">
+              <Link
+                to={piece.path}
+                className={`writing-row${piece.markSide === 'right' ? ' is-mark-right' : ''}`}
+              >
                 <span className="writing-media" aria-hidden="true">
                   <Mark />
                 </span>
