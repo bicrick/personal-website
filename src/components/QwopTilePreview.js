@@ -85,7 +85,8 @@ function QwopTilePreview({ title = 'qwop-python', playbackRate = 1.5 }) {
       const duration = 1600;
       const start = performance.now();
       const tick = (now) => {
-        const t = Math.min(1, (now - start) / duration);
+        // rAF timestamps can precede performance.now() by a frame.
+        const t = Math.min(1, Math.max(0, (now - start) / duration));
         const eased = 1 - (1 - t) ** 3;
         node.textContent = (RECORD * eased).toFixed(3);
         if (t < 1) clockFrame = requestAnimationFrame(tick);
