@@ -58,7 +58,7 @@ function Tracebench() {
 
       <p>
         The sample agent is scripted and the trace set is four rows. I built it to get the eval and RL-data loop right end to end, not to claim a benchmark. The bigger, real version of that loop lives in{' '}
-        <Link to="/writing/agent-research-loops">auto-research loops for reinforcement learning</Link>.
+        <Link to="/writing/agent-research-loops">auto research loops for reinforcement learning with Grok Bot</Link>.
       </p>
     </ProjectDetail>
   );

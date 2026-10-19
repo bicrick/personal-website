@@ -35,7 +35,7 @@ export default function AboutPage() {
               Cursor
             </a>{' '}
             and Claude Code. The furthest I have taken it is{' '}
-            <Link to="/writing/agent-research-loops">auto-research loops for reinforcement learning</Link>.
+            <Link to="/writing/agent-research-loops">auto research loops for reinforcement learning with Grok Bot</Link>.
           </p>
           <figure className="about-figure">
             <div className="about-heatmap">

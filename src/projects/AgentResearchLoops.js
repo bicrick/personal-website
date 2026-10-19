@@ -11,8 +11,8 @@ import ProjectPair from '../components/project/ProjectPair';
 function AgentResearchLoops() {
   return (
     <ProjectDetail
-      title="auto-research loops for reinforcement learning"
-      date="October 2026"
+      title="auto research loops for reinforcement learning with Grok Bot"
+      date="September 2026"
       backHref="/"
       backLabel="home"
       abstract="The way we go about reinforcement learning has changed. A human no longer has to sit in the loop. In an agentic research loop, an autonomous coding agent observes the runs, tunes hyperparameters, shapes rewards, queues up the next round of experiments, and then observes those, starting the process over."

@@ -10,7 +10,7 @@ import FlowDiagram from '../components/project/FlowDiagram';
 function QwopPython() {
   return (
     <ProjectDetail
-      title="qwop-python"
+      title="qwop world record with reinforcement learning"
       date="September 2026"
       linkHref="https://github.com/bicrick/qwop-python"
       linkLabel="view repo"
@@ -161,7 +161,7 @@ function QwopPython() {
 
       <p>
         That loop is the product. The gym is an RL environment built by reverse-engineering a 13,000-line minified game with coding agents. The same pattern is written up in the{' '}
-        <Link to="/writing/agent-research-loops">auto-research loops for reinforcement learning</Link> note.
+        <Link to="/writing/agent-research-loops">auto research loops for reinforcement learning with Grok Bot</Link> note.
       </p>
 
       <h2>/ conclusions</h2>
