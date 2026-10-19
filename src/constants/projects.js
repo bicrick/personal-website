@@ -43,9 +43,9 @@ export const PROJECTS = [
   },
   {
     title: 'cart-pole-autoresearch',
-    description: 'agentic loops on cart-pole and pendulums',
+    description: 'browser-native cart-pole and pendulum controllers',
     timelineDescription:
-      'Agentic loops on cart-pole, double, triple, and quadruple pendulums running in the browser.',
+      'Controllers for cart-pole plus double, triple, and quadruple pendulums running in the browser.',
     livePreview: 'cartpole',
     blogLink: '/projects/auto-research',
     appLink: 'https://cart-pole-autoresearch.vercel.app/#triple',
