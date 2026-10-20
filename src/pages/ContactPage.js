@@ -1,5 +1,6 @@
 import React from 'react';
 import TypewriterHeading from '../components/TypewriterHeading';
+import { RESUME_LABEL, RESUME_URL } from '../constants/resume';
 import './ContactPage.css';
 
 const WRITE = [
@@ -43,8 +44,8 @@ const ELSEWHERE = [
   },
   {
     label: 'resume',
-    href: `${process.env.PUBLIC_URL}/resume.pdf`,
-    value: 'bicrick.com/resume.pdf',
+    href: RESUME_URL,
+    value: RESUME_LABEL,
     external: true,
   },
 ];

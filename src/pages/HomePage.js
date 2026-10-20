@@ -5,6 +5,7 @@ import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
 import FeaturedProjects from '../components/home/FeaturedProjects';
 import WritingBlock from '../components/home/WritingBlock';
 import HomeFooter from '../components/home/HomeFooter';
+import { RESUME_URL } from '../constants/resume';
 import './HomePage.css';
 
 export default function HomePage() {
@@ -42,7 +43,7 @@ export default function HomePage() {
               <span className="nav-separator">·</span>
               <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
               <span className="nav-separator">·</span>
-              <a href={`${process.env.PUBLIC_URL}/resume.pdf`} target="_blank" rel="noopener noreferrer">resume</a>
+              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
               <span className="nav-separator">·</span>
               <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
             </div>

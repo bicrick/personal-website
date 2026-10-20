@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "redirects": [
+    { "source": "/resume.pdf", "destination": "https://resume.bicrick.com/resume.pdf", "permanent": true },
     { "source": "/writing/context-shaping", "destination": "/projects/harness-bench", "permanent": true },
     { "source": "/projects/context-shaping", "destination": "/projects/harness-bench", "permanent": true },
     { "source": "/writing/context-shaping/:path*", "destination": "/projects/harness-bench#harnesses", "permanent": true },
