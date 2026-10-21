@@ -23,7 +23,7 @@ const JOBS = [
     logo: `${process.env.PUBLIC_URL}/images/career/open-lending.svg`,
     org: 'Open Lending',
     role: 'Software Engineering Intern',
-    dates: 'May 2022 – Aug 2022',
+    dates: 'Summer 2022',
     note: 'TypeScript ingest of dealership loan data on AWS.',
   },
   {
