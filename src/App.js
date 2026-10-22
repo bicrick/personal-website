@@ -17,6 +17,7 @@ import Tracebench from './projects/Tracebench';
 import ContextShaping from './projects/ContextShaping';
 import AgentResearchLoops from './projects/AgentResearchLoops';
 import InfiniteTapestry from './projects/InfiniteTapestry';
+import TapestryThumbnailMockups from './mockups/tapestryThumbnail/TapestryThumbnailMockups';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
@@ -42,6 +43,7 @@ function App() {
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/tracebench" element={<Tracebench />} />
         <Route path="/projects/infinite-tapestry" element={<InfiniteTapestry />} />
+        <Route path="/mockups/tapestry-thumbnail" element={<TapestryThumbnailMockups />} />
         <Route path="/projects/infinite-tapestry/thumbs" element={<Navigate to="/projects/infinite-tapestry" replace />} />
         <Route path="/projects/harness-bench" element={<ContextShaping />} />
         <Route path="/projects/context-shaping" element={<Navigate to="/projects/harness-bench" replace />} />

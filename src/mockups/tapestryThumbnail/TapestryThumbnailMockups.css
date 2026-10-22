@@ -1,0 +1,152 @@
+.tap-mock {
+  width: min(84rem, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 2.4rem 0 3.5rem;
+  color: var(--ink);
+}
+
+.tap-mock-head {
+  max-width: 40rem;
+  margin-bottom: 1.6rem;
+  padding-right: 2.4rem;
+}
+
+.tap-mock-kicker {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--link);
+}
+
+.tap-mock h1 {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-pixel);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.tap-mock-head p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tap-mock-back {
+  margin-top: 0.75rem !important;
+}
+
+.tap-mock-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.35rem 1rem;
+  align-items: start;
+}
+
+.tap-mock-figure {
+  margin: 0;
+  min-width: 0;
+}
+
+.tap-mock-tile {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #050505;
+  filter: drop-shadow(10px 10px 10px var(--shadow-strong));
+}
+
+.tap-variant,
+.tap-variant canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tap-a-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 70%;
+  width: auto;
+  max-width: 90%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.65))
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.28));
+}
+
+.tap-mock-figure figcaption {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.tap-mock-key {
+  flex: 0 0 auto;
+  font-family: var(--font-pixel);
+  color: var(--link);
+}
+
+.tap-mock.is-solo:not(.is-capture) .tap-mock-row {
+  grid-template-columns: minmax(0, 28rem);
+}
+
+.tap-mock.is-capture {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.tap-mock.is-capture .tap-mock-head,
+.tap-mock.is-capture figcaption {
+  display: none;
+}
+
+.tap-mock.is-capture .tap-mock-row {
+  width: min(100vw, calc(100vh * 16 / 9));
+  width: min(100vw, calc(100dvh * 16 / 9));
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.tap-mock.is-capture .tap-mock-tile {
+  border-radius: 0;
+  filter: none;
+}
+
+body.tap-mock-capture {
+  background: #0c0c0e;
+  background-image: none;
+}
+
+body.tap-mock-capture .theme-toggle {
+  visibility: hidden;
+}
+
+@media (max-width: 900px) {
+  .tap-mock-row {
+    grid-template-columns: minmax(0, 36rem);
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tap-mock a:after {
+    transition: none;
+  }
+}
