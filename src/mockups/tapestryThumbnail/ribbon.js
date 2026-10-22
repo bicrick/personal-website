@@ -4,9 +4,9 @@
  * The bitmap is the baked production ribbon already shipped with the site
  * (public/images/infinite-tapestry/ribbon-thumb.webp). Scroll speed matches
  * infinitetapestry.app's live viewer: 30 world px/s across a 512px-tall band
- * (static/client.js `scroll_speed` / `height`). On a tile, that is
- * 30 * (tileHeight / 512) CSS pixels per second, so the crop moves the way a
- * full-bleed view of the band does. prefers-reduced-motion holds one frame.
+ * (static/client.js `scroll_speed` / `height`). Pass the band height as `h`:
+ * the crop then moves at 30 * (bandHeight / 512) CSS pixels per second.
+ * prefers-reduced-motion holds one frame.
  */
 
 const BASE = `${process.env.PUBLIC_URL}/images/infinite-tapestry`;
@@ -15,7 +15,6 @@ export const RIBBON_SRC = `${BASE}/ribbon-thumb.webp`;
 export const RIBBON_FALLBACK = `${BASE}/ribbon-thumb.jpg`;
 export const MARK_SRC = `${BASE}/brand/mark-plain.svg`;
 
-export const PROD_BG = '#050505';
 export const SCROLL_WORLD_PX = 30;
 export const BAND_WORLD_H = 512;
 
@@ -63,7 +62,7 @@ export function ribbonTime(now, reduced) {
 
 export function drawStrip(ctx, ribbon, w, h, time, reduced) {
   if (!ribbon || !ribbon.naturalWidth) {
-    ctx.fillStyle = '#16161a';
+    ctx.fillStyle = '#f4efe7';
     ctx.fillRect(0, 0, w, h);
     return null;
   }

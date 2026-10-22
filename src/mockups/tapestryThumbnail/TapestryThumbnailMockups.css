@@ -1,5 +1,5 @@
 .tap-mock {
-  width: min(84rem, calc(100% - 2.5rem));
+  width: min(56rem, calc(100% - 2.5rem));
   margin: 0 auto;
   padding: 2.4rem 0 3.5rem;
   color: var(--ink);
@@ -40,8 +40,8 @@
 
 .tap-mock-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.35rem 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem 10px;
   align-items: start;
 }
 
@@ -55,7 +55,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 4px;
-  background: #050505;
+  background: #f4efe7;
   filter: drop-shadow(10px 10px 10px var(--shadow-strong));
 }
 
@@ -71,16 +71,14 @@
 .tap-a-mark {
   position: absolute;
   left: 50%;
-  top: 50%;
-  height: 70%;
+  top: var(--mark-top, 47%);
+  height: var(--mark-h, 22%);
   width: auto;
-  max-width: 90%;
+  max-width: 46%;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
-  filter:
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.65))
-    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.28));
+  filter: drop-shadow(0 1px 0 rgba(11, 11, 13, 0.28));
 }
 
 .tap-mock-figure figcaption {
@@ -130,7 +128,7 @@
 }
 
 body.tap-mock-capture {
-  background: #0c0c0e;
+  background: #f4efe7;
   background-image: none;
 }
 

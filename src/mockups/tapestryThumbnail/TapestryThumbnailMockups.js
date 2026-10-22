@@ -2,28 +2,22 @@ import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import VariantA from './VariantA';
-import VariantB from './VariantB';
-import VariantC from './VariantC';
 import './TapestryThumbnailMockups.css';
 
 const VARIANTS = [
   {
-    id: 'a',
-    label: 'A',
-    caption: 'The strip fills the tile. The woven mark sits on it in crisp ink.',
-    Node: VariantA,
+    id: 'a2',
+    label: 'A2',
+    caption: 'Production band, three fifths of the tile. Small woven mark centered on it.',
+    ribbon: 0.6,
+    mark: 0.22,
   },
   {
-    id: 'b',
-    label: 'B',
-    caption: 'The strip fills the tile. The infinity is frosted glass with a warm rim.',
-    Node: VariantB,
-  },
-  {
-    id: 'c',
-    label: 'C',
-    caption: 'The strip shows only inside the infinity, on the production dark field.',
-    Node: VariantC,
+    id: 'a3',
+    label: 'A3',
+    caption: 'Shorter band, smaller mark. Same scroll, same cream field, same reflections.',
+    ribbon: 0.48,
+    mark: 0.15,
   },
 ];
 
@@ -52,19 +46,20 @@ export default function TapestryThumbnailMockups() {
         <p className="tap-mock-kicker">mockups</p>
         <h1>infinite tapestry thumbnail</h1>
         <p>
-          Three studies for the project tile. The live thumbnail is unchanged.
-          Each one scrolls the real strip at the production pace, and holds still
-          when reduced motion is on.
+          Two studies of the striped mark on a production ribbon. The band
+          scrolls through the middle of the tile, with cream above and below
+          and the live viewer's mirror. The live thumbnail is unchanged.
+          Reduced motion holds one frame.
         </p>
         <p className="tap-mock-back">
           <Link to="/projects">projects</Link>
         </p>
       </header>
       <div className="tap-mock-row">
-        {shown.map(({ id, label, caption, Node }) => (
+        {shown.map(({ id, label, caption, ribbon, mark }) => (
           <figure key={id} id={`variant-${id}`} className="tap-mock-figure">
-            <div className="tap-mock-tile">
-              <Node />
+            <div className="tap-mock-tile" data-shot={id}>
+              <VariantA ribbon={ribbon} mark={mark} />
             </div>
             <figcaption>
               <span className="tap-mock-key">{label}</span>
