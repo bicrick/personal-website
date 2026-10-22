@@ -1,17 +1,261 @@
 .tapestry-tile-preview {
+  --tuck: 8px;
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0b0b0d;
-}
-
-html:not(.is-dark) .tapestry-tile-preview {
   background: #f4efe7;
 }
 
-.tapestry-tile-preview canvas {
-  display: block;
+html.is-dark .tapestry-tile-preview {
+  background: #050505;
+}
+
+.tapestry-tile-band,
+.tapestry-tile-reflect,
+.tapestry-tile-flip {
+  position: absolute;
+  left: 0;
   width: 100%;
+}
+
+.tapestry-tile-band {
+  top: var(--band-top, 17%);
+  height: var(--band-h, 60%);
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Full-tile layers. Masks keep the mirrors in the margins; the sharp band covers the tuck. */
+.tapestry-tile-reflect {
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+}
+
+.tapestry-tile-flip {
+  height: var(--band-h, 60%);
+  filter: blur(8px) brightness(1.12) saturate(1.12);
+}
+
+html.is-dark .tapestry-tile-flip {
+  filter: blur(8px) brightness(1.34) saturate(1.12);
+}
+
+.tapestry-tile-reflect.is-above .tapestry-tile-flip {
+  top: calc(var(--band-top, 17%) + var(--tuck));
+  transform: scaleY(-1);
+  transform-origin: center top;
+}
+
+.tapestry-tile-reflect.is-below .tapestry-tile-flip {
+  top: calc(var(--band-top, 17%) - var(--tuck));
+  transform: scaleY(-1);
+  transform-origin: center bottom;
+}
+
+/*
+ * Coverage from infinitetapestry static/refl.js (aBelow 0.55, aAbove 0.25,
+ * fade 1.25, glow 0.18). Light folds glow into coverage; dark uses coverage
+ * only and a hotter grade. t = 0 is the band edge. White-alpha so the mask
+ * is the same in alpha and luminance modes.
+ */
+.tapestry-tile-reflect.is-above {
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.152) 0,
+    rgba(255, 255, 255, 0.164) calc(var(--band-top, 17%) * 0.12),
+    rgba(255, 255, 255, 0.184) calc(var(--band-top, 17%) * 0.30),
+    rgba(255, 255, 255, 0.209) calc(var(--band-top, 17%) * 0.50),
+    rgba(255, 255, 255, 0.234) calc(var(--band-top, 17%) * 0.68),
+    rgba(255, 255, 255, 0.256) calc(var(--band-top, 17%) * 0.82),
+    rgba(255, 255, 255, 0.273) calc(var(--band-top, 17%) * 0.92),
+    rgba(255, 255, 255, 0.284) calc(var(--band-top, 17%) * 0.98),
+    rgba(255, 255, 255, 0.163) var(--band-top, 17%),
+    transparent var(--band-top, 17%)
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.152) 0,
+    rgba(255, 255, 255, 0.164) calc(var(--band-top, 17%) * 0.12),
+    rgba(255, 255, 255, 0.184) calc(var(--band-top, 17%) * 0.30),
+    rgba(255, 255, 255, 0.209) calc(var(--band-top, 17%) * 0.50),
+    rgba(255, 255, 255, 0.234) calc(var(--band-top, 17%) * 0.68),
+    rgba(255, 255, 255, 0.256) calc(var(--band-top, 17%) * 0.82),
+    rgba(255, 255, 255, 0.273) calc(var(--band-top, 17%) * 0.92),
+    rgba(255, 255, 255, 0.284) calc(var(--band-top, 17%) * 0.98),
+    rgba(255, 255, 255, 0.163) var(--band-top, 17%),
+    transparent var(--band-top, 17%)
+  );
+}
+
+.tapestry-tile-reflect.is-below {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.338) var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.602) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.02),
+    rgba(255, 255, 255, 0.571) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.08),
+    rgba(255, 255, 255, 0.523) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.18),
+    rgba(255, 255, 255, 0.463) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.32),
+    rgba(255, 255, 255, 0.395) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.50),
+    rgba(255, 255, 255, 0.332) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.70),
+    rgba(255, 255, 255, 0.284) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.88),
+    rgba(255, 255, 255, 0.255) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.338) var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.602) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.02),
+    rgba(255, 255, 255, 0.571) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.08),
+    rgba(255, 255, 255, 0.523) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.18),
+    rgba(255, 255, 255, 0.463) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.32),
+    rgba(255, 255, 255, 0.395) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.50),
+    rgba(255, 255, 255, 0.332) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.70),
+    rgba(255, 255, 255, 0.284) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.88),
+    rgba(255, 255, 255, 0.255) 100%
+  );
+}
+
+html.is-dark .tapestry-tile-reflect.is-above {
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.127) 0,
+    rgba(255, 255, 255, 0.137) calc(var(--band-top, 17%) * 0.12),
+    rgba(255, 255, 255, 0.155) calc(var(--band-top, 17%) * 0.30),
+    rgba(255, 255, 255, 0.178) calc(var(--band-top, 17%) * 0.50),
+    rgba(255, 255, 255, 0.201) calc(var(--band-top, 17%) * 0.68),
+    rgba(255, 255, 255, 0.221) calc(var(--band-top, 17%) * 0.82),
+    rgba(255, 255, 255, 0.237) calc(var(--band-top, 17%) * 0.92),
+    rgba(255, 255, 255, 0.246) calc(var(--band-top, 17%) * 0.98),
+    rgba(255, 255, 255, 0.125) var(--band-top, 17%),
+    transparent var(--band-top, 17%)
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.127) 0,
+    rgba(255, 255, 255, 0.137) calc(var(--band-top, 17%) * 0.12),
+    rgba(255, 255, 255, 0.155) calc(var(--band-top, 17%) * 0.30),
+    rgba(255, 255, 255, 0.178) calc(var(--band-top, 17%) * 0.50),
+    rgba(255, 255, 255, 0.201) calc(var(--band-top, 17%) * 0.68),
+    rgba(255, 255, 255, 0.221) calc(var(--band-top, 17%) * 0.82),
+    rgba(255, 255, 255, 0.237) calc(var(--band-top, 17%) * 0.92),
+    rgba(255, 255, 255, 0.246) calc(var(--band-top, 17%) * 0.98),
+    rgba(255, 255, 255, 0.125) var(--band-top, 17%),
+    transparent var(--band-top, 17%)
+  );
+}
+
+html.is-dark .tapestry-tile-reflect.is-below {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.275) var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.540) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.02),
+    rgba(255, 255, 255, 0.511) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.08),
+    rgba(255, 255, 255, 0.466) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.18),
+    rgba(255, 255, 255, 0.410) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.32),
+    rgba(255, 255, 255, 0.347) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.50),
+    rgba(255, 255, 255, 0.289) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.70),
+    rgba(255, 255, 255, 0.245) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.88),
+    rgba(255, 255, 255, 0.219) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.275) var(--band-bottom, 77%),
+    rgba(255, 255, 255, 0.540) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.02),
+    rgba(255, 255, 255, 0.511) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.08),
+    rgba(255, 255, 255, 0.466) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.18),
+    rgba(255, 255, 255, 0.410) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.32),
+    rgba(255, 255, 255, 0.347) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.50),
+    rgba(255, 255, 255, 0.289) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.70),
+    rgba(255, 255, 255, 0.245) calc(var(--band-bottom, 77%) + (100% - var(--band-bottom, 77%)) * 0.88),
+    rgba(255, 255, 255, 0.219) 100%
+  );
+}
+
+/*
+ * Two identical copies. translate3d(-50%) is exactly one image width, so the
+ * loop lands on the same pixels it started on. Linear, fractional, no snap.
+ */
+.tapestry-tile-scroller {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  gap: 0;
+  width: max-content;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  will-change: transform;
+  animation-name: tapestry-slide;
+  animation-duration: var(--scroll-duration, 156.8s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--scroll-duration, 156.8s) * var(--scroll-phase, 0.25) * -1);
+}
+
+@keyframes tapestry-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.project-card .tapestry-tile-preview .tapestry-tile-scroller img,
+.featured-media .tapestry-tile-preview .tapestry-tile-scroller img,
+.tapestry-tile-preview .tapestry-tile-scroller img {
+  position: static;
+  top: auto;
+  left: auto;
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  aspect-ratio: 3675 / 400;
+  object-fit: fill;
+  transform: none;
+  image-rendering: auto;
+}
+
+.project-card .tapestry-tile-preview .tapestry-tile-mark,
+.featured-media .tapestry-tile-preview .tapestry-tile-mark,
+.tapestry-tile-preview .tapestry-tile-mark {
+  position: absolute;
+  left: 50%;
+  top: var(--mark-top, 47%);
+  z-index: 3;
+  width: auto;
+  height: var(--mark-h, 22%);
+  max-width: 46%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 1px 0 rgba(11, 11, 13, 0.28));
+}
+
+html.is-dark .tapestry-tile-preview .tapestry-tile-mark {
+  filter:
+    drop-shadow(0 0 1px rgba(239, 233, 223, 0.55))
+    drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tapestry-tile-scroller {
+    animation: none;
+    will-change: auto;
+    transform: translate3d(calc(var(--scroll-phase, 0.25) * -50%), 0, 0);
+  }
 }
