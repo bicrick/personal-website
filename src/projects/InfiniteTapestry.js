@@ -19,8 +19,10 @@ function InfiniteTapestry() {
       backLabel="home"
       linkHref="https://infinitetapestry.app"
       linkLabel="live"
-      secondaryLinkHref="https://infinitetapestry.app/about"
-      secondaryLinkLabel="about"
+      secondaryLinkHref="https://github.com/bicrick/infinite-tapestry"
+      secondaryLinkLabel="repo"
+      tertiaryLinkHref="https://infinitetapestry.app/about"
+      tertiaryLinkLabel="about"
       abstract={
         <>
           This project was about building an endless, infinitely extending tapestry. Anyone can prompt the tapestry, and their creations will be woven in. It runs on a rented GPU from{' '}
@@ -84,6 +86,8 @@ function InfiniteTapestry() {
       </p>
 
       <p>
+        <a href="https://github.com/bicrick/infinite-tapestry" target="_blank" rel="noopener noreferrer">repo</a>
+        {' · '}
         <a href="https://infinitetapestry.app" target="_blank" rel="noopener noreferrer">
           infinitetapestry.app
         </a>

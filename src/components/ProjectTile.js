@@ -81,10 +81,20 @@ export default function ProjectTile({
   const panelId = useId();
   const fineHover = useFineHover();
   const hasApp = Boolean(project.appLink);
+  const hasRepo = Boolean(project.repoLink);
   const appLabel = project.appLabel || 'app';
   const blogLink = project.blogLink || project.link;
   const blogIsExternal = Boolean(project.blogExternal || project.external);
   const appIsExternal = /^https?:\/\//i.test(project.appLink || '');
+  const repoIsExternal = /^https?:\/\//i.test(project.repoLink || '');
+  const hoverChoices = [
+    hasApp ? appLabel : null,
+    hasRepo ? 'repo' : null,
+    'blog',
+  ].filter(Boolean);
+  const hoverChoiceLabel = hoverChoices.length > 2
+    ? `${hoverChoices.slice(0, -1).join(', ')}, and ${hoverChoices[hoverChoices.length - 1]}`
+    : hoverChoices.join(' and ');
   const panelOpen = fineHover ? false : isExpanded;
   const choiceTabIndex = fineHover || isExpanded ? 0 : -1;
 
@@ -148,7 +158,7 @@ export default function ProjectTile({
         {media}
         <span className="visually-hidden">
           {fineHover
-            ? `${project.title}. Hover for ${hasApp ? `${appLabel} and blog` : 'blog'} options.`
+            ? `${project.title}. Hover for ${hoverChoiceLabel} options.`
             : isExpanded
               ? `Hide options for ${project.title}`
               : `Choose where to open ${project.title}`}
@@ -160,7 +170,7 @@ export default function ProjectTile({
         className={`project-choice-panel${panelOpen ? ' is-open' : ''}`}
         aria-hidden={fineHover ? undefined : !isExpanded}
       >
-        <div className="project-choice-row">
+        <div className={`project-choice-row${hasRepo ? ' has-repo' : ''}`}>
           {hasApp && (
             <ChoiceLink
               to={project.appLink}
@@ -170,6 +180,17 @@ export default function ProjectTile({
               onClick={onCollapse}
             >
               <span>{appLabel}</span>
+            </ChoiceLink>
+          )}
+          {hasRepo && (
+            <ChoiceLink
+              to={project.repoLink}
+              external={repoIsExternal}
+              className="project-choice project-choice--repo"
+              tabIndex={choiceTabIndex}
+              onClick={onCollapse}
+            >
+              <span>repo</span>
             </ChoiceLink>
           )}
           <ChoiceLink

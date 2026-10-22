@@ -18,6 +18,8 @@ function ProjectDetail({
   secondaryLinkHref,
   secondaryLinkLabel,
   secondaryLinkInternal = false,
+  tertiaryLinkHref,
+  tertiaryLinkLabel,
   abstract,
   tldr,
   backHref = '/projects',
@@ -28,6 +30,8 @@ function ProjectDetail({
   const seo = getPageSeo(pathname);
   const hasPrimary = Boolean(linkHref && linkLabel);
   const hasSecondary = Boolean(secondaryLinkHref && secondaryLinkLabel);
+  const hasTertiary = Boolean(tertiaryLinkHref && tertiaryLinkLabel);
+  const hasMetaLink = hasPrimary || hasSecondary || hasTertiary;
 
   return (
     <div className="App_mainContainer landing-page">
@@ -64,7 +68,15 @@ function ProjectDetail({
                   </a>
                 )
               )}
-              {(hasPrimary || hasSecondary) && date && (
+              {hasTertiary && (hasPrimary || hasSecondary) && (
+                <span className="project-meta-sep" aria-hidden="true">·</span>
+              )}
+              {hasTertiary && (
+                <a href={tertiaryLinkHref} target="_blank" rel="noopener noreferrer">
+                  {tertiaryLinkLabel}
+                </a>
+              )}
+              {hasMetaLink && date && (
                 <span className="project-meta-sep" aria-hidden="true">·</span>
               )}
               {date && <span className="project-date">{date}</span>}

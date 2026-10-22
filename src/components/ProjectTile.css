@@ -82,10 +82,15 @@
   background: rgba(33, 35, 45, 0.72);
 }
 
-.project-choice--blog {
+.project-choice--blog,
+.project-choice--repo {
   flex: 1 1 33.333%;
   background: rgba(33, 35, 45, 0.58);
   border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.project-choice-row.has-repo .project-choice--app {
+  flex: 1 1 33.333%;
 }
 
 .project-choice--solo {
@@ -106,7 +111,9 @@
 }
 
 .project-choice--blog:hover,
-.project-choice--blog:focus-visible {
+.project-choice--blog:focus-visible,
+.project-choice--repo:hover,
+.project-choice--repo:focus-visible {
   background: rgba(33, 35, 45, 0.78);
   outline: none;
 }

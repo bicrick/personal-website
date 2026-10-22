@@ -2,6 +2,7 @@ import React from 'react';
 import './tapestry.css';
 
 const LIVE = 'https://infinitetapestry.app';
+const REPO = 'https://github.com/bicrick/infinite-tapestry';
 
 /* Layout viewport inside the frame. The live site goes full-bleed below 520px tall. */
 const VIEW_W = 1600;
@@ -45,7 +46,10 @@ export default function TapestryRibbon() {
         <a href={LIVE} target="_blank" rel="noopener noreferrer">
           infinitetapestry.app
         </a>
-        .
+        {' · '}
+        <a href={REPO} target="_blank" rel="noopener noreferrer">
+          repo
+        </a>
       </figcaption>
     </figure>
   );

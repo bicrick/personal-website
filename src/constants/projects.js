@@ -8,6 +8,7 @@ export const PROJECTS = [
     blogLink: '/projects/infinite-tapestry',
     appLink: 'https://infinitetapestry.app',
     appLabel: 'live',
+    repoLink: 'https://github.com/bicrick/infinite-tapestry',
     relevanceRank: 2,
     dateRank: 0,
     date: 'October 2026',
