@@ -51,48 +51,10 @@ function AgentResearchLoops() {
         A loop does not wait. It enqueues many runs side by side and reads them all when they land. This is not just a bigger grid search, which you could always run if you had the compute. Each next try is founded on what the last ones showed, including hunches that live outside the math: this reward is being gamed, this start is too hard. Same compute, aimed better.
       </p>
 
-      <h2>/ how to set it up</h2>
+      <h2>/ the setup</h2>
 
       <p>
-        If you want to run this yourself, the bot needs a way into the training machines, a checkout on its own disk, and a schedule that wakes it. This is how I set those up.
-      </p>
-
-      <p>
-        The machines are on GCP. I made a service account that belongs to the bot, and I kept the roles narrow. Compute viewer is what it uses to watch the VMs. I add instance admin only when it should also start, stop, or inspect one. Logging viewer and monitoring viewer cover the logs and the metrics. Storage stays on the bucket that holds checkpoints and results. I create a key for that account, store it as a secret on the bot&apos;s computer, and install gcloud there. The research repo never holds the key.
-      </p>
-
-      <pre>
-        <code>{`gcloud iam service-accounts create research-loop \\
-  --project=PROJECT_ID \\
-  --display-name="research loop"
-
-gcloud projects add-iam-policy-binding PROJECT_ID \\
-  --member="serviceAccount:research-loop@PROJECT_ID.iam.gserviceaccount.com" \\
-  --role="roles/compute.viewer"
-
-gcloud projects add-iam-policy-binding PROJECT_ID \\
-  --member="serviceAccount:research-loop@PROJECT_ID.iam.gserviceaccount.com" \\
-  --role="roles/logging.viewer"
-
-gcloud projects add-iam-policy-binding PROJECT_ID \\
-  --member="serviceAccount:research-loop@PROJECT_ID.iam.gserviceaccount.com" \\
-  --role="roles/monitoring.viewer"
-
-gcloud storage buckets add-iam-policy-binding gs://BUCKET \\
-  --member="serviceAccount:research-loop@PROJECT_ID.iam.gserviceaccount.com" \\
-  --role="roles/storage.objectViewer"`}</code>
-      </pre>
-
-      <p>
-        Add <code>roles/compute.instanceAdmin.v1</code> on that same account only if the bot has to start, stop, or reset a VM. The bucket binding above is read access. If the bot also writes results there, use <code>roles/storage.objectAdmin</code> on that bucket, and only that bucket. Create the JSON key with <code>gcloud iam service-accounts keys create</code>, keep it as a secret on the bot&apos;s computer, and authenticate with <code>gcloud auth activate-service-account</code>.
-      </p>
-
-      <p>
-        The research code is a local clone on the bot&apos;s own disk. It edits that checkout and commits there. I do not have it spin up Cursor cloud agents or worktrees. Either one takes the edit off the disk where the bot runs and inspects the experiment. I want the edit, the run, and the commit in one place.
-      </p>
-
-      <p>
-        To let it iterate on its own, I set a routine: a scheduled check-in that wakes the bot. It checks the VMs and the training status, reads the results, decides the next experiment, commits, and relaunches. On the QWOP farm that was every 15 minutes.
+        Give the bot scoped GCP access through its own service account, just enough to watch the VMs, read logs and metrics, and touch the results bucket. Give it a clone of the research repo on its own disk so the edit, the run, and the commit happen in one place. Then give it a routine that wakes it every 15 minutes to check the runs, decide the next experiment, commit, and relaunch.
       </p>
 
       <h2>/ two examples</h2>
