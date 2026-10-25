@@ -7,7 +7,7 @@ export const WRITING = [
     date: 'September 2026',
   },
   {
-    title: 'is your model being lobotomized by your harness?',
+    title: 'is your harness lobotomizing your model?',
     description:
       'Everyone compares models. Almost nobody compares the thing wrapped around them.',
     path: '/projects/harness-bench',

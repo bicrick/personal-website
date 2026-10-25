@@ -187,12 +187,12 @@
     "type": "article"
   },
   "/projects/harness-bench": {
-    "ogTitle": "is your model being lobotomized by your harness?",
-    "seoTitle": "Is your model being lobotomized by your harness? - bicrick",
+    "ogTitle": "is your harness lobotomizing your model?",
+    "seoTitle": "Is your harness lobotomizing your model? - bicrick",
     "description": "Short answer: no, probably not. Five coding harnesses, one model (Claude Haiku 5.5), 50 SWE-bench Verified bugs: about the same fix rate, but over 4x the tokens per fix for some.",
     "keywords": "bicrick, Patrick Brown, harness-bench, coding harness, SWE-bench Verified, Claude Code, Cursor, OpenCode, SWE-agent, mini-swe-agent, Claude Haiku",
-    "imagePath": "/og/harness-bench-v3-1200x630.png",
-    "imageAlt": "is your model being lobotomized by your harness? A pixel critter hanging over a landscape",
+    "imagePath": "/og/harness-bench-v4-1200x630.png",
+    "imageAlt": "is your harness lobotomizing your model? A pixel critter hanging over a landscape",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

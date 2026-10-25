@@ -29,7 +29,7 @@ export const PROJECTS = [
     featured: true,
   },
   {
-    title: 'is your model being lobotomized by your harness?',
+    title: 'is your harness lobotomizing your model?',
     description: 'one model in five coding harnesses, 50 real bugs',
     timelineDescription:
       'Claude Haiku 5.5 inside Claude Code, Cursor, OpenCode, SWE-agent, and mini-swe-agent on 50 SWE-bench Verified bugs. Same accuracy, very different token bills.',
