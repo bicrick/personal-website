@@ -5,6 +5,7 @@ import HarnessTilePreview from './HarnessTilePreview';
 import TapestryTilePreview from './TapestryTilePreview';
 import { MonocleTilePreview } from './project/monocle';
 import { CartPoleTilePreview } from './CartPoleEmbed';
+import NotepadableTilePreview from './notepadable-tile/NotepadableTilePreview';
 import './ProjectTile.css';
 
 function useFineHover() {
@@ -131,6 +132,8 @@ export default function ProjectTile({
     <MonocleTilePreview />
   ) : project.livePreview === 'cartpole' ? (
     <CartPoleTilePreview />
+  ) : project.livePreview === 'notepadable' ? (
+    <NotepadableTilePreview />
   ) : project.image ? (
     <img src={project.image} alt={project.title} width="1200" height="600" />
   ) : (
