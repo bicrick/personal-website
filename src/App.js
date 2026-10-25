@@ -13,7 +13,6 @@ import GolfIncremental from './projects/GolfIncremental';
 import AutoResearch from './projects/AutoResearch';
 import Heb from './projects/Heb';
 import Monocle from './projects/Monocle';
-import Tracebench from './projects/Tracebench';
 import ContextShaping from './projects/ContextShaping';
 import AgentResearchLoops from './projects/AgentResearchLoops';
 import InfiniteTapestry from './projects/InfiniteTapestry';
@@ -40,7 +39,6 @@ function App() {
         <Route path="/projects/golf-incremental" element={<GolfIncremental />} />
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
-        <Route path="/projects/tracebench" element={<Tracebench />} />
         <Route path="/projects/infinite-tapestry" element={<InfiniteTapestry />} />
         <Route path="/projects/infinite-tapestry/thumbs" element={<Navigate to="/projects/infinite-tapestry" replace />} />
         <Route path="/projects/harness-bench" element={<ContextShaping />} />

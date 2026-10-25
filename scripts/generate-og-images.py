@@ -275,13 +275,6 @@ def make_project_cards():
         "monocle-1200x630.jpg",
         fit="contain",
     )
-    split_card(
-        PUBLIC / "images" / "tracebench" / "tracebench-1600x900.png",
-        "tracebench",
-        "offline agent evals",
-        "tracebench-1200x630.jpg",
-        fit="contain",
-    )
     # harness-bench card: public/og/harness-bench-v2-1200x630.png (Playwright render of the post header)
 
 
