@@ -102,6 +102,7 @@ export const PROJECTS = [
     image: `${process.env.PUBLIC_URL}/images/notepadable/notepadable-1200x600.png`,
     blogLink: '/projects/notepadable',
     appLink: 'https://notepadable.com',
+    livePreview: 'notepadable',
     relevanceRank: 8,
     dateRank: 6,
     date: 'March 2026',

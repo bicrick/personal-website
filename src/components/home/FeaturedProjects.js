@@ -6,6 +6,7 @@ import HarnessTilePreview from '../HarnessTilePreview';
 import TapestryTilePreview from '../TapestryTilePreview';
 import { MonocleTilePreview } from '../project/monocle';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
+import NotepadableTilePreview from '../notepadable-tile/NotepadableTilePreview';
 import './FeaturedProjects.css';
 
 function FeaturedMedia({ project }) {
@@ -23,6 +24,9 @@ function FeaturedMedia({ project }) {
   }
   if (project.livePreview === 'cartpole') {
     return <CartPoleTilePreview />;
+  }
+  if (project.livePreview === 'notepadable') {
+    return <NotepadableTilePreview />;
   }
   if (project.image) {
     return (

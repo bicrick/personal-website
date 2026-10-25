@@ -36,7 +36,8 @@
 .featured-media .qwop-tile-preview,
 .featured-media .cart-pole-tile-preview,
 .featured-media .harness-tile-preview,
-.featured-media .tapestry-tile-preview {
+.featured-media .tapestry-tile-preview,
+.featured-media .np-tile {
   display: block;
   width: 100%;
   height: 100%;

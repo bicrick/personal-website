@@ -1,0 +1,260 @@
+/*
+ * notepadable project tile.
+ * Colors, type, and chrome are lifted from notepadable's styles.css / landing.css.
+ * A fixed 640×360 stage is scaled to the card, so type stays proportional.
+ * Motion is limited to opacity + transform (plus discrete text swaps for typing).
+ */
+
+.np-tile {
+  --np-bg: #f5f5f5;
+  --np-text: #1a1a1a;
+  --np-subtle: #ebebeb;
+  --np-card: #f0f0f0;
+  --np-border: #d8d8d8;
+  --np-muted: #5c5c5c;
+  --np-faint: #7a7a7a;
+  --np-accent: #3b82f6;
+  --np-label: #999;
+  --np-footer: rgba(245, 245, 245, 0.92);
+  --np-track: rgba(0, 0, 0, 0.06);
+  --np-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --np-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--np-bg);
+  color: var(--np-text);
+  font-family: var(--np-sans);
+  contain: layout paint;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.is-dark .np-tile {
+  --np-bg: #1a1a1a;
+  --np-text: #e0e0e0;
+  --np-subtle: #242424;
+  --np-card: #1e1e1e;
+  --np-border: #333;
+  --np-muted: #a0a0a0;
+  --np-faint: #6e6e6e;
+  --np-label: #666;
+  --np-footer: rgba(38, 38, 38, 0.92);
+  --np-track: rgba(255, 255, 255, 0.06);
+}
+
+.np-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+/* ------------------------------------------------------------------ editor */
+
+.np-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  will-change: opacity, transform;
+}
+
+.np-addr {
+  flex: none;
+  padding: 10px 14px 0;
+}
+
+.np-addr-pill {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--np-border);
+  border-radius: 8px;
+  background: var(--np-subtle);
+  font: 14px/1 var(--np-sans);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.np-addr-origin {
+  flex: none;
+  color: var(--np-faint);
+}
+
+/* Right-anchored so the newest characters of the hash stay in view. */
+.np-addr-hash-clip {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.np-addr-hash-clip.is-clipped {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 28px);
+}
+
+.np-addr-hash {
+  flex: none;
+  color: var(--np-text);
+}
+
+.np-editor {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 16px 24px 0;
+  font: 17px/1.6 var(--np-sans);
+}
+
+.np-line {
+  white-space: pre;
+}
+
+.np-line.is-h1 {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.np-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 1.2em;
+  margin-left: 1px;
+  margin-right: -2.5px;
+  vertical-align: -0.22em;
+  background: currentColor;
+}
+
+.np-footer {
+  flex: none;
+}
+
+.np-capacity-bar {
+  height: 3px;
+  background: var(--np-track);
+  overflow: hidden;
+}
+
+.np-capacity-fill {
+  height: 100%;
+  width: 100%;
+  background: #34c759;
+  transform-origin: 0 50%;
+  transform: scaleX(0.003375);
+  will-change: transform;
+}
+
+.np-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 66px;
+  padding: 0 24px;
+  background: var(--np-footer);
+}
+
+.np-brand-area,
+.np-actions {
+  display: flex;
+  align-items: center;
+}
+
+.np-brand-area {
+  gap: 8px;
+}
+
+.np-actions {
+  gap: 6px;
+}
+
+.np-brand {
+  font: 700 19.2px/1 var(--np-sans);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.np-brand-suffix {
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+.np-btn-new,
+.np-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+}
+
+.np-btn-new {
+  opacity: 0.7;
+}
+
+.np-btn {
+  opacity: 0.6;
+}
+
+.np-btn-new svg,
+.np-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.np-capacity-label {
+  font: 16.8px/1 var(--np-sans);
+  color: var(--np-label);
+  white-space: nowrap;
+  padding: 0 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------- link + wordmark */
+
+.np-solo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+.np-link p {
+  max-width: 560px;
+  margin: 0;
+  font: 19px/1.55 var(--np-sans);
+  color: var(--np-text);
+  text-align: center;
+  word-break: break-all;
+}
+
+.np-link-origin {
+  color: var(--np-faint);
+}
+
+/* landing.css .nav-name: 600 weight, -0.01em, "able" at 400 / 0.5 */
+.np-wordmark {
+  font: 600 76px/1 var(--np-sans);
+  letter-spacing: -0.01em;
+  color: var(--np-text);
+  white-space: nowrap;
+}
+
+.np-wordmark strong {
+  font-weight: 600;
+}
+
+.np-wordmark-muted {
+  font-weight: 400;
+  opacity: 0.5;
+}
