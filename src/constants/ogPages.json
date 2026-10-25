@@ -153,17 +153,6 @@
     "imageHeight": 630,
     "type": "article"
   },
-  "/projects/tracebench": {
-    "ogTitle": "tracebench",
-    "seoTitle": "tracebench - offline agent evals and RL tasks from traces - bicrick",
-    "description": "Replay agent traces, score tool-error rate, task success, and keep rate, and mine RL tasks from failures.",
-    "keywords": "bicrick, Patrick Brown, tracebench, trace2tasks, agent evals, RL environments, traces",
-    "imagePath": "/og/tracebench-1200x630.jpg",
-    "imageAlt": "tracebench",
-    "imageWidth": 1200,
-    "imageHeight": 630,
-    "type": "article"
-  },
   "/writing/agent-research-loops": {
     "ogTitle": "auto research loops for reinforcement learning with Grok Bot",
     "seoTitle": "auto research loops for reinforcement learning with Grok Bot - bicrick",

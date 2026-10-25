@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Build 16:9 project thumbnails (1600x900) from real project assets and output."""
 
-import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -123,81 +122,5 @@ def monocle():
     base.save(IMAGES / "monocle" / "monocle-1600x900.png", optimize=True)
 
 
-def load_traces():
-    path = ROOT / "scripts" / "data" / "tracebench-sample.jsonl"
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
-
-
-def tracebench():
-    traces = load_traces()
-    base = stipple_bg()
-    d = ImageDraw.Draw(base)
-
-    # terminal panel
-    tx, ty, tw, th = 90, 110, 640, 680
-    term = Image.new("RGB", (tw, th), TERM_BG)
-    td = ImageDraw.Draw(term)
-    for i, c in enumerate([(255, 95, 86), (255, 189, 46), (39, 201, 63)]):
-        td.ellipse((26 + i * 30, 24, 42 + i * 30, 40), fill=c)
-    mono = font(MENLO, 25)
-    small = font(MENLO, 23)
-    y = 78
-    lines = [
-        ("$ tracebench run", TERM_INK),
-        ("wrote 4 traces", TERM_MUTED),
-        ("", TERM_INK),
-        ("$ tracebench score", TERM_INK),
-        ("tool_error_rate  0.444", TERM_INK),
-        ("task_success     0.500", TERM_INK),
-        ("keep_rate        0.500", TERM_INK),
-        ("", TERM_INK),
-        ("$ tracebench cluster", TERM_INK),
-        ("2  edit:file_locked", (255, 160, 110)),
-        ("1  search:invalid_args", (255, 160, 110)),
-        ("1  read:not_found", (255, 160, 110)),
-    ]
-    for text, colour in lines:
-        td.text((32, y), text, font=mono if text.startswith("$") else small, fill=colour)
-        y += 46
-    shadowed(base, rounded(term, 12), (tx, ty))
-
-    # trace timeline
-    px, py, pw, ph = 800, 110, 710, 680
-    panel = Image.new("RGB", (pw, ph), (255, 255, 255))
-    pd = ImageDraw.Draw(panel)
-    pd.rectangle((0, 0, pw - 1, ph - 1), outline=RULE, width=2)
-    pd.text((36, 34), "traces.jsonl", font=font(ARIAL_BOLD, 30), fill=INK)
-    pd.text((36, 78), "one row per trace, one cell per tool call", font=font(ARIAL, 22), fill=MUTED)
-
-    row_y = 150
-    cell = 92
-    for t in traces:
-        task = t["task"]["id"]
-        pd.text((36, row_y), task, font=font(MENLO, 24), fill=INK)
-        x = 36
-        for s in t["steps"]:
-            colour = OK if s["ok"] else BAD
-            pd.rounded_rectangle((x, row_y + 44, x + cell, row_y + 44 + 44), radius=6, fill=colour)
-            tool = s["tool"]
-            tw_ = pd.textlength(tool, font=font(MENLO, 20))
-            pd.text((x + (cell - tw_) / 2, row_y + 54), tool, font=font(MENLO, 20), fill=(255, 255, 255))
-            x += cell + 10
-        verdict = "keep" if t["success"] and all(s["ok"] for s in t["steps"]) else ("pass, retried" if t["success"] else "fail")
-        vcol = OK if t["success"] else BAD
-        vw = pd.textlength(verdict, font=font(ARIAL_BOLD, 24))
-        pd.text((pw - 36 - vw, row_y + 54), verdict, font=font(ARIAL_BOLD, 24), fill=vcol)
-        row_y += 130
-
-    lx = 36
-    for label, colour in (("ok", OK), ("error", BAD)):
-        pd.rounded_rectangle((lx, ph - 58, lx + 22, ph - 36), radius=4, fill=colour)
-        pd.text((lx + 32, ph - 61), label, font=font(ARIAL, 22), fill=MUTED)
-        lx += 130
-    shadowed(base, panel, (px, py))
-
-    base.save(IMAGES / "tracebench" / "tracebench-1600x900.png", optimize=True)
-
-
 if __name__ == "__main__":
     monocle()
-    tracebench()
