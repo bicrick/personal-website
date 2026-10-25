@@ -66,12 +66,12 @@
     "type": "article"
   },
   "/projects/auto-research": {
-    "ogTitle": "cart-pole-autoresearch",
-    "seoTitle": "cart-pole-autoresearch - bicrick",
+    "ogTitle": "cart pole autoresearch loops",
+    "seoTitle": "cart pole autoresearch loops - bicrick",
     "description": "Agentic loops on cart-pole, from PPO to MPPI.",
     "keywords": "bicrick, Patrick Brown, auto research, grok bot, cart-pole, pendulum, PPO, MPPI, reinforcement learning",
     "imagePath": "/og/auto-research-1200x630.jpg",
-    "imageAlt": "cart-pole-autoresearch, a double pendulum on a cart",
+    "imageAlt": "cart pole autoresearch loops, a double pendulum on a cart",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"

@@ -215,7 +215,7 @@ def make_page_cards():
     )
     split_card(
         PUBLIC / "images" / "auto-research" / "cart-pole-card.png",
-        "cart-pole-autoresearch",
+        "cart pole autoresearch loops",
         "Agentic loops on cart-pole, from PPO to MPPI",
         "auto-research-1200x630.jpg",
         fit="contain",
