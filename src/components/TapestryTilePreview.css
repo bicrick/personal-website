@@ -196,10 +196,10 @@ html.is-dark .tapestry-tile-reflect.is-below {
   padding: 0;
   will-change: transform;
   animation-name: tapestry-slide;
-  animation-duration: var(--scroll-duration, 156.8s);
+  animation-duration: var(--scroll-duration, 125.9s);
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  animation-delay: calc(var(--scroll-duration, 156.8s) * var(--scroll-phase, 0.25) * -1);
+  animation-delay: calc(var(--scroll-duration, 125.9s) * var(--scroll-phase, 0.25) * -1);
 }
 
 @keyframes tapestry-slide {
@@ -223,7 +223,7 @@ html.is-dark .tapestry-tile-reflect.is-below {
   height: 100%;
   max-width: none;
   margin: 0;
-  aspect-ratio: 3675 / 400;
+  aspect-ratio: 4425 / 600;
   object-fit: fill;
   transform: none;
   image-rendering: auto;
