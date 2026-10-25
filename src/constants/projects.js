@@ -43,7 +43,7 @@ export const PROJECTS = [
     unlisted: true,
   },
   {
-    title: 'cart-pole-autoresearch',
+    title: 'cart pole autoresearch loops',
     description: 'browser-native cart-pole and pendulum controllers',
     timelineDescription:
       'Controllers for cart-pole plus double, triple, and quadruple pendulums running in the browser.',

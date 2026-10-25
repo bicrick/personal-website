@@ -106,7 +106,7 @@ gcloud storage buckets add-iam-policy-binding gs://BUCKET \\
         QWOP finished under the 45.530 record. The triple pendulum balances and recovers when you grab it. The details are in the{' '}
         <Link to="/projects/qwop-python">qwop-python</Link>
         {' '}and{' '}
-        <Link to="/projects/auto-research">cart-pole-autoresearch</Link>
+        <Link to="/projects/auto-research">cart pole autoresearch loops</Link>
         {' '}writeups.
       </p>
 

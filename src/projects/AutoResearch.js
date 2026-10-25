@@ -8,7 +8,7 @@ import FlowDiagram from '../components/project/FlowDiagram';
 function AutoResearch() {
   return (
     <ProjectDetail
-      title="cart-pole-autoresearch"
+      title="cart pole autoresearch loops"
       date="September 2026"
       linkHref="https://cart-pole-autoresearch.vercel.app/#triple"
       linkLabel="open demo"
