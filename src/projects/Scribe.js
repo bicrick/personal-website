@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import ProjectDetail from '../components/ProjectDetail';
 
 const SITE = 'https://scribe-friends.vercel.app';
@@ -43,8 +42,7 @@ function Scribe() {
       </p>
 
       <p>
-        It's friends-only while I test it, so the site asks for a password. If you want in,{' '}
-        <Link to="/contact">ask me</Link>.
+        It's friends-only while I test it, so the site asks for a password.
       </p>
     </ProjectDetail>
   );
