@@ -1,0 +1,92 @@
+/* Live iframe embed, same pattern as the infinite tapestry window */
+
+.live-embed {
+  margin: 28px 0 24px;
+}
+
+.live-embed figcaption {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.15px;
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+.live-embed figcaption a {
+  color: inherit;
+}
+
+.live-embed-box {
+  position: relative;
+  width: 100%;
+  overflow: clip;
+  container-type: inline-size;
+  background: #fff;
+  border: 1px solid var(--rule);
+}
+
+.live-embed-scaler {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: calc(var(--le-vw) * 1px);
+  height: calc(var(--le-vh) * 1px);
+  transform-origin: top left;
+  transform: scale(calc(100cqw / (var(--le-vw) * 1px)))
+    translateY(calc(var(--le-oy) * -1px));
+  pointer-events: none;
+}
+
+.live-embed-iframe {
+  display: block;
+  width: calc(var(--le-vw) * 1px);
+  height: calc(var(--le-vh) * 1px);
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Covers the frame, including on iOS where a transformed iframe can still
+   take touches unless something with a background sits above it. */
+.live-embed-hit {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+.live-embed-hit:after,
+.live-embed-hit:hover:after {
+  content: none;
+}
+
+.live-embed-hit:focus {
+  outline: none;
+}
+
+.live-embed-hit:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: -3px;
+}
+
+.live-embed-hit-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

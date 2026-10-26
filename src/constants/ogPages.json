@@ -142,6 +142,28 @@
     "imageHeight": 630,
     "type": "article"
   },
+  "/projects/da-transcribuh": {
+    "ogTitle": "da transcribuh",
+    "seoTitle": "da transcribuh - on-device voice-to-text for macOS - bicrick",
+    "description": "A free macOS menu bar app for on-device voice-to-text. Hit option-space, talk, and the text pastes wherever you're typing.",
+    "keywords": "bicrick, Patrick Brown, da transcribuh, dictation, voice to text, macOS, WhisperKit, coding agents",
+    "imagePath": "/og/da-transcribuh-1200x630.jpg",
+    "imageAlt": "da transcribuh",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
+  "/projects/scribe": {
+    "ogTitle": "scribe",
+    "seoTitle": "scribe - AI that writes by hand - bicrick",
+    "description": "Ask for anything and scribe writes it by hand, stroke by stroke, while you watch.",
+    "keywords": "bicrick, Patrick Brown, scribe, handwriting, AI, pen, generative",
+    "imagePath": "/og/scribe-1200x630.jpg",
+    "imageAlt": "scribe",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
   "/projects/monocle": {
     "ogTitle": "monocle",
     "seoTitle": "monocle - restyle the live tab with Cursor CLI - bicrick",
