@@ -16,6 +16,8 @@ import Monocle from './projects/Monocle';
 import ContextShaping from './projects/ContextShaping';
 import AgentResearchLoops from './projects/AgentResearchLoops';
 import InfiniteTapestry from './projects/InfiniteTapestry';
+import DaTranscribuh from './projects/DaTranscribuh';
+import Scribe from './projects/Scribe';
 import SiteLayout from './components/SiteLayout';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
@@ -40,6 +42,8 @@ function App() {
         <Route path="/projects/auto-research" element={<AutoResearch />} />
         <Route path="/projects/monocle" element={<Monocle />} />
         <Route path="/projects/infinite-tapestry" element={<InfiniteTapestry />} />
+        <Route path="/projects/da-transcribuh" element={<DaTranscribuh />} />
+        <Route path="/projects/scribe" element={<Scribe />} />
         <Route path="/projects/infinite-tapestry/thumbs" element={<Navigate to="/projects/infinite-tapestry" replace />} />
         <Route path="/projects/harness-bench" element={<ContextShaping />} />
         <Route path="/projects/context-shaping" element={<Navigate to="/projects/harness-bench" replace />} />

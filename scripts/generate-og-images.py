@@ -275,6 +275,20 @@ def make_project_cards():
         "monocle-1200x630.jpg",
         fit="contain",
     )
+    split_card(
+        PUBLIC / "images" / "da-transcribuh" / "da-transcribuh-still.jpg",
+        "da transcribuh",
+        "on-device voice-to-text for your mac",
+        "da-transcribuh-1200x630.jpg",
+        fit="contain",
+        bg=(255, 255, 255),
+    )
+    split_card(
+        PUBLIC / "images" / "scribe" / "scribe-card-poster.jpg",
+        "scribe",
+        "ai that writes it out by hand",
+        "scribe-1200x630.jpg",
+    )
     # harness-bench card: public/og/harness-bench-v2-1200x630.png (Playwright render of the post header)
 
 
