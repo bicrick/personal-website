@@ -1,0 +1,15 @@
+# bicrick
+
+> Patrick Brown — Data Platform Engineer. Agents, RL environments, shipped tools.
+
+## Profile
+
+- [Patrick Brown](https://www.bicrick.com/patrick.md): agent-readable profile (facts, rules, sources)
+
+## Site
+
+- [Home](https://www.bicrick.com/)
+- [Projects](https://www.bicrick.com/projects)
+- [Career](https://www.bicrick.com/career)
+- [About](https://www.bicrick.com/about)
+- [Résumé PDF](https://resume.bicrick.com/resume.pdf)
