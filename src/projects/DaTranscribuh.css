@@ -1,45 +1,38 @@
 /* da transcribuh article — quiet theme-aware visuals (html.is-dark).
    InkTheme + ClipboardHistoryView: mono 12 rows/header/footer, mono 10 shortcuts,
    rowHeight 22, preferred width ~450 scaled down.
-   Feature walk is centered so visuals don't hug the left edge. */
+   Copy left-aligned like other project posts; visuals centered in the column. */
 
 .dt-article {
-  text-align: center;
+  text-align: left;
 }
 
 .dt-intro,
 .dt-links {
-  max-width: 32rem;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+  text-align: left;
 }
 
 .dt-feature {
-  margin: 2.1rem auto 2.4rem;
-  max-width: 34rem;
-  text-align: center;
+  margin: 0 0 0.4rem;
+  text-align: left;
 }
 
+/* Match ProjectDetail '/ section' h2 rhythm; first feature sits under links. */
 .dt-feature h2 {
-  margin: 0 0 0.55rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: lowercase;
-  color: inherit;
-  opacity: 0.72;
+  margin: 40px 0 12px;
+}
+
+.dt-feature:first-of-type h2 {
+  margin-top: 28px;
 }
 
 .dt-feature > p {
-  max-width: 28rem;
-  margin: 0 auto 0.85rem;
-  text-align: center;
-  line-height: 1.45;
+  margin: 0 0 20px;
+  text-align: left;
 }
 
 .dt-visual {
-  margin: 0.85rem auto 0.2rem;
+  margin: 0 auto 0.4rem;
   max-width: 28rem;
   display: flex;
   flex-direction: column;

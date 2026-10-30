@@ -255,13 +255,13 @@ function DaTranscribuh() {
         </p>
 
         <section className="dt-feature">
-          <h2>on-device</h2>
+          <h2>/ on-device</h2>
           <p>i made speech-to-text that runs on-device using parakeet.</p>
           <ThemePill />
         </section>
 
         <section className="dt-feature">
-          <h2>screenshots</h2>
+          <h2>/ screenshots</h2>
           <p>
             another quality-of-life change i made is context-aware screenshots. you can
             talk while you take screenshots, and it pairs your notes with each screenshot
@@ -271,7 +271,7 @@ function DaTranscribuh() {
         </section>
 
         <section className="dt-feature">
-          <h2>clipboard</h2>
+          <h2>/ clipboard</h2>
           <p>
             all of this needs a good clipboard history tool, so i built one in too. ⌘⇧C
             opens history by your pointer.
