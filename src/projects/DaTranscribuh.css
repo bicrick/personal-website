@@ -1,10 +1,49 @@
 /* da transcribuh article — quiet theme-aware visuals (html.is-dark).
    InkTheme + ClipboardHistoryView: mono 12 rows/header/footer, mono 10 shortcuts,
-   rowHeight 22, preferred width ~450 scaled down. */
+   rowHeight 22, preferred width ~450 scaled down.
+   Feature walk is centered so visuals don't hug the left edge. */
+
+.dt-article {
+  text-align: center;
+}
+
+.dt-intro,
+.dt-links {
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.dt-feature {
+  margin: 2.1rem auto 2.4rem;
+  max-width: 34rem;
+  text-align: center;
+}
+
+.dt-feature h2 {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: inherit;
+  opacity: 0.72;
+}
+
+.dt-feature > p {
+  max-width: 28rem;
+  margin: 0 auto 0.85rem;
+  text-align: center;
+  line-height: 1.45;
+}
 
 .dt-visual {
-  margin: 0.75rem 0 0.35rem;
+  margin: 0.85rem auto 0.2rem;
   max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* theme swap helpers (videos + grab imgs) */
@@ -28,6 +67,7 @@ html.is-dark .dt-theme-dark {
 
 .dt-pill-loop {
   max-width: 26rem;
+  width: 100%;
   line-height: 0;
 }
 
@@ -151,18 +191,23 @@ html.is-dark .dt-capture-clock {
 .dt-merge-stage {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.55rem;
+  width: 100%;
 }
 
 .dt-merge-during {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.45rem;
+  width: 100%;
 }
 
 .dt-merge-grabs {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: flex-start;
   gap: 0.4rem 0.5rem;
 }
@@ -248,6 +293,7 @@ html.is-dark .dt-merge-chip-frame .dt-theme-dark {
 .dt-merge-cue {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
   color: #666;
   font-size: 11px;
@@ -270,11 +316,14 @@ html.is-dark .dt-merge-cue {
 }
 
 .dt-merge-paste {
+  width: 100%;
+  max-width: 22rem;
   border: 2px solid #000;
   box-shadow: 3px 3px 0 #000;
   background: #fff;
   color: #000;
   overflow: hidden;
+  text-align: left; /* mock content stays readable */
 }
 
 html.is-dark .dt-merge-paste {
@@ -435,6 +484,7 @@ html.is-dark .dt-merge-thumb {
 
 .dt-clip {
   max-width: 22.5rem; /* ~360 of Swift's 450 */
+  width: 100%;
 }
 
 .dt-clip-panel {
@@ -449,6 +499,7 @@ html.is-dark .dt-merge-thumb {
   font-size: 12px;
   line-height: 1.2;
   -webkit-font-smoothing: antialiased;
+  text-align: left; /* history rows stay left like the real panel */
 }
 
 html.is-dark .dt-clip-panel {
@@ -586,6 +637,22 @@ html.is-dark .dt-clip-footer {
 }
 
 @media (max-width: 600px) {
+  .dt-visual {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .dt-feature {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .dt-feature > p {
+    max-width: 100%;
+  }
+
   .dt-visual {
     max-width: 100%;
   }

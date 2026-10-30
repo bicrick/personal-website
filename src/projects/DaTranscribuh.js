@@ -234,36 +234,51 @@ function DaTranscribuh() {
       tertiaryLinkHref={DOWNLOAD}
       tertiaryLinkLabel="download"
     >
-      <p>
-        free and MIT. Apple Silicon and Intel, macOS 14+. transcription runs on-device
-        with Parakeet v2.
-      </p>
+      <div className="dt-article">
+        <p className="dt-intro">
+          free and MIT. Apple Silicon and Intel, macOS 14+. transcription runs on-device
+          with Parakeet v2.
+        </p>
 
-      <p>
-        <a href={SITE} target="_blank" rel="noopener noreferrer">
-          try da transcribuh
-        </a>
-        {' | '}
-        <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer">
-          download for mac
-        </a>
-        {' | '}
-        <a href={REPO} target="_blank" rel="noopener noreferrer">
-          source on github
-        </a>
-      </p>
+        <p className="dt-links">
+          <a href={SITE} target="_blank" rel="noopener noreferrer">
+            try da transcribuh
+          </a>
+          {' | '}
+          <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer">
+            download for mac
+          </a>
+          {' | '}
+          <a href={REPO} target="_blank" rel="noopener noreferrer">
+            source on github
+          </a>
+        </p>
 
-      <h2>/ on-device</h2>
-      <ThemePill />
-      <p>parakeet v2 runs on your mac. private, fast, no cloud.</p>
+        <section className="dt-feature">
+          <h2>on-device</h2>
+          <p>i made speech-to-text that runs on-device using parakeet.</p>
+          <ThemePill />
+        </section>
 
-      <h2>/ screenshots</h2>
-      <CaptureVisual />
-      <p>grab while you talk. each pic drops into the words. one paste, pics and text in order.</p>
+        <section className="dt-feature">
+          <h2>screenshots</h2>
+          <p>
+            another quality-of-life change i made is context-aware screenshots. you can
+            talk while you take screenshots, and it pairs your notes with each screenshot
+            so you can make multiple edits in one paste.
+          </p>
+          <CaptureVisual />
+        </section>
 
-      <h2>/ clipboard</h2>
-      <ClipboardVisual />
-      <p>⌘⇧C opens history by your pointer. pin the ones you keep.</p>
+        <section className="dt-feature">
+          <h2>clipboard</h2>
+          <p>
+            all of this needs a good clipboard history tool, so i built one in too. ⌘⇧C
+            opens history by your pointer.
+          </p>
+          <ClipboardVisual />
+        </section>
+      </div>
     </ProjectDetail>
   );
 }
