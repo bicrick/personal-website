@@ -1,18 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import RecordingIsland from './RecordingIsland';
 import SidePanel from './SidePanel';
+import MockShop, { GrabThumb } from './MockShop';
 import useReducedMotion from '../useReducedMotion';
 import { formatClock, waveformLevels } from './ink';
-import { SENTENCES, CAPTURE_SWATCHES } from './samples';
+import { DICTATE_SENTENCES, GRAB_TARGETS, HINTS } from './samples';
 import './datranscribuh.css';
 
-const TYPE_MS = 28; // ~ per character when reduced-motion off
+const TYPE_MS = 28;
+
 function Collage({ items }) {
   if (!items.length) return null;
   return (
     <span className="dtd-collage" aria-hidden="true">
       {items.map((c) => (
-        <span key={c.id} className="dtd-collage-tile" style={{ background: c.fill }} title={c.label} />
+        <GrabThumb key={c.id} id={c.targetId} />
       ))}
     </span>
   );
@@ -31,15 +33,14 @@ function RaceTrack({ running, reduced, onDone }) {
       return undefined;
     }
     if (reduced) {
-      setTypePct(27); // ~40/150 of a full lap visual
+      setTypePct(27);
       setTalkPct(100);
       if (!done.current) {
         done.current = true;
-        // Keep the finished race on screen; parent clears via mode change.
+        onDone?.();
       }
       return undefined;
     }
-    // ~40 wpm vs ~150 wpm → talk finishes ~3.75× sooner. Animate over ~3.2s talk / ~12s type.
     const talkMs = 3200;
     const typeMs = 12000;
     const t0 = performance.now();
@@ -78,19 +79,32 @@ function RaceTrack({ running, reduced, onDone }) {
   );
 }
 
+function rectToMarquee(pageEl, targetEl) {
+  const page = pageEl.getBoundingClientRect();
+  const t = targetEl.getBoundingClientRect();
+  const pad = 4;
+  return {
+    x: ((t.left - page.left - pad) / page.width) * 100,
+    y: ((t.top - page.top - pad) / page.height) * 100,
+    w: ((t.width + pad * 2) / page.width) * 100,
+    h: ((t.height + pad * 2) / page.height) * 100,
+  };
+}
+
 /**
- * Interactive da transcribuh demo — Monocle-shaped stage with the real
- * recording pill chrome (Ink / IslandMetrics classic).
+ * Interactive da transcribuh demo — Monocle-shaped stage with Ink island chrome.
  */
 export default function DaTranscribuhDemo() {
   const reduced = useReducedMotion();
   const wrapRef = useRef(null);
-  const fieldRef = useRef(null);
+  const pageRef = useRef(null);
+  const shopRef = useRef(null);
   const autoplayed = useRef(false);
-  const sentenceIdx = useRef(0);
+  const dictateIdx = useRef(0);
+  const grabIdx = useRef(0);
   const holdStarted = useRef(0);
+  const pauseBegan = useRef(null);
   const typeTimer = useRef(null);
-  const elapsedTimer = useRef(null);
 
   const [inView, setInView] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -103,7 +117,7 @@ export default function DaTranscribuhDemo() {
   const [fieldText, setFieldText] = useState('');
   const [pastedCollage, setPastedCollage] = useState([]);
   const [marquee, setMarquee] = useState(null);
-  const [drag, setDrag] = useState(null);
+  const [activeGrabId, setActiveGrabId] = useState(null);
   const [status, setStatus] = useState('idle');
   const [raceOn, setRaceOn] = useState(false);
   const [waveTick, setWaveTick] = useState(0);
@@ -112,12 +126,13 @@ export default function DaTranscribuhDemo() {
   const busyRef = useRef(false);
   const modeRef = useRef(mode);
   const captureItemsRef = useRef(captureItems);
+  const fieldTextRef = useRef('');
   useEffect(() => { holdingRef.current = holding; }, [holding]);
   useEffect(() => { busyRef.current = busy; }, [busy]);
   useEffect(() => { modeRef.current = mode; }, [mode]);
   useEffect(() => { captureItemsRef.current = captureItems; }, [captureItems]);
+  useEffect(() => { fieldTextRef.current = fieldText; }, [fieldText]);
 
-  // IntersectionObserver — pause off-screen, autoplay once after ~900ms
   useEffect(() => {
     const el = wrapRef.current;
     if (!el || typeof IntersectionObserver === 'undefined') {
@@ -131,18 +146,31 @@ export default function DaTranscribuhDemo() {
     return () => io.disconnect();
   }, []);
 
-  // Waveform tick while holding + in view
+  // Pause elapsed clock while off-screen
   useEffect(() => {
-    if (!holding || !inView || reduced) return undefined;
+    if (holding && !inView) {
+      if (pauseBegan.current == null) pauseBegan.current = performance.now();
+      return undefined;
+    }
+    if (holding && inView && pauseBegan.current != null) {
+      holdStarted.current += performance.now() - pauseBegan.current;
+      pauseBegan.current = null;
+    }
+    return undefined;
+  }, [holding, inView]);
+
+  // Live elapsed (TimeFormat.clock) + waveform while holding + in view
+  useEffect(() => {
+    if (!holding || !inView) return undefined;
     let raf = 0;
-    const t0 = performance.now();
     const loop = (now) => {
-      setWaveTick((now - t0) / 1000);
+      setElapsed((now - holdStarted.current) / 1000);
+      setWaveTick((now - holdStarted.current) / 1000);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [holding, inView, reduced]);
+  }, [holding, inView]);
 
   const clearType = () => {
     if (typeTimer.current) {
@@ -151,11 +179,6 @@ export default function DaTranscribuhDemo() {
     }
   };
 
-  const fieldTextRef = useRef('');
-  useEffect(() => {
-    fieldTextRef.current = fieldText;
-  }, [fieldText]);
-
   const typeIntoField = useCallback(
     (sentence, collage = []) => {
       clearType();
@@ -163,9 +186,7 @@ export default function DaTranscribuhDemo() {
       setBusy(true);
       setStatus('pasting');
       setPastedCollage(collage);
-      const base = fieldTextRef.current
-        ? `${fieldTextRef.current}\n`
-        : '';
+      const base = fieldTextRef.current ? `${fieldTextRef.current}\n` : '';
       if (reduced) {
         const next = base + sentence;
         fieldTextRef.current = next;
@@ -198,12 +219,7 @@ export default function DaTranscribuhDemo() {
     if (!holdingRef.current) return;
     holdingRef.current = false;
     setHolding(false);
-    if (elapsedTimer.current) {
-      clearInterval(elapsedTimer.current);
-      elapsedTimer.current = null;
-    }
-    const sentence = SENTENCES[sentenceIdx.current % SENTENCES.length];
-    sentenceIdx.current += 1;
+    pauseBegan.current = null;
 
     if (modeRef.current === 'race') {
       setRaceOn(true);
@@ -214,14 +230,23 @@ export default function DaTranscribuhDemo() {
       setCaptures(0);
       setCaptureItems([]);
       setMarquee(null);
+      setActiveGrabId(null);
       return;
     }
 
     const collage = captureItemsRef.current.slice();
+    let sentence;
+    if (collage.length) {
+      sentence = collage.map((c) => c.prompt).join('; ');
+    } else {
+      sentence = DICTATE_SENTENCES[dictateIdx.current % DICTATE_SENTENCES.length];
+      dictateIdx.current += 1;
+    }
     setElapsed(0);
     setCaptures(0);
     setCaptureItems([]);
     setMarquee(null);
+    setActiveGrabId(null);
     typeIntoField(sentence, collage);
   }, [typeIntoField]);
 
@@ -230,21 +255,19 @@ export default function DaTranscribuhDemo() {
     holdingRef.current = true;
     setHolding(true);
     holdStarted.current = performance.now();
+    pauseBegan.current = null;
     setStatus('recording');
     setElapsed(0);
+    setWaveTick(0);
     if (modeRef.current !== 'race') {
       setCaptures(0);
       setCaptureItems([]);
       setMarquee(null);
+      setActiveGrabId(null);
       setPastedCollage([]);
     }
-    if (elapsedTimer.current) clearInterval(elapsedTimer.current);
-    elapsedTimer.current = setInterval(() => {
-      setElapsed((e) => e + 1);
-    }, 1000);
   }, []);
 
-  // Spacebar hold when focused
   useEffect(() => {
     const onKeyDown = (e) => {
       if (!focused) return;
@@ -270,77 +293,112 @@ export default function DaTranscribuhDemo() {
 
   const startHoldRef = useRef(startHold);
   const endHoldRef = useRef(endHold);
+  const commitGrabRef = useRef(null);
   startHoldRef.current = startHold;
   endHoldRef.current = endHold;
 
-  // Autoplay one canned run after ~900ms once in view
+  const commitGrab = useCallback(() => {
+    if (!holdingRef.current) return;
+    const pageEl = pageRef.current;
+    if (!pageEl) return;
+    const target = GRAB_TARGETS[grabIdx.current % GRAB_TARGETS.length];
+    grabIdx.current += 1;
+    const el = pageEl.querySelector(`[data-grab="${target.id}"]`);
+    if (el) {
+      setMarquee(rectToMarquee(pageEl, el));
+      setActiveGrabId(target.id);
+    }
+    const next = {
+      id: `${target.id}-${captureItemsRef.current.length}`,
+      targetId: target.id,
+      prompt: target.prompt,
+    };
+    const items = [...captureItemsRef.current, next];
+    captureItemsRef.current = items;
+    setCaptures(items.length);
+    setCaptureItems(items);
+  }, []);
+  commitGrabRef.current = commitGrab;
+
+  // Autoplay: hold → grab order button → paste
   useEffect(() => {
     if (!inView || autoplayed.current || reduced) return undefined;
     autoplayed.current = true;
     const timers = [];
     timers.push(
       window.setTimeout(() => {
+        // Force first grab to be the order button
+        grabIdx.current = 0;
         startHoldRef.current();
         timers.push(
           window.setTimeout(() => {
-            setCaptures(1);
-            setCaptureItems([CAPTURE_SWATCHES[0]]);
-            setMarquee({ x: 18, y: 22, w: 42, h: 28 });
+            commitGrabRef.current();
             timers.push(
               window.setTimeout(() => {
                 endHoldRef.current();
-              }, 700)
+              }, 900)
             );
-          }, 900)
+          }, 1100)
         );
       }, 900)
     );
     return () => timers.forEach((id) => window.clearTimeout(id));
   }, [inView, reduced]);
 
-  // Marquee drag on mock page (shift-drag or capture mode while holding)
+  // Shift-drag: snap to nearest grab target on release
+  const dragRef = useRef(null);
   const onPointerDownPage = (e) => {
     if (!holding) return;
     if (mode !== 'capture' && !e.shiftKey) return;
+    // Prefer clicking a grab target directly
+    const hit = e.target.closest?.('[data-grab]');
+    if (hit && pageRef.current) {
+      const id = hit.getAttribute('data-grab');
+      const target = GRAB_TARGETS.find((t) => t.id === id) || GRAB_TARGETS[0];
+      // Align cycle so next button-grab continues after this
+      const idx = GRAB_TARGETS.findIndex((t) => t.id === id);
+      if (idx >= 0) grabIdx.current = idx + 1;
+      setMarquee(rectToMarquee(pageRef.current, hit));
+      setActiveGrabId(id);
+      const next = {
+        id: `${target.id}-${captureItemsRef.current.length}`,
+        targetId: target.id,
+        prompt: target.prompt,
+      };
+      const items = [...captureItemsRef.current, next];
+      captureItemsRef.current = items;
+      setCaptures(items.length);
+      setCaptureItems(items);
+      return;
+    }
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setDrag({ ox: x, oy: y, x, y, w: 0, h: 0 });
-    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = { ox: x, oy: y };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {
+      /* ignore */
+    }
   };
 
   const onPointerMovePage = (e) => {
-    if (!drag) return;
+    if (!dragRef.current || !pageRef.current) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-    const left = Math.min(drag.ox, x);
-    const top = Math.min(drag.oy, y);
-    const w = Math.abs(x - drag.ox);
-    const h = Math.abs(y - drag.oy);
-    setDrag({ ...drag, x: left, y: top, w, h });
+    const left = Math.min(dragRef.current.ox, x);
+    const top = Math.min(dragRef.current.oy, y);
+    const w = Math.abs(x - dragRef.current.ox);
+    const h = Math.abs(y - dragRef.current.oy);
     setMarquee({ x: left, y: top, w, h });
   };
 
-  const commitGrab = useCallback(() => {
-    const count = captureItemsRef.current.length;
-    const next = {
-      ...CAPTURE_SWATCHES[count % CAPTURE_SWATCHES.length],
-      id: `${CAPTURE_SWATCHES[count % CAPTURE_SWATCHES.length].id}-${count}`,
-    };
-    const items = [...captureItemsRef.current, next];
-    captureItemsRef.current = items;
-    setCaptures(items.length);
-    setCaptureItems(items);
-    setMarquee((m) => m || { x: 12 + count * 8, y: 18 + count * 6, w: 36, h: 24 });
-  }, []);
-
   const onPointerUpPage = () => {
-    if (!drag) return;
-    if (drag.w > 4 && drag.h > 4) {
-      commitGrab();
-    }
-    setDrag(null);
+    if (!dragRef.current) return;
+    dragRef.current = null;
+    // Snap to next grab target (button cycles real elements)
+    commitGrab();
   };
 
   const onMode = (id) => {
@@ -351,6 +409,7 @@ export default function DaTranscribuhDemo() {
   };
 
   const levels = holding ? waveformLevels(reduced ? 0.35 : waveTick) : null;
+  const clockLabel = formatClock(elapsed);
 
   return (
     <figure className="dtd" ref={wrapRef}>
@@ -362,7 +421,7 @@ export default function DaTranscribuhDemo() {
               <i />
               <i />
             </span>
-            <span className="dtd-url">Notes — untitled</span>
+            <span className="dtd-url">bakery.shop</span>
             <span className={`dtd-badge${holding ? ' is-on' : ''}`}>
               {holding ? 'recording' : 'idle'}
             </span>
@@ -372,56 +431,50 @@ export default function DaTranscribuhDemo() {
             className={`dtd-viewport${focused ? ' is-focused' : ''}`}
             tabIndex={0}
             role="application"
-            aria-label="Mock editor. Hold space to dictate, or use the hold button."
+            aria-label="Mock bakery page. Hold space to dictate, or use the hold button."
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
           >
             <div
               className="dtd-page"
+              ref={pageRef}
               onPointerDown={onPointerDownPage}
               onPointerMove={onPointerMovePage}
               onPointerUp={onPointerUpPage}
-              onPointerCancel={() => setDrag(null)}
+              onPointerCancel={() => {
+                dragRef.current = null;
+              }}
             >
-              <div className="dtd-page-gutter" aria-hidden="true">
-                <span>12</span>
-                <span>13</span>
-                <span>14</span>
-                <span>15</span>
-              </div>
-              <div className="dtd-page-body">
-                <p className="dtd-page-stub">
-                  {'// agent session — drop a prompt below'}
-                </p>
-                <div className="dtd-field-wrap">
-                  {pastedCollage.length ? <Collage items={pastedCollage} /> : null}
-                  <div className="dtd-field" ref={fieldRef}>
-                    {fieldText || (
-                      <span className="dtd-placeholder">
-                        hold to talk — text lands here
-                      </span>
-                    )}
-                    {busy && status === 'pasting' ? (
-                      <span className="dtd-caret" aria-hidden="true" />
-                    ) : null}
-                  </div>
-                </div>
+              <div className="dtd-page-main">
+                <MockShop ref={shopRef} activeGrabId={activeGrabId} />
 
-                {mode === 'race' && (raceOn || holding) ? (
-                  <RaceTrack
-                    running={raceOn || holding}
-                    reduced={reduced}
-                    onDone={() => {
-                      busyRef.current = false;
-                      holdingRef.current = false;
-                      setBusy(false);
-                      setHolding(false);
-                      setStatus('idle');
-                      setElapsed(0);
-                      // Keep raceOn so the finished bars stay visible until mode change.
-                    }}
-                  />
-                ) : null}
+                <div className="dtd-notes">
+                  <div className="dtd-notes-label">agent</div>
+                  <div className="dtd-field-wrap">
+                    {pastedCollage.length ? <Collage items={pastedCollage} /> : null}
+                    <div className="dtd-field">
+                      {fieldText || (
+                        <span className="dtd-placeholder">text lands here</span>
+                      )}
+                      {busy && status === 'pasting' ? (
+                        <span className="dtd-caret" aria-hidden="true" />
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {mode === 'race' && raceOn ? (
+                    <RaceTrack
+                      running={raceOn}
+                      reduced={reduced}
+                      onDone={() => {
+                        busyRef.current = false;
+                        setBusy(false);
+                        setStatus('idle');
+                        setElapsed(0);
+                      }}
+                    />
+                  ) : null}
+                </div>
               </div>
 
               {marquee && holding ? (
@@ -452,15 +505,15 @@ export default function DaTranscribuhDemo() {
           <div className="dtd-status">
             <span>mode: {mode}</span>
             <span>captures: {captures}</span>
-            <span>clock: {formatClock(elapsed)}</span>
+            <span>clock: {clockLabel}</span>
             <span className="dtd-status-hint">
               {focused
                 ? holding
                   ? mode === 'capture'
-                    ? 'shift-drag or grab to capture'
+                    ? 'grab a target'
                     : 'release to paste'
                   : 'space to hold'
-                : 'click the page, then hold space'}
+                : 'click, then hold space'}
             </span>
           </div>
         </div>
@@ -471,18 +524,17 @@ export default function DaTranscribuhDemo() {
           holding={holding}
           busy={busy}
           captures={captures}
-          elapsed={formatClock(elapsed)}
+          elapsed={clockLabel}
           status={status}
+          hint={HINTS[mode] || HINTS.dictate}
           onHoldStart={startHold}
           onHoldEnd={endHold}
           onGrab={commitGrab}
-          canGrab={holding && mode === 'capture'}
+          canGrab={holding && (mode === 'capture' || mode === 'dictate')}
         />
       </div>
       <figcaption>
-        Canned runs — the real app transcribes on-device with Parakeet v2. Hold
-        space (or the button) for the pill; grab a region while holding to bump
-        the capture chip, then release for one paste.
+        canned runs. the real app transcribes on-device with parakeet v2.
       </figcaption>
     </figure>
   );

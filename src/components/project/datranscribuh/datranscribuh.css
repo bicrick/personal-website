@@ -131,40 +131,168 @@ html.is-dark .dtd {
 .dtd-page {
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  background: var(--dtd-front);
+  background: var(--dtd-fill);
   color: var(--dtd-label);
   font-family: var(--dtd-mono);
   font-size: 13px;
   line-height: 1.45;
   user-select: none;
   touch-action: none;
-}
-
-.dtd-page-gutter {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 6px;
-  border-right: 1px solid var(--dtd-hairline);
-  color: var(--dtd-secondary);
-  font-size: 11px;
-  text-align: right;
-  background: var(--dtd-fill);
-}
-
-.dtd-page-body {
-  position: relative;
-  padding: 14px 14px 56px;
   overflow: hidden;
+}
+
+.dtd-page-main {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+  gap: 0;
+  padding: 0 0 56px;
   min-width: 0;
 }
 
-.dtd-page-stub {
-  margin: 0 0 12px;
-  color: var(--dtd-secondary);
+/* ---- bakery.shop mock ---- */
+
+.dtd-shop {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 14px;
+  background: var(--dtd-front);
+  border-right: 1px solid var(--dtd-hairline);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.dtd-shop-nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--dtd-hairline);
+}
+
+.dtd-shop-logo {
   font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--dtd-label);
+}
+
+.dtd-shop-nav-links {
+  font-size: 10px;
+  color: var(--dtd-secondary);
+}
+
+.dtd-shop-hero {
+  padding: 10px 10px 12px;
+  border: var(--dtd-stroke) solid var(--dtd-label);
+  border-radius: var(--dtd-radius);
+  background: color-mix(in srgb, #f6e8d4 70%, var(--dtd-front));
+  box-shadow: var(--dtd-bevel-off) var(--dtd-bevel-off) 0 var(--dtd-bevel);
+}
+
+html.is-dark .dtd-shop-hero {
+  background: color-mix(in srgb, #5a4632 55%, var(--dtd-front));
+}
+
+.dtd-shop-eyebrow {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dtd-secondary);
+  margin-bottom: 4px;
+}
+
+.dtd-shop-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--dtd-label);
+}
+
+.dtd-shop-tag {
+  margin: 0;
+  font-size: 11px;
+  color: var(--dtd-secondary);
+}
+
+.dtd-shop-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.dtd-shop-price {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 10px;
+  border: var(--dtd-stroke) solid var(--dtd-label);
+  border-radius: var(--dtd-radius);
+  background: var(--dtd-front);
+  box-shadow: var(--dtd-bevel-off) var(--dtd-bevel-off) 0 var(--dtd-bevel);
+  min-width: 0;
+}
+
+.dtd-shop-price-label {
+  font-size: 9px;
+  color: var(--dtd-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dtd-shop-price-amt {
+  font-size: 18px;
+  letter-spacing: -0.03em;
+  color: var(--dtd-label);
+  line-height: 1;
+}
+
+.dtd-shop-order {
+  appearance: none;
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  font-family: var(--dtd-mono);
+  font-size: 12px;
+  color: var(--dtd-front);
+  background: var(--dtd-label);
+  border: var(--dtd-stroke) solid var(--dtd-label);
+  border-radius: var(--dtd-radius);
+  box-shadow: var(--dtd-bevel-off) var(--dtd-bevel-off) 0 var(--dtd-bevel);
+  cursor: default;
+  white-space: nowrap;
+}
+
+.dtd-shop-hero.is-grabbed,
+.dtd-shop-price.is-grabbed,
+.dtd-shop-order.is-grabbed {
+  outline: 2px solid var(--dtd-record);
+  outline-offset: 2px;
+}
+
+/* ---- agent notes pane ---- */
+
+.dtd-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 14px;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--dtd-fill);
+}
+
+.dtd-notes-label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dtd-secondary);
 }
 
 .dtd-field-wrap {
@@ -172,13 +300,18 @@ html.is-dark .dtd {
   flex-direction: column;
   gap: 8px;
   min-height: 88px;
+  padding: 10px;
+  background: var(--dtd-front);
+  border: 1px solid var(--dtd-hairline);
+  border-radius: var(--dtd-radius);
 }
 
 .dtd-field {
-  min-height: 72px;
+  min-height: 56px;
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--dtd-label);
+  font-size: 12px;
 }
 
 .dtd-placeholder {
@@ -203,7 +336,7 @@ html.is-dark .dtd {
   .dtd-caret { animation: none; }
 }
 
-/* ---- collage (one-paste thumbnails) ---- */
+/* ---- collage (one-paste thumbnails of grabs) ---- */
 
 .dtd-collage {
   display: inline-flex;
@@ -214,13 +347,70 @@ html.is-dark .dtd {
   background: var(--dtd-front);
   box-shadow: var(--dtd-bevel-off) var(--dtd-bevel-off) 0 var(--dtd-bevel);
   width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
 }
 
-.dtd-collage-tile {
-  width: 36px;
-  height: 28px;
+.dtd-thumb {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
   border: 1px solid var(--dtd-label);
   border-radius: 1px;
+  overflow: hidden;
+  font-family: var(--dtd-mono);
+  line-height: 1.15;
+}
+
+.dtd-thumb-order {
+  padding: 6px 8px;
+  background: var(--dtd-label);
+  color: var(--dtd-front);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.dtd-thumb-price {
+  padding: 4px 7px;
+  background: var(--dtd-front);
+  color: var(--dtd-label);
+  gap: 1px;
+  min-width: 42px;
+}
+
+.dtd-thumb-price-label {
+  font-size: 7px;
+  color: var(--dtd-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dtd-thumb-price-amt {
+  font-size: 11px;
+  letter-spacing: -0.02em;
+}
+
+.dtd-thumb-hero {
+  padding: 5px 7px;
+  min-width: 72px;
+  background: color-mix(in srgb, #f6e8d4 70%, var(--dtd-front));
+  color: var(--dtd-label);
+  gap: 2px;
+}
+
+html.is-dark .dtd-thumb-hero {
+  background: color-mix(in srgb, #5a4632 55%, var(--dtd-front));
+}
+
+.dtd-thumb-hero-title {
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.dtd-thumb-hero-tag {
+  font-size: 7px;
+  color: var(--dtd-secondary);
 }
 
 /* ---- marquee ---- */
@@ -453,9 +643,10 @@ html.is-dark .dtd {
 
 .dtd-hint {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.3;
   color: var(--ink-muted);
+  text-transform: lowercase;
 }
 
 .dtd-controls {
@@ -587,7 +778,17 @@ html.is-dark .dtd {
   }
 
   .dtd-viewport {
-    aspect-ratio: 5 / 4.6;
+    aspect-ratio: 5 / 5.2;
+  }
+
+  .dtd-page-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .dtd-shop {
+    border-right: 0;
+    border-bottom: 1px solid var(--dtd-hairline);
   }
 
   .dtd-status-hint {

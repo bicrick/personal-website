@@ -8,6 +8,7 @@ export default function SidePanel({
   captures,
   elapsed,
   status,
+  hint,
   onHoldStart,
   onHoldEnd,
   onGrab,
@@ -45,22 +46,7 @@ export default function SidePanel({
       </div>
 
       <div className="dtd-panel-body">
-        {mode === 'race' ? (
-          <p className="dtd-hint">
-            Typing sits around 40 wpm. Talking lands nearer 150. Press hold to
-            watch a short race — no mic, just the canned pace.
-          </p>
-        ) : mode === 'capture' ? (
-          <p className="dtd-hint">
-            Hold to record, then grab a region of the mock page. Release and the
-            collage + text land together — one paste.
-          </p>
-        ) : (
-          <p className="dtd-hint">
-            Hold space (when the demo is focused) or the button below. Release
-            and a canned sentence types itself into the field.
-          </p>
-        )}
+        {hint ? <p className="dtd-hint">{hint}</p> : null}
 
         <div className="dtd-controls">
           <button
@@ -73,7 +59,7 @@ export default function SidePanel({
               try {
                 e.currentTarget.setPointerCapture(e.pointerId);
               } catch (_) {
-                /* synthetic events (tests / screenshots) may lack a real pointerId */
+                /* synthetic events may lack a real pointerId */
               }
             }}
             onPointerUp={(e) => {
@@ -94,7 +80,7 @@ export default function SidePanel({
               disabled={!canGrab}
               onClick={onGrab}
             >
-              grab region
+              grab
             </button>
           ) : null}
         </div>
