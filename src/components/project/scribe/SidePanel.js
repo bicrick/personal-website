@@ -1,69 +1,62 @@
 import React, { useState } from 'react';
 import { HANDS } from './scenarios';
 
-function Steps({ run, scenario }) {
-  if (!run || !scenario) return null;
-  return (
-    <ol className="sqd-steps">
-      {scenario.steps.slice(0, run.step).map((label, i) => {
-        const active = !run.done && i === run.step - 1;
-        return (
-          <li key={label} className={active ? 'is-active' : 'is-done'}>
-            <span className="sqd-step-dot" aria-hidden="true" />
-            <span>{label}</span>
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
-
-function Session({ run, typed, scenario }) {
-  if (!run && !typed) {
-    return (
-      <p className="sqd-empty">
-        Pick a request below. The orchestrator plans the paper, lays out regions,
-        generates them in parallel, then writes top to bottom.
-      </p>
-    );
-  }
-  if (!run) return null;
-  return (
-    <div className="sqd-session">
-      <div className="sqd-msg sqd-msg-user">{run.prompt}</div>
-      <Steps run={run} scenario={scenario} />
-      {run.done && scenario ? <div className="sqd-msg sqd-msg-bot">{scenario.reply}</div> : null}
-    </div>
-  );
-}
-
-function PlanView({ scenario }) {
-  if (!scenario) {
-    return <p className="sqd-empty">No plan yet. Run a scenario to peek at the planner output.</p>;
-  }
-  const raw = JSON.stringify(scenario.plan, null, 2);
-  return (
-    <div className="sqd-patch">
-      <pre>{raw}</pre>
-      <p className="sqd-patch-note">Planner JSON for this run. Regions and paper choice are baked.</p>
-    </div>
-  );
-}
-
 const SND_ICON = {
   on: (
     <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" />
-      <path d="M10.5 5.8a3 3 0 0 1 0 4.4M12.3 4a5.5 5.5 0 0 1 0 8" />
+      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" fill="currentColor" />
+      <path d="M10.5 5.8a3 3 0 0 1 0 4.4M12.3 4a5.5 5.5 0 0 1 0 8" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   ),
   off: (
     <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" />
-      <path d="M10.5 6l3.5 4M14 6l-3.5 4" />
+      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" fill="currentColor" />
+      <path d="M10.5 6l3.5 4M14 6l-3.5 4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   ),
 };
+
+const PLAY_ICON = (
+  <svg className="i" viewBox="0 0 18 18" aria-hidden="true">
+    <path d="M6 4.2v9.6L14.2 9z" />
+  </svg>
+);
+const PAUSE_ICON = (
+  <svg className="i" viewBox="0 0 18 18" aria-hidden="true">
+    <path d="M5 4h3v10H5zM10 4h3v10h-3z" />
+  </svg>
+);
+const REPLAY_ICON = (
+  <svg className="i" viewBox="0 0 18 18" aria-hidden="true">
+    <path d="M9 3.2a5.8 5.8 0 1 0 5.5 7.4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    <path d="M14.8 4.2v4.2h-4.2" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+function statusText(stage, working, run, scenario) {
+  if (!run && !working) return 'Pick an example — or watch the reel.';
+  if (stage === 'typing') return 'Reading your request…';
+  if (stage === 'plan' || stage === 'wire' || stage === 'regions') return 'Planning the page…';
+  if (stage === 'write') return 'Writing…';
+  if (stage === 'done') return scenario ? scenario.reply : 'Done.';
+  if (working) return 'Working…';
+  return '';
+}
+
+function statusKind(stage) {
+  if (stage === 'done') return 'ok';
+  if (stage === 'write' || stage === 'plan' || stage === 'wire' || stage === 'regions' || stage === 'typing') {
+    return 'working';
+  }
+  return '';
+}
+
+function fmtClock(p) {
+  const sec = Math.max(0, Math.round((p || 0) * 12));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
 
 export default function SidePanel({
   scenarios,
@@ -71,6 +64,7 @@ export default function SidePanel({
   scenario,
   run,
   typed,
+  writeFlash = false,
   working,
   wireOn,
   setWireOn,
@@ -85,123 +79,146 @@ export default function SidePanel({
   soundOn = true,
   onToggleSound,
 }) {
-  const [tab, setTab] = useState('session');
+  const [styleOpen, setStyleOpen] = useState(false);
+  const kind = statusKind(stage);
+  const writing = stage === 'write';
+  const done = stage === 'done';
+  const playerOn = Boolean(scenario) && (writing || done || stage === 'regions' || stage === 'wire');
+  const fill = `${Math.round((penProgress || 0) * 100)}%`;
 
   return (
-    <aside className="sqd-panel" aria-label="Scribe side panel">
-      <div className="sqd-panel-head">
-        <span className="sqd-panel-mark" aria-hidden="true">✎</span>
-        <span className="sqd-panel-name">scribe</span>
-        <span className="sqd-panel-pill">orchestrator · local</span>
-      </div>
+    <aside className="sqd-panel" aria-label="Scribe controls">
+      <div className="sqd-panel-scroll">
+        <div className={`sqd-compose${typed && stage === 'typing' ? ' is-typing' : ''}${writeFlash ? ' is-submit' : ''}`}>
+          <div className="sqd-compose-text" aria-live="polite">
+            {typed || (
+              <span className="sqd-ph">A note to leave on the fridge…</span>
+            )}
+          </div>
+          <div className="sqd-compose-row">
+            <span className="sqd-grow" />
+            <button
+              type="button"
+              className={`sqd-go${working ? ' is-busy' : ''}${writeFlash ? ' is-pressed' : ''}`}
+              disabled
+              aria-pressed={writeFlash}
+            >
+              Write
+            </button>
+          </div>
+        </div>
 
-      <div className="sqd-tabs" role="tablist">
-        {['session', 'plan'].map((name) => (
-          <button
-            key={name}
-            type="button"
-            role="tab"
-            aria-selected={tab === name}
-            className={tab === name ? 'is-on' : ''}
-            onClick={() => setTab(name)}
-          >
-            {name}
-          </button>
-        ))}
-      </div>
-
-      <div className="sqd-body">
-        {tab === 'session' ? (
-          <Session run={run} typed={typed} scenario={scenario} />
-        ) : (
-          <PlanView scenario={scenario} />
-        )}
-      </div>
-
-      <div className="sqd-controls" aria-label="Playback controls">
-        <div className="sqd-seg" role="group" aria-label="Page view">
-          <button
-            type="button"
-            className={!wireOn ? 'is-on' : ''}
-            aria-pressed={!wireOn}
-            onClick={() => setWireOn(false)}
-          >
-            page
-          </button>
+        <div className="sqd-examples">
+          <div className="sqd-ex-list" role="group" aria-label="Example requests">
+            {scenarios.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={`sqd-ex${scenarioId === s.id ? ' is-current' : ''}`}
+                disabled={working}
+                onClick={() => onPick(s.id)}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
           <button
             type="button"
-            className={wireOn ? 'is-on' : ''}
-            aria-pressed={wireOn}
-            onClick={() => setWireOn(true)}
+            className={`sqd-icon-btn${styleOpen ? ' is-on' : ''}`}
+            aria-pressed={styleOpen}
+            aria-label="Style"
+            title="Style"
+            onClick={() => setStyleOpen((v) => !v)}
           >
-            layout
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2.5 4.5h11M2.5 11.5h11" fill="none" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M5.5 2.5v4M10.5 9.5v4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+            </svg>
           </button>
         </div>
-        <button
-          type="button"
-          className={`sqd-snd${soundOn ? '' : ' is-off'}`}
-          aria-pressed={soundOn}
-          aria-label={soundOn ? 'Sound on' : 'Sound off'}
-          title={soundOn ? 'Pen sound: on' : 'Pen sound: off'}
-          onClick={() => onToggleSound && onToggleSound()}
+
+        {styleOpen ? (
+          <div className="sqd-style" aria-label="Style details">
+            <div className="sqd-seg" role="group" aria-label="Page view">
+              <button
+                type="button"
+                className={!wireOn ? 'is-on' : ''}
+                aria-pressed={!wireOn}
+                onClick={() => setWireOn(false)}
+              >
+                page
+              </button>
+              <button
+                type="button"
+                className={wireOn ? 'is-on' : ''}
+                aria-pressed={wireOn}
+                onClick={() => setWireOn(true)}
+              >
+                layout
+              </button>
+            </div>
+            <div className="sqd-seg" role="group" aria-label="Handwriting style">
+              {HANDS.map((h) => (
+                <button
+                  key={h.id}
+                  type="button"
+                  className={handId === h.id ? 'is-on' : ''}
+                  disabled={!scenario}
+                  onClick={() => setHand(h.id)}
+                >
+                  {h.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        <div
+          className={`sqd-status${kind === 'working' ? ' is-working' : ''}`}
+          data-kind={kind}
+          role="status"
         >
-          {SND_ICON[soundOn ? 'on' : 'off']}
-        </button>
-        <button type="button" className="sqd-replay" disabled={!scenario || working} onClick={onReplay}>
-          replay pen
-        </button>
-        <label className="sqd-scrub">
-          <span>pen</span>
-          <input
-            type="range"
-            min={0}
-            max={1000}
-            value={Math.round((penProgress || 0) * 1000)}
-            disabled={!scenario || stage === 'idle' || stage === 'typing' || stage === 'plan'}
-            onPointerDown={() => setScrubbing && setScrubbing(true)}
-            onPointerUp={() => setScrubbing && setScrubbing(false)}
-            onPointerCancel={() => setScrubbing && setScrubbing(false)}
-            onChange={(e) => scrubPen(Number(e.target.value) / 1000)}
-          />
-        </label>
-      </div>
+          {statusText(stage, working, run, scenario)}
+        </div>
 
-      <div className="sqd-hands" role="group" aria-label="Handwriting style">
-        {HANDS.map((h) => (
-          <button
-            key={h.id}
-            type="button"
-            className={handId === h.id ? 'is-current' : ''}
-            disabled={!scenario}
-            onClick={() => setHand(h.id)}
-          >
-            {h.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="sqd-chips" role="group" aria-label="Example requests">
-        {scenarios.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            className={scenarioId === s.id ? 'is-current' : ''}
-            disabled={working}
-            onClick={() => {
-              setTab('session');
-              onPick(s.id);
-            }}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-
-      <div className={`sqd-input${typed ? ' is-typing' : ''}`}>
-        <span className="sqd-input-caret" aria-hidden="true">{'>'}</span>
-        <span className="sqd-input-text">
-          {typed || <em>describe the page you want written</em>}
-        </span>
+        <div className={`sqd-player${playerOn ? '' : ' is-off'}${done ? ' is-done' : ''}`}>
+          <div className="sqd-transport">
+            <button
+              type="button"
+              className="sqd-round"
+              aria-label={done ? 'Replay' : writing ? 'Writing' : 'Play'}
+              disabled={!scenario || (working && !writing && !done)}
+              onClick={onReplay}
+            >
+              {done ? REPLAY_ICON : writing ? PAUSE_ICON : PLAY_ICON}
+            </button>
+            <input
+              type="range"
+              className="sqd-scrub"
+              min={0}
+              max={1000}
+              value={Math.round((penProgress || 0) * 1000)}
+              style={{ '--fill': fill }}
+              disabled={!scenario || stage === 'idle' || stage === 'typing' || stage === 'plan'}
+              aria-label="Pen progress"
+              onPointerDown={() => setScrubbing && setScrubbing(true)}
+              onPointerUp={() => setScrubbing && setScrubbing(false)}
+              onPointerCancel={() => setScrubbing && setScrubbing(false)}
+              onChange={(e) => scrubPen(Number(e.target.value) / 1000)}
+            />
+            <span className="sqd-clock">{fmtClock(penProgress)}</span>
+            <button
+              type="button"
+              className={`sqd-snd${soundOn ? '' : ' is-off'}`}
+              aria-pressed={soundOn}
+              aria-label={soundOn ? 'Sound on' : 'Sound off'}
+              title={soundOn ? 'Pen sound: on' : 'Pen sound: off'}
+              onClick={() => onToggleSound && onToggleSound()}
+            >
+              {SND_ICON[soundOn ? 'on' : 'off']}
+            </button>
+          </div>
+        </div>
       </div>
     </aside>
   );

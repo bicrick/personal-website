@@ -3,7 +3,7 @@ import ProjectDetail from '../components/ProjectDetail';
 
 const SITE = 'https://scribe-friends.vercel.app';
 
-/* Scenario JSON is ~210KB gz — keep it out of main.js. */
+/* Scenario JSON is heavy — keep it out of main.js. */
 const ScribeDemo = lazy(() => import('../components/project/scribe'));
 
 function Scribe() {
@@ -13,7 +13,7 @@ function Scribe() {
       date="October 2026"
       linkHref={SITE}
       linkLabel="site (invite only)"
-      abstract="Ask for anything and scribe writes it by hand. A note, a card, math with graphs, a comic. You watch the pen write it live."
+      abstract="Ask for anything and scribe writes it by hand. Study notes, a letter, a toast. You watch the pen move."
     >
       <Suspense
         fallback={
@@ -26,6 +26,11 @@ function Scribe() {
       <p>
         you type what you want. a planner lays out the page, then a handwriting model
         draws it stroke by stroke. pictures become pen sketches or little doodles.
+      </p>
+
+      <p>
+        the reel above is canned — newton's third law, ohm's law, integration by parts,
+        a thank-you letter, a wedding toast. same pipeline the live app uses, just offline.
       </p>
 
       <p>
