@@ -6,14 +6,6 @@
   font-weight: 100 900;
   font-display: swap;
 }
-@font-face {
-  font-family: "Cormorant";
-  src: url(./fonts/cormorant.woff2) format("woff2");
-  font-weight: 300 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 .sqd {
   --sqd-navy: #233a6b;
   --sqd-navy-deep: #182a50;
@@ -29,7 +21,6 @@
   --sqd-desk-bg: #96653d;
   --sqd-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
   --sqd-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --sqd-serif: "Cormorant", "Iowan Old Style", Palatino, Georgia, serif;
   --bot: var(--sqd-navy);
   --link: var(--sqd-navy-ink);
   --ink: var(--sqd-text);
@@ -44,12 +35,11 @@
 }
 
 .sqd figcaption {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
+  text-align: center;
   color: var(--sqd-muted);
-  font-size: 14px;
-  line-height: 1.45;
-  font-style: italic;
-  font-family: var(--sqd-serif);
+  font: italic 15px/20px var(--sqd-sans);
+  letter-spacing: -0.15px;
 }
 
 .sqd-stage {
@@ -192,23 +182,9 @@ html.is-dark .sqd-macro-tag {
 }
 
 .sqd-page-empty {
-  aspect-ratio: 3 / 4;
-  max-width: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--sqd-muted);
-  font-size: 14px;
-  line-height: 1.4;
-  padding: 24px;
-  background: var(--sqd-paper);
-  box-shadow:
-    0 0 0 0.5px rgba(60, 40, 15, 0.2),
-    0 10px 20px -6px rgba(40, 22, 5, 0.34);
+  /* legacy — idle now uses a blank .sqd-sheet */
+  display: none;
 }
-
-.sqd-page-empty p { margin: 0; }
 
 .sqd-sheet {
   position: absolute;
@@ -291,20 +267,6 @@ html.is-dark .sqd-sheet {
   fill: rgba(35, 58, 107, 0.04);
 }
 
-.sqd-choosing {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  margin: 0;
-  color: var(--sqd-muted);
-  font-family: var(--sqd-serif);
-  font-size: 18px;
-  font-style: italic;
-  background: rgba(251, 250, 246, 0.92);
-  z-index: 2;
-}
-
 @keyframes sqd-pulse {
   50% { opacity: 0.55; }
 }
@@ -366,8 +328,8 @@ html.is-dark .sqd-panel {
 }
 
 .sqd-compose-text {
-  min-height: 72px;
-  font: 500 18px/1.35 var(--sqd-serif);
+  min-height: 64px;
+  font: 400 14px/1.45 var(--sqd-sans);
   color: var(--sqd-text);
   white-space: pre-wrap;
   word-break: break-word;
@@ -375,7 +337,7 @@ html.is-dark .sqd-panel {
 
 .sqd-ph {
   color: #a0a6b6;
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
 }
 
@@ -390,18 +352,26 @@ html.is-dark .sqd-ph { color: #6f7890; }
 
 .sqd-grow { flex: 1; }
 
+.sqd-check {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--sqd-navy);
+  flex: none;
+}
+.sqd-check svg { width: 14px; height: 14px; display: block; }
+
 .sqd-go {
   background: var(--sqd-navy);
   border: 1px solid var(--sqd-navy);
   color: #fff;
-  padding: 8px 16px;
+  padding: 8px 18px;
   font: 600 13px/1 var(--sqd-sans);
   border-radius: 0;
   cursor: default;
-  opacity: 0.85;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18) inset,
-    0 4px 12px -4px rgba(24, 42, 80, 0.6);
+  opacity: 1;
+  box-shadow: none;
 }
 
 .sqd-go.is-busy { opacity: 0.55; }
@@ -421,22 +391,30 @@ html.is-dark .sqd-ph { color: #6f7890; }
 .sqd-examples {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
 }
 
 .sqd-ex-list {
   flex: 1;
   min-width: 0;
   display: grid;
-  gap: 2px;
+  gap: 6px;
+}
+
+.sqd-ex-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: none;
+  padding-top: 1px;
 }
 
 .sqd-ex {
   border: 0;
   background: none;
-  padding: 3px 0;
+  padding: 0;
   text-align: left;
-  font: 13px/1.35 var(--sqd-sans);
+  font: 12.5px/1.4 var(--sqd-sans);
   color: var(--sqd-text-2);
   cursor: pointer;
 }
@@ -496,11 +474,39 @@ html.is-dark .sqd-icon-btn:hover {
 
 .sqd-icon-btn svg { width: 14px; height: 14px; }
 
+.sqd-style-block {
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid var(--sqd-line);
+}
+
+.sqd-style-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  font: 600 13px/1 var(--sqd-sans);
+  color: var(--sqd-text-2);
+  cursor: pointer;
+}
+.sqd-style-toggle svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s var(--sqd-ease);
+}
+.sqd-style-toggle.is-open svg {
+  transform: rotate(180deg);
+}
+
 .sqd-style {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 10px 0 2px;
+  padding: 2px 0 8px;
 }
 
 .sqd-seg {
