@@ -1,17 +1,34 @@
 /* da transcribuh article — quiet theme-aware visuals (html.is-dark).
-   InkTheme: light ink #000 / paper #FFF / fill #F0F0F0 / hairline #C0C0C0 /
-   rowSelect #E6E6E6; dark window #2C2C2E / front #3A3A3D / fill #353538 /
-   label #F2F2F2 / secondary #A8A8AD / rowSelect #454548. */
+   InkTheme + ClipboardHistoryView: mono 12 rows/header/footer, mono 10 shortcuts,
+   rowHeight 22, preferred width ~450 scaled down. */
 
 .dt-visual {
   margin: 0.75rem 0 0.35rem;
   max-width: 28rem;
 }
 
-/* --- pill loop (feature 1) --- */
+/* theme swap helpers (videos + grab imgs) */
+.dt-theme-light {
+  display: block;
+}
+
+.dt-theme-dark {
+  display: none;
+}
+
+html.is-dark .dt-theme-light {
+  display: none !important;
+}
+
+html.is-dark .dt-theme-dark {
+  display: block !important;
+}
+
+/* --- pill loop (feature 1) — tight crop, no empty gray field --- */
 
 .dt-pill-loop {
-  max-width: 22rem;
+  max-width: 26rem;
+  line-height: 0;
 }
 
 .dt-pill-loop video {
@@ -40,23 +57,27 @@ html.is-dark .dt-pill-loop .dt-theme-dark {
 /* --- capture pill + grab (feature 2) --- */
 
 .dt-capture {
+  max-width: 26rem;
+}
+
+.dt-capture-row {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.55rem;
-  max-width: 22rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.7rem;
 }
 
 .dt-capture-pill {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: #fff;
   color: #000;
   border: 2px solid #000;
   box-shadow: 3px 3px 0 #000;
-  font-family: var(--font-pixel), ui-monospace, monospace;
+  /* Departure Mono stand-in: system mono keeps 12px looking like Swift */
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 12px;
   line-height: 1;
 }
@@ -78,6 +99,7 @@ html.is-dark .dt-capture-pill {
 .dt-capture-clock {
   color: #666;
   min-width: 2.4em;
+  font-variant-numeric: tabular-nums;
 }
 
 html.is-dark .dt-capture-clock {
@@ -89,7 +111,7 @@ html.is-dark .dt-capture-clock {
   align-items: center;
   gap: 1.35px;
   height: 22px;
-  width: 118px;
+  width: 100px;
 }
 
 .dt-capture-wave i {
@@ -97,15 +119,14 @@ html.is-dark .dt-capture-clock {
   width: 2px;
   min-height: 3px;
   background: currentColor;
-  border-radius: 0;
 }
 
 .dt-capture-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   min-height: 22px;
-  padding: 0 6px;
+  padding: 2px 5px 2px 6px;
   border: 1px solid currentColor;
   font-variant-numeric: tabular-nums;
 }
@@ -114,14 +135,28 @@ html.is-dark .dt-capture-clock {
   font-size: 11px;
 }
 
-.dt-capture-chip svg {
+.dt-capture-chip-thumb {
   display: block;
+  width: 40px;
+  height: 16px;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  line-height: 0;
+  flex: 0 0 auto;
+}
+
+.dt-capture-chip-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+  margin: 0;
 }
 
 .dt-capture-grab {
   border: 2px solid #000;
   box-shadow: 3px 3px 0 #000;
-  background: #fff;
+  background: #f0f0f0;
   line-height: 0;
 }
 
@@ -132,17 +167,35 @@ html.is-dark .dt-capture-grab {
 }
 
 .dt-capture-grab img {
-  display: block;
-  width: 120px;
-  height: 72px;
-  object-fit: cover;
+  width: 140px;
+  height: auto;
   margin: 0;
+}
+
+.dt-capture-chip-thumb .dt-theme-light,
+.dt-capture-grab .dt-theme-light {
+  display: block;
+}
+
+.dt-capture-chip-thumb .dt-theme-dark,
+.dt-capture-grab .dt-theme-dark {
+  display: none;
+}
+
+html.is-dark .dt-capture-chip-thumb .dt-theme-light,
+html.is-dark .dt-capture-grab .dt-theme-light {
+  display: none;
+}
+
+html.is-dark .dt-capture-chip-thumb .dt-theme-dark,
+html.is-dark .dt-capture-grab .dt-theme-dark {
+  display: block;
 }
 
 /* --- clipboard history mock (feature 3) --- */
 
 .dt-clip {
-  max-width: 22rem;
+  max-width: 22.5rem; /* ~360 of Swift's 450 */
 }
 
 .dt-clip-panel {
@@ -152,9 +205,11 @@ html.is-dark .dt-capture-grab {
   color: #000;
   border: 2px solid #000;
   box-shadow: 3px 3px 0 #000;
-  font-family: var(--font-pixel), ui-monospace, monospace;
+  /* Match Departure Mono metrics better than Geist Pixel */
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 12px;
-  line-height: 1.25;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
 }
 
 html.is-dark .dt-clip-panel {
@@ -170,6 +225,7 @@ html.is-dark .dt-clip-panel {
   gap: 8px;
   padding: 8px 12px;
   background: #f0f0f0;
+  font-size: 12px;
 }
 
 html.is-dark .dt-clip-header {
@@ -179,6 +235,7 @@ html.is-dark .dt-clip-header {
 .dt-clip-title {
   font-weight: 600;
   flex: 0 0 auto;
+  font-size: 12px;
 }
 
 .dt-clip-search {
@@ -232,6 +289,7 @@ html.is-dark .dt-clip-rule {
   height: 22px;
   padding: 0 9px;
   margin: 0;
+  font-size: 12px;
 }
 
 .dt-clip-list li.is-selected {
@@ -248,6 +306,7 @@ html.is-dark .dt-clip-list li.is-selected {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 12px;
 }
 
 .dt-clip-key {
@@ -272,6 +331,7 @@ html.is-dark .dt-clip-hair {
 
 .dt-clip-footer {
   background: #f0f0f0;
+  font-size: 12px;
 }
 
 html.is-dark .dt-clip-footer {
@@ -283,6 +343,7 @@ html.is-dark .dt-clip-footer {
   align-items: center;
   justify-content: space-between;
   padding: 5px 12px;
+  font-size: 12px;
 }
 
 @media (max-width: 600px) {
@@ -291,6 +352,10 @@ html.is-dark .dt-clip-footer {
   }
 
   .dt-capture-wave {
-    width: 88px;
+    width: 72px;
+  }
+
+  .dt-capture-grab img {
+    width: 120px;
   }
 }

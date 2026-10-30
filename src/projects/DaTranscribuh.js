@@ -7,7 +7,7 @@ const DOWNLOAD = 'https://da-transcribuh-site.vercel.app/download';
 const REPO = 'https://github.com/bicrick/da-transcribuh';
 const IMG = `${process.env.PUBLIC_URL}/images/da-transcribuh`;
 
-/** Theme-aware looping pill; pauses when prefers-reduced-motion. */
+/** Theme-aware looping pill (tight crop); pauses when prefers-reduced-motion. */
 function ThemePill() {
   const lightRef = useRef(null);
   const darkRef = useRef(null);
@@ -40,10 +40,10 @@ function ThemePill() {
       <video
         ref={lightRef}
         className="dt-theme-light"
-        src={`${IMG}/da-transcribuh-pill-light.mp4`}
-        poster={`${IMG}/da-transcribuh-pill-light-poster.jpg`}
-        width={768}
-        height={432}
+        src={`${IMG}/da-transcribuh-pill-light-tight.mp4`}
+        poster={`${IMG}/da-transcribuh-pill-light-tight-poster.jpg`}
+        width={582}
+        height={100}
         autoPlay
         muted
         loop
@@ -53,10 +53,10 @@ function ThemePill() {
       <video
         ref={darkRef}
         className="dt-theme-dark"
-        src={`${IMG}/da-transcribuh-pill-dark.mp4`}
-        poster={`${IMG}/da-transcribuh-pill-dark-poster.jpg`}
-        width={768}
-        height={432}
+        src={`${IMG}/da-transcribuh-pill-dark-tight.mp4`}
+        poster={`${IMG}/da-transcribuh-pill-dark-tight-poster.jpg`}
+        width={582}
+        height={100}
         autoPlay
         muted
         loop
@@ -67,71 +67,84 @@ function ThemePill() {
   );
 }
 
-/** Static island-ish pill with capture chip + grab thumb (Ink / Departure Mono feel). */
+/**
+ * Static capture island: pill with chip count + the grab tucked in the chip
+ * so it reads as "this got captured". Theme-aware order-now snippet.
+ */
 function CaptureVisual() {
   return (
     <div className="dt-visual dt-capture" aria-hidden="true">
-      <div className="dt-capture-pill">
-        <span className="dt-capture-dot" />
-        <span className="dt-capture-clock">0:04</span>
-        <span className="dt-capture-wave">
-          {Array.from({ length: 28 }, (_, i) => {
-            const t = i / 27;
-            const env = 1 - Math.abs(t - 0.5) * 1.4;
-            const h = 22 + Math.max(0.2, env) * 48 * (0.55 + 0.45 * Math.sin(i * 1.7));
-            return <i key={i} style={{ height: `${h}%` }} />;
-          })}
-        </span>
-        <span className="dt-capture-chip">
-          <span className="dt-capture-chip-n">1</span>
-          <svg width="10" height="10" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <rect
-              x="1.25"
-              y="3.25"
-              width="13.5"
-              height="9.5"
-              rx="2"
-              ry="2"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-            />
-            <circle cx="5.1" cy="6.35" r="1.15" fill="currentColor" />
-            <path
-              d="M2.6 11.6 L6.1 7.9 L8.35 10.05 L10.9 7.35 L13.5 11.6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-          </svg>
-        </span>
-      </div>
-      <div className="dt-capture-grab">
-        <img
-          src={`${IMG}/grab-thumb.jpg`}
-          alt=""
-          width={120}
-          height={72}
-          loading="lazy"
-          decoding="async"
-        />
+      <div className="dt-capture-row">
+        <div className="dt-capture-pill">
+          <span className="dt-capture-dot" />
+          <span className="dt-capture-clock">0:04</span>
+          <span className="dt-capture-wave">
+            {Array.from({ length: 28 }, (_, i) => {
+              const t = i / 27;
+              const env = 1 - Math.abs(t - 0.5) * 1.4;
+              const h = 22 + Math.max(0.2, env) * 48 * (0.55 + 0.45 * Math.sin(i * 1.7));
+              return <i key={i} style={{ height: `${h}%` }} />;
+            })}
+          </span>
+          <span className="dt-capture-chip">
+            <span className="dt-capture-chip-n">1</span>
+            <span className="dt-capture-chip-thumb">
+              <img
+                className="dt-theme-light"
+                src={`${IMG}/grab-chip-light.jpg`}
+                alt=""
+                width={96}
+                height={36}
+                loading="lazy"
+                decoding="async"
+              />
+              <img
+                className="dt-theme-dark"
+                src={`${IMG}/grab-chip-dark.jpg`}
+                alt=""
+                width={96}
+                height={36}
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          </span>
+        </div>
+        <div className="dt-capture-grab">
+          <img
+            className="dt-theme-light"
+            src={`${IMG}/grab-order-light.jpg`}
+            alt=""
+            width={168}
+            height={64}
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            className="dt-theme-dark"
+            src={`${IMG}/grab-order-dark.jpg`}
+            alt=""
+            width={168}
+            height={64}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
 /**
- * Quiet static mock of ClipboardHistoryView (Paint ink panel, Maccy-structured).
- * Colors / spacing / mono from InkTheme + ClipboardHistoryView.swift.
+ * Quiet static mock of ClipboardHistoryView (Paint ink panel).
+ * Row/header/footer all Ink.mono(12); shortcuts Ink.mono(10); rowHeight 22.
  */
 function ClipboardVisual() {
   const rows = [
-    { text: 'make this button blue and bump the price font', shortcut: '⌘1', selected: true },
-    { text: 'https://bakery.shop/loaf', shortcut: '⌘2' },
-    { text: 'sourdough · crust, crumb, and a little butter', shortcut: '⌘3' },
-    { text: 'ship the demo when patrick says so', shortcut: '⌘4' },
+    { text: 'can you bump the loaf price to $5?', shortcut: '⌘1', selected: true },
+    { text: 'https://bakery.shop/menu', shortcut: '⌘2' },
+    { text: 'const price = loaf.cost * 1.08', shortcut: '⌘3' },
+    { text: '4823 cedar ave, apt 4b', shortcut: '⌘4' },
   ];
   return (
     <div className="dt-visual dt-clip" aria-hidden="true">
