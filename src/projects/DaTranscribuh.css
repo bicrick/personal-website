@@ -1,34 +1,307 @@
-/* Theme-aware light/dark assets (html.is-dark), same class toggle as ThemeToggle.
-   Specificity must beat App.css `@media (max-width: 800px) img` and
-   `.project-article img { display: block }` on small viewports. */
+/* da transcribuh article — quiet theme-aware visuals (html.is-dark).
+   InkTheme: light ink #000 / paper #FFF / fill #F0F0F0 / hairline #C0C0C0 /
+   rowSelect #E6E6E6; dark window #2C2C2E / front #3A3A3D / fill #353538 /
+   label #F2F2F2 / secondary #A8A8AD / rowSelect #454548. */
 
-.dt-theme-shot-link {
+.dt-theme-light {
   display: block;
-  color: inherit;
-  text-decoration: none;
 }
 
-.dt-theme-shot-link:after,
-.dt-theme-shot-link:hover:after {
-  content: none;
+.dt-theme-dark {
+  display: none;
 }
 
-.dt-theme-shot img,
-.dt-theme-shot video {
-  margin: 0;
+html.is-dark .dt-theme-light {
+  display: none;
+}
+
+html.is-dark .dt-theme-dark {
+  display: block;
+}
+
+.dt-visual {
+  margin: 0.75rem 0 0.35rem;
+  max-width: 28rem;
+}
+
+/* --- pill loop (feature 1) --- */
+
+.dt-pill-loop {
+  max-width: 22rem;
+}
+
+.dt-pill-loop video {
+  display: block;
   width: 100%;
   height: auto;
+  margin: 0;
+  border-radius: 2px;
+}
+
+html.is-dark .dt-pill-loop .dt-theme-dark {
   display: block;
 }
 
-.dt-theme-shot .dt-theme-shot-dark {
-  display: none;
+@media (prefers-reduced-motion: reduce) {
+  .dt-pill-loop video {
+    /* paused via JS; poster still shows */
+  }
 }
 
-html.is-dark .dt-theme-shot .dt-theme-shot-light {
-  display: none;
+/* --- capture pill + grab (feature 2) --- */
+
+.dt-capture {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  max-width: 22rem;
 }
 
-html.is-dark .dt-theme-shot .dt-theme-shot-dark {
+.dt-capture-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  font-family: var(--font-pixel), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1;
+}
+
+html.is-dark .dt-capture-pill {
+  background: #3a3a3d;
+  color: #f2f2f2;
+  border-color: #f2f2f2;
+  box-shadow: 3px 3px 0 #f2f2f2;
+}
+
+.dt-capture-dot {
+  width: 8px;
+  height: 8px;
+  background: #ed1c24;
+  flex: 0 0 auto;
+}
+
+.dt-capture-clock {
+  color: #666;
+  min-width: 2.4em;
+}
+
+html.is-dark .dt-capture-clock {
+  color: #a8a8ad;
+}
+
+.dt-capture-wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.35px;
+  height: 22px;
+  width: 118px;
+}
+
+.dt-capture-wave i {
   display: block;
+  width: 2px;
+  min-height: 3px;
+  background: currentColor;
+  border-radius: 0;
+}
+
+.dt-capture-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  padding: 0 6px;
+  border: 1px solid currentColor;
+  font-variant-numeric: tabular-nums;
+}
+
+.dt-capture-chip-n {
+  font-size: 11px;
+}
+
+.dt-capture-chip svg {
+  display: block;
+}
+
+.dt-capture-grab {
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  background: #fff;
+  line-height: 0;
+}
+
+html.is-dark .dt-capture-grab {
+  border-color: #f2f2f2;
+  box-shadow: 3px 3px 0 #f2f2f2;
+  background: #2c2c2e;
+}
+
+.dt-capture-grab img {
+  display: block;
+  width: 120px;
+  height: 72px;
+  object-fit: cover;
+  margin: 0;
+}
+
+/* --- clipboard history mock (feature 3) --- */
+
+.dt-clip {
+  max-width: 22rem;
+}
+
+.dt-clip-panel {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  font-family: var(--font-pixel), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+html.is-dark .dt-clip-panel {
+  background: rgba(58, 58, 61, 0.95);
+  color: #f2f2f2;
+  border-color: #f2f2f2;
+  box-shadow: 3px 3px 0 #f2f2f2;
+}
+
+.dt-clip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f0f0;
+}
+
+html.is-dark .dt-clip-header {
+  background: #353538;
+}
+
+.dt-clip-title {
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.dt-clip-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  width: min(11.5rem, 58%);
+  height: 23px;
+  padding: 0 6px;
+  background: #fff;
+  border: 2px solid #000;
+  color: #666;
+  font-size: 12px;
+}
+
+html.is-dark .dt-clip-search {
+  background: #2c2c2e;
+  border-color: #f2f2f2;
+  color: #a8a8ad;
+}
+
+.dt-clip-search-glyph {
+  flex: 0 0 auto;
+  color: #666;
+}
+
+html.is-dark .dt-clip-search-glyph {
+  color: #a8a8ad;
+}
+
+.dt-clip-rule {
+  height: 2px;
+  background: #000;
+}
+
+html.is-dark .dt-clip-rule {
+  background: #f2f2f2;
+}
+
+.dt-clip-list {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0;
+}
+
+.dt-clip-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  margin: 0;
+}
+
+.dt-clip-list li.is-selected {
+  background: #e6e6e6;
+}
+
+html.is-dark .dt-clip-list li.is-selected {
+  background: #454548;
+}
+
+.dt-clip-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dt-clip-key {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: #666;
+  opacity: 0.7;
+}
+
+html.is-dark .dt-clip-key {
+  color: #a8a8ad;
+}
+
+.dt-clip-hair {
+  height: 1px;
+  background: #c0c0c0;
+}
+
+html.is-dark .dt-clip-hair {
+  background: #4a4a4e;
+}
+
+.dt-clip-footer {
+  background: #f0f0f0;
+}
+
+html.is-dark .dt-clip-footer {
+  background: #353538;
+}
+
+.dt-clip-footer > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 12px;
+}
+
+@media (max-width: 600px) {
+  .dt-visual {
+    max-width: 100%;
+  }
+
+  .dt-capture-wave {
+    width: 88px;
+  }
 }
