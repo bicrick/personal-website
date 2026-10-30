@@ -5,7 +5,6 @@ import {
   buildTimeline,
   inkColor,
   progressAt,
-  wallMsForWrite,
 } from './livePen';
 import { resolveInk } from './hands';
 
@@ -15,6 +14,14 @@ const STEP_MS = 620;
 const WIRE_AT = 2;
 const REGIONS_AT = 3;
 const WRITE_AT = 4;
+/** Wall-clock seconds the pen takes per page (each page lands in the 30-60s band). */
+export const DEMO_TARGET_S = 45;
+
+/** Playback speed so this timeline's write phase takes ~DEMO_TARGET_S. */
+export function demoSpeed(tl) {
+  if (!tl || !tl.writeEnd) return DEFAULT_SPEED;
+  return Math.max(DEFAULT_SPEED, tl.writeEnd / DEMO_TARGET_S);
+}
 
 function timelineFor(scenario, handId) {
   if (!scenario) return null;
@@ -55,6 +62,10 @@ export default function useOrchestrate({
   const [wireOn, setWireOn] = useState(false); // layout boxes off by default
   const [handId, setHandId] = useState('neat');
   const [replayKey, setReplayKey] = useState(0);
+  const [userPaused, setUserPausedState] = useState(false);
+  const userPausedRef = useRef(false);
+  const stageRef = useRef('idle');
+  const finishRef = useRef(() => {});
   const timers = useRef([]);
   const busy = useRef(false);
   const pausedRef = useRef(paused);
@@ -78,6 +89,15 @@ export default function useOrchestrate({
   useEffect(() => {
     handRef.current = handId;
   }, [handId]);
+
+  useEffect(() => {
+    stageRef.current = stage;
+  }, [stage]);
+
+  const setUserPaused = useCallback((on) => {
+    userPausedRef.current = !!on;
+    setUserPausedState(!!on);
+  }, []);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -137,52 +157,76 @@ export default function useOrchestrate({
     return undefined;
   }, [bootDone, bootScenario, clearTimers]);
 
-  const runPen = useCallback((tl) => {
+  /** Start the pen RAF loop. It holds still while paused / scrubbing / off-screen
+   * and keeps ticking, so a scrub mid-play continues from the new spot. */
+  const loopPen = useCallback((tl) => {
     if (penRaf.current) cancelAnimationFrame(penRaf.current);
     timelineRef.current = tl;
+    const speed = demoSpeed(tl);
+    penLast.current = 0;
+    const tick = (now) => {
+      const held = pausedRef.current || userPausedRef.current || scrubbingRef.current;
+      const last = penLast.current || now;
+      const dtReal = held ? 0 : Math.min(0.1, (now - last) / 1000);
+      penLast.current = now;
+      // playbackRef.vt is the source of truth (scrubPen writes it too).
+      const next = Math.min(tl.writeEnd, (playbackRef.current.vt || 0) + dtReal * speed);
+      playbackRef.current.vt = next;
+      playbackRef.current.strokes = tl.strokes;
+      playbackRef.current.playing = !held && next < tl.writeEnd;
+      playbackRef.current.scrubbing = scrubbingRef.current;
+      playbackRef.current.speed = speed;
+      // Functional update reads the ref at flush time so a stale RAF setState
+      // cannot overwrite a newer scrub seek.
+      if (dtReal > 0) setPenVt(() => playbackRef.current.vt);
+      if (!held && next >= tl.writeEnd) {
+        penRaf.current = 0;
+        finishRef.current();
+        return;
+      }
+      penRaf.current = requestAnimationFrame(tick);
+    };
+    penRaf.current = requestAnimationFrame(tick);
+  }, []);
+
+  const runPen = useCallback((tl) => {
+    if (penRaf.current) cancelAnimationFrame(penRaf.current);
+    penRaf.current = 0;
+    timelineRef.current = tl;
+    setUserPaused(false);
     setPenEnd(tl.writeEnd);
     setPenVt(0);
-    penLast.current = 0;
     playbackRef.current.strokes = tl.strokes;
     playbackRef.current.vt = 0;
     playbackRef.current.playing = !fast;
-    playbackRef.current.speed = DEFAULT_SPEED;
+    playbackRef.current.speed = demoSpeed(tl);
     if (fast) {
       setPenVt(tl.writeEnd);
       playbackRef.current.vt = tl.writeEnd;
       playbackRef.current.playing = false;
+      finishRef.current();
       return;
     }
-    const tick = (now) => {
-      if (pausedRef.current) {
-        penLast.current = now;
-        penRaf.current = requestAnimationFrame(tick);
-        return;
-      }
-      const last = penLast.current || now;
-      const dtReal = Math.min(0.1, (now - last) / 1000);
-      penLast.current = now;
-      setPenVt((prev) => {
-        const next = Math.min(tl.writeEnd, prev + dtReal * DEFAULT_SPEED);
-        playbackRef.current.vt = next;
-        playbackRef.current.strokes = tl.strokes;
-        playbackRef.current.playing = next < tl.writeEnd;
-        playbackRef.current.scrubbing = scrubbingRef.current;
-        playbackRef.current.speed = DEFAULT_SPEED;
-        if (next < tl.writeEnd) penRaf.current = requestAnimationFrame(tick);
-        else penRaf.current = 0;
-        return next;
-      });
-    };
-    penRaf.current = requestAnimationFrame(tick);
-  }, [fast]);
+    loopPen(tl);
+  }, [fast, loopPen, setUserPaused]);
+
+  // Pen reached the end of the page: mark the run done.
+  finishRef.current = () => {
+    const tl = timelineRef.current;
+    if (tl) setPenVt(tl.writeEnd);
+    playbackRef.current.playing = false;
+    setUserPaused(false);
+    setStage('done');
+    setRun((r) => (r ? { ...r, step: r.total || r.step, done: true } : r));
+    busy.current = false;
+  };
 
   const start = useCallback((id) => {
-    if (busy.current) return;
     const scenario = SCENARIO_BY_ID[id];
     if (!scenario) return;
-    busy.current = true;
     clearTimers();
+    busy.current = true;
+    setUserPaused(false);
     setScenarioId(id);
     // Keep the user's page|layout choice; do not force wireframe on.
     setRegionStatus({});
@@ -209,10 +253,9 @@ export default function useOrchestrate({
     later(() => {
       setWriteFlash(false);
       setStage('plan');
-      setRun({ id, prompt: scenario.prompt, step: 1, done: false });
+      setRun({ id, prompt: scenario.prompt, step: 1, total: scenario.steps.length, done: false });
     }, t);
 
-    let writeWall = fast ? 400 : 5000;
     scenario.steps.forEach((_, i) => {
       if (i === 0) return;
       t += stepMs;
@@ -238,53 +281,78 @@ export default function useOrchestrate({
         }
         if (i === WRITE_AT) {
           setStage('write');
-          const tl = timelineFor(scenario, handRef.current);
-          writeWall = wallMsForWrite(tl.writeEnd, DEFAULT_SPEED, fast);
-          runPen(tl);
+          runPen(timelineFor(scenario, handRef.current));
         }
         setRun((r) => (r ? { ...r, step: i + 1 } : r));
       }, t);
     });
 
-    // Pen duration is known up front from the same timeline the canvas uses.
-    const tl0 = timelineFor(scenario, handRef.current);
-    writeWall = wallMsForWrite(tl0.writeEnd, DEFAULT_SPEED, fast);
-    t += Math.max(stepMs * 0.9, writeWall + 80);
-    later(() => {
-      setPenVt((tl0 && tl0.writeEnd) || 1);
-      setStage('done');
-      setRun((r) => (r ? { ...r, step: scenario.steps.length, done: true } : r));
-      busy.current = false;
-    }, t);
-  }, [clearTimers, fast, later, runPen]);
+  }, [clearTimers, fast, later, runPen, setUserPaused]);
 
   const replayPen = useCallback(() => {
     const scenario = SCENARIO_BY_ID[scenarioId];
     if (!scenario) return;
+    clearTimers();
+    busy.current = false;
     setStage('write');
     setReplayKey((k) => k + 1);
-    const tl = timelineFor(scenario, handRef.current);
-    const dur = wallMsForWrite(tl.writeEnd, DEFAULT_SPEED, fast);
-    runPen(tl);
-    later(() => {
-      setPenVt(tl.writeEnd);
-      setStage('done');
-    }, dur + 40);
-  }, [fast, later, runPen, scenarioId]);
+    runPen(timelineFor(scenario, handRef.current));
+  }, [clearTimers, runPen, scenarioId]);
 
+  /** Pause / resume the pen mid-page; replay once the page is done. */
+  const togglePlay = useCallback(() => {
+    const st = stageRef.current;
+    if (st === 'done') {
+      replayPen();
+      return;
+    }
+    if (st !== 'write') return;
+    const nextPaused = !userPausedRef.current;
+    setUserPaused(nextPaused);
+    if (!nextPaused) {
+      const tl = timelineRef.current;
+      if (tl && !penRaf.current) loopPen(tl);
+    }
+  }, [loopPen, replayPen, setUserPaused]);
+
+  /**
+   * Seek the pen. Playing keeps playing from the new spot; paused stays
+   * paused. Scrubbing back from a finished page leaves it paused there.
+   */
   const scrubPen = useCallback((p) => {
-    if (penRaf.current) cancelAnimationFrame(penRaf.current);
-    penRaf.current = 0;
-    const tl = timelineRef.current || (SCENARIO_BY_ID[scenarioId]
-      ? timelineFor(SCENARIO_BY_ID[scenarioId], handRef.current)
-      : null);
-    const end = (tl && tl.writeEnd) || penEnd || 1;
-    const next = Math.max(0, Math.min(1, p)) * end;
-    setPenVt(next);
+    const st = stageRef.current;
+    if (st === 'idle' || st === 'typing' || st === 'plan') return;
+    const scenario = SCENARIO_BY_ID[scenarioId];
+    let tl = timelineRef.current;
+    if (!tl && scenario) {
+      tl = timelineFor(scenario, handRef.current);
+      timelineRef.current = tl;
+    }
+    if (!tl) return;
+    const end = tl.writeEnd || 1;
+    const f = Math.max(0, Math.min(1, p));
+    const next = f * end;
+    playbackRef.current.vt = next;
     setPenEnd(end);
-    if (stage === 'idle' || stage === 'typing' || stage === 'plan') return;
-    setStage(p >= 1 ? 'done' : 'write');
-  }, [penEnd, scenarioId, stage]);
+    setPenVt(() => playbackRef.current.vt);
+    if (st === 'done') {
+      if (f >= 1) {
+        setStage('done');
+        return;
+      }
+      clearTimers();
+      setUserPaused(true);
+      setStage('write');
+      setRun((r) => (r ? { ...r, done: false } : r));
+      loopPen(tl);
+      return;
+    }
+    if (st !== 'write') {
+      setStage('write');
+    }
+    // Keep the RAF loop alive so pause/resume and mid-play scrub stay smooth.
+    if (!penRaf.current) loopPen(tl);
+  }, [clearTimers, loopPen, scenarioId, setUserPaused]);
 
   const setHand = useCallback((hid) => {
     setHandId(hid);
@@ -295,21 +363,22 @@ export default function useOrchestrate({
     const tl = timelineFor(scenario, hid);
     timelineRef.current = tl;
     setPenEnd(tl.writeEnd);
-    setPenVt((prev) => {
-      const frac = penEnd > 0 ? prev / penEnd : 1;
-      return frac * tl.writeEnd;
-    });
-  }, [penEnd, scenarioId]);
+    const prev = playbackRef.current.vt || 0;
+    const frac = penEnd > 0 ? prev / penEnd : 1;
+    playbackRef.current.vt = frac * tl.writeEnd;
+    setPenVt(frac * tl.writeEnd);
+    if (penRaf.current) loopPen(tl);
+  }, [loopPen, penEnd, scenarioId]);
 
 
   useEffect(() => {
     const tl = timelineRef.current;
-    playbackRef.current.vt = penVt;
+    // vt is owned by the RAF loop / scrubPen — do not clobber it here.
     playbackRef.current.strokes = (tl && tl.strokes) || [];
-    playbackRef.current.playing = stage === 'write';
+    playbackRef.current.playing = stage === 'write' && !userPaused && !scrubbingRef.current;
     playbackRef.current.scrubbing = scrubbingRef.current;
-    playbackRef.current.speed = DEFAULT_SPEED;
-  }, [penVt, stage]);
+    playbackRef.current.speed = demoSpeed(tl);
+  }, [penVt, stage, userPaused]);
 
   const setScrubbing = useCallback((on) => {
     scrubbingRef.current = !!on;
@@ -340,9 +409,12 @@ export default function useOrchestrate({
     handId,
     setHand,
     replayKey,
-    working: Boolean(run && !run.done) || stage === 'typing' || writeFlash,
+    working: (Boolean(run && !run.done) || stage === 'typing' || writeFlash) && stage !== 'write',
     start,
     replayPen,
+    togglePlay,
+    userPaused,
+    playing: stage === 'write' && !userPaused,
     scrubPen,
     setScrubbing,
     playbackRef,

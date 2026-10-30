@@ -163,6 +163,9 @@ export default function ScribeDemo({
             orch.start(id);
           }}
           onReplay={orch.replayPen}
+          onTogglePlay={orch.togglePlay}
+          playing={orch.playing}
+          userPaused={orch.userPaused}
           penProgress={orch.penProgress}
           scrubPen={orch.scrubPen}
           setScrubbing={orch.setScrubbing}
