@@ -54,7 +54,6 @@ export const PROJECTS = [
     relevanceRank: 5,
     dateRank: 5,
     date: 'September 2026',
-    featured: true,
   },
   {
     title: 'da transcribuh',
@@ -73,7 +72,6 @@ export const PROJECTS = [
     relevanceRank: 4,
     dateRank: 0,
     date: 'October 2026',
-    featured: true,
   },
   {
     title: 'scribe',
@@ -87,7 +85,6 @@ export const PROJECTS = [
     relevanceRank: 3,
     dateRank: 1,
     date: 'October 2026',
-    featured: true,
   },
   {
     title: 'monocle',
@@ -102,7 +99,6 @@ export const PROJECTS = [
     relevanceRank: 6,
     dateRank: 7,
     date: 'September 2026',
-    featured: true,
   },
   {
     title: 'range rat',
@@ -116,7 +112,6 @@ export const PROJECTS = [
     relevanceRank: 8,
     dateRank: 6,
     date: 'August 2026',
-    featured: true,
   },
   {
     title: 'gd-visualizer',
@@ -129,7 +124,6 @@ export const PROJECTS = [
     relevanceRank: 9,
     dateRank: 9,
     date: 'November 2025',
-    featured: true,
   },
   {
     title: 'notepadable',
@@ -143,7 +137,6 @@ export const PROJECTS = [
     relevanceRank: 7,
     dateRank: 8,
     date: 'March 2026',
-    featured: true,
   },
   {
     title: 'docprep',
