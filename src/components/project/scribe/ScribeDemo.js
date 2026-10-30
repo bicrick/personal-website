@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import PaperView from './PaperView';
 import SidePanel from './SidePanel';
 import useOrchestrate from './useOrchestrate';
+import usePenSound from './usePenSound';
 import useReducedMotion from '../useReducedMotion';
 import './scribe.css';
 
@@ -39,6 +40,10 @@ export default function ScribeDemo({
     bootDone,
   });
   const { start } = orch;
+  const sound = usePenSound({
+    fast: reduced || forceFast,
+    playbackRef: orch.playbackRef,
+  });
 
   useEffect(() => {
     if (forceInView) {
@@ -99,7 +104,11 @@ export default function ScribeDemo({
   const badgeOn = orch.stage !== 'idle' && orch.scenarioId;
 
   return (
-    <figure className="sqd" ref={wrapRef}>
+    <figure
+      className="sqd"
+      ref={wrapRef}
+      onPointerDownCapture={sound.unlockSound}
+    >
       <div className="sqd-stage">
         <div className="sqd-browser">
           <div className="sqd-chrome">
@@ -118,7 +127,7 @@ export default function ScribeDemo({
               scenario={orch.scenario}
               stage={orch.stage}
               regionStatus={orch.regionStatus}
-              penProgress={orch.penProgress}
+              penVt={orch.penVt}
               wireOn={orch.wireOn}
               handId={orch.handId}
               replayKey={orch.replayKey}
@@ -156,7 +165,10 @@ export default function ScribeDemo({
           onReplay={orch.replayPen}
           penProgress={orch.penProgress}
           scrubPen={orch.scrubPen}
+          setScrubbing={orch.setScrubbing}
           stage={orch.stage}
+          soundOn={sound.soundOn}
+          onToggleSound={sound.toggleSound}
         />
       </div>
       <figcaption>

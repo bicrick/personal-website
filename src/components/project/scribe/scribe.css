@@ -97,12 +97,21 @@
   flex: 1 1 auto;
   min-height: 240px;
   min-width: 0;
-  background: var(--paper);
+  /* Soft desk wash behind the sheet — echoes friends brown desk without a photo. */
+  background:
+    radial-gradient(70% 60% at 40% 35%, rgba(255, 236, 200, 0.22), transparent 70%),
+    linear-gradient(180deg, #a9784a 0%, #8a5a32 100%);
   display: grid;
   place-items: center;
   padding: 12px;
   container-type: size;
   container-name: sqd-vp;
+}
+
+html.is-dark .sqd-viewport {
+  background:
+    radial-gradient(70% 60% at 40% 35%, rgba(80, 50, 20, 0.35), transparent 70%),
+    linear-gradient(180deg, #5a3a22 0%, #3d2818 100%);
 }
 
 .sqd-status {
@@ -173,19 +182,24 @@
 .sqd-sheet {
   position: absolute;
   inset: 0;
-  background: var(--surface);
+  /* Friends desk paper (#fbfaf6). Dark mode keeps a warm off-white so navy ink reads. */
+  background: #fbfaf6;
   border: 1px solid var(--rule);
   box-shadow: 0 2px 10px var(--shadow);
   overflow: hidden;
 }
 
+html.is-dark .sqd-sheet {
+  background: #e8e4d8;
+}
+
 .sqd-page.is-sticky .sqd-sheet {
-  background: #f6e27a;
+  background: #fde77a;
   border-color: color-mix(in srgb, #c4a84a 50%, var(--rule));
 }
 
 html.is-dark .sqd-page.is-sticky .sqd-sheet {
-  background: #7a6a28;
+  background: #c9b04a;
 }
 
 .sqd-ruled {
@@ -197,8 +211,13 @@ html.is-dark .sqd-page.is-sticky .sqd-sheet {
 }
 
 .sqd-ruled line {
-  stroke: color-mix(in srgb, var(--link) 22%, transparent);
+  /* Friends college-ruled blue-ish guides */
+  stroke: rgba(157, 180, 220, 0.55);
   stroke-width: 0.25;
+}
+
+html.is-dark .sqd-ruled line {
+  stroke: rgba(120, 140, 180, 0.45);
 }
 
 .sqd-ink {
@@ -440,15 +459,77 @@ html.is-dark .sqd-page.is-sticky .sqd-sheet {
   color: var(--ink-muted);
 }
 
-.sqd-toggle {
+.sqd-seg {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  align-items: stretch;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.sqd-seg button {
+  appearance: none;
+  margin: 0;
+  padding: 3px 10px;
+  font: inherit;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--ink-muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sqd-seg button + button {
+  border-left: 1px solid var(--control-border);
+}
+
+.sqd-seg button.is-on {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--bot) 14%, transparent);
+}
+
+.sqd-seg button:focus-visible {
+  outline: 2px solid var(--bot);
+  outline-offset: -2px;
+}
+
+
+.sqd-snd {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.sqd-toggle input {
-  accent-color: var(--bot);
+.sqd-snd svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+}
+
+.sqd-snd.is-off {
+  color: var(--ink-muted);
+  opacity: 0.7;
+}
+
+.sqd-snd:focus-visible {
+  outline: 2px solid var(--bot);
+  outline-offset: 1px;
 }
 
 .sqd-replay {

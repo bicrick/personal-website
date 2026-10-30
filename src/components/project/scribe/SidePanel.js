@@ -50,6 +50,21 @@ function PlanView({ scenario }) {
   );
 }
 
+const SND_ICON = {
+  on: (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" />
+      <path d="M10.5 5.8a3 3 0 0 1 0 4.4M12.3 4a5.5 5.5 0 0 1 0 8" />
+    </svg>
+  ),
+  off: (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M2.5 6h2.5l3-2.5v9L5 10H2.5z" />
+      <path d="M10.5 6l3.5 4M14 6l-3.5 4" />
+    </svg>
+  ),
+};
+
 export default function SidePanel({
   scenarios,
   scenarioId,
@@ -65,7 +80,10 @@ export default function SidePanel({
   onReplay,
   penProgress,
   scrubPen,
+  setScrubbing,
   stage,
+  soundOn = true,
+  onToggleSound,
 }) {
   const [tab, setTab] = useState('session');
 
@@ -101,14 +119,34 @@ export default function SidePanel({
       </div>
 
       <div className="sqd-controls" aria-label="Playback controls">
-        <label className="sqd-toggle">
-          <input
-            type="checkbox"
-            checked={wireOn}
-            onChange={(e) => setWireOn(e.target.checked)}
-          />
-          <span>wireframe</span>
-        </label>
+        <div className="sqd-seg" role="group" aria-label="Page view">
+          <button
+            type="button"
+            className={!wireOn ? 'is-on' : ''}
+            aria-pressed={!wireOn}
+            onClick={() => setWireOn(false)}
+          >
+            page
+          </button>
+          <button
+            type="button"
+            className={wireOn ? 'is-on' : ''}
+            aria-pressed={wireOn}
+            onClick={() => setWireOn(true)}
+          >
+            layout
+          </button>
+        </div>
+        <button
+          type="button"
+          className={`sqd-snd${soundOn ? '' : ' is-off'}`}
+          aria-pressed={soundOn}
+          aria-label={soundOn ? 'Sound on' : 'Sound off'}
+          title={soundOn ? 'Pen sound: on' : 'Pen sound: off'}
+          onClick={() => onToggleSound && onToggleSound()}
+        >
+          {SND_ICON[soundOn ? 'on' : 'off']}
+        </button>
         <button type="button" className="sqd-replay" disabled={!scenario || working} onClick={onReplay}>
           replay pen
         </button>
@@ -120,6 +158,9 @@ export default function SidePanel({
             max={1000}
             value={Math.round((penProgress || 0) * 1000)}
             disabled={!scenario || stage === 'idle' || stage === 'typing' || stage === 'plan'}
+            onPointerDown={() => setScrubbing && setScrubbing(true)}
+            onPointerUp={() => setScrubbing && setScrubbing(false)}
+            onPointerCancel={() => setScrubbing && setScrubbing(false)}
             onChange={(e) => scrubPen(Number(e.target.value) / 1000)}
           />
         </label>
