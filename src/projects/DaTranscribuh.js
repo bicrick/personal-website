@@ -68,67 +68,101 @@ function ThemePill() {
 }
 
 /**
- * Static capture island: pill with chip count + the grab tucked in the chip
- * so it reads as "this got captured". Theme-aware order-now snippet.
+ * Screenshots → transcript → one paste.
+ * Quiet CSS loop: grab while talking, each snip lands inline, then one
+ * interleaved paste into an agent/chat box. Reduced-motion shows the end state.
  */
-function CaptureVisual() {
+const MERGE_LINES = [
+  { n: 1, text: 'this button is ugly', img: 'grab-merge-1' },
+  { n: 2, text: 'make this blue', img: 'grab-merge-2' },
+  { n: 3, text: 'why is this here', img: 'grab-merge-3' },
+];
+
+function ThemePair({ base, width, height }) {
   return (
-    <div className="dt-visual dt-capture" aria-hidden="true">
-      <div className="dt-capture-row">
-        <div className="dt-capture-pill">
-          <span className="dt-capture-dot" />
-          <span className="dt-capture-clock">0:04</span>
-          <span className="dt-capture-wave">
-            {Array.from({ length: 28 }, (_, i) => {
-              const t = i / 27;
-              const env = 1 - Math.abs(t - 0.5) * 1.4;
-              const h = 22 + Math.max(0.2, env) * 48 * (0.55 + 0.45 * Math.sin(i * 1.7));
-              return <i key={i} style={{ height: `${h}%` }} />;
-            })}
-          </span>
-          <span className="dt-capture-chip">
-            <span className="dt-capture-chip-n">1</span>
-            <span className="dt-capture-chip-thumb">
-              <img
-                className="dt-theme-light"
-                src={`${IMG}/grab-chip-light.jpg`}
-                alt=""
-                width={96}
-                height={36}
-                loading="lazy"
-                decoding="async"
-              />
-              <img
-                className="dt-theme-dark"
-                src={`${IMG}/grab-chip-dark.jpg`}
-                alt=""
-                width={96}
-                height={36}
-                loading="lazy"
-                decoding="async"
-              />
+    <>
+      <img
+        className="dt-theme-light"
+        src={`${IMG}/${base}-light.jpg`}
+        alt=""
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        className="dt-theme-dark"
+        src={`${IMG}/${base}-dark.jpg`}
+        alt=""
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+      />
+    </>
+  );
+}
+
+function CaptureVisual() {
+  const wave = Array.from({ length: 28 }, (_, i) => {
+    const t = i / 27;
+    const env = 1 - Math.abs(t - 0.5) * 1.4;
+    const h = 22 + Math.max(0.2, env) * 48 * (0.55 + 0.45 * Math.sin(i * 1.7));
+    return <i key={i} style={{ height: `${h}%` }} />;
+  });
+
+  return (
+    <div className="dt-visual dt-merge" aria-hidden="true">
+      <div className="dt-merge-stage">
+        <div className="dt-merge-during">
+          <div className="dt-capture-pill">
+            <span className="dt-capture-dot" />
+            <span className="dt-capture-clock">0:08</span>
+            <span className="dt-capture-wave">{wave}</span>
+            <span className="dt-capture-chip">
+              <span className="dt-capture-chip-n dt-merge-count">3</span>
+              <span className="dt-capture-chip-thumb dt-merge-chip-stack">
+                {MERGE_LINES.map((line) => (
+                  <span key={line.n} className={`dt-merge-chip-frame dt-merge-step-${line.n}`}>
+                    <ThemePair base={`${line.img}-chip`} width={48} height={18} />
+                  </span>
+                ))}
+              </span>
             </span>
-          </span>
+          </div>
+          <div className="dt-merge-grabs">
+            {MERGE_LINES.map((line) => (
+              <div key={line.n} className={`dt-merge-grab dt-merge-step-${line.n}`}>
+                <span className="dt-merge-badge">{line.n}</span>
+                <ThemePair base={line.img} width={140} height={52} />
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="dt-capture-grab">
-          <img
-            className="dt-theme-light"
-            src={`${IMG}/grab-order-light.jpg`}
-            alt=""
-            width={168}
-            height={64}
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            className="dt-theme-dark"
-            src={`${IMG}/grab-order-dark.jpg`}
-            alt=""
-            width={168}
-            height={64}
-            loading="lazy"
-            decoding="async"
-          />
+
+        <div className="dt-merge-cue">
+          <span className="dt-merge-cue-arrow">↓</span>
+          <span className="dt-merge-cue-key">fn</span>
+          <span className="dt-merge-cue-label">one paste</span>
+        </div>
+
+        <div className="dt-merge-paste">
+          <div className="dt-merge-paste-chrome">
+            <span className="dt-merge-paste-dots" />
+            <span>agent</span>
+          </div>
+          <div className="dt-merge-paste-body">
+            {MERGE_LINES.map((line) => (
+              <div key={line.n} className={`dt-merge-line dt-merge-step-${line.n}`}>
+                <span className="dt-merge-thumb">
+                  <ThemePair base={line.img} width={72} height={28} />
+                </span>
+                <span className="dt-merge-line-text">
+                  <span className="dt-merge-line-n">{line.n}.</span> {line.text}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -225,7 +259,7 @@ function DaTranscribuh() {
 
       <h2>/ screenshots</h2>
       <CaptureVisual />
-      <p>grab part of the screen while you talk. pics and words paste together.</p>
+      <p>grab while you talk. each pic drops into the words. one paste, pics and text in order.</p>
 
       <h2>/ clipboard</h2>
       <ClipboardVisual />
