@@ -13,7 +13,7 @@ function Scribe() {
       date="October 2026"
       linkHref={SITE}
       linkLabel="site (invite only)"
-      abstract="Ask for anything and scribe writes it by hand. Study notes, a letter, a toast. You watch the pen move."
+      abstract="Ask for anything and scribe writes it by hand. A free-body diagram, an integral, a circuit. You watch the pen move."
     >
       <Suspense
         fallback={
@@ -29,8 +29,8 @@ function Scribe() {
       </p>
 
       <p>
-        the reel above is canned — newton's third law, ohm's law, integration by parts,
-        a thank-you letter, a wedding toast. same pipeline the live app uses, just offline.
+        the reel above is canned — newton's third law with a free-body diagram, a definite
+        integral by parts, ohm's law with a labeled circuit. same pipeline the live app uses, just offline.
       </p>
 
       <p>
