@@ -142,7 +142,7 @@ function CaptureVisual() {
 
         <div className="dt-merge-cue">
           <span className="dt-merge-cue-arrow">↓</span>
-          <span className="dt-merge-cue-key">⌥ space</span>
+          <span className="dt-merge-cue-key">fn</span>
           <span className="dt-merge-cue-label">one paste</span>
         </div>
 
