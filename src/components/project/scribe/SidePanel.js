@@ -51,12 +51,14 @@ function statusKind(stage) {
   return '';
 }
 
-function fmtClock(p, totalSec = 45) {
-  const sec = Math.max(0, Math.round((p || 0) * totalSec));
+function fmtClock(p, totalSec = 0) {
+  const sec = Math.max(0, Math.round((p || 0) * (totalSec || 0)));
   const m = Math.floor(sec / 60);
   const s = sec % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
 }
+
+const SPEED_OPTS = [1, 2, 4];
 
 export default function SidePanel({
   scenarios,
@@ -75,6 +77,9 @@ export default function SidePanel({
   onTogglePlay,
   playing = false,
   userPaused = false,
+  userSpeed = 1,
+  setUserSpeed,
+  wallTotalSec = 0,
   penProgress,
   scrubPen,
   setScrubbing,
@@ -89,6 +94,7 @@ export default function SidePanel({
   const playerOn = Boolean(scenario) && (writing || done || stage === 'regions' || stage === 'wire');
   const fill = `${Math.round((penProgress || 0) * 100)}%`;
   const showPause = writing && playing && !userPaused;
+  const clock = fmtClock(penProgress, wallTotalSec);
 
   return (
     <aside className="sqd-panel" aria-label="Scribe controls">
@@ -186,6 +192,19 @@ export default function SidePanel({
         </div>
 
         <div className={`sqd-player${playerOn ? '' : ' is-off'}${done ? ' is-done' : ''}`}>
+          <div className="sqd-speed" role="group" aria-label="Playback speed">
+            {SPEED_OPTS.map((sp) => (
+              <button
+                key={sp}
+                type="button"
+                className={userSpeed === sp ? 'is-on' : ''}
+                aria-pressed={userSpeed === sp}
+                onClick={() => setUserSpeed && setUserSpeed(sp)}
+              >
+                {sp}x
+              </button>
+            ))}
+          </div>
           <div className="sqd-transport">
             <button
               type="button"
@@ -210,7 +229,7 @@ export default function SidePanel({
               onPointerCancel={() => setScrubbing && setScrubbing(false)}
               onChange={(e) => scrubPen(Number(e.target.value) / 1000)}
             />
-            <span className="sqd-clock">{fmtClock(penProgress)}</span>
+            <span className="sqd-clock">{clock}</span>
             <button
               type="button"
               className={`sqd-snd${soundOn ? '' : ' is-off'}`}

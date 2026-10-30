@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SCENARIO_BY_ID, SCENARIOS } from './scenarios';
 import {
-  DEFAULT_SPEED,
   buildTimeline,
   inkColor,
   progressAt,
@@ -14,14 +13,10 @@ const STEP_MS = 620;
 const WIRE_AT = 2;
 const REGIONS_AT = 3;
 const WRITE_AT = 4;
-/** Wall-clock seconds the pen takes per page (each page lands in the 30-60s band). */
-export const DEMO_TARGET_S = 45;
+/** User-facing playback multipliers. 1x = real-time ink clock (PEN_MM_S). */
+export const SPEED_OPTIONS = [1, 2, 4];
+export const DEFAULT_USER_SPEED = 1;
 
-/** Playback speed so this timeline's write phase takes ~DEMO_TARGET_S. */
-export function demoSpeed(tl) {
-  if (!tl || !tl.writeEnd) return DEFAULT_SPEED;
-  return Math.max(DEFAULT_SPEED, tl.writeEnd / DEMO_TARGET_S);
-}
 
 function timelineFor(scenario, handId) {
   if (!scenario) return null;
@@ -42,8 +37,9 @@ function timelineFor(scenario, handId) {
 /**
  * Plays one canned scribe run: type the request, step the activity log,
  * reveal paper → (optional) wireframe → parallel regions → pen at the
- * friends-app live.js clock (DEFAULT_SPEED ×). `fast` skips pacing for
- * reduced-motion. Timers freeze while `paused` is true.
+ * real-time ink clock (1x) times the user speed multiplier. `fast` skips
+ * pacing for reduced-motion. Timers freeze while `paused` is true.
+ * Speeds never compound: only userSpeed advances the pen clock.
  */
 export default function useOrchestrate({
   fast = false,
@@ -64,6 +60,8 @@ export default function useOrchestrate({
   const [replayKey, setReplayKey] = useState(0);
   const [userPaused, setUserPausedState] = useState(false);
   const userPausedRef = useRef(false);
+  const [userSpeed, setUserSpeedState] = useState(DEFAULT_USER_SPEED);
+  const userSpeedRef = useRef(DEFAULT_USER_SPEED);
   const stageRef = useRef('idle');
   const finishRef = useRef(() => {});
   const timers = useRef([]);
@@ -79,7 +77,7 @@ export default function useOrchestrate({
     strokes: [],
     playing: false,
     scrubbing: false,
-    speed: DEFAULT_SPEED,
+    speed: DEFAULT_USER_SPEED,
   });
 
   useEffect(() => {
@@ -97,6 +95,14 @@ export default function useOrchestrate({
   const setUserPaused = useCallback((on) => {
     userPausedRef.current = !!on;
     setUserPausedState(!!on);
+  }, []);
+
+  const setUserSpeed = useCallback((sp) => {
+    const n = Number(sp);
+    const next = SPEED_OPTIONS.includes(n) ? n : DEFAULT_USER_SPEED;
+    userSpeedRef.current = next;
+    setUserSpeedState(next);
+    playbackRef.current.speed = next;
   }, []);
 
   const clearTimers = useCallback(() => {
@@ -162,14 +168,15 @@ export default function useOrchestrate({
   const loopPen = useCallback((tl) => {
     if (penRaf.current) cancelAnimationFrame(penRaf.current);
     timelineRef.current = tl;
-    const speed = demoSpeed(tl);
     penLast.current = 0;
     const tick = (now) => {
       const held = pausedRef.current || userPausedRef.current || scrubbingRef.current;
       const last = penLast.current || now;
       const dtReal = held ? 0 : Math.min(0.1, (now - last) / 1000);
       penLast.current = now;
+      const speed = userSpeedRef.current || DEFAULT_USER_SPEED;
       // playbackRef.vt is the source of truth (scrubPen writes it too).
+      // Only userSpeed advances the clock — no demo compression stacked on top.
       const next = Math.min(tl.writeEnd, (playbackRef.current.vt || 0) + dtReal * speed);
       playbackRef.current.vt = next;
       playbackRef.current.strokes = tl.strokes;
@@ -199,7 +206,7 @@ export default function useOrchestrate({
     playbackRef.current.strokes = tl.strokes;
     playbackRef.current.vt = 0;
     playbackRef.current.playing = !fast;
-    playbackRef.current.speed = demoSpeed(tl);
+    playbackRef.current.speed = userSpeedRef.current || DEFAULT_USER_SPEED;
     if (fast) {
       setPenVt(tl.writeEnd);
       playbackRef.current.vt = tl.writeEnd;
@@ -377,8 +384,8 @@ export default function useOrchestrate({
     playbackRef.current.strokes = (tl && tl.strokes) || [];
     playbackRef.current.playing = stage === 'write' && !userPaused && !scrubbingRef.current;
     playbackRef.current.scrubbing = scrubbingRef.current;
-    playbackRef.current.speed = demoSpeed(tl);
-  }, [penVt, stage, userPaused]);
+    playbackRef.current.speed = userSpeedRef.current || DEFAULT_USER_SPEED;
+  }, [penVt, stage, userPaused, userSpeed]);
 
   const setScrubbing = useCallback((on) => {
     scrubbingRef.current = !!on;
@@ -414,7 +421,10 @@ export default function useOrchestrate({
     replayPen,
     togglePlay,
     userPaused,
+    userSpeed,
+    setUserSpeed,
     playing: stage === 'write' && !userPaused,
+    wallTotalSec: penEnd > 0 ? penEnd / (userSpeed || DEFAULT_USER_SPEED) : 0,
     scrubPen,
     setScrubbing,
     playbackRef,

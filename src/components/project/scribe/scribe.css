@@ -54,15 +54,15 @@
 
 .sqd-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: 12px;
   align-items: stretch;
-  /* Fixed friends-app frame — page switches must not resize this box. */
-  aspect-ratio: 16 / 10;
+  /* Fixed friends-app frame — page / macro / panel never resize mid-play. */
   width: 100%;
-  max-height: min(68vh, 620px);
-  min-height: 420px;
-  height: auto;
+  height: min(72vh, 640px);
+  max-height: min(72vh, 640px);
+  min-height: 480px;
+  overflow: hidden;
 }
 
 /* ---- desk (no browser chrome) ---- */
@@ -94,12 +94,55 @@ html.is-dark .sqd-desk {
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;
-  height: 100%;
   display: grid;
   place-items: center;
-  padding: 14px 12px 8px;
+  padding: 10px 10px 6px;
   container-type: size;
   container-name: sqd-vp;
+}
+
+.sqd-macro {
+  position: relative;
+  flex: 0 0 26%;
+  min-height: 96px;
+  max-height: 150px;
+  margin: 0 10px 0;
+  border: 1px solid rgba(40, 22, 5, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 8px 18px -12px rgba(30, 15, 0, 0.55);
+  background: var(--sqd-white);
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.sqd-macro.is-empty {
+  background: rgba(255, 248, 235, 0.35);
+}
+
+.sqd-macro-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sqd-macro-tag {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(24, 42, 80, 0.55);
+  background: rgba(255, 254, 251, 0.78);
+  padding: 2px 6px;
+  pointer-events: none;
+}
+
+html.is-dark .sqd-macro-tag {
+  color: rgba(220, 228, 245, 0.7);
+  background: rgba(20, 28, 48, 0.55);
 }
 
 .sqd-desk-meta {
@@ -274,7 +317,7 @@ html.is-dark .sqd-sheet {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 0;
+  overflow-x: hidden;
   background: var(--sqd-paper);
   border: 1px solid var(--sqd-line-2);
   border-radius: 0;
@@ -299,12 +342,14 @@ html.is-dark .sqd-panel {
 .sqd-panel-scroll {
   flex: 1 1 auto;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
-  padding: 20px 18px 16px;
+  padding: 14px 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   scrollbar-width: thin;
+  box-sizing: border-box;
 }
 
 .sqd-compose {
@@ -513,16 +558,19 @@ html.is-dark .sqd-icon-btn:hover {
 /* ---- transport / player ---- */
 
 .sqd-player {
-  display: grid;
-  gap: 12px;
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
   border-radius: 0;
   background: rgba(35, 58, 107, 0.045);
   border: 1px solid var(--sqd-line);
   transition: opacity 0.35s var(--sqd-ease), max-height 0.45s var(--sqd-ease),
     padding 0.35s, margin 0.35s, border-width 0.35s;
   overflow: hidden;
-  max-height: 120px;
+  max-height: 160px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 html.is-dark .sqd-player {
@@ -539,15 +587,52 @@ html.is-dark .sqd-player {
   pointer-events: none;
 }
 
+.sqd-speed {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--sqd-line-2);
+  background: var(--sqd-white);
+  min-width: 0;
+}
+
+.sqd-speed button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--sqd-text-2);
+  font: 600 11px/1 var(--sqd-sans);
+  letter-spacing: 0.04em;
+  padding: 7px 4px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.sqd-speed button + button {
+  border-left: 1px solid var(--sqd-line);
+}
+
+.sqd-speed button.is-on {
+  background: var(--sqd-navy);
+  color: #fff;
+}
+
+.sqd-speed button:hover:not(.is-on) {
+  background: rgba(35, 58, 107, 0.06);
+}
+
 .sqd-transport {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sqd-round {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   border-radius: 0;
   border: 0;
   display: grid;
@@ -562,7 +647,7 @@ html.is-dark .sqd-player {
 .sqd-round:hover:not(:disabled) { background: var(--sqd-navy-deep); }
 .sqd-round:active:not(:disabled) { transform: scale(0.94); }
 .sqd-round:disabled { opacity: 0.45; cursor: default; }
-.sqd-round svg.i { width: 18px; height: 18px; fill: currentColor; }
+.sqd-round svg.i { width: 16px; height: 16px; fill: currentColor; }
 .sqd-player.is-done .sqd-round svg.i {
   fill: none;
   stroke: currentColor;
@@ -605,16 +690,18 @@ html.is-dark .sqd-player {
 .sqd-scrub:disabled { opacity: 0.45; cursor: default; }
 
 .sqd-clock {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--sqd-muted);
   font-variant-numeric: tabular-nums;
-  min-width: 2.6em;
+  min-width: 3em;
   text-align: right;
+  flex: none;
+  white-space: nowrap;
 }
 
 .sqd-snd {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   border: 1px solid var(--sqd-line-2);
@@ -635,21 +722,33 @@ html.is-dark .sqd-player {
   .sqd-stage {
     grid-template-columns: 1fr;
     gap: 12px;
-    aspect-ratio: auto;
+    height: auto;
     max-height: none;
     min-height: 0;
+    overflow: visible;
   }
   .sqd-desk {
     min-height: 0;
-    aspect-ratio: 4 / 5;
-    max-height: min(70vh, 520px);
+    height: auto;
+    max-height: none;
   }
   .sqd-viewport {
     min-height: 0;
     height: auto;
+    aspect-ratio: 216 / 279;
+    max-height: min(52vh, 420px);
     padding: 12px 10px 8px;
   }
-  .sqd-panel { max-height: none; }
+  .sqd-macro {
+    flex: none;
+    height: 110px;
+    max-height: 110px;
+    margin: 0 10px 4px;
+  }
+  .sqd-panel {
+    max-height: none;
+    overflow-x: hidden;
+  }
 }
 
 @container sqd (max-width: 420px) {

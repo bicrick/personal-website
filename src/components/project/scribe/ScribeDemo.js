@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PaperView from './PaperView';
+import MacroView from './MacroView';
 import SidePanel from './SidePanel';
 import useOrchestrate from './useOrchestrate';
 import usePenSound from './usePenSound';
@@ -132,6 +133,15 @@ export default function ScribeDemo({
               replayKey={orch.replayKey}
             />
           </div>
+          <MacroView
+            scenario={orch.scenario}
+            handId={orch.handId}
+            playbackRef={orch.playbackRef}
+            penVt={orch.penVt}
+            stage={orch.stage}
+            replayKey={orch.replayKey}
+            reduced={reduced}
+          />
           <div className="sqd-desk-meta" aria-hidden="true">
             <span>
               {regionTotal ? `regions ${regionDone}/${regionTotal}` : 'regions —'}
@@ -166,6 +176,9 @@ export default function ScribeDemo({
           onTogglePlay={orch.togglePlay}
           playing={orch.playing}
           userPaused={orch.userPaused}
+          userSpeed={orch.userSpeed}
+          setUserSpeed={orch.setUserSpeed}
+          wallTotalSec={orch.wallTotalSec}
           penProgress={orch.penProgress}
           scrubPen={orch.scrubPen}
           setScrubbing={orch.setScrubbing}
