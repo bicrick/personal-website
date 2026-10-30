@@ -71,8 +71,12 @@ export default function ScribeDemo({
   useEffect(() => {
     if (disableAutoplay || bootDone || bootScenario) return undefined;
     if (!inView || autoplayed.current || reduced) return undefined;
-    autoplayed.current = true;
-    const id = window.setTimeout(() => start('card'), 900);
+    // Mark played only when it actually fires: inView starts optimistic-true,
+    // so IO flipping to false before 900ms must not burn the one autoplay.
+    const id = window.setTimeout(() => {
+      autoplayed.current = true;
+      start('card');
+    }, 900);
     return () => window.clearTimeout(id);
   }, [inView, reduced, start, disableAutoplay, bootDone, bootScenario]);
 
@@ -80,8 +84,10 @@ export default function ScribeDemo({
   useEffect(() => {
     if (!bootScenario || bootDone) return undefined;
     if (!inView || autoplayed.current) return undefined;
-    autoplayed.current = true;
-    const id = window.setTimeout(() => start(bootScenario), forceFast ? 50 : 200);
+    const id = window.setTimeout(() => {
+      autoplayed.current = true;
+      start(bootScenario);
+    }, forceFast ? 50 : 200);
     return () => window.clearTimeout(id);
   }, [bootScenario, bootDone, inView, start, forceFast]);
 
