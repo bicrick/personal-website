@@ -186,7 +186,7 @@ function strokeAt(strokes, t) {
   return lo;
 }
 
-function tipAt(strokes, t) {
+export function tipAt(strokes, t) {
   if (!strokes.length) return null;
   const i = strokeAt(strokes, t);
   if (i < 0) {
