@@ -465,6 +465,43 @@ section {
   filter: drop-shadow(10px 10px 12px var(--shadow-strong));
 }
 
+
+/* Theme-aware project-card video (html.is-dark). Twin muted loops. */
+.project-card-theme-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.project-card-theme-media video {
+  /* inherits .project-card video absolute fill */
+}
+
+.project-card-theme-media .project-card-theme-dark {
+  display: none;
+}
+
+html.is-dark .project-card-theme-media .project-card-theme-light {
+  display: none;
+}
+
+html.is-dark .project-card-theme-media .project-card-theme-dark {
+  display: block;
+}
+
+.featured-media .project-card-theme-media {
+  position: absolute;
+  inset: 0;
+}
+
+.featured-media .project-card-theme-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .project-card img,
 .project-card video {
   position: absolute;

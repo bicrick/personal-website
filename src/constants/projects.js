@@ -59,8 +59,13 @@ export const PROJECTS = [
     title: 'da transcribuh',
     description: 'on-device voice-to-text for your mac',
     timelineDescription:
-      'A free macOS menu bar app. Hit option-space, talk, and the text pastes wherever you are typing. Runs locally with WhisperKit.',
-    image: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-demo.webp`,
+      'A free macOS menu bar app. Hit option-space, talk, and the text pastes wherever you are typing. Runs locally with Parakeet v2.',
+    // Theme-aware waving pill (card). Old da-transcribuh-demo.webp kept in public/ but unused.
+    image: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-pill-light-poster.jpg`,
+    video: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-pill-light.mp4`,
+    videoDark: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-pill-dark.mp4`,
+    poster: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-pill-light-poster.jpg`,
+    posterDark: `${process.env.PUBLIC_URL}/images/da-transcribuh/da-transcribuh-pill-dark-poster.jpg`,
     blogLink: '/projects/da-transcribuh',
     appLink: 'https://da-transcribuh-site.vercel.app',
     appLabel: 'try',

@@ -134,6 +134,33 @@ export default function ProjectTile({
     <CartPoleTilePreview />
   ) : project.livePreview === 'notepadable' ? (
     <NotepadableTilePreview />
+  ) : project.video ? (
+    <span className="project-card-theme-media" aria-hidden="true">
+      <video
+        className="project-card-theme-light"
+        src={project.video}
+        poster={project.poster || project.image}
+        width="768"
+        height="432"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      <video
+        className="project-card-theme-dark"
+        src={project.videoDark || project.video}
+        poster={project.posterDark || project.poster || project.image}
+        width="768"
+        height="432"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+    </span>
   ) : project.image ? (
     <img src={project.image} alt={project.title} width="1200" height="600" />
   ) : (

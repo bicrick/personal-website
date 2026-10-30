@@ -28,6 +28,36 @@ function FeaturedMedia({ project }) {
   if (project.livePreview === 'notepadable') {
     return <NotepadableTilePreview />;
   }
+  if (project.video) {
+    return (
+      <span className="project-card-theme-media" aria-hidden="true">
+        <video
+          className="project-card-theme-light"
+          src={project.video}
+          poster={project.poster || project.image}
+          width="768"
+          height="432"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+        <video
+          className="project-card-theme-dark"
+          src={project.videoDark || project.video}
+          poster={project.posterDark || project.poster || project.image}
+          width="768"
+          height="432"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+      </span>
+    );
+  }
   if (project.image) {
     return (
       <img

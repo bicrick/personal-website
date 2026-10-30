@@ -28,8 +28,8 @@ function DaTranscribuh() {
       <figure className="project-figure dt-theme-shot">
         <video
           className="dt-theme-shot-light"
-          src={`${IMG}/pill-hero-light.mp4`}
-          poster={`${IMG}/pill-hero-light-poster.jpg`}
+          src={`${IMG}/da-transcribuh-hero-light.mp4`}
+          poster={`${IMG}/da-transcribuh-hero-light-poster.jpg`}
           width={1280}
           height={720}
           autoPlay
@@ -41,8 +41,8 @@ function DaTranscribuh() {
         />
         <video
           className="dt-theme-shot-dark"
-          src={`${IMG}/pill-hero-dark.mp4`}
-          poster={`${IMG}/pill-hero-dark-poster.jpg`}
+          src={`${IMG}/da-transcribuh-hero-dark.mp4`}
+          poster={`${IMG}/da-transcribuh-hero-dark-poster.jpg`}
           width={1280}
           height={720}
           autoPlay
