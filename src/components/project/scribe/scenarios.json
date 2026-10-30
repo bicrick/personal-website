@@ -16,7 +16,7 @@
       "kind": "card",
       "label": "thank-you card",
       "width_mm": 140,
-      "height_mm": 108,
+      "height_mm": 74,
       "ruled": false,
       "margins": {
         "l": 12,
@@ -102,7 +102,7 @@
     },
     "ink": {
       "w": 140,
-      "h": 108,
+      "h": 74,
       "strokes": [
         {
           "xs": [
@@ -4147,7 +4147,7 @@
     "inkByHand": {
       "neat": {
         "w": 140,
-        "h": 108,
+        "h": 74,
         "strokes": [
           {
             "xs": [
@@ -8191,7 +8191,7 @@
       },
       "slant": {
         "w": 140,
-        "h": 108,
+        "h": 74,
         "strokes": [
           {
             "xs": [

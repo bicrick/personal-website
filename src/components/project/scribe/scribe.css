@@ -2,6 +2,8 @@
 
 .sqd {
   margin: 8px 0 28px;
+  container-type: inline-size;
+  container-name: sqd;
 }
 
 .sqd figcaption {
@@ -26,6 +28,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
   border: 1px solid var(--rule);
   background: var(--surface);
   border-radius: 6px;
@@ -90,12 +94,15 @@
 
 .sqd-viewport {
   position: relative;
-  min-height: 280px;
+  flex: 1 1 auto;
+  min-height: 240px;
+  min-width: 0;
   background: var(--paper);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  container-type: size;
+  container-name: sqd-vp;
 }
 
 .sqd-status {
@@ -132,14 +139,16 @@
 /* ---- page / paper ---- */
 
 .sqd-page {
-  /* Fit inside the viewport while keeping paper aspect — never let
-     max-height stretch width, or ink (stretch) drifts from wire (meet). */
+  /* Fill the stage viewport while keeping paper aspect. Width/height both
+     come from the viewport size container so ink + wire share one transform. */
   position: relative;
-  width: min(100%, calc(62vh * var(--page-ar, 1)));
+  box-sizing: border-box;
+  aspect-ratio: var(--page-ar, 1);
+  width: min(100cqw, calc(100cqh * var(--page-ar, 1)));
   max-width: 100%;
-  max-height: 62vh;
+  max-height: 100%;
   height: auto;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .sqd-page-empty {
@@ -564,15 +573,92 @@ html.is-dark .sqd-page.is-sticky .sqd-sheet {
   animation: sqd-blink 1.06s steps(1) infinite;
 }
 
+/* Stack on narrow *containers* (article column ~505px inside a wide
+   window). Viewport media alone never sees the real embed width. */
+@container sqd (max-width: 760px) {
+  .sqd-stage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .sqd-browser {
+    height: auto;
+  }
+  .sqd-viewport {
+    /* Page height drives the stage; drop size-container so 100cqw == stage. */
+    container-type: inline-size;
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 10px 12px;
+  }
+  .sqd-page {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    height: auto;
+  }
+  .sqd-body {
+    max-height: 132px;
+    min-height: 0;
+  }
+  .sqd-panel-head {
+    padding: 8px 10px;
+  }
+  .sqd-panel-pill {
+    font-size: 9.5px;
+  }
+  .sqd-controls {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+  .sqd-hands {
+    padding: 0 10px 6px;
+  }
+  .sqd-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 8px 10px;
+    scrollbar-width: thin;
+  }
+  .sqd-chips button {
+    flex: 0 0 auto;
+  }
+  .sqd-input {
+    margin: 0 10px 10px;
+    padding: 7px 9px;
+  }
+  .sqd-status {
+    gap: 10px;
+    font-size: 10px;
+  }
+}
+
+/* Viewport fallback when the demo is itself the full mobile page */
 @media (max-width: 760px) {
   .sqd-stage {
     grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .sqd-browser {
+    height: auto;
   }
   .sqd-viewport {
-    min-height: 240px;
+    container-type: inline-size;
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 10px 12px;
+  }
+  .sqd-page {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
   }
   .sqd-body {
-    max-height: 220px;
+    max-height: 132px;
+    min-height: 0;
+  }
+  .sqd-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 }
 
