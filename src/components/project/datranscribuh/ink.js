@@ -45,6 +45,20 @@ export const ClassicScale = {
 
 export const WaveformCount = 64;
 
+/** IslandChromeMotion slot ease — tau ~0.07 settles in ~0.22–0.25s. */
+export const IslandSlotTau = 0.07;
+/** ChromeHost.revealIsland fade-in. */
+export const IslandFadeIn = 0.26;
+/** ChromeHost.dismissIsland fade-out. */
+export const IslandFadeOut = 0.34;
+/** Material-like standard curve used for island fade (controlPoints 0.4, 0, 0.2, 1). */
+export const IslandFadeEase = 'cubic-bezier(0.4, 0, 0.2, 1)';
+/** FrequencyBands.smooth live follow() taus while voiced. */
+export const WaveAttackTau = 0.04;
+export const WaveReleaseTau = 0.07;
+/** FrequencyBands.smooth defaults (slower release used when decaying to idle). */
+export const WaveIdleReleaseTau = 0.26;
+
 export function formatClock(seconds) {
   const total = Math.max(0, Math.floor(seconds));
   const hours = Math.floor(total / 3600);
@@ -56,29 +70,116 @@ export function formatClock(seconds) {
   return `${minutes}:${String(secs).padStart(2, '0')}`;
 }
 
-/** Live-ish waveform levels (WaveformMotion.loading) — soft dual-hump travel. */
-export function waveformLevels(time, count = WaveformCount) {
+/** FrequencyBands.resting — low center envelope. */
+export function restingLevels(count = WaveformCount) {
   if (count <= 0) return [];
-  const travel = time * 0.48;
   const span = Math.max(count - 1, 1);
-  const wrap = (v) => {
-    const w = v % 1;
-    return w < 0 ? w + 1 : w;
-  };
-  const hump = (x, center, width) => {
-    let delta = Math.abs(x - center);
-    if (delta > 0.5) delta = 1 - delta;
-    const half = width / 2;
-    if (delta >= half || half <= 0) return 0;
-    return 0.5 + 0.5 * Math.cos((delta / half) * Math.PI);
-  };
   return Array.from({ length: count }, (_, index) => {
-    const x = index / span;
-    const lead = hump(x, wrap(travel), 0.22);
-    const follow = hump(x, wrap(travel + 0.42), 0.16);
-    const level = 0.1 + lead * 0.34 + follow * 0.2;
-    return Math.min(1, Math.max(0.08, level));
+    const position = index / span;
+    const center = Math.max(0, 1 - Math.abs(position - 0.5) * 2);
+    return 0.08 + 0.05 * center;
   });
+}
+
+/** FrequencyBands.shaped — single loudness → comb with center bias. */
+export function shapedLevels(level, count = WaveformCount) {
+  if (count <= 0) return [];
+  const span = Math.max(count - 1, 1);
+  const amp = Math.min(1, Math.max(0, level));
+  return Array.from({ length: count }, (_, index) => {
+    const position = index / span;
+    const envelope = 1 - Math.abs(position - 0.5) * 1.15;
+    const height = 0.08 + amp * 0.9 * Math.max(0.25, envelope);
+    return Math.min(1, Math.max(0.08, height));
+  });
+}
+
+/** FrequencyBands.soften — share energy with neighbors. */
+export function softenLevels(levels) {
+  if (!levels || levels.length <= 2) return levels || [];
+  return levels.map((_, index) => {
+    const left = levels[Math.max(0, index - 1)];
+    const right = levels[Math.min(levels.length - 1, index + 1)];
+    return left * 0.22 + levels[index] * 0.56 + right * 0.22;
+  });
+}
+
+/**
+ * FrequencyBands.smooth — exponential approach; rise uses attackTau, fall uses releaseTau.
+ * delta is seconds since last frame.
+ */
+export function smoothLevels(
+  current,
+  target,
+  delta = 1 / 60,
+  attackTau = WaveAttackTau,
+  releaseTau = WaveReleaseTau
+) {
+  const step = Math.max(0, delta);
+  const attack = 1 - Math.exp(-step / Math.max(attackTau, 0.001));
+  const release = 1 - Math.exp(-step / Math.max(releaseTau, 0.001));
+  const count = Math.max(current?.length || 0, target?.length || 0);
+  return Array.from({ length: count }, (_, index) => {
+    const from = index < (current?.length || 0) ? current[index] : 0.1;
+    const to = index < (target?.length || 0) ? target[index] : 0.1;
+    const rate = to > from ? attack : release;
+    return from + (to - from) * rate;
+  });
+}
+
+/** IslandSlots.step — same exponential used for chrome open amount. */
+export function approach(value, target, delta, tau = IslandSlotTau) {
+  if (!(tau > 0)) return target;
+  const rate = 1 - Math.exp(-Math.max(0, delta) / tau);
+  return value + (target - value) * rate;
+}
+
+/**
+ * Speech-ish loudness for the character under the cursor.
+ * Letters → voiced (vowels louder); spaces → quiet; punctuation → near-idle.
+ */
+export function charVoicing(ch, jitter = 0) {
+  if (!ch || /\s/.test(ch)) return 0.02;
+  if (/[.,;:!?…'"“”‘’()[\]{}]/.test(ch)) return 0.06;
+  const j = Math.max(-0.08, Math.min(0.08, jitter));
+  if (/[aeiouy]/i.test(ch)) return Math.min(1, 0.78 + j);
+  if (/[mnrwl]/i.test(ch)) return Math.min(1, 0.55 + j);
+  return Math.min(1, 0.42 + j);
+}
+
+/**
+ * Build a raw comb from text progress.
+ * `charIndex` is how many characters have been "spoken"/typed (0..length).
+ * Adds a short trailing syllable hump so bars aren't a flat plate.
+ */
+export function speechTargetFromText(text, charIndex, count = WaveformCount, now = 0) {
+  const rest = restingLevels(count);
+  if (!text || text.length === 0) return rest;
+  const i = Math.max(0, Math.min(text.length, Math.floor(charIndex)));
+  const ch = i > 0 ? text[i - 1] : '';
+  // Tiny deterministic jitter from time + index so bars don't lock in sync.
+  const jitter =
+    0.06 * Math.sin(now * 17.3 + i * 0.7) + 0.04 * Math.cos(now * 11.1 + i * 1.3);
+  const level = charVoicing(ch, jitter);
+  // Local syllable envelope: recent letters share energy, gaps mute.
+  let syllable = level;
+  if (i > 1) {
+    const prev = charVoicing(text[i - 2], jitter * 0.5);
+    syllable = Math.max(level, prev * 0.55);
+  }
+  // Soft left→right travel so the comb reads as speech, not a meter.
+  const span = Math.max(count - 1, 1);
+  const focus = ((i % 13) / 13) * 0.55 + 0.22;
+  const raw = Array.from({ length: count }, (_, index) => {
+    const position = index / span;
+    const near = 1 - Math.min(1, Math.abs(position - focus) * 2.4);
+    const envelope = 1 - Math.abs(position - 0.5) * 1.15;
+    const height =
+      0.08 +
+      syllable * 0.9 * Math.max(0.2, envelope) * (0.45 + 0.55 * Math.max(0.15, near));
+    return Math.min(1, Math.max(0.08, height));
+  });
+  return softenLevels(raw);
 }
 
 export function chipSpan(count) {

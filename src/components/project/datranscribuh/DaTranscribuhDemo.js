@@ -3,11 +3,24 @@ import RecordingIsland from './RecordingIsland';
 import SidePanel from './SidePanel';
 import MockShop, { GrabThumb } from './MockShop';
 import useReducedMotion from '../useReducedMotion';
-import { formatClock, waveformLevels } from './ink';
+import {
+  formatClock,
+  restingLevels,
+  smoothLevels,
+  speechTargetFromText,
+  WaveAttackTau,
+  WaveReleaseTau,
+  WaveIdleReleaseTau,
+  WaveformCount,
+} from './ink';
 import { DICTATE_SENTENCES, GRAB_TARGETS, HINTS } from './samples';
 import './datranscribuh.css';
 
 const TYPE_MS = 28;
+/** Rough on-device speech pace while the pill is held (~12–14 chars/s). */
+const SPEECH_MS = 72;
+/** After paste, linger on idle comb before dismissing the pill. */
+const CLOSE_AFTER_IDLE_MS = 420;
 
 function Collage({ items }) {
   if (!items.length) return null;
@@ -105,11 +118,13 @@ export default function DaTranscribuhDemo() {
   const holdStarted = useRef(0);
   const pauseBegan = useRef(null);
   const typeTimer = useRef(null);
+  const closeTimer = useRef(null);
 
   const [inView, setInView] = useState(false);
   const [focused, setFocused] = useState(false);
   const [mode, setMode] = useState('dictate');
   const [holding, setHolding] = useState(false);
+  const [islandOn, setIslandOn] = useState(false);
   const [busy, setBusy] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [captures, setCaptures] = useState(0);
@@ -120,18 +135,26 @@ export default function DaTranscribuhDemo() {
   const [activeGrabId, setActiveGrabId] = useState(null);
   const [status, setStatus] = useState('idle');
   const [raceOn, setRaceOn] = useState(false);
-  const [waveTick, setWaveTick] = useState(0);
+  const [levels, setLevels] = useState(() => restingLevels());
 
   const holdingRef = useRef(false);
   const busyRef = useRef(false);
   const modeRef = useRef(mode);
   const captureItemsRef = useRef(captureItems);
   const fieldTextRef = useRef('');
+  const islandOnRef = useRef(false);
+  const levelsRef = useRef(restingLevels());
+  const speechTextRef = useRef('');
+  const speechCharsRef = useRef(0);
+  const waveModeRef = useRef('idle'); // 'speech' | 'idle'
+  const pasteBaseLenRef = useRef(0);
+
   useEffect(() => { holdingRef.current = holding; }, [holding]);
   useEffect(() => { busyRef.current = busy; }, [busy]);
   useEffect(() => { modeRef.current = mode; }, [mode]);
   useEffect(() => { captureItemsRef.current = captureItems; }, [captureItems]);
   useEffect(() => { fieldTextRef.current = fieldText; }, [fieldText]);
+  useEffect(() => { islandOnRef.current = islandOn; }, [islandOn]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -159,18 +182,77 @@ export default function DaTranscribuhDemo() {
     return undefined;
   }, [holding, inView]);
 
-  // Live elapsed (TimeFormat.clock) + waveform while holding + in view
+  // Live elapsed while holding + in view
   useEffect(() => {
     if (!holding || !inView) return undefined;
     let raf = 0;
     const loop = (now) => {
       setElapsed((now - holdStarted.current) / 1000);
-      setWaveTick((now - holdStarted.current) / 1000);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
   }, [holding, inView]);
+
+  // Advance a speech cursor through the planned sentence while holding.
+  useEffect(() => {
+    if (!holding || !inView || reduced) return undefined;
+    const id = window.setInterval(() => {
+      const text = speechTextRef.current;
+      if (!text) return;
+      if (speechCharsRef.current < text.length) {
+        speechCharsRef.current += 1;
+      }
+    }, SPEECH_MS);
+    return () => window.clearInterval(id);
+  }, [holding, inView, reduced]);
+
+  // Smooth comb toward speech target or resting idle (FrequencyBands.smooth).
+  useEffect(() => {
+    if (!islandOn) {
+      levelsRef.current = restingLevels();
+      setLevels(levelsRef.current);
+      return undefined;
+    }
+    if (reduced) {
+      const mid = speechTargetFromText(
+        speechTextRef.current || 'talk',
+        Math.max(1, Math.floor((speechTextRef.current || 'talk').length * 0.4)),
+        WaveformCount,
+        0.35
+      );
+      levelsRef.current = mid;
+      setLevels(mid);
+      return undefined;
+    }
+    let raf = 0;
+    let last = performance.now();
+    const loop = (now) => {
+      const delta = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      const speaking = waveModeRef.current === 'speech';
+      const target = speaking
+        ? speechTargetFromText(
+            speechTextRef.current,
+            speechCharsRef.current,
+            WaveformCount,
+            now / 1000
+          )
+        : restingLevels();
+      const next = smoothLevels(
+        levelsRef.current,
+        target,
+        delta,
+        speaking ? WaveAttackTau : 0.05,
+        speaking ? WaveReleaseTau : WaveIdleReleaseTau
+      );
+      levelsRef.current = next;
+      setLevels(next);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [islandOn, reduced]);
 
   const clearType = () => {
     if (typeTimer.current) {
@@ -179,21 +261,49 @@ export default function DaTranscribuhDemo() {
     }
   };
 
+  const clearClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const dismissIsland = useCallback(() => {
+    waveModeRef.current = 'idle';
+    clearClose();
+    closeTimer.current = window.setTimeout(() => {
+      setIslandOn(false);
+      islandOnRef.current = false;
+      speechTextRef.current = '';
+      speechCharsRef.current = 0;
+      closeTimer.current = null;
+    }, reduced ? 0 : CLOSE_AFTER_IDLE_MS);
+  }, [reduced]);
+
   const typeIntoField = useCallback(
     (sentence, collage = []) => {
       clearType();
+      clearClose();
       busyRef.current = true;
       setBusy(true);
       setStatus('pasting');
       setPastedCollage(collage);
+      setIslandOn(true);
+      islandOnRef.current = true;
+      speechTextRef.current = sentence;
+      speechCharsRef.current = 0;
+      waveModeRef.current = 'speech';
       const base = fieldTextRef.current ? `${fieldTextRef.current}\n` : '';
+      pasteBaseLenRef.current = base.length;
       if (reduced) {
         const next = base + sentence;
         fieldTextRef.current = next;
         setFieldText(next);
+        speechCharsRef.current = sentence.length;
         busyRef.current = false;
         setBusy(false);
         setStatus('idle');
+        dismissIsland();
         return;
       }
       setFieldText(base);
@@ -204,15 +314,17 @@ export default function DaTranscribuhDemo() {
         const next = base + sentence.slice(0, i);
         fieldTextRef.current = next;
         setFieldText(next);
+        speechCharsRef.current = i;
         if (i >= sentence.length) {
           clearType();
           busyRef.current = false;
           setBusy(false);
           setStatus('idle');
+          dismissIsland();
         }
       }, TYPE_MS);
     },
-    [reduced]
+    [reduced, dismissIsland]
   );
 
   const endHold = useCallback(() => {
@@ -231,6 +343,8 @@ export default function DaTranscribuhDemo() {
       setCaptureItems([]);
       setMarquee(null);
       setActiveGrabId(null);
+      setIslandOn(false);
+      waveModeRef.current = 'idle';
       return;
     }
 
@@ -258,13 +372,29 @@ export default function DaTranscribuhDemo() {
     pauseBegan.current = null;
     setStatus('recording');
     setElapsed(0);
-    setWaveTick(0);
+    clearClose();
+    setIslandOn(true);
+    islandOnRef.current = true;
+    waveModeRef.current = 'speech';
+    speechCharsRef.current = 0;
+
     if (modeRef.current !== 'race') {
       setCaptures(0);
       setCaptureItems([]);
       setMarquee(null);
       setActiveGrabId(null);
       setPastedCollage([]);
+      // Peek the line we'll paste so the comb tracks it while held.
+      if (modeRef.current === 'capture') {
+        speechTextRef.current = GRAB_TARGETS[grabIdx.current % GRAB_TARGETS.length].prompt;
+      } else {
+        speechTextRef.current =
+          DICTATE_SENTENCES[dictateIdx.current % DICTATE_SENTENCES.length];
+      }
+    } else {
+      speechTextRef.current = '';
+      setIslandOn(false);
+      waveModeRef.current = 'idle';
     }
   }, []);
 
@@ -317,6 +447,10 @@ export default function DaTranscribuhDemo() {
     captureItemsRef.current = items;
     setCaptures(items.length);
     setCaptureItems(items);
+    // Comb follows the spoken grab prompts as they stack.
+    speechTextRef.current = items.map((c) => c.prompt).join('; ');
+    speechCharsRef.current = 0;
+    waveModeRef.current = 'speech';
   }, []);
   commitGrabRef.current = commitGrab;
 
@@ -369,6 +503,9 @@ export default function DaTranscribuhDemo() {
       captureItemsRef.current = items;
       setCaptures(items.length);
       setCaptureItems(items);
+      speechTextRef.current = items.map((c) => c.prompt).join('; ');
+      speechCharsRef.current = 0;
+      waveModeRef.current = 'speech';
       return;
     }
     const rect = e.currentTarget.getBoundingClientRect();
@@ -408,8 +545,8 @@ export default function DaTranscribuhDemo() {
     setStatus('idle');
   };
 
-  const levels = holding ? waveformLevels(reduced ? 0.35 : waveTick) : null;
   const clockLabel = formatClock(elapsed);
+  const showIsland = islandOn && mode !== 'race';
 
   return (
     <figure className="dtd" ref={wrapRef}>
@@ -491,7 +628,7 @@ export default function DaTranscribuhDemo() {
 
               <div className="dtd-island-slot">
                 <RecordingIsland
-                  visible={holding && mode !== 'race'}
+                  visible={showIsland}
                   elapsed={elapsed}
                   captures={captures}
                   levels={levels}

@@ -23,10 +23,27 @@ export default function CaptureCountChip({ count = 1 }) {
         aria-hidden="true"
         focusable="false"
       >
-        {/* SF Symbol "photo" stand-in — filled rectangle + mountain */}
-        <rect x="1" y="3" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-        <circle cx="5.2" cy="6.4" r="1.2" fill="currentColor" />
-        <path d="M2.5 12 L6.2 8.2 L8.5 10.4 L11 7.5 L14.5 12 Z" fill="currentColor" />
+        {/* SF Symbol "photo" stand-in — rounded rect, mountain + sun, stroke weight ~black */}
+        <rect
+          x="1.25"
+          y="3.25"
+          width="13.5"
+          height="9.5"
+          rx="2"
+          ry="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+        />
+        <circle cx="5.1" cy="6.35" r="1.15" fill="currentColor" />
+        <path
+          d="M2.6 11.6 L6.1 7.9 L8.35 10.05 L10.9 7.35 L13.5 11.6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
       </svg>
     </span>
   );

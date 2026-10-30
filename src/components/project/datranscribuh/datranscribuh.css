@@ -437,6 +437,7 @@ html.is-dark .dtd-thumb-hero {
 .dtd-island {
   position: relative;
   /* gutter for bevelOffset */
+  will-change: opacity, width;
 }
 
 .dtd-island-face {
@@ -470,19 +471,22 @@ html.is-dark .dtd-thumb-hero {
   justify-content: center;
   min-height: 28px;
   overflow: hidden;
+  flex: 0 0 auto;
+  transform-origin: center center;
 }
+
 
 .dtd-record-dot {
   display: block;
   flex: 0 0 auto;
   background: var(--dtd-record);
   border-radius: 1px;
-  animation: dtd-pulse 1.1s ease-in-out infinite;
+  animation: dtd-pulse 0.85s ease-in-out infinite;
 }
 
 @keyframes dtd-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+  50% { opacity: 0.35; }
 }
 
 @media (prefers-reduced-motion: reduce) {
