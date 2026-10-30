@@ -1,16 +1,12 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
-import ProjectFigure from '../components/project/ProjectFigure';
-import ProjectPair from '../components/project/ProjectPair';
+import DaTranscribuhDemo from '../components/project/datranscribuh';
 import './DaTranscribuh.css';
 
 const SITE = 'https://da-transcribuh-site.vercel.app';
 const DOWNLOAD = 'https://da-transcribuh-site.vercel.app/download';
 const REPO = 'https://github.com/bicrick/da-transcribuh';
 const IMG = `${process.env.PUBLIC_URL}/images/da-transcribuh`;
-
-// Marketing stills are a proposal — flip to false to drop the pair.
-const SHOW_STILLS = true;
 
 function DaTranscribuh() {
   return (
@@ -25,56 +21,7 @@ function DaTranscribuh() {
       tertiaryLinkLabel="download"
       abstract="A free macOS menu bar app for voice-to-text. Hit option-space, talk, and the text pastes wherever you're typing. It all runs on your Mac."
     >
-      <figure className="project-figure dt-theme-shot">
-        <video
-          className="dt-theme-shot-light"
-          src={`${IMG}/da-transcribuh-hero-light.mp4`}
-          poster={`${IMG}/da-transcribuh-hero-light-poster.jpg`}
-          width={1280}
-          height={720}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label="da transcribuh waving pill"
-        />
-        <video
-          className="dt-theme-shot-dark"
-          src={`${IMG}/da-transcribuh-hero-dark.mp4`}
-          poster={`${IMG}/da-transcribuh-hero-dark-poster.jpg`}
-          width={1280}
-          height={720}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label="da transcribuh waving pill"
-        />
-      </figure>
-
-      {SHOW_STILLS ? (
-        <>
-          <ProjectPair>
-            <ProjectFigure
-              src={`${IMG}/03-point-and-yap.webp`}
-              alt="point at stuff and yap"
-              width={1080}
-              height={1080}
-              contain
-            />
-            <ProjectFigure
-              src={`${IMG}/07-one-paste.webp`}
-              alt="pics and words, one paste"
-              width={1600}
-              height={900}
-              contain
-            />
-          </ProjectPair>
-          <p className="project-caption">point at stuff and yap, then one paste</p>
-        </>
-      ) : null}
+      <DaTranscribuhDemo />
 
       <figure className="project-figure dt-theme-shot">
         <a
