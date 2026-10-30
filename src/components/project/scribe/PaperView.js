@@ -81,28 +81,31 @@ export default function PaperView({
   handId,
   replayKey,
 }) {
-  if (!scenario) {
-    return (
-      <div className="sqd-page sqd-page-empty">
-        <p>Pick a request on the right. Scribe plans the page, then writes it.</p>
-      </div>
-    );
-  }
-  const { paper, regions, ink } = scenario;
-  const showWire = wireOn && (stage === 'wire' || stage === 'regions' || stage === 'write' || stage === 'done');
-  const showInk = stage === 'write' || stage === 'done';
+  // Always show a blank letter sheet until ink/wire appear — never mid-page copy.
+  const blankPaper = {
+    width_mm: 216,
+    height_mm: 279,
+    margins: { l: 20, r: 20, t: 20, b: 20 },
+    ruled: false,
+    kind: 'letter',
+  };
+  const paper = scenario ? scenario.paper : blankPaper;
+  const regions = scenario ? scenario.regions : [];
+  const ink = scenario ? scenario.ink : null;
+  const showWire = Boolean(scenario) && wireOn
+    && (stage === 'wire' || stage === 'regions' || stage === 'write' || stage === 'done');
+  const showInk = Boolean(scenario) && (stage === 'write' || stage === 'done');
   const finished = stage === 'done';
   // Outer slot is always letter so switching pages never resizes the desk.
   const slotAr = 216 / 279;
   const pageAr = paper.width_mm / paper.height_mm;
-  const choosing = stage === 'plan' || stage === 'typing';
   const isCompact = paper.kind === 'sticky' || pageAr > 1.1 || pageAr < slotAr * 0.92;
 
   return (
     <div
       className="sqd-page-slot"
       style={{ aspectRatio: '216 / 279', '--page-ar': slotAr }}
-      data-stage={stage}
+      data-stage={stage || 'idle'}
     >
       <div
         className={`sqd-page${paper.kind === 'sticky' ? ' is-sticky' : ''}${isCompact ? ' is-compact' : ''}`}
@@ -110,9 +113,6 @@ export default function PaperView({
       >
       <div className="sqd-sheet">
         <RuledLines page={paper} />
-        {choosing ? (
-          <p className="sqd-choosing">{paper.label}</p>
-        ) : null}
         {showInk ? (
           <StrokeCanvas
             key={`${scenario.id}-${handId}-${replayKey}`}

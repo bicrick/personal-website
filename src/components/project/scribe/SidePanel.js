@@ -33,6 +33,26 @@ const REPLAY_ICON = (
   </svg>
 );
 
+const REFRESH_ICON = (
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M3.2 3.2a5.5 5.5 0 0 1 9.1 1.6M12.8 12.8a5.5 5.5 0 0 1-9.1-1.6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M12.8 2.2v3.2h-3.2M3.2 13.8v-3.2h3.2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const GRID_ICON = (
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    <rect x="2.5" y="2.5" width="4.5" height="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="9" y="2.5" width="4.5" height="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="2.5" y="9" width="4.5" height="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    <rect x="9" y="9" width="4.5" height="4.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+  </svg>
+);
+const CHEVRON_ICON = (
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 function statusText(stage, working, run, scenario) {
   if (!run && !working) return 'Pick an example — or watch the reel.';
   if (stage === 'typing') return 'Reading your request…';
@@ -106,6 +126,12 @@ export default function SidePanel({
             )}
           </div>
           <div className="sqd-compose-row">
+            <span className="sqd-check" aria-hidden="true" title="Ready">
+              <svg viewBox="0 0 14 14">
+                <rect x="0.75" y="0.75" width="12.5" height="12.5" rx="1.5" fill="currentColor" />
+                <path d="M3.6 7.1l2.2 2.2 4.6-4.6" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
             <span className="sqd-grow" />
             <button
               type="button"
@@ -128,60 +154,33 @@ export default function SidePanel({
                 disabled={working && !writing && !done}
                 onClick={() => onPick(s.id)}
               >
-                {s.label}
+                {s.prompt || s.label}
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            className={`sqd-icon-btn${styleOpen ? ' is-on' : ''}`}
-            aria-pressed={styleOpen}
-            aria-label="Style"
-            title="Style"
-            onClick={() => setStyleOpen((v) => !v)}
-          >
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M2.5 4.5h11M2.5 11.5h11" fill="none" stroke="currentColor" strokeWidth="1.4" />
-              <path d="M5.5 2.5v4M10.5 9.5v4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-            </svg>
-          </button>
-        </div>
-
-        {styleOpen ? (
-          <div className="sqd-style" aria-label="Style details">
-            <div className="sqd-seg" role="group" aria-label="Page view">
-              <button
-                type="button"
-                className={!wireOn ? 'is-on' : ''}
-                aria-pressed={!wireOn}
-                onClick={() => setWireOn(false)}
-              >
-                page
-              </button>
-              <button
-                type="button"
-                className={wireOn ? 'is-on' : ''}
-                aria-pressed={wireOn}
-                onClick={() => setWireOn(true)}
-              >
-                layout
-              </button>
-            </div>
-            <div className="sqd-seg" role="group" aria-label="Handwriting style">
-              {HANDS.map((h) => (
-                <button
-                  key={h.id}
-                  type="button"
-                  className={handId === h.id ? 'is-on' : ''}
-                  disabled={!scenario}
-                  onClick={() => setHand(h.id)}
-                >
-                  {h.label}
-                </button>
-              ))}
-            </div>
+          <div className="sqd-ex-tools">
+            <button
+              type="button"
+              className="sqd-icon-btn"
+              aria-label="Refresh examples"
+              title="Refresh"
+              disabled={!scenario || (working && !writing && !done)}
+              onClick={() => scenarioId && onPick(scenarioId)}
+            >
+              {REFRESH_ICON}
+            </button>
+            <button
+              type="button"
+              className={`sqd-icon-btn${wireOn ? ' is-on' : ''}`}
+              aria-pressed={wireOn}
+              aria-label={wireOn ? 'Hide layout boxes' : 'Show layout boxes'}
+              title="Layout"
+              onClick={() => setWireOn(!wireOn)}
+            >
+              {GRID_ICON}
+            </button>
           </div>
-        ) : null}
+        </div>
 
         <div
           className={`sqd-status${kind === 'working' ? ' is-working' : ''}`}
@@ -241,6 +240,53 @@ export default function SidePanel({
               {SND_ICON[soundOn ? 'on' : 'off']}
             </button>
           </div>
+        </div>
+
+        <div className="sqd-style-block">
+          <button
+            type="button"
+            className={`sqd-style-toggle${styleOpen ? ' is-open' : ''}`}
+            aria-expanded={styleOpen}
+            onClick={() => setStyleOpen((v) => !v)}
+          >
+            <span>Style</span>
+            {CHEVRON_ICON}
+          </button>
+          {styleOpen ? (
+            <div className="sqd-style" aria-label="Style details">
+              <div className="sqd-seg" role="group" aria-label="Page view">
+                <button
+                  type="button"
+                  className={!wireOn ? 'is-on' : ''}
+                  aria-pressed={!wireOn}
+                  onClick={() => setWireOn(false)}
+                >
+                  page
+                </button>
+                <button
+                  type="button"
+                  className={wireOn ? 'is-on' : ''}
+                  aria-pressed={wireOn}
+                  onClick={() => setWireOn(true)}
+                >
+                  layout
+                </button>
+              </div>
+              <div className="sqd-seg" role="group" aria-label="Handwriting style">
+                {HANDS.map((h) => (
+                  <button
+                    key={h.id}
+                    type="button"
+                    className={handId === h.id ? 'is-on' : ''}
+                    disabled={!scenario}
+                    onClick={() => setHand(h.id)}
+                  >
+                    {h.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </aside>
