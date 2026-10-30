@@ -3,22 +3,6 @@
    rowSelect #E6E6E6; dark window #2C2C2E / front #3A3A3D / fill #353538 /
    label #F2F2F2 / secondary #A8A8AD / rowSelect #454548. */
 
-.dt-theme-light {
-  display: block;
-}
-
-.dt-theme-dark {
-  display: none;
-}
-
-html.is-dark .dt-theme-light {
-  display: none;
-}
-
-html.is-dark .dt-theme-dark {
-  display: block;
-}
-
 .dt-visual {
   margin: 0.75rem 0 0.35rem;
   max-width: 28rem;
@@ -31,21 +15,26 @@ html.is-dark .dt-theme-dark {
 }
 
 .dt-pill-loop video {
-  display: block;
   width: 100%;
   height: auto;
   margin: 0;
   border-radius: 2px;
 }
 
-html.is-dark .dt-pill-loop .dt-theme-dark {
+.dt-pill-loop .dt-theme-light {
   display: block;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dt-pill-loop video {
-    /* paused via JS; poster still shows */
-  }
+.dt-pill-loop .dt-theme-dark {
+  display: none;
+}
+
+html.is-dark .dt-pill-loop .dt-theme-light {
+  display: none;
+}
+
+html.is-dark .dt-pill-loop .dt-theme-dark {
+  display: block;
 }
 
 /* --- capture pill + grab (feature 2) --- */
