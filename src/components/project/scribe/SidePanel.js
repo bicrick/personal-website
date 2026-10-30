@@ -51,8 +51,8 @@ function statusKind(stage) {
   return '';
 }
 
-function fmtClock(p) {
-  const sec = Math.max(0, Math.round((p || 0) * 12));
+function fmtClock(p, totalSec = 45) {
+  const sec = Math.max(0, Math.round((p || 0) * totalSec));
   const m = Math.floor(sec / 60);
   const s = sec % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
@@ -72,6 +72,9 @@ export default function SidePanel({
   setHand,
   onPick,
   onReplay,
+  onTogglePlay,
+  playing = false,
+  userPaused = false,
   penProgress,
   scrubPen,
   setScrubbing,
@@ -85,6 +88,7 @@ export default function SidePanel({
   const done = stage === 'done';
   const playerOn = Boolean(scenario) && (writing || done || stage === 'regions' || stage === 'wire');
   const fill = `${Math.round((penProgress || 0) * 100)}%`;
+  const showPause = writing && playing && !userPaused;
 
   return (
     <aside className="sqd-panel" aria-label="Scribe controls">
@@ -115,7 +119,7 @@ export default function SidePanel({
                 key={s.id}
                 type="button"
                 className={`sqd-ex${scenarioId === s.id ? ' is-current' : ''}`}
-                disabled={working}
+                disabled={working && !writing && !done}
                 onClick={() => onPick(s.id)}
               >
                 {s.label}
@@ -186,11 +190,11 @@ export default function SidePanel({
             <button
               type="button"
               className="sqd-round"
-              aria-label={done ? 'Replay' : writing ? 'Writing' : 'Play'}
+              aria-label={done ? 'Replay' : showPause ? 'Pause' : 'Play'}
               disabled={!scenario || (working && !writing && !done)}
-              onClick={onReplay}
+              onClick={() => (onTogglePlay ? onTogglePlay() : onReplay && onReplay())}
             >
-              {done ? REPLAY_ICON : writing ? PAUSE_ICON : PLAY_ICON}
+              {done ? REPLAY_ICON : showPause ? PAUSE_ICON : PLAY_ICON}
             </button>
             <input
               type="range"

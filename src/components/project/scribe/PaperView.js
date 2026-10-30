@@ -92,16 +92,22 @@ export default function PaperView({
   const showWire = wireOn && (stage === 'wire' || stage === 'regions' || stage === 'write' || stage === 'done');
   const showInk = stage === 'write' || stage === 'done';
   const finished = stage === 'done';
-  const aspect = `${paper.width_mm} / ${paper.height_mm}`;
+  // Outer slot is always letter so switching pages never resizes the desk.
+  const slotAr = 216 / 279;
   const pageAr = paper.width_mm / paper.height_mm;
   const choosing = stage === 'plan' || stage === 'typing';
+  const isCompact = paper.kind === 'sticky' || pageAr > 1.1 || pageAr < slotAr * 0.92;
 
   return (
     <div
-      className={`sqd-page${paper.kind === 'sticky' ? ' is-sticky' : ''}`}
-      style={{ aspectRatio: aspect, '--page-ar': pageAr }}
+      className="sqd-page-slot"
+      style={{ aspectRatio: '216 / 279', '--page-ar': slotAr }}
       data-stage={stage}
     >
+      <div
+        className={`sqd-page${paper.kind === 'sticky' ? ' is-sticky' : ''}${isCompact ? ' is-compact' : ''}`}
+        style={{ aspectRatio: `${paper.width_mm} / ${paper.height_mm}`, '--sheet-ar': pageAr }}
+      >
       <div className="sqd-sheet">
         <RuledLines page={paper} />
         {choosing ? (
@@ -128,6 +134,7 @@ export default function PaperView({
           visible={showWire}
           page={paper}
         />
+      </div>
       </div>
     </div>
   );

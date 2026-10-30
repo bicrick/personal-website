@@ -54,11 +54,15 @@
 
 .sqd-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
   gap: 14px;
   align-items: stretch;
-  /* Tall desk so letter sheets can fill width beside the panel. */
-  min-height: 720px;
+  /* Fixed friends-app frame — page switches must not resize this box. */
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  max-height: min(68vh, 620px);
+  min-height: 420px;
+  height: auto;
 }
 
 /* ---- desk (no browser chrome) ---- */
@@ -69,6 +73,7 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  height: 100%;
   border-radius: 0;
   overflow: hidden;
   background-color: var(--sqd-desk-bg);
@@ -87,8 +92,9 @@ html.is-dark .sqd-desk {
 .sqd-viewport {
   position: relative;
   flex: 1 1 auto;
-  min-height: 580px;
+  min-height: 0;
   min-width: 0;
+  height: 100%;
   display: grid;
   place-items: center;
   padding: 14px 12px 8px;
@@ -115,16 +121,31 @@ html.is-dark .sqd-desk {
 
 /* ---- page / paper ---- */
 
-.sqd-page {
+.sqd-page-slot {
   position: relative;
   box-sizing: border-box;
-  aspect-ratio: var(--page-ar, 1);
-  /* Prefer filling the desk: as large as the viewport allows. */
-  width: min(100cqw, calc(100cqh * var(--page-ar, 1)));
+  aspect-ratio: 216 / 279;
+  width: min(100cqw, calc(100cqh * 216 / 279));
   max-width: 100%;
   max-height: 100%;
   height: auto;
   margin: 0;
+  display: grid;
+  place-items: center;
+}
+
+.sqd-page {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.sqd-page.is-compact {
+  width: min(78%, calc(100% * var(--sheet-ar, 1) / (216 / 279)));
+  height: auto;
+  max-height: 78%;
 }
 
 .sqd-page-empty {
@@ -248,6 +269,8 @@ html.is-dark .sqd-sheet {
 /* ---- floating panel (friends #panel) ---- */
 
 .sqd-panel {
+  max-height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -606,55 +629,32 @@ html.is-dark .sqd-player {
 .sqd-snd svg { width: 14px; height: 14px; }
 .sqd-snd.is-off { color: var(--sqd-muted); opacity: 0.75; }
 
-/* ---- responsive: stack so the page owns the full article width ---- */
-/* 900cqw covers 728 article + tablet; page becomes the star. */
+/* ---- responsive: stack only on narrow phones; article width stays side-by-side ---- */
 
-@container sqd (max-width: 900px) {
+@container sqd (max-width: 560px) {
   .sqd-stage {
     grid-template-columns: 1fr;
     gap: 12px;
+    aspect-ratio: auto;
+    max-height: none;
     min-height: 0;
   }
   .sqd-desk {
-    /* Letter 216×279 → width≈article; height ≈ width / 0.774 + meta. */
     min-height: 0;
+    aspect-ratio: 4 / 5;
+    max-height: min(70vh, 520px);
   }
   .sqd-viewport {
-    /* Let the page dictate height: fill width, grow vertically. */
     min-height: 0;
     height: auto;
-    padding: 16px 14px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    container-type: inline-size;
-    container-name: sqd-vp;
-  }
-  .sqd-page {
-    width: 100%;
-    max-width: 100%;
-    max-height: none;
-    height: auto;
+    padding: 12px 10px 8px;
   }
   .sqd-panel { max-height: none; }
 }
 
 @container sqd (max-width: 420px) {
-  .sqd-viewport { padding: 12px 10px 8px; }
+  .sqd-viewport { padding: 10px 8px 6px; }
   .sqd-compose-text { font-size: 16px; min-height: 56px; }
-}
-
-/* Wide: keep side panel, but size the desk so a letter sheet can fill its column. */
-@container sqd (min-width: 901px) {
-  .sqd-stage {
-    /* Desk column ~ (W - panel - gap). Letter needs height ≈ width / 0.774. */
-    min-height: min(92vh, 980px);
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
-  }
-  .sqd-viewport {
-    min-height: min(86vh, 900px);
-    padding: 16px 14px 10px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
