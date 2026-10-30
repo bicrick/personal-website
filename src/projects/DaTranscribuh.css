@@ -54,18 +54,7 @@ html.is-dark .dt-pill-loop .dt-theme-dark {
   display: block;
 }
 
-/* --- capture pill + grab (feature 2) --- */
-
-.dt-capture {
-  max-width: 26rem;
-}
-
-.dt-capture-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem 0.7rem;
-}
+/* --- capture pill bits (shared) + screenshots merge sequence --- */
 
 .dt-capture-pill {
   display: inline-flex;
@@ -76,7 +65,6 @@ html.is-dark .dt-pill-loop .dt-theme-dark {
   color: #000;
   border: 2px solid #000;
   box-shadow: 3px 3px 0 #000;
-  /* Departure Mono stand-in: system mono keeps 12px looking like Swift */
   font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 12px;
   line-height: 1;
@@ -153,43 +141,294 @@ html.is-dark .dt-capture-clock {
   margin: 0;
 }
 
-.dt-capture-grab {
-  border: 2px solid #000;
-  box-shadow: 3px 3px 0 #000;
-  background: #f0f0f0;
-  line-height: 0;
+/* merge: talk → grabs land inline → one paste */
+.dt-merge {
+  max-width: 26rem;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
 }
 
-html.is-dark .dt-capture-grab {
+.dt-merge-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.dt-merge-during {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.dt-merge-grabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.4rem 0.5rem;
+}
+
+.dt-merge-grab {
+  position: relative;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
+  background: #f0f0f0;
+  line-height: 0;
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+html.is-dark .dt-merge-grab {
   border-color: #f2f2f2;
-  box-shadow: 3px 3px 0 #f2f2f2;
+  box-shadow: 2px 2px 0 #f2f2f2;
   background: #2c2c2e;
 }
 
-.dt-capture-grab img {
-  width: 140px;
+.dt-merge-grab img {
+  width: 110px;
   height: auto;
   margin: 0;
 }
 
-.dt-capture-chip-thumb .dt-theme-light,
-.dt-capture-grab .dt-theme-light {
+.dt-merge-grab .dt-theme-light,
+.dt-merge-thumb .dt-theme-light,
+.dt-merge-chip-frame .dt-theme-light {
   display: block;
 }
 
-.dt-capture-chip-thumb .dt-theme-dark,
-.dt-capture-grab .dt-theme-dark {
+.dt-merge-grab .dt-theme-dark,
+.dt-merge-thumb .dt-theme-dark,
+.dt-merge-chip-frame .dt-theme-dark {
   display: none;
 }
 
-html.is-dark .dt-capture-chip-thumb .dt-theme-light,
-html.is-dark .dt-capture-grab .dt-theme-light {
+html.is-dark .dt-merge-grab .dt-theme-light,
+html.is-dark .dt-merge-thumb .dt-theme-light,
+html.is-dark .dt-merge-chip-frame .dt-theme-light {
   display: none;
 }
 
-html.is-dark .dt-capture-chip-thumb .dt-theme-dark,
-html.is-dark .dt-capture-grab .dt-theme-dark {
+html.is-dark .dt-merge-grab .dt-theme-dark,
+html.is-dark .dt-merge-thumb .dt-theme-dark,
+html.is-dark .dt-merge-chip-frame .dt-theme-dark {
   display: block;
+}
+
+.dt-merge-badge {
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  background: #ed1c24;
+  color: #fff;
+  font-size: 9px;
+  line-height: 14px;
+  text-align: center;
+  z-index: 1;
+}
+
+.dt-merge-chip-stack {
+  position: relative;
+  width: 40px;
+  height: 16px;
+}
+
+.dt-merge-chip-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.dt-merge-chip-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dt-merge-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #666;
+  font-size: 11px;
+  line-height: 1;
+}
+
+html.is-dark .dt-merge-cue {
+  color: #a8a8ad;
+}
+
+.dt-merge-cue-arrow {
+  font-size: 13px;
+  color: inherit;
+}
+
+.dt-merge-cue-key {
+  border: 1px solid currentColor;
+  padding: 1px 5px;
+  font-size: 10px;
+}
+
+.dt-merge-paste {
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  background: #fff;
+  color: #000;
+  overflow: hidden;
+}
+
+html.is-dark .dt-merge-paste {
+  border-color: #f2f2f2;
+  box-shadow: 3px 3px 0 #f2f2f2;
+  background: #2c2c2e;
+  color: #f2f2f2;
+}
+
+.dt-merge-paste-chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #c0c0c0;
+  font-size: 11px;
+}
+
+html.is-dark .dt-merge-paste-chrome {
+  background: #353538;
+  border-bottom-color: #4a4a4e;
+}
+
+.dt-merge-paste-dots {
+  width: 28px;
+  height: 6px;
+  background:
+    radial-gradient(circle at 3px 3px, currentColor 1.4px, transparent 1.5px),
+    radial-gradient(circle at 12px 3px, currentColor 1.4px, transparent 1.5px),
+    radial-gradient(circle at 21px 3px, currentColor 1.4px, transparent 1.5px);
+  opacity: 0.45;
+}
+
+.dt-merge-paste-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 9px 10px;
+}
+
+.dt-merge-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+.dt-merge-thumb {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 24px;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  line-height: 0;
+  background: #f0f0f0;
+}
+
+html.is-dark .dt-merge-thumb {
+  background: #1e1e20;
+}
+
+.dt-merge-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  margin: 0;
+}
+
+.dt-merge-line-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dt-merge-line-n {
+  color: #ed1c24;
+  margin-right: 2px;
+}
+
+/* Quiet loop: 1 appears → 2 → 3 → hold on paste → restart.
+   Total ~7.2s. Reduced motion: show final combined state. */
+@keyframes dt-merge-in {
+  0%, 100% { opacity: 0; transform: translateY(4px); }
+  8%, 88% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dt-merge-chip {
+  0%, 100% { opacity: 0; }
+  8%, 88% { opacity: 1; }
+}
+
+@keyframes dt-merge-count {
+  0%, 11% { content: '1'; }
+  12%, 35% { content: '2'; }
+  36%, 100% { content: '3'; }
+}
+
+.dt-merge-step-1 {
+  animation: dt-merge-in 7.2s ease-in-out infinite;
+  animation-delay: 0.15s;
+}
+.dt-merge-chip-frame.dt-merge-step-1 {
+  animation-name: dt-merge-chip;
+}
+
+.dt-merge-step-2 {
+  animation: dt-merge-in 7.2s ease-in-out infinite;
+  animation-delay: 1.55s;
+}
+.dt-merge-chip-frame.dt-merge-step-2 {
+  animation-name: dt-merge-chip;
+}
+
+.dt-merge-step-3 {
+  animation: dt-merge-in 7.2s ease-in-out infinite;
+  animation-delay: 3.0s;
+}
+.dt-merge-chip-frame.dt-merge-step-3 {
+  animation-name: dt-merge-chip;
+}
+
+/* count badge updates via stepped opacity layers — keep "3" as end; early steps
+   reveal via chip frames. Static "3" is fine; chips stack reveal order. */
+
+@media (prefers-reduced-motion: reduce) {
+  .dt-merge-step-1,
+  .dt-merge-step-2,
+  .dt-merge-step-3,
+  .dt-merge-chip-frame {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .dt-capture-wave {
+    width: 72px;
+  }
+
+  .dt-merge-grab img {
+    width: 96px;
+  }
+
+  .dt-merge-thumb {
+    width: 52px;
+  }
 }
 
 /* --- clipboard history mock (feature 3) --- */
@@ -349,13 +588,5 @@ html.is-dark .dt-clip-footer {
 @media (max-width: 600px) {
   .dt-visual {
     max-width: 100%;
-  }
-
-  .dt-capture-wave {
-    width: 72px;
-  }
-
-  .dt-capture-grab img {
-    width: 120px;
   }
 }
