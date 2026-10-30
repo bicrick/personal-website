@@ -4,20 +4,13 @@ import SidePanel from './SidePanel';
 import useOrchestrate from './useOrchestrate';
 import usePenSound from './usePenSound';
 import useReducedMotion from '../useReducedMotion';
+import deskUrl from './media/desk-m.jpg';
 import './scribe.css';
 
-function badgeLabel(stage, working) {
-  if (stage === 'write') return 'scribe writing';
-  if (stage === 'done') return 'scribe done';
-  if (working || stage === 'typing' || stage === 'plan' || stage === 'wire' || stage === 'regions') {
-    return 'scribe busy';
-  }
-  return 'scribe idle';
-}
-
 /**
- * Interactive scribe orchestrator demo. Left: a browser-framed page that
- * plans then writes. Right: canned runs with a live activity log.
+ * Interactive scribe orchestrator demo restyled like the friends desk app:
+ * brown desk, floating navy panel, transport, no fake browser chrome.
+ * Autoplay on mount; after a run finishes, advance through the reel.
  */
 export default function ScribeDemo({
   bootScenario,
@@ -28,23 +21,23 @@ export default function ScribeDemo({
 } = {}) {
   const reduced = useReducedMotion();
   const wrapRef = useRef(null);
-  // Optimistic true so a missing/stuck IntersectionObserver can never freeze
-  // the orchestrator paused forever. IO may still pause once it reports.
   const [inView, setInView] = useState(true);
   const autoplayed = useRef(false);
+  const reelTimer = useRef(0);
 
   const orch = useOrchestrate({
     fast: reduced || forceFast,
     paused: !inView,
-    bootScenario,
-    bootDone,
+    bootScenario: bootDone || reduced ? (bootScenario || 'newton3') : bootScenario,
+    bootDone: bootDone || (reduced && !bootScenario && !disableAutoplay),
   });
-  const { start } = orch;
+  const { start, scenarios, stage, scenarioId } = orch;
   const sound = usePenSound({
     fast: reduced || forceFast,
     playbackRef: orch.playbackRef,
   });
 
+  // Pause pen when scrolled off-screen; keep optimistic-true until IO reports.
   useEffect(() => {
     if (forceInView) {
       setInView(true);
@@ -59,11 +52,8 @@ export default function ScribeDemo({
     const io = new IntersectionObserver(([entry]) => {
       reported = true;
       setInView(entry.isIntersecting);
-    }, {
-      threshold: 0.35,
-    });
+    }, { threshold: 0.35 });
     io.observe(el);
-    // If IO never callbacks (some headless / zero-size hosts), unstick.
     const fallback = window.setTimeout(() => {
       if (!reported) setInView(true);
     }, 1200);
@@ -73,35 +63,52 @@ export default function ScribeDemo({
     };
   }, [forceInView]);
 
+  // Autoplay on article open (mount + short delay) — not gated on scroll-into-view.
   useEffect(() => {
     if (disableAutoplay || bootDone || bootScenario) return undefined;
-    if (!inView || autoplayed.current || reduced) return undefined;
-    // Mark played only when it actually fires: inView starts optimistic-true,
-    // so IO flipping to false before 900ms must not burn the one autoplay.
+    if (reduced || autoplayed.current) return undefined;
     const id = window.setTimeout(() => {
       autoplayed.current = true;
-      start('card');
-    }, 900);
+      start(scenarios[0] ? scenarios[0].id : 'newton3');
+    }, 700);
     return () => window.clearTimeout(id);
-  }, [inView, reduced, start, disableAutoplay, bootDone, bootScenario]);
+  }, [reduced, start, disableAutoplay, bootDone, bootScenario, scenarios]);
 
-  // QA: start a specific scenario once visible (animated unless bootDone handled in hook)
+  // QA: start a specific scenario once (animated unless bootDone).
   useEffect(() => {
     if (!bootScenario || bootDone) return undefined;
-    if (!inView || autoplayed.current) return undefined;
+    if (autoplayed.current) return undefined;
     const id = window.setTimeout(() => {
       autoplayed.current = true;
       start(bootScenario);
     }, forceFast ? 50 : 200);
     return () => window.clearTimeout(id);
-  }, [bootScenario, bootDone, inView, start, forceFast]);
+  }, [bootScenario, bootDone, start, forceFast]);
+
+  // Reel: after a run finishes, advance to the next scenario.
+  useEffect(() => {
+    if (disableAutoplay || reduced || bootDone) return undefined;
+    if (stage !== 'done' || !scenarioId) return undefined;
+    if (reelTimer.current) window.clearTimeout(reelTimer.current);
+    const ids = scenarios.map((s) => s.id);
+    const ix = ids.indexOf(scenarioId);
+    if (ix < 0 || ids.length < 2) return undefined;
+    const next = ids[(ix + 1) % ids.length];
+    reelTimer.current = window.setTimeout(() => {
+      if (!orch.working) start(next);
+    }, 2200);
+    return () => {
+      if (reelTimer.current) window.clearTimeout(reelTimer.current);
+    };
+  // orch.working intentionally read live inside timeout
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, scenarioId, scenarios, start, disableAutoplay, reduced, bootDone]);
 
   const regionDone = Object.values(orch.regionStatus).filter((s) => s === 'done').length;
   const regionTotal = orch.scenario ? orch.scenario.regions.length : 0;
   const strokeTotal = orch.scenario ? orch.scenario.ink.strokes.length : 0;
   const strokeDrawn = Math.round(strokeTotal * (orch.penProgress || 0));
   const busy = orch.working;
-  const badgeOn = orch.stage !== 'idle' && orch.scenarioId;
 
   return (
     <figure
@@ -109,19 +116,11 @@ export default function ScribeDemo({
       ref={wrapRef}
       onPointerDownCapture={sound.unlockSound}
     >
-      <div className="sqd-stage">
-        <div className="sqd-browser">
-          <div className="sqd-chrome">
-            <span className="sqd-lights" aria-hidden="true"><i /><i /><i /></span>
-            <span className="sqd-url">
-              {orch.scenario
-                ? `scribe.app/write/${orch.scenario.id}`
-                : 'scribe.app/write'}
-            </span>
-            <span className={`sqd-badge${badgeOn ? ' is-on' : ''}`}>
-              {badgeLabel(orch.stage, busy)}
-            </span>
-          </div>
+      <div
+        className="sqd-stage"
+        style={{ '--sqd-desk': `url(${deskUrl})` }}
+      >
+        <div className="sqd-desk">
           <div className="sqd-viewport">
             <PaperView
               scenario={orch.scenario}
@@ -133,18 +132,14 @@ export default function ScribeDemo({
               replayKey={orch.replayKey}
             />
           </div>
-          <div className="sqd-status">
+          <div className="sqd-desk-meta" aria-hidden="true">
             <span>
-              {regionTotal
-                ? `regions ${regionDone}/${regionTotal}`
-                : 'regions —'}
+              {regionTotal ? `regions ${regionDone}/${regionTotal}` : 'regions —'}
             </span>
             <span>
-              {strokeTotal
-                ? `strokes ${strokeDrawn}/${strokeTotal}`
-                : 'strokes —'}
+              {strokeTotal ? `strokes ${strokeDrawn}/${strokeTotal}` : 'strokes —'}
             </span>
-            <span className="sqd-status-hint">
+            <span>
               {orch.scenario ? orch.scenario.paper.label : 'waiting'}
             </span>
           </div>
@@ -156,12 +151,17 @@ export default function ScribeDemo({
           scenario={orch.scenario}
           run={orch.run}
           typed={orch.typed}
+          writeFlash={orch.writeFlash}
           working={busy}
           wireOn={orch.wireOn}
           setWireOn={orch.setWireOn}
           handId={orch.handId}
           setHand={orch.setHand}
-          onPick={orch.start}
+          onPick={(id) => {
+            autoplayed.current = true;
+            if (reelTimer.current) window.clearTimeout(reelTimer.current);
+            orch.start(id);
+          }}
           onReplay={orch.replayPen}
           penProgress={orch.penProgress}
           scrubPen={orch.scrubPen}
@@ -172,7 +172,7 @@ export default function ScribeDemo({
         />
       </div>
       <figcaption>
-        canned runs. the real app plans the page, then a handwriting model writes it live.
+        a reel of real pages. the live app plans the layout, then a handwriting model writes it.
       </figcaption>
     </figure>
   );

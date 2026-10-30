@@ -46,6 +46,7 @@ export default function useOrchestrate({
 } = {}) {
   const [scenarioId, setScenarioId] = useState(null);
   const [typed, setTyped] = useState('');
+  const [writeFlash, setWriteFlash] = useState(false);
   const [run, setRun] = useState(null);
   const [stage, setStage] = useState('idle'); // idle|typing|plan|wire|regions|write|done
   const [regionStatus, setRegionStatus] = useState({}); // id -> pending|running|done
@@ -121,7 +122,8 @@ export default function useOrchestrate({
     const tl = timelineFor(scenario, handRef.current);
     timelineRef.current = tl;
     setScenarioId(bootScenario);
-    setTyped('');
+    setTyped(scenario.prompt);
+    setWriteFlash(false);
     setRegionStatus(statuses);
     setPenEnd(tl.writeEnd);
     setPenVt(tl.writeEnd);
@@ -194,14 +196,18 @@ export default function useOrchestrate({
     const stepMs = fast ? 60 : STEP_MS;
     let t = 0;
 
+    setWriteFlash(false);
     [...scenario.prompt].forEach((_, i) => {
       t += typeMs;
       later(() => setTyped(scenario.prompt.slice(0, i + 1)), t);
     });
 
-    t += fast ? 40 : 260;
+    // Brief Write-button press like someone hitting submit, then plan.
+    t += fast ? 40 : 280;
+    later(() => setWriteFlash(true), t);
+    t += fast ? 40 : 320;
     later(() => {
-      setTyped('');
+      setWriteFlash(false);
       setStage('plan');
       setRun({ id, prompt: scenario.prompt, step: 1, done: false });
     }, t);
@@ -322,6 +328,7 @@ export default function useOrchestrate({
     scenarioId,
     scenario,
     typed,
+    writeFlash,
     run,
     stage,
     regionStatus,
@@ -333,7 +340,7 @@ export default function useOrchestrate({
     handId,
     setHand,
     replayKey,
-    working: Boolean(run && !run.done) || typed.length > 0 || stage === 'typing',
+    working: Boolean(run && !run.done) || stage === 'typing' || writeFlash,
     start,
     replayPen,
     scrubPen,
