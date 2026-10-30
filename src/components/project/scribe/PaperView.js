@@ -71,12 +71,12 @@ function RuledLines({ page }) {
   );
 }
 
-/** The page inside the browser chrome: paper, optional wireframe, pen ink. */
+/** The page inside the browser chrome: paper, optional layout boxes, friends pen. */
 export default function PaperView({
   scenario,
   stage,
   regionStatus,
-  penProgress,
+  penVt,
   wireOn,
   handId,
   replayKey,
@@ -91,7 +91,7 @@ export default function PaperView({
   const { paper, regions, ink } = scenario;
   const showWire = wireOn && (stage === 'wire' || stage === 'regions' || stage === 'write' || stage === 'done');
   const showInk = stage === 'write' || stage === 'done';
-  const progress = stage === 'done' ? 1 : penProgress;
+  const finished = stage === 'done';
   const aspect = `${paper.width_mm} / ${paper.height_mm}`;
   const pageAr = paper.width_mm / paper.height_mm;
   const choosing = stage === 'plan' || stage === 'typing';
@@ -112,7 +112,13 @@ export default function PaperView({
             key={`${scenario.id}-${handId}-${replayKey}`}
             ink={{ ...ink, byHand: scenario.inkByHand || ink.byHand }}
             handId={handId}
-            progress={progress}
+            vt={finished ? 1e9 : penVt}
+            showPen={!finished}
+            finished={finished}
+            pageW={paper.width_mm}
+            pageH={paper.height_mm}
+            regions={regions}
+            lineHeightMm={paper.line_height_mm || 8}
             className="sqd-ink"
           />
         ) : null}

@@ -1,79 +1,101 @@
 import React, { useEffect, useRef } from 'react';
 import { resolveInk } from './hands';
+import {
+  buildTimeline,
+  drawFrame,
+  inkColor,
+} from './livePen';
 
-function inkColor() {
-  if (typeof window === 'undefined') return '#21232d';
-  const v = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
-  return v || '#21232d';
-}
-
-/** Draws scenario ink up to `progress` (0..1) in the theme ink color. */
+/**
+ * Draws scenario ink at virtual time `vt` (seconds on the live.js pen clock),
+ * with the friends-app 3D pen while writing.
+ */
 export default function StrokeCanvas({
   ink,
   handId = 'neat',
-  progress = 1,
+  vt = 0,
+  showPen = true,
+  finished = false,
+  pageW,
+  pageH,
+  regions,
+  lineHeightMm,
   className,
 }) {
   const ref = useRef(null);
+  const timelineRef = useRef(null);
+  const poseRef = useRef(null);
+  const keyRef = useRef('');
 
   useEffect(() => {
     const cv = ref.current;
     if (!cv || !ink) return undefined;
     const ctx = cv.getContext('2d');
     const data = resolveInk(ink, handId);
+    const key = `${handId}|${data.w}x${data.h}|${data.strokes.length}|${(regions && regions.length) || 0}|${inkColor()}`;
+    if (keyRef.current !== key) {
+      keyRef.current = key;
+      poseRef.current = null;
+      const tl = buildTimeline(data.strokes, {
+        color: inkColor(),
+        regions,
+        lineHeightMm,
+      });
+      tl.pageW = pageW || data.w;
+      tl.pageH = pageH || data.h;
+      timelineRef.current = tl;
+    }
     const paint = () => {
       const dpr = window.devicePixelRatio || 1;
       const cssW = cv.clientWidth || 1;
       const cssH = cv.clientHeight || 1;
-      cv.width = Math.round(cssW * dpr);
-      cv.height = Math.round(cssH * dpr);
+      const needW = Math.round(cssW * dpr);
+      const needH = Math.round(cssH * dpr);
+      if (cv.width !== needW || cv.height !== needH) {
+        cv.width = needW;
+        cv.height = needH;
+      }
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, cv.width, cv.height);
-      // Uniform "meet" scale + center — same transform as the wireframe SVG
-      // (preserveAspectRatio=xMidYMid meet). Non-uniform stretch used to drift
-      // ink left of region boxes on portrait papers.
-      const scale = Math.min(cssW / data.w, cssH / data.h);
-      const ox = (cssW - data.w * scale) / 2;
-      const oy = (cssH - data.h * scale) / 2;
-      ctx.setTransform(scale * dpr, 0, 0, scale * dpr, ox * dpr, oy * dpr);
-      ctx.strokeStyle = inkColor();
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      const total = data.strokes.length;
-      const until = progress >= 1 ? total : Math.floor(total * progress);
-      const frac = progress >= 1 ? 0 : (total * progress) - until;
-      for (let i = 0; i < until; i += 1) {
-        const s = data.strokes[i];
-        if (!s.xs.length) continue;
-        ctx.lineWidth = s.w || 0.45;
-        ctx.beginPath();
-        ctx.moveTo(s.xs[0], s.ys[0]);
-        for (let k = 1; k < s.xs.length; k += 1) ctx.lineTo(s.xs[k], s.ys[k]);
-        ctx.stroke();
+      const tl = timelineRef.current;
+      if (!tl) return;
+      const W = tl.pageW || data.w;
+      const H = tl.pageH || data.h;
+      // Uniform "meet" scale + center — same transform as the wireframe SVG.
+      const scale = Math.min(cssW / W, cssH / H);
+      const ox = (cssW - W * scale) / 2;
+      const oy = (cssH - H * scale) / 2;
+      const sc = scale * dpr;
+      ctx.setTransform(sc, 0, 0, sc, ox * dpr, oy * dpr);
+      // Rebuild color if theme flipped since timeline build.
+      const col = inkColor();
+      if (tl.strokes.length && tl.strokes[0].c !== col) {
+        tl.strokes.forEach((s) => { s.c = col; });
       }
-      if (frac > 0 && until < total) {
-        const s = data.strokes[until];
-        const n = Math.max(1, Math.floor((s.xs.length - 1) * frac));
-        ctx.lineWidth = s.w || 0.45;
-        ctx.beginPath();
-        ctx.moveTo(s.xs[0], s.ys[0]);
-        for (let k = 1; k <= n; k += 1) ctx.lineTo(s.xs[k], s.ys[k]);
-        ctx.stroke();
-      }
+      drawFrame(ctx, tl, vt, {
+        showPen,
+        finished,
+        poseState: poseRef.current || (poseRef.current = { t: -1, x: null, v: null }),
+        pageW: W,
+        pageH: H,
+        sc,
+      });
     };
     paint();
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(paint) : null;
     if (ro) ro.observe(cv);
     window.addEventListener('resize', paint);
-    // site toggles html.is-dark — observe class changes
-    const mo = new MutationObserver(paint);
+    const mo = new MutationObserver(() => {
+      keyRef.current = '';
+      paint();
+    });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => {
       if (ro) ro.disconnect();
       mo.disconnect();
       window.removeEventListener('resize', paint);
     };
-  }, [ink, handId, progress]);
+  }, [ink, handId, vt, showPen, finished, pageW, pageH, regions, lineHeightMm]);
 
   return <canvas ref={ref} className={className} aria-hidden="true" />;
 }

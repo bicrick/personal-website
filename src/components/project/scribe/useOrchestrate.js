@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SCENARIO_BY_ID, SCENARIOS } from './scenarios';
+import {
+  DEFAULT_SPEED,
+  buildTimeline,
+  inkColor,
+  progressAt,
+  wallMsForWrite,
+} from './livePen';
+import { resolveInk } from './hands';
 
 const TYPE_MS = 34;
 const STEP_MS = 620;
@@ -8,31 +16,67 @@ const WIRE_AT = 2;
 const REGIONS_AT = 3;
 const WRITE_AT = 4;
 
+function timelineFor(scenario, handId) {
+  if (!scenario) return null;
+  const data = resolveInk(
+    { ...scenario.ink, byHand: scenario.inkByHand || scenario.ink.byHand },
+    handId,
+  );
+  const tl = buildTimeline(data.strokes, {
+    color: inkColor(),
+    regions: scenario.regions,
+    lineHeightMm: (scenario.paper && scenario.paper.line_height_mm) || 8,
+  });
+  tl.pageW = data.w;
+  tl.pageH = data.h;
+  return tl;
+}
+
 /**
  * Plays one canned scribe run: type the request, step the activity log,
- * reveal paper → wireframe → parallel regions → pen. `fast` skips pacing
- * for reduced-motion visitors. Timers freeze while `paused` is true.
+ * reveal paper → (optional) wireframe → parallel regions → pen at the
+ * friends-app live.js clock (DEFAULT_SPEED ×). `fast` skips pacing for
+ * reduced-motion. Timers freeze while `paused` is true.
  */
-export default function useOrchestrate({ fast = false, paused = false, bootScenario = null, bootDone = false } = {}) {
+export default function useOrchestrate({
+  fast = false,
+  paused = false,
+  bootScenario = null,
+  bootDone = false,
+} = {}) {
   const [scenarioId, setScenarioId] = useState(null);
   const [typed, setTyped] = useState('');
   const [run, setRun] = useState(null);
   const [stage, setStage] = useState('idle'); // idle|typing|plan|wire|regions|write|done
   const [regionStatus, setRegionStatus] = useState({}); // id -> pending|running|done
-  const [penProgress, setPenProgress] = useState(0); // 0..1
-  const [wireOn, setWireOn] = useState(true);
+  const [penVt, setPenVt] = useState(0);
+  const [penEnd, setPenEnd] = useState(0);
+  const [wireOn, setWireOn] = useState(false); // layout boxes off by default
   const [handId, setHandId] = useState('neat');
   const [replayKey, setReplayKey] = useState(0);
   const timers = useRef([]);
   const busy = useRef(false);
   const pausedRef = useRef(paused);
   const penRaf = useRef(0);
-  const penStart = useRef(0);
-  const penFrozen = useRef(0);
+  const penLast = useRef(0);
+  const timelineRef = useRef(null);
+  const handRef = useRef(handId);
+  const scrubbingRef = useRef(false);
+  const playbackRef = useRef({
+    vt: 0,
+    strokes: [],
+    playing: false,
+    scrubbing: false,
+    speed: DEFAULT_SPEED,
+  });
 
   useEffect(() => {
     pausedRef.current = paused;
   }, [paused]);
+
+  useEffect(() => {
+    handRef.current = handId;
+  }, [handId]);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -74,11 +118,13 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     clearTimers();
     const statuses = {};
     scenario.regions.forEach((r) => { statuses[r.id] = 'done'; });
+    const tl = timelineFor(scenario, handRef.current);
+    timelineRef.current = tl;
     setScenarioId(bootScenario);
     setTyped('');
-    setWireOn(true);
     setRegionStatus(statuses);
-    setPenProgress(1);
+    setPenEnd(tl.writeEnd);
+    setPenVt(tl.writeEnd);
     setStage('done');
     setRun({
       id: bootScenario,
@@ -89,23 +135,45 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     return undefined;
   }, [bootDone, bootScenario, clearTimers]);
 
-  const runPen = useCallback((durationMs) => {
+  const runPen = useCallback((tl) => {
     if (penRaf.current) cancelAnimationFrame(penRaf.current);
-    penStart.current = performance.now();
-    penFrozen.current = 0;
+    timelineRef.current = tl;
+    setPenEnd(tl.writeEnd);
+    setPenVt(0);
+    penLast.current = 0;
+    playbackRef.current.strokes = tl.strokes;
+    playbackRef.current.vt = 0;
+    playbackRef.current.playing = !fast;
+    playbackRef.current.speed = DEFAULT_SPEED;
+    if (fast) {
+      setPenVt(tl.writeEnd);
+      playbackRef.current.vt = tl.writeEnd;
+      playbackRef.current.playing = false;
+      return;
+    }
     const tick = (now) => {
       if (pausedRef.current) {
-        penFrozen.current += 16;
+        penLast.current = now;
         penRaf.current = requestAnimationFrame(tick);
         return;
       }
-      const p = Math.min(1, (now - penStart.current - penFrozen.current) / durationMs);
-      setPenProgress(p);
-      if (p < 1) penRaf.current = requestAnimationFrame(tick);
+      const last = penLast.current || now;
+      const dtReal = Math.min(0.1, (now - last) / 1000);
+      penLast.current = now;
+      setPenVt((prev) => {
+        const next = Math.min(tl.writeEnd, prev + dtReal * DEFAULT_SPEED);
+        playbackRef.current.vt = next;
+        playbackRef.current.strokes = tl.strokes;
+        playbackRef.current.playing = next < tl.writeEnd;
+        playbackRef.current.scrubbing = scrubbingRef.current;
+        playbackRef.current.speed = DEFAULT_SPEED;
+        if (next < tl.writeEnd) penRaf.current = requestAnimationFrame(tick);
+        else penRaf.current = 0;
+        return next;
+      });
     };
-    setPenProgress(0);
     penRaf.current = requestAnimationFrame(tick);
-  }, []);
+  }, [fast]);
 
   const start = useCallback((id) => {
     if (busy.current) return;
@@ -114,9 +182,10 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     busy.current = true;
     clearTimers();
     setScenarioId(id);
-    setWireOn(true);
+    // Keep the user's page|layout choice; do not force wireframe on.
     setRegionStatus({});
-    setPenProgress(0);
+    setPenVt(0);
+    setPenEnd(0);
     setStage('typing');
     setRun(null);
     setTyped('');
@@ -124,7 +193,6 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     const typeMs = fast ? 0 : TYPE_MS;
     const stepMs = fast ? 60 : STEP_MS;
     let t = 0;
-    
 
     [...scenario.prompt].forEach((_, i) => {
       t += typeMs;
@@ -138,6 +206,7 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
       setRun({ id, prompt: scenario.prompt, step: 1, done: false });
     }, t);
 
+    let writeWall = fast ? 400 : 5000;
     scenario.steps.forEach((_, i) => {
       if (i === 0) return;
       t += stepMs;
@@ -163,20 +232,20 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
         }
         if (i === WRITE_AT) {
           setStage('write');
-          const writeDur = fast ? 400 : Math.min(5200, 900 + scenario.ink.strokes.length * 18);
-          runPen(writeDur);
+          const tl = timelineFor(scenario, handRef.current);
+          writeWall = wallMsForWrite(tl.writeEnd, DEFAULT_SPEED, fast);
+          runPen(tl);
         }
         setRun((r) => (r ? { ...r, step: i + 1 } : r));
       }, t);
     });
 
-    // Wait for pen payoff before marking done (writeDur captured at schedule time via closure of later)
-    const penWait = fast
-      ? 400
-      : Math.min(5200, 900 + scenario.ink.strokes.length * 18);
-    t += Math.max(stepMs * 0.9, penWait + 80);
+    // Pen duration is known up front from the same timeline the canvas uses.
+    const tl0 = timelineFor(scenario, handRef.current);
+    writeWall = wallMsForWrite(tl0.writeEnd, DEFAULT_SPEED, fast);
+    t += Math.max(stepMs * 0.9, writeWall + 80);
     later(() => {
-      setPenProgress(1);
+      setPenVt((tl0 && tl0.writeEnd) || 1);
       setStage('done');
       setRun((r) => (r ? { ...r, step: scenario.steps.length, done: true } : r));
       busy.current = false;
@@ -187,12 +256,12 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     const scenario = SCENARIO_BY_ID[scenarioId];
     if (!scenario) return;
     setStage('write');
-    setPenProgress(0);
     setReplayKey((k) => k + 1);
-    const dur = fast ? 400 : Math.min(5200, 900 + scenario.ink.strokes.length * 18);
-    runPen(dur);
+    const tl = timelineFor(scenario, handRef.current);
+    const dur = wallMsForWrite(tl.writeEnd, DEFAULT_SPEED, fast);
+    runPen(tl);
     later(() => {
-      setPenProgress(1);
+      setPenVt(tl.writeEnd);
       setStage('done');
     }, dur + 40);
   }, [fast, later, runPen, scenarioId]);
@@ -200,17 +269,53 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
   const scrubPen = useCallback((p) => {
     if (penRaf.current) cancelAnimationFrame(penRaf.current);
     penRaf.current = 0;
-    setPenProgress(Math.max(0, Math.min(1, p)));
+    const tl = timelineRef.current || (SCENARIO_BY_ID[scenarioId]
+      ? timelineFor(SCENARIO_BY_ID[scenarioId], handRef.current)
+      : null);
+    const end = (tl && tl.writeEnd) || penEnd || 1;
+    const next = Math.max(0, Math.min(1, p)) * end;
+    setPenVt(next);
+    setPenEnd(end);
     if (stage === 'idle' || stage === 'typing' || stage === 'plan') return;
     setStage(p >= 1 ? 'done' : 'write');
-  }, [stage]);
+  }, [penEnd, scenarioId, stage]);
 
   const setHand = useCallback((hid) => {
     setHandId(hid);
     setReplayKey((k) => k + 1);
+    // Retarget timeline for the new hand at the same progress fraction.
+    const scenario = SCENARIO_BY_ID[scenarioId];
+    if (!scenario) return;
+    const tl = timelineFor(scenario, hid);
+    timelineRef.current = tl;
+    setPenEnd(tl.writeEnd);
+    setPenVt((prev) => {
+      const frac = penEnd > 0 ? prev / penEnd : 1;
+      return frac * tl.writeEnd;
+    });
+  }, [penEnd, scenarioId]);
+
+
+  useEffect(() => {
+    const tl = timelineRef.current;
+    playbackRef.current.vt = penVt;
+    playbackRef.current.strokes = (tl && tl.strokes) || [];
+    playbackRef.current.playing = stage === 'write';
+    playbackRef.current.scrubbing = scrubbingRef.current;
+    playbackRef.current.speed = DEFAULT_SPEED;
+  }, [penVt, stage]);
+
+  const setScrubbing = useCallback((on) => {
+    scrubbingRef.current = !!on;
+    playbackRef.current.scrubbing = !!on;
   }, []);
 
   const scenario = scenarioId ? SCENARIO_BY_ID[scenarioId] : null;
+  const tl = timelineRef.current;
+  const penProgress = progressAt(
+    tl || { writeEnd: penEnd },
+    penVt,
+  );
 
   return {
     scenarios: SCENARIOS,
@@ -221,6 +326,8 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     stage,
     regionStatus,
     penProgress,
+    penVt,
+    penEnd,
     wireOn,
     setWireOn,
     handId,
@@ -230,5 +337,7 @@ export default function useOrchestrate({ fast = false, paused = false, bootScena
     start,
     replayPen,
     scrubPen,
+    setScrubbing,
+    playbackRef,
   };
 }
