@@ -11,6 +11,7 @@
   --sqd-navy-deep: #182a50;
   --sqd-navy-ink: #1c2f5a;
   --sqd-paper: #fbfaf6;
+  --sqd-panel: #fcfcfa;
   --sqd-white: #fffefb;
   --sqd-line: rgba(24, 42, 80, 0.12);
   --sqd-line-2: rgba(24, 42, 80, 0.2);
@@ -43,10 +44,11 @@
 }
 
 .sqd-stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
-  gap: 12px;
-  align-items: stretch;
+  --sqd-panel-w: 340px;
+  --sqd-macro-w: 400px;
+  --sqd-float-gap: 12px;
+  position: relative;
+  display: block;
   /* Fixed friends-app frame — page / macro / panel never resize mid-play. */
   width: 100%;
   height: min(72vh, 640px);
@@ -58,12 +60,11 @@
 /* ---- desk (no browser chrome) ---- */
 
 .sqd-desk {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  display: block;
   min-width: 0;
   min-height: 0;
-  height: 100%;
   border-radius: 0;
   overflow: hidden;
   background-color: var(--sqd-desk-bg);
@@ -80,35 +81,47 @@ html.is-dark .sqd-desk {
 }
 
 .sqd-viewport {
-  position: relative;
-  flex: 1 1 auto;
+  position: absolute;
+  inset: 0;
   min-height: 0;
   min-width: 0;
   display: grid;
   place-items: center;
-  padding: 10px 10px 6px;
+  /* Leave room so floating panel/macro never cover ink. */
+  padding:
+    calc(var(--sqd-float-gap) + 6px)
+    calc(var(--sqd-panel-w) + var(--sqd-float-gap) + 8px)
+    calc(var(--sqd-macro-w) * 10 / 16 + var(--sqd-float-gap) + 8px)
+    calc(var(--sqd-float-gap) + 6px);
   container-type: size;
   container-name: sqd-vp;
+  z-index: 1;
 }
 
+/* Floating cream cards: panel top-right, macro bottom-left (§11). */
 .sqd-macro {
-  position: relative;
-  flex: 0 0 26%;
-  min-height: 96px;
-  max-height: 150px;
-  margin: 0 10px 0;
-  border: 1px solid rgba(40, 22, 5, 0.28);
+  position: absolute;
+  z-index: 10;
+  left: var(--sqd-float-gap);
+  bottom: var(--sqd-float-gap);
+  width: var(--sqd-macro-w);
+  max-width: calc(100% - var(--sqd-float-gap) * 2);
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  border: 1px solid rgba(24, 42, 80, 0.55);
+  border-radius: 0;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.12) inset,
-    0 8px 18px -12px rgba(30, 15, 0, 0.55);
-  background: var(--sqd-white);
+    0 1px 2px rgba(24, 42, 80, 0.06),
+    0 10px 24px -16px rgba(24, 42, 80, 0.35);
+  background: #fcfcfa;
   overflow: hidden;
   pointer-events: none;
   isolation: isolate;
 }
 
 .sqd-macro.is-empty {
-  background: rgba(255, 248, 235, 0.35);
+  background: #fcfcfa;
+  opacity: 0.55;
 }
 
 .sqd-macro-canvas {
@@ -121,35 +134,24 @@ html.is-dark .sqd-desk {
   position: absolute;
   left: 8px;
   bottom: 6px;
-  font-size: 10px;
+  font: 600 10px/1 var(--sqd-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(24, 42, 80, 0.55);
-  background: rgba(255, 254, 251, 0.78);
+  color: rgba(24, 42, 80, 0.45);
+  background: rgba(252, 252, 250, 0.82);
   padding: 2px 6px;
+  border-radius: 0;
   pointer-events: none;
+}
+
+html.is-dark .sqd-macro {
+  background: #1a2236;
+  border-color: rgba(180, 195, 230, 0.28);
 }
 
 html.is-dark .sqd-macro-tag {
   color: rgba(220, 228, 245, 0.7);
   background: rgba(20, 28, 48, 0.55);
-}
-
-.sqd-desk-meta {
-  display: flex;
-  gap: 14px;
-  padding: 6px 12px 10px;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: rgba(255, 248, 235, 0.72);
-  text-shadow: 0 1px 1px rgba(40, 20, 0, 0.35);
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.sqd-desk-meta span:last-child {
-  margin-left: auto;
-  text-transform: lowercase;
 }
 
 /* ---- page / paper ---- */
@@ -215,9 +217,15 @@ html.is-dark .sqd-sheet {
   pointer-events: none;
 }
 
-.sqd-ruled line {
+.sqd-ruled line,
+.sqd-ruled-h {
   stroke: rgba(157, 180, 220, 0.55);
   stroke-width: 0.25;
+}
+
+.sqd-ruled-margin {
+  stroke: rgba(192, 57, 43, 0.55);
+  stroke-width: 0.35;
 }
 
 .sqd-ink {
@@ -274,14 +282,23 @@ html.is-dark .sqd-sheet {
 /* ---- floating panel (friends #panel) ---- */
 
 .sqd-panel {
-  max-height: 100%;
+  position: absolute;
+  z-index: 10;
+  top: var(--sqd-float-gap);
+  right: var(--sqd-float-gap);
+  bottom: auto;
+  width: var(--sqd-panel-w);
+  max-width: calc(100% - var(--sqd-float-gap) * 2);
+  height: auto;
+  /* Leave room for bottom-left macro so cards never cover each other. */
+  max-height: calc(100% - (var(--sqd-macro-w) * 10 / 16) - var(--sqd-float-gap) * 3);
   min-height: 0;
   display: flex;
   flex-direction: column;
   min-width: 0;
   overflow-x: hidden;
-  background: var(--sqd-paper);
-  border: 1px solid var(--sqd-line-2);
+  background: var(--sqd-panel, #fcfcfa);
+  border: 1px solid rgba(24, 42, 80, 0.55);
   border-radius: 0;
   box-shadow:
     0 1px 2px rgba(24, 42, 80, 0.06),
@@ -306,7 +323,7 @@ html.is-dark .sqd-panel {
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 14px 12px 12px;
+  padding: 20px 18px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -329,7 +346,7 @@ html.is-dark .sqd-panel {
 
 .sqd-compose-text {
   min-height: 64px;
-  font: 400 14px/1.45 var(--sqd-sans);
+  font: 400 16px/1.45 var(--sqd-sans);
   color: var(--sqd-text);
   white-space: pre-wrap;
   word-break: break-word;
@@ -509,6 +526,20 @@ html.is-dark .sqd-icon-btn:hover {
   padding: 2px 0 8px;
 }
 
+.sqd-style-speed {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sqd-style-label {
+  font: 600 11px/1 var(--sqd-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sqd-muted);
+}
+
 .sqd-seg {
   display: inline-flex;
   border: 1px solid var(--sqd-line-2);
@@ -574,7 +605,7 @@ html.is-dark .sqd-icon-btn:hover {
   transition: opacity 0.35s var(--sqd-ease), max-height 0.45s var(--sqd-ease),
     padding 0.35s, margin 0.35s, border-width 0.35s;
   overflow: hidden;
-  max-height: 160px;
+  max-height: 96px;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -726,39 +757,36 @@ html.is-dark .sqd-player {
 
 @container sqd (max-width: 560px) {
   .sqd-stage {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    --sqd-panel-w: min(300px, 46vw);
+    --sqd-macro-w: min(300px, 72vw);
     height: auto;
     max-height: none;
-    min-height: 0;
-    overflow: visible;
+    min-height: 420px;
+    overflow: hidden;
   }
   .sqd-desk {
-    min-height: 0;
-    height: auto;
-    max-height: none;
+    position: relative;
+    min-height: 420px;
+    height: min(70vh, 560px);
   }
   .sqd-viewport {
-    min-height: 0;
-    height: auto;
-    aspect-ratio: 216 / 279;
-    max-height: min(52vh, 420px);
-    padding: 12px 10px 8px;
-  }
-  .sqd-macro {
-    flex: none;
-    height: 110px;
-    max-height: 110px;
-    margin: 0 10px 4px;
+    padding:
+      calc(var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-panel-w) + var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-macro-w) * 10 / 16 + var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-float-gap) + 4px);
   }
   .sqd-panel {
-    max-height: none;
+    max-height: calc(100% - var(--sqd-float-gap) * 2);
     overflow-x: hidden;
   }
 }
 
 @container sqd (max-width: 420px) {
-  .sqd-viewport { padding: 10px 8px 6px; }
+  .sqd-stage {
+    --sqd-panel-w: min(280px, 88vw);
+    --sqd-macro-w: min(280px, 88vw);
+  }
   .sqd-compose-text { font-size: 16px; min-height: 56px; }
 }
 

@@ -48,7 +48,7 @@ function Wireframe({ regions, regionStatus, visible, page }) {
 }
 
 function RuledLines({ page }) {
-  if (!page.ruled) return null;
+  if (!page.ruled && page.kind !== 'college_ruled') return null;
   const lines = [];
   const top = page.margins.t;
   const bottom = page.height_mm - page.margins.b;
@@ -56,22 +56,36 @@ function RuledLines({ page }) {
   for (let y = top + lh; y < bottom; y += lh) {
     lines.push(
       <line
-        key={y}
-        x1={page.margins.l}
-        x2={page.width_mm - page.margins.r}
+        key={`h-${y}`}
+        className="sqd-ruled-h"
+        x1={0}
+        x2={page.width_mm}
         y1={y}
         y2={y}
       />,
     );
   }
+  // College-ruled red margin (~1"). Prefer a fixed 28mm when left margin is tight.
+  const marginX = page.kind === 'college_ruled'
+    ? Math.max(25, Math.min(32, (page.margins && page.margins.l) || 28))
+    : null;
   return (
     <svg className="sqd-ruled" viewBox={`0 0 ${page.width_mm} ${page.height_mm}`} aria-hidden="true">
       {lines}
+      {marginX != null ? (
+        <line
+          className="sqd-ruled-margin"
+          x1={marginX}
+          x2={marginX}
+          y1={0}
+          y2={page.height_mm}
+        />
+      ) : null}
     </svg>
   );
 }
 
-/** The page inside the browser chrome: paper, optional layout boxes, friends pen. */
+/** The page on the desk: paper, optional layout boxes, friends pen. */
 export default function PaperView({
   scenario,
   stage,
@@ -81,7 +95,8 @@ export default function PaperView({
   handId,
   replayKey,
 }) {
-  // Always show a blank letter sheet until ink/wire appear — never mid-page copy.
+  // Idle: blank letter. Once a scenario is active, use its paper (college_ruled
+  // for math demos) — ink still waits for the write stage.
   const blankPaper = {
     width_mm: 216,
     height_mm: 279,
