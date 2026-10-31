@@ -12,7 +12,7 @@ import './scribe.css';
  * Interactive scribe orchestrator demo restyled like the friends desk app:
  * brown desk, floating cream panel, transport, no fake browser chrome.
  * Autoplay on mount; after a run finishes, advance through the reel.
- * Macro is a separate cream card in the right rail (not inside the panel).
+ * Macro is a separate cream card (bottom-left); panel floats top-right.
  */
 export default function ScribeDemo({
   bootScenario,
@@ -125,9 +125,7 @@ export default function ScribeDemo({
               replayKey={orch.replayKey}
             />
           </div>
-        </div>
 
-        <div className="sqd-rail">
           <MacroView
             scenario={orch.scenario}
             handId={orch.handId}

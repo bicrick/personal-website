@@ -16,10 +16,90 @@ const FOLLOW = 0.22;
 const TIP_FX = 0.625;
 const TIP_FY = 0.5;
 
+const paperCache = new Map();
+
 /**
- * Separate cream macro card: a true zoom of the same page (ruled sheet,
- * red margin, ink, pen) centered on the nib. Sibling of the side panel —
- * not inside it.
+ * Build the same college_ruled sheet the desk PaperView draws (phase-matched
+ * lines + red margin + light grain), as an Image for canvas drawImage.
+ */
+function paperKey(paper) {
+  if (!paper) return 'blank';
+  const m = paper.margins || {};
+  return [
+    paper.kind || 'letter',
+    paper.width_mm || 216,
+    paper.height_mm || 279,
+    paper.ruled ? 1 : 0,
+    paper.line_height_mm || 8,
+    m.l, m.r, m.t, m.b,
+  ].join('|');
+}
+
+function buildPaperSvg(paper) {
+  const W = paper.width_mm || 216;
+  const H = paper.height_mm || 279;
+  const margins = paper.margins || { l: 20, r: 20, t: 20, b: 20 };
+  const ruled = paper.ruled || paper.kind === 'college_ruled';
+  const lh = paper.line_height_mm || 8;
+  const lines = [];
+  if (ruled) {
+    const top = margins.t;
+    const bottom = H - margins.b;
+    for (let y = top + lh; y < bottom; y += lh) {
+      lines.push(
+        `<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#a8c3e2" stroke-width="0.20" stroke-opacity="0.90"/>`,
+      );
+    }
+    const marginX = paper.kind === 'college_ruled'
+      ? Math.max(25, Math.min(32, margins.l || 28))
+      : null;
+    if (marginX != null) {
+      lines.push(
+        `<line x1="${marginX}" y1="0" x2="${marginX}" y2="${H}" stroke="#e58b8b" stroke-width="0.28" stroke-opacity="0.85"/>`,
+      );
+    }
+  }
+  return `<?xml version="1.0" encoding="UTF-8"?>`
+    + `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm">`
+    + `<defs><filter id="pgrain" x="0" y="0" width="100%" height="100%">`
+    + `<feTurbulence type="fractalNoise" baseFrequency="1.67" numOctaves="3" seed="3"/>`
+    + `<feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0"/>`
+    + `</filter></defs>`
+    + `<rect width="${W}" height="${H}" fill="#fdfdfb"/>`
+    + `<rect width="${W}" height="${H}" filter="url(#pgrain)"/>`
+    + lines.join('')
+    + `</svg>`;
+}
+
+function loadPaperImage(paper) {
+  const key = paperKey(paper);
+  const hit = paperCache.get(key);
+  if (hit) return hit;
+  const entry = { img: null, ready: false, key };
+  paperCache.set(key, entry);
+  if (typeof Image === 'undefined') {
+    entry.ready = true;
+    return entry;
+  }
+  const img = new Image();
+  entry.img = img;
+  const svg = buildPaperSvg(paper || {
+    width_mm: 216,
+    height_mm: 279,
+    margins: { l: 20, r: 20, t: 20, b: 20 },
+    ruled: false,
+    kind: 'letter',
+  });
+  img.onload = () => { entry.ready = true; };
+  img.onerror = () => { entry.ready = true; };
+  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  return entry;
+}
+
+/**
+ * Separate cream macro card: true zoom of the same page paper (SVG rules,
+ * red margin, grain) + ink + pen, tip-pinned. Sibling overlay — not inside
+ * the side panel.
  */
 export default function MacroView({
   scenario,
@@ -36,6 +116,7 @@ export default function MacroView({
   const camRef = useRef({ x: null, y: null });
   const keyRef = useRef('');
   const paperRef = useRef(null);
+  const paperEntryRef = useRef(null);
   const reducedRef = useRef(reduced);
   const stageRef = useRef(stage);
   const penVtRef = useRef(penVt);
@@ -65,6 +146,7 @@ export default function MacroView({
       tl.pageH = scenario.paper.height_mm || data.h;
       timelineRef.current = tl;
       paperRef.current = scenario.paper || null;
+      paperEntryRef.current = loadPaperImage(scenario.paper);
     }
 
     let raf = 0;
@@ -114,36 +196,21 @@ export default function MacroView({
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, cv.width, cv.height);
-      // Page wash (same sheet cream as PaperView), not panel cream.
-      ctx.fillStyle = '#fffefb';
+      // Card cream behind the page crop (visible only if paper not yet ready).
+      ctx.fillStyle = '#fcfcfa';
       ctx.fillRect(0, 0, cv.width, cv.height);
 
       ctx.setTransform(scale * dpr, 0, 0, scale * dpr, ox * dpr, oy * dpr);
 
-      const paper = paperRef.current || {};
       const pageW = tl.pageW;
       const pageH = tl.pageH;
-      const margins = paper.margins || { l: 20, r: 20, t: 20, b: 20 };
-      const ruled = paper.ruled || paper.kind === 'college_ruled';
-
-      if (ruled) {
-        const lh = paper.line_height_mm || 8;
-        // Same page geometry as PaperView — absolute ruled lines + red margin.
-        ctx.strokeStyle = 'rgba(157,180,220,0.55)';
-        ctx.lineWidth = 0.25;
-        for (let y = margins.t + lh; y < pageH - margins.b; y += lh) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(pageW, y);
-          ctx.stroke();
-        }
-        const marginX = Math.max(25, Math.min(32, margins.l || 28));
-        ctx.strokeStyle = 'rgba(192,57,43,0.55)';
-        ctx.lineWidth = 0.35;
-        ctx.beginPath();
-        ctx.moveTo(marginX, 0);
-        ctx.lineTo(marginX, pageH);
-        ctx.stroke();
+      const entry = paperEntryRef.current;
+      if (entry && entry.ready && entry.img && entry.img.naturalWidth) {
+        ctx.drawImage(entry.img, 0, 0, pageW, pageH);
+      } else {
+        // Fallback wash until SVG decodes — never synthetic out-of-phase rules.
+        ctx.fillStyle = '#fdfdfb';
+        ctx.fillRect(0, 0, pageW, pageH);
       }
 
       drawFrame(ctx, tl, vt, {

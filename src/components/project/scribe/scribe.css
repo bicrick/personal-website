@@ -44,10 +44,11 @@
 }
 
 .sqd-stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
-  gap: 12px;
-  align-items: stretch;
+  --sqd-panel-w: 340px;
+  --sqd-macro-w: 400px;
+  --sqd-float-gap: 12px;
+  position: relative;
+  display: block;
   /* Fixed friends-app frame — page / macro / panel never resize mid-play. */
   width: 100%;
   height: min(72vh, 640px);
@@ -59,12 +60,11 @@
 /* ---- desk (no browser chrome) ---- */
 
 .sqd-desk {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  display: block;
   min-width: 0;
   min-height: 0;
-  height: 100%;
   border-radius: 0;
   overflow: hidden;
   background-color: var(--sqd-desk-bg);
@@ -81,34 +81,32 @@ html.is-dark .sqd-desk {
 }
 
 .sqd-viewport {
-  position: relative;
-  flex: 1 1 auto;
+  position: absolute;
+  inset: 0;
   min-height: 0;
   min-width: 0;
   display: grid;
   place-items: center;
-  padding: 10px 10px 6px;
+  /* Leave room so floating panel/macro never cover ink. */
+  padding:
+    calc(var(--sqd-float-gap) + 6px)
+    calc(var(--sqd-panel-w) + var(--sqd-float-gap) + 8px)
+    calc(var(--sqd-macro-w) * 10 / 16 + var(--sqd-float-gap) + 8px)
+    calc(var(--sqd-float-gap) + 6px);
   container-type: size;
   container-name: sqd-vp;
+  z-index: 1;
 }
 
-/* Right rail: separate macro card above the cream panel */
-.sqd-rail {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  min-height: 0;
-  max-height: 100%;
-  overflow: hidden;
-}
-
+/* Floating cream cards: panel top-right, macro bottom-left (§11). */
 .sqd-macro {
-  position: relative;
-  flex: 0 0 auto;
-  width: 100%;
+  position: absolute;
+  z-index: 10;
+  left: var(--sqd-float-gap);
+  bottom: var(--sqd-float-gap);
+  width: var(--sqd-macro-w);
+  max-width: calc(100% - var(--sqd-float-gap) * 2);
   aspect-ratio: 16 / 10;
-  max-height: 42%;
   margin: 0;
   border: 1px solid rgba(24, 42, 80, 0.55);
   border-radius: 0;
@@ -284,8 +282,16 @@ html.is-dark .sqd-sheet {
 /* ---- floating panel (friends #panel) ---- */
 
 .sqd-panel {
-  flex: 1 1 auto;
-  max-height: 100%;
+  position: absolute;
+  z-index: 10;
+  top: var(--sqd-float-gap);
+  right: var(--sqd-float-gap);
+  bottom: auto;
+  width: var(--sqd-panel-w);
+  max-width: calc(100% - var(--sqd-float-gap) * 2);
+  height: auto;
+  /* Leave room for bottom-left macro so cards never cover each other. */
+  max-height: calc(100% - (var(--sqd-macro-w) * 10 / 16) - var(--sqd-float-gap) * 3);
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -751,43 +757,36 @@ html.is-dark .sqd-player {
 
 @container sqd (max-width: 560px) {
   .sqd-stage {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    --sqd-panel-w: min(300px, 46vw);
+    --sqd-macro-w: min(300px, 72vw);
     height: auto;
     max-height: none;
-    min-height: 0;
-    overflow: visible;
+    min-height: 420px;
+    overflow: hidden;
   }
   .sqd-desk {
-    min-height: 0;
-    height: auto;
-    max-height: none;
+    position: relative;
+    min-height: 420px;
+    height: min(70vh, 560px);
   }
   .sqd-viewport {
-    min-height: 0;
-    height: auto;
-    aspect-ratio: 216 / 279;
-    max-height: min(52vh, 420px);
-    padding: 12px 10px 8px;
-  }
-  .sqd-rail {
-    max-height: none;
-    overflow: visible;
-  }
-  .sqd-macro {
-    flex: none;
-    max-height: none;
-    height: auto;
-    aspect-ratio: 16 / 10;
+    padding:
+      calc(var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-panel-w) + var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-macro-w) * 10 / 16 + var(--sqd-float-gap) + 4px)
+      calc(var(--sqd-float-gap) + 4px);
   }
   .sqd-panel {
-    max-height: none;
+    max-height: calc(100% - var(--sqd-float-gap) * 2);
     overflow-x: hidden;
   }
 }
 
 @container sqd (max-width: 420px) {
-  .sqd-viewport { padding: 10px 8px 6px; }
+  .sqd-stage {
+    --sqd-panel-w: min(280px, 88vw);
+    --sqd-macro-w: min(280px, 88vw);
+  }
   .sqd-compose-text { font-size: 16px; min-height: 56px; }
 }
 
