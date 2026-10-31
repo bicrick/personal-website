@@ -80,6 +80,24 @@ function fmtClock(p, totalSec = 0) {
 
 const SPEED_OPTS = [1, 2, 4];
 
+function SpeedSeg({ userSpeed, setUserSpeed }) {
+  return (
+    <div className="sqd-speed" role="group" aria-label="Playback speed">
+      {SPEED_OPTS.map((sp) => (
+        <button
+          key={sp}
+          type="button"
+          className={userSpeed === sp ? 'is-on' : ''}
+          aria-pressed={userSpeed === sp}
+          onClick={() => setUserSpeed && setUserSpeed(sp)}
+        >
+          {`${sp}×`}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function SidePanel({
   scenarios,
   scenarioId,
@@ -128,7 +146,7 @@ export default function SidePanel({
           <div className="sqd-compose-row">
             <span className="sqd-check" aria-hidden="true" title="Ready">
               <svg viewBox="0 0 14 14">
-                <rect x="0.75" y="0.75" width="12.5" height="12.5" rx="1.5" fill="currentColor" />
+                <rect x="0.75" y="0.75" width="12.5" height="12.5" rx="0" fill="currentColor" />
                 <path d="M3.6 7.1l2.2 2.2 4.6-4.6" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
@@ -190,20 +208,8 @@ export default function SidePanel({
           {statusText(stage, working, run, scenario)}
         </div>
 
+
         <div className={`sqd-player${playerOn ? '' : ' is-off'}${done ? ' is-done' : ''}`}>
-          <div className="sqd-speed" role="group" aria-label="Playback speed">
-            {SPEED_OPTS.map((sp) => (
-              <button
-                key={sp}
-                type="button"
-                className={userSpeed === sp ? 'is-on' : ''}
-                aria-pressed={userSpeed === sp}
-                onClick={() => setUserSpeed && setUserSpeed(sp)}
-              >
-                {sp}x
-              </button>
-            ))}
-          </div>
           <div className="sqd-transport">
             <button
               type="button"
@@ -254,6 +260,10 @@ export default function SidePanel({
           </button>
           {styleOpen ? (
             <div className="sqd-style" aria-label="Style details">
+              <div className="sqd-style-speed">
+                <span className="sqd-style-label">Speed</span>
+                <SpeedSeg userSpeed={userSpeed} setUserSpeed={setUserSpeed} />
+              </div>
               <div className="sqd-seg" role="group" aria-label="Page view">
                 <button
                   type="button"

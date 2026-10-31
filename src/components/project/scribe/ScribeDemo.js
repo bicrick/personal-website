@@ -10,8 +10,9 @@ import './scribe.css';
 
 /**
  * Interactive scribe orchestrator demo restyled like the friends desk app:
- * brown desk, floating navy panel, transport, no fake browser chrome.
+ * brown desk, floating cream panel, transport, no fake browser chrome.
  * Autoplay on mount; after a run finishes, advance through the reel.
+ * Macro is a separate cream card in the right rail (not inside the panel).
  */
 export default function ScribeDemo({
   bootScenario,
@@ -38,7 +39,6 @@ export default function ScribeDemo({
     playbackRef: orch.playbackRef,
   });
 
-  // Pause pen when scrolled off-screen; keep optimistic-true until IO reports.
   useEffect(() => {
     if (forceInView) {
       setInView(true);
@@ -64,7 +64,6 @@ export default function ScribeDemo({
     };
   }, [forceInView]);
 
-  // Autoplay on article open (mount + short delay) — not gated on scroll-into-view.
   useEffect(() => {
     if (disableAutoplay || bootDone || bootScenario) return undefined;
     if (reduced || autoplayed.current) return undefined;
@@ -75,7 +74,6 @@ export default function ScribeDemo({
     return () => window.clearTimeout(id);
   }, [reduced, start, disableAutoplay, bootDone, bootScenario, scenarios]);
 
-  // QA: start a specific scenario once (animated unless bootDone).
   useEffect(() => {
     if (!bootScenario || bootDone) return undefined;
     if (autoplayed.current) return undefined;
@@ -86,7 +84,6 @@ export default function ScribeDemo({
     return () => window.clearTimeout(id);
   }, [bootScenario, bootDone, start, forceFast]);
 
-  // Reel: after a run finishes, advance to the next scenario.
   useEffect(() => {
     if (disableAutoplay || reduced || bootDone) return undefined;
     if (stage !== 'done' || !scenarioId) return undefined;
@@ -101,14 +98,9 @@ export default function ScribeDemo({
     return () => {
       if (reelTimer.current) window.clearTimeout(reelTimer.current);
     };
-  // orch.working intentionally read live inside timeout
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, scenarioId, scenarios, start, disableAutoplay, reduced, bootDone]);
 
-  const regionDone = Object.values(orch.regionStatus).filter((s) => s === 'done').length;
-  const regionTotal = orch.scenario ? orch.scenario.regions.length : 0;
-  const strokeTotal = orch.scenario ? orch.scenario.ink.strokes.length : 0;
-  const strokeDrawn = Math.round(strokeTotal * (orch.penProgress || 0));
   const busy = orch.working;
 
   return (
@@ -133,6 +125,9 @@ export default function ScribeDemo({
               replayKey={orch.replayKey}
             />
           </div>
+        </div>
+
+        <div className="sqd-rail">
           <MacroView
             scenario={orch.scenario}
             handId={orch.handId}
@@ -142,50 +137,38 @@ export default function ScribeDemo({
             replayKey={orch.replayKey}
             reduced={reduced}
           />
-          <div className="sqd-desk-meta" aria-hidden="true">
-            <span>
-              {regionTotal ? `regions ${regionDone}/${regionTotal}` : 'regions —'}
-            </span>
-            <span>
-              {strokeTotal ? `strokes ${strokeDrawn}/${strokeTotal}` : 'strokes —'}
-            </span>
-            <span>
-              {orch.scenario ? orch.scenario.paper.label : 'waiting'}
-            </span>
-          </div>
+          <SidePanel
+            scenarios={orch.scenarios}
+            scenarioId={orch.scenarioId}
+            scenario={orch.scenario}
+            run={orch.run}
+            typed={orch.typed}
+            writeFlash={orch.writeFlash}
+            working={busy}
+            wireOn={orch.wireOn}
+            setWireOn={orch.setWireOn}
+            handId={orch.handId}
+            setHand={orch.setHand}
+            onPick={(id) => {
+              autoplayed.current = true;
+              if (reelTimer.current) window.clearTimeout(reelTimer.current);
+              orch.start(id);
+            }}
+            onReplay={orch.replayPen}
+            onTogglePlay={orch.togglePlay}
+            playing={orch.playing}
+            userPaused={orch.userPaused}
+            userSpeed={orch.userSpeed}
+            setUserSpeed={orch.setUserSpeed}
+            wallTotalSec={orch.wallTotalSec}
+            penProgress={orch.penProgress}
+            scrubPen={orch.scrubPen}
+            setScrubbing={orch.setScrubbing}
+            stage={orch.stage}
+            soundOn={sound.soundOn}
+            onToggleSound={sound.toggleSound}
+          />
         </div>
-
-        <SidePanel
-          scenarios={orch.scenarios}
-          scenarioId={orch.scenarioId}
-          scenario={orch.scenario}
-          run={orch.run}
-          typed={orch.typed}
-          writeFlash={orch.writeFlash}
-          working={busy}
-          wireOn={orch.wireOn}
-          setWireOn={orch.setWireOn}
-          handId={orch.handId}
-          setHand={orch.setHand}
-          onPick={(id) => {
-            autoplayed.current = true;
-            if (reelTimer.current) window.clearTimeout(reelTimer.current);
-            orch.start(id);
-          }}
-          onReplay={orch.replayPen}
-          onTogglePlay={orch.togglePlay}
-          playing={orch.playing}
-          userPaused={orch.userPaused}
-          userSpeed={orch.userSpeed}
-          setUserSpeed={orch.setUserSpeed}
-          wallTotalSec={orch.wallTotalSec}
-          penProgress={orch.penProgress}
-          scrubPen={orch.scrubPen}
-          setScrubbing={orch.setScrubbing}
-          stage={orch.stage}
-          soundOn={sound.soundOn}
-          onToggleSound={sound.toggleSound}
-        />
       </div>
       <figcaption>
         a reel of real pages. the live app plans the layout, then a handwriting model writes it.
