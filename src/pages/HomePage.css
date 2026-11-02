@@ -71,16 +71,9 @@
   margin: 0;
 }
 
-.home-band-role {
-  margin: 0.85rem 0 0;
-  font-size: 0.98rem;
-  line-height: 1.5;
-  color: var(--ink);
-  letter-spacing: 0.01em;
-}
 
 .home-band-intro .home-links {
-  margin-top: 1.15rem;
+  margin-top: 0.95rem;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -193,7 +186,6 @@ body:has(.home-band-page) {
 }
 
 .home-intro-place,
-.home-intro-role,
 .home-intro-links,
 .home-intro-cue {
   transform: translateY(0);
@@ -208,7 +200,6 @@ body:has(.home-band-page) {
 
 .home-intro-pending .home-intro-runner,
 .home-intro-pending .home-intro-place,
-.home-intro-pending .home-intro-role,
 .home-intro-pending .home-intro-links,
 .home-intro-pending .home-intro-cue {
   opacity: 0;
@@ -236,7 +227,8 @@ body:has(.home-band-page) {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 920ms;
 }
 
-.home-intro-play .home-intro-role {
+
+.home-intro-play .home-intro-links {
   opacity: 1;
   transform: translateY(0);
   transition:
@@ -244,20 +236,12 @@ body:has(.home-band-page) {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 1040ms;
 }
 
-.home-intro-play .home-intro-links {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 380ms cubic-bezier(0.22, 1, 0.36, 1) 1160ms,
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1) 1160ms;
-}
-
 .home-intro-play .home-intro-cue {
   opacity: 0.5;
   transform: translateX(-50%) translateY(0);
   transition:
-    opacity 360ms cubic-bezier(0.22, 1, 0.36, 1) 1380ms,
-    transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 1380ms;
+    opacity 360ms cubic-bezier(0.22, 1, 0.36, 1) 1260ms,
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 1260ms;
 }
 
 /* Cue keeps its centering translate — pending/play must compose it. */
@@ -269,7 +253,6 @@ body:has(.home-band-page) {
 .home-intro-done .home-intro-track,
 .home-intro-done .home-intro-runner,
 .home-intro-done .home-intro-place,
-.home-intro-done .home-intro-role,
 .home-intro-done .home-intro-links {
   transform: none;
   opacity: 1;
@@ -286,13 +269,11 @@ body:has(.home-band-page) {
   .home-intro-pending .home-intro-track,
   .home-intro-pending .home-intro-runner,
   .home-intro-pending .home-intro-place,
-  .home-intro-pending .home-intro-role,
   .home-intro-pending .home-intro-links,
   .home-intro-pending .home-intro-cue,
   .home-intro-play .home-intro-track,
   .home-intro-play .home-intro-runner,
   .home-intro-play .home-intro-place,
-  .home-intro-play .home-intro-role,
   .home-intro-play .home-intro-links,
   .home-intro-play .home-intro-cue {
     transition: none !important;
