@@ -329,10 +329,12 @@ function buildNightExtras() {
 }
 
 /**
- * Bayer-dithered vertical alpha mask.
- * Sky (opaqueAt=bottom): fully opaque through the hill belt near the track,
- * then a long gentle fade over the remaining height (slow as you leave).
+ * Smooth continuous vertical alpha mask (no Bayer / no quantized bands).
+ * Pixel content stays crisp; only the fade alpha is continuous 0–255.
+ * Sky (opaqueAt=bottom): opaque through the hill belt near the track,
+ * then a long eased fade over the remaining height.
  * Dirt (opaqueAt=top): opaque under the track, slower fade downward.
+ * No left/right edge fades — mask is 1px wide, stretched full width.
  */
 function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
   const c = document.createElement('canvas');
@@ -340,50 +342,40 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
   c.height = Math.max(1, Math.ceil(h));
   const g = c.getContext('2d');
   const H = c.height;
-  const bayer = [
-    0, 8, 2, 10,
-    12, 4, 14, 6,
-    3, 11, 1, 9,
-    15, 7, 13, 5,
-  ];
   // Absolute opaque belt near the track (px), then fade over the rest.
   const opaquePx = opaqueAt === 'bottom'
     ? Math.min(Math.round(H * 0.34), Math.max(64, Math.round(H * 0.28)))
-    : Math.min(Math.round(H * 0.28), Math.max(18, Math.round(H * 0.22)));
+    // Dirt: shorter opaque belt → longer smooth fade down into wallpaper.
+    : Math.min(Math.round(H * 0.18), Math.max(12, Math.round(H * 0.14)));
   const img = g.createImageData(1, H);
-  // Fully clear tip/tail so Bayer dither can't leave a 1px hairline vs wallpaper.
-  const tipClear = Math.min(14, Math.max(6, Math.round(H * 0.035)));
   for (let y = 0; y < H; y += 1) {
     let a;
     if (opaqueAt === 'bottom') {
       // y=0 top (transparent) → y=H-1 bottom/track (opaque)
       const distFromTrack = (H - 1) - y;
-      if (distFromTrack <= opaquePx) a = 1;
-      else {
+      if (distFromTrack <= opaquePx) {
+        a = 1;
+      } else {
         const fadeH = Math.max(1, H - 1 - opaquePx);
         const u = 1 - (distFromTrack - opaquePx) / fadeH; // 1 at opaque edge → 0 at top
         // Smoothstep squared: slow start leaving opaque, long soft finish.
         const s = u * u * (3 - 2 * u);
         a = s * s;
       }
-      if (y < tipClear) a = 0;
     } else {
       // dirt: y=0 top/track opaque → y=H-1 bottom transparent (long soft fade)
-      if (y <= opaquePx) a = 1;
-      else {
+      if (y <= opaquePx) {
+        a = 1;
+      } else {
         const fadeH = Math.max(1, H - 1 - opaquePx);
         const u = 1 - (y - opaquePx) / fadeH;
         const s = u * u * (3 - 2 * u);
-        a = s * s * s;
+        // Same s^2 ease as sky — continuous, no mid-fade shelf from a steeper cubic.
+        a = s * s;
       }
-      if (y >= H - tipClear) a = 0;
     }
-    // Kill near-zero alpha so sparse Bayer dots don't form a faint full-width line.
-    if (a < 0.045) a = 0;
-    const level = a * 16;
-    const thr = bayer[y % 16];
-    const on = level > thr ? Math.min(1, Math.ceil(level) / 16) : Math.floor(level) / 16;
-    const A = Math.round(Math.max(0, Math.min(1, on)) * 255);
+    // Continuous per-row alpha (full 8-bit). No dither shelves.
+    const A = Math.round(Math.max(0, Math.min(1, a)) * 255);
     const i = y * 4;
     img.data[i] = 255;
     img.data[i + 1] = 255;
@@ -459,17 +451,17 @@ function buildGrassTile() {
 function buildGrassTuftStrip() {
   // Wide tile + few seeded clusters → irregular gaps, not a comb.
   const W = 720;
-  const H = 12; // bottom-aligned over track; blades grow upward
+  const H = 16; // bottom-aligned over track; blades grow upward (a few px taller)
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
   const rand = mulberry32(0x71F75);
-  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898', '#9bc8a4'];
+  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898', '#9bc8a4', '#a8d4b0'];
 
   function paintBlade(cx, baseY, dir, maxLen) {
-    const len = 3 + Math.floor(rand() * Math.max(1, maxLen - 2)); // 3..maxLen
+    const len = 4 + Math.floor(rand() * Math.max(1, maxLen - 3)); // 4..maxLen
     const col = colors[Math.floor(rand() * colors.length)];
     g.fillStyle = col;
     for (let dy = 0; dy < len; dy += 1) {
@@ -479,8 +471,8 @@ function buildGrassTuftStrip() {
       if (y < 0 || y >= H) continue;
       g.fillRect(x, y, 1, 1);
     }
-    if (dir < 0 && rand() > 0.35) {
-      g.fillStyle = '#9bc8a4';
+    if (dir < 0 && rand() > 0.25) {
+      g.fillStyle = '#a8d4b0';
       const tipX = (cx + (rand() > 0.5 ? 1 : -1) + W) % W;
       g.fillRect(tipX, Math.max(0, baseY - len), 1, 1);
     }
@@ -499,7 +491,7 @@ function buildGrassTuftStrip() {
     const jitter = Math.floor(rand() * 50) - 25;
     const x = (anchors[i] + jitter + W) % W;
     const blades = 2 + Math.floor(rand() * 3); // 2–4
-    const maxLen = 5 + Math.floor(rand() * 4); // varied 5–8
+    const maxLen = 8 + Math.floor(rand() * 5); // varied 8–12 (taller, still sparse)
     paintTuft(x, H - 1, -1, maxLen, blades);
   }
   return c;
@@ -737,13 +729,22 @@ export default function QwopBand() {
       og.clearRect(0, 0, oc.width, oc.height);
       og.imageSmoothingEnabled = false;
 
-      const fill = night ? state.skyFillNight : state.skyFillDay;
       const clouds = night ? state.cloudsNight : state.cloudsDay;
       const farH = night ? state.farHillsNight : state.farHillsDay;
       const nearH = night ? state.nearHillsNight : state.nearHillsDay;
 
-      // Sky fill — single-column stretch, full width, no L/R fade.
-      og.drawImage(fill, 0, 0, 1, fill.height, 0, 0, w, skyH);
+      // Sky fill — continuous vertical gradient (no 48px nearest-neighbor shelves).
+      // Pixel-art clouds/hills stay crisp on top; only the wash is smooth.
+      const grd = og.createLinearGradient(0, 0, 0, skyH);
+      if (night) {
+        grd.addColorStop(0, 'rgb(10, 14, 36)');
+        grd.addColorStop(1, 'rgb(28, 38, 76)');
+      } else {
+        grd.addColorStop(0, 'rgb(96, 158, 214)');
+        grd.addColorStop(1, 'rgb(144, 200, 242)');
+      }
+      og.fillStyle = grd;
+      og.fillRect(0, 0, w, skyH);
 
       // Ground on-screen CSS px scroll; layer offsets are fractions of that.
       const groundCss = scrollNative * s;
