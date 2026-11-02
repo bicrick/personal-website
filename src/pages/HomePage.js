@@ -6,7 +6,8 @@ import './HomePage.css';
 
 /**
  * Homepage rebuilt around the QWOP track band.
- * Compact index underneath — not a two-project feature list.
+ * Under-copy mirrors the old home socials row (resume folded in; no nav duplicate).
+ * Title + WR wording match career / projects copy already on the site.
  */
 export default function HomePage() {
   return (
@@ -24,24 +25,13 @@ export default function HomePage() {
           <h1 className="home-band-name">Patrick Brown</h1>
           <p className="home-band-place">Austin, TX. Relocating to San Francisco.</p>
           <p className="home-band-lead">
-            ML / data engineer. Beat the official{' '}
-            <Link to="/projects/qwop-python">QWOP world record</Link>
+            Data Platform Engineer. Beat the official{' '}
+            <Link to="/projects/qwop-python">world record</Link>
             {' '}at 45.167s — that&apos;s the run above.
           </p>
         </header>
 
-        <nav className="home-band-index" aria-label="site index">
-          <Link to="/projects">projects</Link>
-          <span className="home-band-sep" aria-hidden="true">·</span>
-          <Link to="/career">career</Link>
-          <span className="home-band-sep" aria-hidden="true">·</span>
-          <Link to="/about">about</Link>
-          <span className="home-band-sep" aria-hidden="true">·</span>
-          <Link to="/contact">contact</Link>
-          <span className="home-band-sep" aria-hidden="true">·</span>
-          <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
-        </nav>
-
+        {/* Same socials row as the previous homepage (resume stays here, not a second nav). */}
         <p className="home-band-social">
           <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
           <span className="home-band-sep" aria-hidden="true">·</span>
@@ -49,9 +39,9 @@ export default function HomePage() {
           <span className="home-band-sep" aria-hidden="true">·</span>
           <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
           <span className="home-band-sep" aria-hidden="true">·</span>
-          <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+          <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
           <span className="home-band-sep" aria-hidden="true">·</span>
-          <a href="mailto:patrickbrownai@gmail.com">email</a>
+          <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
         </p>
       </div>
     </section>

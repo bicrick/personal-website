@@ -3,12 +3,11 @@ import './QwopBand.css';
 
 /**
  * Thin homepage band: real QWOP ragdoll centered, running in place on the
- * real track surface (sprintbg crop) + underground dirt. Playback rate 1 —
- * same as /demos/qwop. No sky/stadium, markers, or caption.
+ * real track surface (sprintbg crop) + underground dirt. Transparent canvas
+ * so it blends into the page. Playback rate 1 — same as /demos/qwop.
  */
 
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
-const BAND_H = 150;
 const RUNNER_H = 58;
 const BODY_WORLD_H = 14.2;
 const TRACK_CENTER_Y = 10.74275;
@@ -16,6 +15,7 @@ const METERS_TO_WORLD = 10;
 const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
+const HEAD_PAD = 10; // clearance for raised limbs above the torso
 const PLAYBACK_RATE = 1; // QwopReplay default
 
 function loadImage(src) {
@@ -85,7 +85,8 @@ function buildTrackSurface(sprintbg) {
 }
 
 function tileUnderground(src) {
-  const reps = 48;
+  // Wide enough for full-bleed 4k+ viewports at our partScale.
+  const reps = 128;
   const c = document.createElement('canvas');
   c.width = src.width * reps;
   c.height = src.height;
@@ -93,12 +94,6 @@ function tileUnderground(src) {
   g.imageSmoothingEnabled = false;
   for (let x = 0; x < reps; x += 1) g.drawImage(src, x * src.width, 0);
   return c;
-}
-
-function pageBgColor() {
-  if (typeof window === 'undefined') return '#f4f3ef';
-  const raw = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-  return raw || '#f4f3ef';
 }
 
 export default function QwopBand() {
@@ -129,28 +124,51 @@ export default function QwopBand() {
       acc: 0,
       lastTs: 0,
       cssW: 0,
-      bg: pageBgColor(),
+      bandH: 96,
+      trackTop: HEAD_PAD,
+      trackH: 12,
     };
 
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return undefined;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
+
+    function partScale() {
+      return RUNNER_H / (BODY_WORLD_H * state.run.worldScale);
+    }
+
+    function layoutMetrics() {
+      const s = partScale();
+      const trackH = state.trackSurface.height * s;
+      const ugH = state.underground.height * s;
+      const overlap = UG_OVERLAP_NATIVE * s;
+      // Feet sit near the bottom of the red track; head clears HEAD_PAD.
+      const contactBandY = HEAD_PAD + RUNNER_H;
+      const trackTop = contactBandY - trackH + 2;
+      const ugTop = trackTop + trackH - overlap;
+      const bandH = Math.ceil(ugTop + ugH);
+      return { s, trackH, ugH, overlap, trackTop, ugTop, bandH, contactBandY };
+    }
 
     function sizeCanvas() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const cssW = Math.max(280, wrap.clientWidth || 320);
+      let bandH = state.bandH;
+      if (state.run && state.trackSurface && state.underground) {
+        const m = layoutMetrics();
+        bandH = m.bandH;
+        state.bandH = bandH;
+        state.trackTop = m.trackTop;
+        state.trackH = m.trackH;
+      }
       canvas.style.width = `${cssW}px`;
-      canvas.style.height = `${BAND_H}px`;
+      canvas.style.height = `${bandH}px`;
       canvas.width = Math.round(cssW * dpr);
-      canvas.height = Math.round(BAND_H * dpr);
+      canvas.height = Math.round(bandH * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       state.cssW = cssW;
       return cssW;
-    }
-
-    function partScale() {
-      return RUNNER_H / (BODY_WORLD_H * state.run.worldScale);
     }
 
     function displayMeters() {
@@ -159,11 +177,8 @@ export default function QwopBand() {
     }
 
     function drawGround(w, meters) {
-      const s = partScale();
-      const trackH = state.trackSurface.height * s;
-      const ugH = state.underground.height * s;
-      const trackTop = Math.round(BAND_H * 0.48);
-      const ugTop = trackTop + trackH - UG_OVERLAP_NATIVE * s;
+      const m = layoutMetrics();
+      const { s, trackH, ugH, trackTop, ugTop } = m;
       const scrollNative = meters * METERS_TO_WORLD * state.run.worldScale;
 
       ctx.save();
@@ -183,15 +198,32 @@ export default function QwopBand() {
       const tileW = state.underground.width;
       let srcX = scrollNative % tileW;
       if (srcX < 0) srcX += tileW;
-      const ugNeed = Math.ceil(w / s) + tileW;
+      // Cover the full CSS width in destination space (full-bleed).
+      const destNeed = w + tileW * s;
+      const srcNeed = Math.min(
+        Math.ceil(destNeed / s) + 1,
+        state.tiledUnderground.width - srcX,
+      );
+      // If near the end of the pre-tiled strip, wrap with a second blit.
+      const firstW = srcNeed * s;
       ctx.drawImage(
         state.tiledUnderground,
-        srcX, 0, ugNeed, state.underground.height,
+        srcX, 0, srcNeed, state.underground.height,
         0, ugTop,
-        ugNeed * s, ugH,
+        firstW, ugH,
       );
+      if (firstW < w + 1) {
+        const remain = w + tileW * s - firstW;
+        const secondSrc = Math.min(Math.ceil(remain / s) + 1, state.tiledUnderground.width);
+        ctx.drawImage(
+          state.tiledUnderground,
+          0, 0, secondSrc, state.underground.height,
+          firstW, ugTop,
+          secondSrc * s, ugH,
+        );
+      }
       ctx.restore();
-      return { trackTop, trackH };
+      return m;
     }
 
     function drawRunner(pose, trackTop, trackH, cx) {
@@ -227,9 +259,9 @@ export default function QwopBand() {
 
     function paint() {
       const w = state.cssW || sizeCanvas();
-      ctx.clearRect(0, 0, w, BAND_H);
-      ctx.fillStyle = state.bg;
-      ctx.fillRect(0, 0, w, BAND_H);
+      const h = state.bandH;
+      // Transparent — page texture shows through. No fill.
+      ctx.clearRect(0, 0, w, h);
       if (!state.run || !state.trackSurface || !state.underground) return;
       const { trackTop, trackH } = drawGround(w, displayMeters());
       drawRunner(state.run.poses[state.frameIndex], trackTop, trackH, w / 2);
@@ -281,11 +313,6 @@ export default function QwopBand() {
       }
     }
 
-    function onTheme() {
-      state.bg = pageBgColor();
-      paint();
-    }
-
     async function boot() {
       try {
         const [run, atlasJson, atlas, underground, sprintbg] = await Promise.all([
@@ -310,7 +337,6 @@ export default function QwopBand() {
         paint();
         startLoop();
       } catch (err) {
-        // Keep the empty band; avoid throwing into React.
         // eslint-disable-next-line no-console
         console.error('QwopBand', err);
       }
@@ -340,9 +366,6 @@ export default function QwopBand() {
       intersectionObserver.observe(wrap);
     }
     document.addEventListener('visibilitychange', onVisibility);
-    // Theme toggle flips data-theme / class on html — repaint bg
-    const themeObs = new MutationObserver(onTheme);
-    themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme', 'style'] });
 
     const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const onMq = () => {
@@ -360,7 +383,6 @@ export default function QwopBand() {
       mq?.removeEventListener?.('change', onMq);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
-      themeObs.disconnect();
     };
   }, []);
 
@@ -370,7 +392,7 @@ export default function QwopBand() {
         ref={canvasRef}
         className="qwop-band-canvas"
         width={896}
-        height={BAND_H}
+        height={96}
         role="img"
         aria-label="QWOP world-record run, looping mid-stride"
       />

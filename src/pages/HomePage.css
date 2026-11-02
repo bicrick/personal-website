@@ -1,23 +1,38 @@
-/* Band homepage — minimal, square, no rounded corners */
+/* Band homepage — transparent full-bleed track into the site wallpaper */
 
 .page-section.home-section.home-band-page {
-  padding-top: 0;
+  /* Kill the default 2rem page-section top pad — band sits tight under nav */
+  padding-top: 0.25rem;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: visible;
 }
 
+/* Edge-to-edge breakout of the measure column (desktop + mobile) */
 .home-band-slot {
-  width: 100%;
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding-top: 0.75rem; /* head clearance from top edge */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 0;
   border-radius: 0;
+  background: transparent;
+  border: none;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .home-band-inner {
-  padding-top: 1.75rem;
+  /* Re-seat copy inside the measure column after the full-bleed band */
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-top: 1.1rem;
+  box-sizing: border-box;
 }
 
 .home-band-header {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.1rem;
 }
 
 .home-band-name {
@@ -50,26 +65,20 @@
   text-underline-offset: 2px;
 }
 
-.home-band-index,
 .home-band-social {
-  margin: 0;
+  margin: 0 0 3rem;
   font-size: 0.9rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   line-height: 1.8;
+  color: var(--muted, #6b6b6b);
 }
 
-.home-band-index {
-  margin-bottom: 0.65rem;
-}
-
-.home-band-index a,
 .home-band-social a {
-  color: var(--ink, #141414);
+  color: var(--muted, #6b6b6b);
   text-decoration: none;
   border-radius: 0;
 }
 
-.home-band-index a:hover,
 .home-band-social a:hover {
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -80,26 +89,17 @@
   color: var(--muted, #6b6b6b);
 }
 
-.home-band-social {
-  color: var(--muted, #6b6b6b);
-  margin-bottom: 3rem;
-}
-
-.home-band-social a {
-  color: var(--muted, #6b6b6b);
-}
-
 @media (max-width: 640px) {
-  .home-band-slot {
-    padding-top: 0.5rem;
-  }
-
   .home-band-name {
     font-size: 1.35rem;
   }
 
-  .home-band-index,
   .home-band-social {
     font-size: 0.85rem;
   }
+}
+
+/* 100vw full-bleed can add a horizontal scrollbar; clip on home only */
+body:has(.home-band-page) {
+  overflow-x: clip;
 }
