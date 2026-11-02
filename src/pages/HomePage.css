@@ -42,94 +42,67 @@
   overflow: hidden;
 }
 
+/* Centered stack under the runner — balances the centered sprite */
 .home-band-inner {
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
-  padding-top: clamp(2rem, 5vh, 3.25rem);
+  padding-top: clamp(1.75rem, 4.5vh, 3rem);
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
-.home-band-header {
-  margin: 0 0 clamp(1.5rem, 3vh, 2.25rem);
+.home-band-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 36rem;
 }
 
-.home-band-name {
-  /* TypewriterHeading already applies .page-title (Geist Pixel) + .home-heading size */
+/* Live type-out: TypewriterHeading + .home-heading (Geist Pixel, ink caret).
+   Do not restyle the caret — live uses currentColor (= --ink). */
+.home-band-intro .home-heading {
+  margin: 0 0 0.55rem;
+}
+
+.home-band-intro .home-place {
   margin: 0;
-  border-radius: 0;
 }
 
-/* Blue caret so the nav underline blue reads as a site color */
-.home-band-name .typewriter-heading-caret {
-  background-color: var(--link);
+.home-band-role {
+  margin: 0.85rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--ink);
+  letter-spacing: 0.01em;
 }
 
-.home-band-place {
-  margin: 0.65rem 0 0;
-  color: var(--muted, #6b6b6b);
-  font-size: 0.95rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+.home-band-intro .home-links {
+  margin-top: 1.15rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.home-band-lead {
-  margin: 1.15rem 0 0;
-  max-width: 34rem;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--ink, #141414);
-}
-
-.home-band-lead a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.home-band-social {
-  margin: 0;
-  font-size: 0.95rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  line-height: 1.8;
-  color: var(--muted, #6b6b6b);
-}
-
-.home-band-social a {
-  color: var(--muted, #6b6b6b);
-  text-decoration: none;
-  border-radius: 0;
-}
-
-.home-band-social a:hover,
-.home-band-social a:focus-visible {
-  color: var(--link);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-}
-
-.home-band-sep {
-  margin: 0 0.35rem;
-  color: var(--muted, #6b6b6b);
-}
-
-/* Quiet scroll cue — minimal, no "scroll to run" */
+/* Quiet scroll cue — muted, not a blue accent */
 .home-hero-cue {
   position: absolute;
   left: 50%;
   bottom: clamp(1rem, 3vh, 1.75rem);
   transform: translateX(-50%);
-  color: var(--link);
+  color: var(--ink-muted);
   text-decoration: none;
   font-size: 0.85rem;
   line-height: 1;
-  opacity: 0.7;
+  opacity: 0.5;
   border-radius: 0;
 }
 
 .home-hero-cue:hover,
 .home-hero-cue:focus-visible {
-  opacity: 1;
+  opacity: 0.85;
+  color: var(--ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -170,19 +143,6 @@
   color: var(--ink-muted);
 }
 
-.home-block-head a {
-  color: var(--link);
-  text-decoration: none;
-  border-radius: 0;
-}
-
-.home-block-head a:hover,
-.home-block-head a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-}
-
 .home-heatmap {
   margin: 0;
   padding: 12px;
@@ -190,13 +150,11 @@
   border-radius: 0;
 }
 
-/* Experience / featured / writing sit as home-block children — give first one room */
 .home-rest > .home-block:first-child,
 .home-rest > *:first-child {
   margin-top: 0;
 }
 
-/* Bump spacing on the restored section roots if they use home-block */
 .home-rest .home-block + .home-block,
 .home-rest .home-footer {
   margin-top: clamp(3rem, 7vh, 4.5rem);
@@ -211,8 +169,8 @@
       clamp(2.5rem, 7vh, 4rem);
   }
 
-  .home-band-social {
-    font-size: 0.85rem;
+  .home-band-intro {
+    padding: 0 0.25rem;
   }
 }
 

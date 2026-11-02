@@ -10,9 +10,9 @@ import { RESUME_URL } from '../constants/resume';
 import './HomePage.css';
 
 /**
- * Spacious QWOP-band hero, then the rest of the old homepage below
- * (experience → featured → writing → how I build → contact).
- * Hero intro/socials replace the old headshot compose block.
+ * Spacious QWOP-band hero (centered intro under the runner), then the
+ * rest of the old homepage below. Name type-out matches live bicrick.com
+ * (TypewriterHeading + .home-heading, ink caret).
  */
 export default function HomePage() {
   return (
@@ -27,25 +27,24 @@ export default function HomePage() {
         </div>
 
         <div className="home-band-inner">
-          <header className="home-band-header">
-            <TypewriterHeading as="h1" className="home-band-name home-heading">
+          <div className="home-band-intro">
+            <TypewriterHeading as="h1" className="home-heading">
               Patrick Brown
             </TypewriterHeading>
-            <p className="home-band-place">Austin, TX. Relocating to San Francisco.</p>
-            <p className="home-band-lead">Data Platform Engineer</p>
-          </header>
-
-          <p className="home-band-social">
-            <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
-            <span className="home-band-sep" aria-hidden="true">·</span>
-            <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
-            <span className="home-band-sep" aria-hidden="true">·</span>
-            <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
-            <span className="home-band-sep" aria-hidden="true">·</span>
-            <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
-            <span className="home-band-sep" aria-hidden="true">·</span>
-            <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
-          </p>
+            <p className="home-place">Austin, TX. Relocating to San Francisco.</p>
+            <p className="home-band-role">Data Platform Engineer</p>
+            <div className="home-links">
+              <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
+              <span className="nav-separator">·</span>
+              <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
+              <span className="nav-separator">·</span>
+              <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
+              <span className="nav-separator">·</span>
+              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
+              <span className="nav-separator">·</span>
+              <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+            </div>
+          </div>
         </div>
 
         <a className="home-hero-cue" href="#home-rest" aria-label="More below">
