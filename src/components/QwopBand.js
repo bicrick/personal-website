@@ -362,9 +362,9 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
         const u = 1 - (distFromTrack - opaquePx) / fadeH; // 1 at opaque edge → 0 at top
         // Smoothstep squared: slow start leaving opaque, long soft finish.
         const s = u * u * (3 - 2 * u);
-        // Soft floor (~6%) so the tall sky still kisses the nav / CSS wash
-        // without a hard transparent hairline at the canvas top.
-        a = 0.06 + 0.94 * (s * s);
+        // Fade fully to 0 at the canvas top — the full-viewport CSS wash
+        // continues the sky above; a soft floor here stacked a hard step.
+        a = s * s;
       }
     } else {
       // dirt: y=0 top/track opaque → y=H-1 bottom transparent (long soft fade)
