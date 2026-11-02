@@ -34,8 +34,11 @@ export default function AboutPage() {
             <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
               Cursor
             </a>{' '}
-            and Claude Code. The furthest I have taken it is{' '}
+            and Claude Code, and I've run{' '}
             <Link to="/writing/agent-research-loops">auto research loops for reinforcement learning with Grok Bot</Link>.
+          </p>
+          <p>
+            My stack lately has been Cursor Projects and Grok Bot.
           </p>
           <figure className="about-figure">
             <div className="about-heatmap">

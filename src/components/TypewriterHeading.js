@@ -70,17 +70,22 @@ export default function TypewriterHeading({
 
   return (
     <Tag className={classes} aria-label={label || text}>
-      {/* Sizer text comes from data-text via CSS so scrapers and copy see the title once */}
-      <span className="typewriter-heading-sizer" data-text={text} aria-hidden="true">
-        {suffix}
-        <span className="typewriter-heading-caret is-spacer" />
-      </span>
-      <span className="typewriter-heading-live" aria-hidden="true">
-        {text.slice(0, shown)}
-        {done ? suffix : null}
-        {caret ? (
-          <span className={`typewriter-heading-caret${typing ? ' is-typing' : ''}`} />
-        ) : null}
+      {/* Fixed-width box: invisible full name sizes the layout; live text
+          left-anchors inside it. Caret is absolute and never affects width,
+          so a centered heading does not snap when the caret disappears. */}
+      <span className="typewriter-heading-box">
+        <span className="typewriter-heading-sizer" data-text={text} aria-hidden="true">
+          {suffix}
+        </span>
+        <span className="typewriter-heading-live" aria-hidden="true">
+          <span className="typewriter-heading-typed">
+            {text.slice(0, shown)}
+            {done ? suffix : null}
+            {caret ? (
+              <span className={`typewriter-heading-caret${typing ? ' is-typing' : ''}`} />
+            ) : null}
+          </span>
+        </span>
       </span>
     </Tag>
   );
