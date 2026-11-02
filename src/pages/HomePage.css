@@ -55,12 +55,14 @@
 }
 
 .home-band-name {
+  /* TypewriterHeading already applies .page-title (Geist Pixel) + .home-heading size */
   margin: 0;
-  font-size: clamp(1.6rem, 2.4vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
   border-radius: 0;
+}
+
+/* Blue caret so the nav underline blue reads as a site color */
+.home-band-name .typewriter-heading-caret {
+  background-color: var(--link);
 }
 
 .home-band-place {
@@ -98,9 +100,12 @@
   border-radius: 0;
 }
 
-.home-band-social a:hover {
+.home-band-social a:hover,
+.home-band-social a:focus-visible {
+  color: var(--link);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
 
 .home-band-sep {
@@ -114,16 +119,17 @@
   left: 50%;
   bottom: clamp(1rem, 3vh, 1.75rem);
   transform: translateX(-50%);
-  color: var(--ink-muted, #9a9a9a);
+  color: var(--link);
   text-decoration: none;
   font-size: 0.85rem;
   line-height: 1;
-  opacity: 0.55;
+  opacity: 0.7;
   border-radius: 0;
 }
 
-.home-hero-cue:hover {
-  opacity: 0.9;
+.home-hero-cue:hover,
+.home-hero-cue:focus-visible {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -164,6 +170,19 @@
   color: var(--ink-muted);
 }
 
+.home-block-head a {
+  color: var(--link);
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.home-block-head a:hover,
+.home-block-head a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
 .home-heatmap {
   margin: 0;
   padding: 12px;
@@ -190,10 +209,6 @@
       clamp(1.75rem, 6vh, 3rem)
       0
       clamp(2.5rem, 7vh, 4rem);
-  }
-
-  .home-band-name {
-    font-size: 1.45rem;
   }
 
   .home-band-social {

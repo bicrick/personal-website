@@ -1,4 +1,5 @@
 import React from 'react';
+import TypewriterHeading from '../components/TypewriterHeading';
 import QwopBand from '../components/QwopBand';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
@@ -27,7 +28,9 @@ export default function HomePage() {
 
         <div className="home-band-inner">
           <header className="home-band-header">
-            <h1 className="home-band-name">Patrick Brown</h1>
+            <TypewriterHeading as="h1" className="home-band-name home-heading">
+              Patrick Brown
+            </TypewriterHeading>
             <p className="home-band-place">Austin, TX. Relocating to San Francisco.</p>
             <p className="home-band-lead">Data Platform Engineer</p>
           </header>
