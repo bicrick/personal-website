@@ -4,7 +4,8 @@ import './QwopBand.css';
 /**
  * Thin homepage band: real QWOP ragdoll centered, running in place on the
  * real track surface (sprintbg crop) + underground dirt. Transparent canvas
- * so it blends into the page. Playback rate 1 — same as /demos/qwop.
+ * so it blends into the page. Playback rate 2 — ground scroll locked to
+ * the same distance meters as the runner, so 2x stays in sync.
  */
 
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
@@ -16,7 +17,7 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10; // clearance for raised limbs above the torso
-const PLAYBACK_RATE = 1; // QwopReplay default
+const PLAYBACK_RATE = 2;
 
 function loadImage(src) {
   return new Promise((resolve, reject) => {

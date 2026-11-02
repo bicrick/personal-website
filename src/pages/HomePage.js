@@ -57,7 +57,6 @@ export default function HomePage() {
         className="page-section-inner home-inner home-rest"
       >
         <ExperienceSnapshot />
-        <FeaturedProjects />
         <WritingBlock />
         <section className="home-block" aria-label="how I build">
           <div className="home-block-head">
@@ -70,6 +69,7 @@ export default function HomePage() {
             <CursorActivityHeatmap />
           </figure>
         </section>
+        <FeaturedProjects />
         <HomeFooter />
       </div>
     </section>
