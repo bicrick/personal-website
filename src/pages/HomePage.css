@@ -1,12 +1,64 @@
 /* Homepage: spacious QWOP hero, then original dossier sections below */
 
 .page-section.home-section.home-band-page {
+  position: relative;
+  isolation: isolate;
   padding-top: 0;
   padding-bottom: var(--page-pad-bottom);
   padding-left: 0;
   padding-right: 0;
   overflow: visible;
   justify-content: flex-start;
+}
+
+/*
+ * Full-page atmosphere behind the band + dossier:
+ * - Sky wash from under the sticky nav down into the band (canvas sky is
+ *   transparent at its top, so this continues the blue/navy seamlessly).
+ * - Very faint grass wash through the lower page to the footer.
+ * Content stays above (z-index); text contrast is preserved by low alpha.
+ */
+.home-band-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #609ed6 48%, transparent) 0%,
+      color-mix(in srgb, #78b0e0 30%, transparent) 12%,
+      color-mix(in srgb, #90c8f2 14%, transparent) 28%,
+      transparent 48%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 42%,
+      color-mix(in srgb, #588264 11%, transparent) 58%,
+      color-mix(in srgb, #588264 6%, transparent) 78%,
+      color-mix(in srgb, #588264 2.5%, transparent) 92%,
+      transparent 100%
+    );
+}
+
+html.is-dark .home-band-page::before {
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, #0a0e24 62%, transparent) 0%,
+      color-mix(in srgb, #141c38 38%, transparent) 14%,
+      color-mix(in srgb, #1c264c 16%, transparent) 30%,
+      transparent 50%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 42%,
+      color-mix(in srgb, #243228 12%, transparent) 58%,
+      color-mix(in srgb, #1a261c 6%, transparent) 78%,
+      color-mix(in srgb, #121a14 2.5%, transparent) 92%,
+      transparent 100%
+    );
 }
 
 /* ---- Hero: first viewport, name over fading sky ---- */
@@ -20,11 +72,13 @@
   min-height: calc(100vh - var(--home-nav-offset));
   min-height: calc(100svh - var(--home-nav-offset));
   min-height: calc(100dvh - var(--home-nav-offset));
+  /* Less top pad so the tall sky can sit up under the sticky nav */
   padding:
-    clamp(1.75rem, 5.5vh, 3.75rem)
+    clamp(0.35rem, 1.6vh, 1.1rem)
     0
     clamp(2.25rem, 5.5vh, 4rem);
   position: relative;
+  z-index: 1;
   width: 100%;
 }
 
@@ -43,8 +97,8 @@
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
-  /* Pull the band further under name/links so sky fade sits behind them */
-  margin-bottom: calc(-1 * clamp(5.75rem, 11vh, 8.75rem));
+  /* Pull the tall sky under name/links (and toward the nav) */
+  margin-bottom: calc(-1 * clamp(8.5rem, 16vh, 13rem));
   padding: 0 0.5rem;
   box-sizing: border-box;
   display: flex;
@@ -79,7 +133,8 @@
 .home-band-intro .home-links {
   margin-top: 0.95rem;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 /* Edge-to-edge band — slides down a little under the name */
@@ -127,6 +182,8 @@
 
 /* ---- Restored dossier sections below the hero ---- */
 .home-rest {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
@@ -178,13 +235,48 @@
   .home-hero {
     --home-nav-offset: 4.25rem;
     padding:
-      clamp(1.4rem, 5vh, 2.5rem)
+      clamp(0.25rem, 1.2vh, 0.85rem)
       0
       clamp(2rem, 5.5vh, 3.5rem);
   }
 
   .home-band-intro {
     padding: 0 0.25rem;
+  }
+
+  .home-band-inner {
+    margin-bottom: calc(-1 * clamp(7.25rem, 14vh, 10.5rem));
+  }
+}
+
+/* Keep github · linkedin · youtube · resume · x on one line on phones */
+@media (max-width: 480px) {
+  .home-band-intro .home-links {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    justify-content: center;
+    gap: 0.28rem;
+    font-size: 0.8125rem;
+    margin-top: 0.8rem;
+    max-width: 100%;
+  }
+
+  .home-band-intro .home-links a {
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .home-band-intro .home-links .nav-separator {
+    margin: 0;
+    flex: 0 0 auto;
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-band-intro .home-links {
+    gap: 0.2rem;
+    font-size: 0.74rem;
   }
 }
 

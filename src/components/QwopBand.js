@@ -28,7 +28,7 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10;
-const SKY_EXTRA_MIN = 200; // unchanged — zoom grows content into the frame, not more empty sky
+const SKY_EXTRA_MIN = 280; // tall sky so fade reaches up under the sticky nav
 const TRACK_DRAW_SCALE = 1.35; // visual mass (layout contact stays on unscaled trackH)
 const UG_DEPTH = 6.2;
 const PLAYBACK_RATE = 1.5;
@@ -362,7 +362,9 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
         const u = 1 - (distFromTrack - opaquePx) / fadeH; // 1 at opaque edge → 0 at top
         // Smoothstep squared: slow start leaving opaque, long soft finish.
         const s = u * u * (3 - 2 * u);
-        a = s * s;
+        // Soft floor (~6%) so the tall sky still kisses the nav / CSS wash
+        // without a hard transparent hairline at the canvas top.
+        a = 0.06 + 0.94 * (s * s);
       }
     } else {
       // dirt: y=0 top/track opaque → y=H-1 bottom transparent (long soft fade)
@@ -627,13 +629,13 @@ export default function QwopBand() {
       return RUNNER_H / (BODY_WORLD_H * state.run.worldScale);
     }
 
-    /** Tall sky pad: opaque hill belt + long fade (≈150–250px on desktop). */
+    /** Tall sky pad: opaque hill belt + long fade up under the sticky nav. */
     function skyExtraPx() {
       const w = state.cssW || wrap.clientWidth || 320;
-      // Longer fade so dissipating sky reaches up behind the name/links.
-      const fade = Math.round(Math.min(280, Math.max(190, w * 0.17)));
-      const opaque = Math.round(Math.min(96, Math.max(70, w * 0.06)));
-      // skyH ≈ opaque + fade; SKY_EXTRA ≈ that minus runner/head pad + track
+      // Long fade so sky color is still visible behind name/links and eases
+      // toward the nav (page CSS wash continues through transparent top).
+      const fade = Math.round(Math.min(460, Math.max(280, w * 0.30)));
+      const opaque = Math.round(Math.min(110, Math.max(72, w * 0.055)));
       return Math.max(SKY_EXTRA_MIN, opaque + fade - HEAD_PAD - 46);
     }
 
@@ -761,10 +763,23 @@ export default function QwopBand() {
         );
       }
 
-      // Clouds — slowest moving layer, integer scale for crisp pixels.
+      // Hills first (needed to place clouds just above them in the opaque sky).
+      const farScale = ATMOS_SCALE;
+      const farDestH = farH.height * farScale;
+      const farY = skyH - farDestH - Math.round(Math.min(36, skyH * 0.06));
+      const nearScale = ATMOS_SCALE;
+      const nearDestH = nearH.height * nearScale;
+      const nearY = skyH - nearDestH;
+
+      // Clouds — sit clearly above the near hills, in the more-opaque sky belt
+      // (not up in the nearly-transparent fade where they disappear).
       const cloudScale = ATMOS_SCALE;
       const cloudH = clouds.height * cloudScale;
-      const cloudY = Math.max(2, Math.round(skyH * 0.12));
+      const cloudGap = Math.round(10 * BAND_ZOOM);
+      const cloudY = Math.max(
+        Math.round(skyH * 0.28),
+        Math.min(nearY - cloudH - cloudGap, Math.round(skyH * 0.52)),
+      );
       blitScrolling(
         og,
         clouds,
@@ -775,10 +790,6 @@ export default function QwopBand() {
         cloudScale,
       );
 
-      // Far hills
-      const farScale = ATMOS_SCALE;
-      const farDestH = farH.height * farScale;
-      const farY = skyH - farDestH - Math.round(skyH * 0.08);
       blitScrolling(
         og,
         farH,
@@ -790,9 +801,6 @@ export default function QwopBand() {
       );
 
       // Near hills — sit just above the track
-      const nearScale = ATMOS_SCALE;
-      const nearDestH = nearH.height * nearScale;
-      const nearY = skyH - nearDestH;
       blitScrolling(
         og,
         nearH,

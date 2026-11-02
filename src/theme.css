@@ -8,8 +8,8 @@
   --bot: #d06a1f;
   --paper: #fbfbfa;
   --rule: #e8e8e6;
-  --stipple: rgba(33, 35, 45, 0.10);
-  --stipple-nav: rgba(33, 35, 45, 0.065);
+  --stipple: rgba(33, 35, 45, 0.05);
+  --stipple-nav: rgba(33, 35, 45, 0.035);
   --stipple-rule: #b3b8c2;
   --surface: #ffffff;
   --surface-hover: #eef2fb;
@@ -34,8 +34,8 @@ html.is-dark {
   --bot: #e39a55;
   --paper: #14151a;
   --rule: #2c2e36;
-  --stipple: rgba(255, 255, 255, 0.09);
-  --stipple-nav: rgba(255, 255, 255, 0.06);
+  --stipple: rgba(255, 255, 255, 0.045);
+  --stipple-nav: rgba(255, 255, 255, 0.03);
   --stipple-rule: #6d717c;
   --surface: #1c1d23;
   --surface-hover: #243044;
