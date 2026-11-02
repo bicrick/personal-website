@@ -4,8 +4,10 @@ import './QwopBand.css';
 /**
  * Thin homepage band: real QWOP ragdoll centered, running in place on the
  * real track surface (sprintbg crop) + underground dirt. Transparent canvas
- * so it blends into the page. Playback rate 2 — ground scroll locked to
- * the same distance meters as the runner, so 2x stays in sync.
+ * so it blends into the page. Playback 1.5x. Loop window chosen by
+ * minimizing full-ragdoll pose distance (rel. positions + angles +
+ * velocity) between seam frames; a short pose blend hides residual pop.
+ * Ground scroll stays locked to distance meters (never resets).
  */
 
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
@@ -17,7 +19,7 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10; // clearance for raised limbs above the torso
-const PLAYBACK_RATE = 2;
+const PLAYBACK_RATE = 1.5;
 
 function loadImage(src) {
   return new Promise((resolve, reject) => {
@@ -40,38 +42,43 @@ function prefersReducedMotion() {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function findFrameForDistance(run, m) {
-  const d = run.distance;
-  let best = 0;
-  let bestDelta = Infinity;
-  for (let i = 0; i < d.length; i += 1) {
-    const delta = Math.abs(d[i] - m);
-    if (delta < bestDelta) {
-      bestDelta = delta;
-      best = i;
-    }
-  }
-  return best;
+
+// Offline search over best-run.json (steady 15–85 m): minimize full
+// ragdoll pose distance (torso-relative xy + shortest-angle + velocity)
+// between candidate seam pairs. Best multi-stride hit:
+//   frames 453 → 706  (29.9 m → 50.5 m, Δ20.6 m ≈ 4 strides)
+//   seam cost ≈ 0.55 vs median frame-to-frame ≈ 1.42
+const STRIDE_START = 453;
+const STRIDE_END = 706;
+const BLEND_FRAMES = 5; // lerp end→start over these ticks at the seam
+
+function shortestAngleDelta(from, to) {
+  let d = (to - from) % (Math.PI * 2);
+  if (d > Math.PI) d -= Math.PI * 2;
+  if (d < -Math.PI) d += Math.PI * 2;
+  return d;
 }
 
-function pickStrideWindow(run) {
-  const a = findFrameForDistance(run, 22);
-  const b = findFrameForDistance(run, 48);
-  const ti = run.parts.indexOf('torso');
-  const startAngle = run.poses[a][ti][2];
-  let end = b;
-  let best = Infinity;
-  for (let i = b - 30; i < b + 30 && i < run.poses.length; i += 1) {
-    if (i <= a + 60) continue;
-    const da = Math.abs(run.poses[i][ti][2] - startAngle);
-    const dd = Math.abs((run.distance[i] - run.distance[a]) - (run.distance[b] - run.distance[a]));
-    const score = da * 2 + dd * 0.01;
-    if (score < best) {
-      best = score;
-      end = i;
-    }
+function lerpPose(fromPose, toPose, t) {
+  const out = new Array(fromPose.length);
+  for (let i = 0; i < fromPose.length; i += 1) {
+    const [x0, y0, a0] = fromPose[i];
+    const [x1, y1, a1] = toPose[i];
+    out[i] = [
+      x0 + (x1 - x0) * t,
+      y0 + (y1 - y0) * t,
+      a0 + shortestAngleDelta(a0, a1) * t,
+    ];
   }
-  return { strideStart: a, strideEnd: Math.max(a + 90, end) };
+  return out;
+}
+
+function easeInOut(t) {
+  return t * t * (3 - 2 * t);
+}
+
+function pickStrideWindow(/* run */) {
+  return { strideStart: STRIDE_START, strideEnd: STRIDE_END };
 }
 
 function buildTrackSurface(sprintbg) {
@@ -122,6 +129,7 @@ export default function QwopBand() {
       strideEnd: 0,
       frameIndex: 0,
       loopBaseMeters: 0,
+      blend: null, // { i, fromPose, toPose } while crossfading the seam
       acc: 0,
       lastTs: 0,
       cssW: 0,
@@ -265,14 +273,35 @@ export default function QwopBand() {
       ctx.clearRect(0, 0, w, h);
       if (!state.run || !state.trackSurface || !state.underground) return;
       const { trackTop, trackH } = drawGround(w, displayMeters());
-      drawRunner(state.run.poses[state.frameIndex], trackTop, trackH, w / 2);
+      let pose = state.run.poses[state.frameIndex];
+      if (state.blend) {
+        const t = easeInOut((state.blend.i + 1) / BLEND_FRAMES);
+        pose = lerpPose(state.blend.fromPose, state.blend.toPose, t);
+      }
+      drawRunner(pose, trackTop, trackH, w / 2);
     }
 
     function advanceStride() {
+      // Finish an in-progress seam blend before advancing the frame index.
+      if (state.blend) {
+        state.blend.i += 1;
+        if (state.blend.i >= BLEND_FRAMES) {
+          state.blend = null;
+        }
+        return;
+      }
+
       state.frameIndex += 1;
       if (state.frameIndex > state.strideEnd) {
-        state.loopBaseMeters += state.run.distance[state.strideEnd] - state.run.distance[state.strideStart];
+        // Ground stays continuous: fold the window length into the base and
+        // snap the index back. Pose pops are hidden by a short lerp.
+        const fromPose = state.run.poses[state.strideEnd];
+        const toPose = state.run.poses[state.strideStart];
+        state.loopBaseMeters += (
+          state.run.distance[state.strideEnd] - state.run.distance[state.strideStart]
+        );
         state.frameIndex = state.strideStart;
+        state.blend = { i: 0, fromPose, toPose };
       }
     }
 
