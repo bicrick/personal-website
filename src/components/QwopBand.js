@@ -3,7 +3,7 @@ import './QwopBand.css';
 
 /**
  * Thin homepage band: real QWOP ragdoll centered, running in place on the
- * real track surface (sprintbg crop) + underground dirt. Transparent canvas
+ * real track surface (sprintbg crop) + seamless pixel grass below. Transparent canvas
  * so it blends into the page. Playback 1.5x.
  *
  * Loop: hard cut on a seam pair searched from best-run.json where pose[b]
@@ -387,8 +387,153 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
   return c;
 }
 
-function tileUnderground(src) {
-  const reps = 128;
+/**
+ * Seamless pixel grass tile (hill greens). Brighter near the track edge
+ * with sparse irregular tufts; deeper / cooler further down.
+ */
+function buildGrassTile() {
+  const W = 64;
+  const H = 64; // match prior underground.png height (runner contact math)
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  const rand = mulberry32(0x6A55C0DE);
+  // Palette matches day near-hills + a few darker / brighter blades.
+  const base = [
+    [0x4a, 0x73, 0x58],
+    [0x5f, 0x8a, 0x6a],
+    [0x6e, 0x9a, 0x78],
+    [0x3f, 0x64, 0x4c],
+    [0x7a, 0xa8, 0x88],
+  ];
+  for (let y = 0; y < H; y += 1) {
+    const depth = y / (H - 1); // 0 = track edge, 1 = deep
+    for (let x = 0; x < W; x += 1) {
+      const n = rand();
+      let idx;
+      if (depth < 0.18) idx = n > 0.55 ? 2 : (n > 0.25 ? 1 : 4);
+      else if (depth < 0.45) idx = n > 0.6 ? 1 : (n > 0.25 ? 0 : 2);
+      else if (depth < 0.75) idx = n > 0.5 ? 0 : 3;
+      else idx = n > 0.45 ? 3 : 0;
+      // Subtle horizontal speck so the tile isn't a flat wash.
+      if (((x * 3 + y * 7) & 7) === 0 && n > 0.4) {
+        idx = Math.min(base.length - 1, idx + (n > 0.7 ? 1 : -1));
+        if (idx < 0) idx = 0;
+      }
+      const [r, gre, b] = base[idx];
+      g.fillStyle = `rgb(${r},${gre},${b})`;
+      g.fillRect(x, y, 1, 1);
+    }
+  }
+  // Dense short blades along the top edge (under the track overlap).
+  const blade = ['#6e9a78', '#7aa888', '#5f8a6a', '#8bb898'];
+  for (let x = 0; x < W; x += 1) {
+    if (rand() > 0.62) continue;
+    const h = 1 + Math.floor(rand() * 3);
+    const col = blade[Math.floor(rand() * blade.length)];
+    g.fillStyle = col;
+    for (let dy = 0; dy < h; dy += 1) {
+      const ox = (rand() > 0.7 ? (rand() > 0.5 ? 1 : -1) : 0);
+      g.fillRect((x + ox + W) % W, dy, 1, 1);
+    }
+  }
+  return c;
+}
+
+/**
+ * Sparse irregular tufts that poke OVER the orange track edges.
+ * Authored at ~1 CSS-px per source px (NOT the ~0.2 world scale used for
+ * the track crop) so 3–5px blades stay visible. Drawn AFTER the track and
+ * BEFORE the runner; scrolls at ground CSS speed; seamless tile.
+ */
+function buildGrassTuftStrip() {
+  const W = 256;
+  const H = 10; // bottom-aligned over track; blades grow upward
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  const rand = mulberry32(0x71F75);
+  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898'];
+
+  function paintBlade(cx, baseY, dir, maxLen) {
+    const len = 3 + Math.floor(rand() * Math.max(1, maxLen - 2)); // 3..maxLen
+    const col = colors[Math.floor(rand() * colors.length)];
+    g.fillStyle = col;
+    for (let dy = 0; dy < len; dy += 1) {
+      const lean = dy > 1 && rand() > 0.55 ? (rand() > 0.5 ? 1 : -1) : 0;
+      const x = (cx + lean + W) % W;
+      const y = baseY + dir * dy;
+      if (y < 0 || y >= H) continue;
+      g.fillRect(x, y, 1, 1);
+    }
+    if (dir < 0 && rand() > 0.4) {
+      g.fillStyle = '#8bb898';
+      const tipX = (cx + (rand() > 0.5 ? 1 : -1) + W) % W;
+      g.fillRect(tipX, Math.max(0, baseY - len), 1, 1);
+    }
+  }
+
+  function paintTuft(cx, baseY, dir, maxLen, blades) {
+    for (let i = 0; i < blades; i += 1) {
+      paintBlade(cx + i - Math.floor(blades / 2), baseY, dir, maxLen);
+    }
+  }
+
+  function tooClose(used, candidate, minGap) {
+    for (let u = 0; u < used.length; u += 1) {
+      const d = Math.abs(used[u] - candidate);
+      if (d < minGap || d > W - minGap) return true;
+    }
+    return false;
+  }
+
+  // Bottom edge: handful of tufts growing UP into the track (sparse across 256px).
+  const usedBot = [];
+  for (let i = 0; i < 9; i += 1) {
+    let x = Math.floor(rand() * W);
+    let guard = 0;
+    while (tooClose(usedBot, x, 18) && guard < 16) {
+      x = Math.floor(rand() * W);
+      guard += 1;
+    }
+    usedBot.push(x);
+    const blades = 2 + Math.floor(rand() * 3);
+    paintTuft(x, H - 1, -1, 6, blades);
+  }
+  return c;
+}
+
+/** Subtle top-edge (infield) blades poking down over the track lip. */
+function buildGrassTuftTopStrip() {
+  const W = 256;
+  const H = 5;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  const rand = mulberry32(0xA11CE);
+  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358'];
+  for (let i = 0; i < 3; i += 1) {
+    const cx = Math.floor(rand() * W);
+    const blades = 1 + Math.floor(rand() * 2);
+    for (let b = 0; b < blades; b += 1) {
+      const len = 1 + Math.floor(rand() * 2);
+      g.fillStyle = colors[Math.floor(rand() * colors.length)];
+      for (let dy = 0; dy < len; dy += 1) {
+        const x = (cx + b + (dy > 0 && rand() > 0.6 ? 1 : 0) + W) % W;
+        g.fillRect(x, dy, 1, 1);
+      }
+    }
+  }
+  return c;
+}
+
+function tileHorizontally(src, reps = 128) {
   const c = document.createElement('canvas');
   c.width = src.width * reps;
   c.height = src.height;
@@ -440,9 +585,13 @@ export default function QwopBand() {
       run: null,
       frames: null,
       atlas: null,
-      underground: null,
+      underground: null, // procedural grass tile (width/height for layout)
       trackSurface: null,
       tiledUnderground: null,
+      grassTufts: null,
+      tiledTufts: null,
+      grassTuftsTop: null,
+      tiledTuftsTop: null,
       skyFillDay: null,
       skyFillNight: null,
       cloudsDay: null,
@@ -702,7 +851,7 @@ export default function QwopBand() {
         );
       }
 
-      // Fade dirt into wallpaper toward the bottom only (no L/R fade).
+      // Fade grass into wallpaper toward the bottom only (no L/R fade).
       og.globalCompositeOperation = 'destination-in';
       const mask = ensureDirtMask(ugH);
       og.drawImage(mask, 0, 0, 1, mask.height, 0, 0, w, ugH);
@@ -716,6 +865,42 @@ export default function QwopBand() {
         0, 0, state.trackSurface.width, state.trackSurface.height,
         0, trackTop, w, trackH,
       );
+
+      // Sparse grass tufts at ~1 CSS px/source px (visible over the track).
+      // Scroll matches ground CSS speed; drawn after track, before runner.
+      const groundCss = scrollNative * s;
+      const blitTufts = (tiled, src, destY) => {
+        if (!tiled || !src) return;
+        const tw = src.width;
+        const th = src.height;
+        let tSrcX = groundCss % tw;
+        if (tSrcX < 0) tSrcX += tw;
+        tSrcX = Math.floor(tSrcX);
+        const firstW = Math.min(tw - tSrcX, w + 2);
+        ctx.drawImage(
+          tiled,
+          tSrcX, 0, firstW, th,
+          0, destY,
+          firstW, th,
+        );
+        if (firstW < w + 1) {
+          const secondW = w + 2 - firstW;
+          ctx.drawImage(
+            tiled,
+            0, 0, secondW, th,
+            firstW - 1, destY,
+            secondW + 1, th,
+          );
+        }
+      };
+      if (state.tiledTufts && state.grassTufts) {
+        const th = state.grassTufts.height;
+        blitTufts(state.tiledTufts, state.grassTufts, trackTop + trackH - th);
+      }
+      if (state.tiledTuftsTop && state.grassTuftsTop) {
+        blitTufts(state.tiledTuftsTop, state.grassTuftsTop, trackTop);
+      }
+
       ctx.restore();
       return { ...m, scrollNative };
     }
@@ -779,6 +964,23 @@ export default function QwopBand() {
       drawSky(w, m.trackTop, scrollNative, m.s);
       const { trackTop, trackH } = drawGround(w, scrollNative);
       drawRunner(pose, trackTop, trackH, w / 2);
+      // Dim / cool the foreground (track + grass + tufts + runner) at night.
+      // Sky/hills are already night-colored — only tint below the sky fade.
+      if (state.skyMode === 'night') {
+        const fgTop = Math.max(0, trackTop - 2);
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, fgTop, w, h - fgTop);
+        ctx.clip();
+        ctx.globalCompositeOperation = 'multiply';
+        // ~60% brightness with a navy cast
+        ctx.fillStyle = '#8e9bb8';
+        ctx.fillRect(0, fgTop, w, h - fgTop);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'rgba(12, 18, 36, 0.22)';
+        ctx.fillRect(0, fgTop, w, h - fgTop);
+        ctx.restore();
+      }
     }
 
     function tick(ts) {
@@ -826,20 +1028,23 @@ export default function QwopBand() {
 
     async function boot() {
       try {
-        const [run, atlasJson, atlas, underground, sprintbg] = await Promise.all([
+        const [run, atlasJson, atlas, sprintbg] = await Promise.all([
           loadJson(`${ASSET}/best-run.json`),
           loadJson(`${ASSET}/playercolor.json`),
           loadImage(`${ASSET}/playercolor.png`),
-          loadImage(`${ASSET}/underground.png`),
           loadImage(`${ASSET}/sprintbg.jpg`),
         ]);
         if (cancelled) return;
         state.run = run;
         state.frames = atlasJson.frames;
         state.atlas = atlas;
-        state.underground = underground;
+        state.underground = buildGrassTile();
         state.trackSurface = buildTrackSurface(sprintbg);
-        state.tiledUnderground = tileUnderground(underground);
+        state.tiledUnderground = tileHorizontally(state.underground);
+        state.grassTufts = buildGrassTuftStrip();
+        state.tiledTufts = tileHorizontally(state.grassTufts);
+        state.grassTuftsTop = buildGrassTuftTopStrip();
+        state.tiledTuftsTop = tileHorizontally(state.grassTuftsTop);
         state.skyFillDay = buildSkyFill('day');
         state.skyFillNight = buildSkyFill('night');
         state.cloudsDay = buildCloudStrip('day');

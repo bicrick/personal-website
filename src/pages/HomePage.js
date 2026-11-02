@@ -10,13 +10,13 @@ import { RESUME_URL } from '../constants/resume';
 import './HomePage.css';
 
 /**
- * Spacious QWOP-band hero (centered intro under the runner), then the
- * rest of the old homepage below. Name type-out matches live bicrick.com
- * (TypewriterHeading + .home-heading, ink caret).
+ * Spacious QWOP-band hero: name/place/socials sit above the band and
+ * overlap the fading sky; the track + runner sit below. Name type-out
+ * matches live bicrick.com (TypewriterHeading + .home-heading, ink caret).
  *
- * First-load intro (~1.5s): track draws center→out, runner fades in,
- * then name type-out, then place/socials/cue in a short stagger.
- * Module flag prevents StrictMode double-play; reduced-motion skips.
+ * First-load intro (~1.5s): sky/track draw center→out, name types, place
+ * + socials fade, then runner fades in. Module flag prevents StrictMode
+ * double-play; reduced-motion skips.
  */
 
 // Once per full page load (survives StrictMode remount; resets on refresh).
@@ -39,7 +39,7 @@ export default function HomePage() {
   const [introClass, setIntroClass] = useState(initialIntroClass);
   // Freeze at mount so flipping pending→done does not restart the type-out.
   const [delayMs] = useState(() => (
-    preferReducedMotion() || introClass === 'home-intro-done' ? 0 : 560
+    preferReducedMotion() || introClass === 'home-intro-done' ? 0 : 520
   ));
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function HomePage() {
         setIntroClass('home-intro-play');
       });
     });
-    const done = window.setTimeout(() => setIntroClass('home-intro-done'), 1700);
+    const done = window.setTimeout(() => setIntroClass('home-intro-done'), 1800);
     return () => {
       window.cancelAnimationFrame(raf1);
       window.cancelAnimationFrame(raf2);
@@ -66,32 +66,34 @@ export default function HomePage() {
       aria-label="home"
     >
       <div className="home-hero">
-        <div className="home-band-slot home-intro-track">
-          <div className="home-intro-runner">
-            <QwopBand />
+        <div className="home-hero-stack">
+          <div className="home-band-inner">
+            <div className="home-band-intro">
+              <TypewriterHeading
+                as="h1"
+                className="home-heading home-intro-name"
+                delayMs={delayMs}
+              >
+                Patrick Brown
+              </TypewriterHeading>
+              <p className="home-place home-intro-place">Austin, TX. Relocating to San Francisco.</p>
+              <div className="home-links home-intro-links">
+                <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
+                <span className="nav-separator">·</span>
+                <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
+                <span className="nav-separator">·</span>
+                <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
+                <span className="nav-separator">·</span>
+                <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
+                <span className="nav-separator">·</span>
+                <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="home-band-inner">
-          <div className="home-band-intro">
-            <TypewriterHeading
-              as="h1"
-              className="home-heading home-intro-name"
-              delayMs={delayMs}
-            >
-              Patrick Brown
-            </TypewriterHeading>
-            <p className="home-place home-intro-place">Austin, TX. Relocating to San Francisco.</p>
-            <div className="home-links home-intro-links">
-              <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
-              <span className="nav-separator">·</span>
-              <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
-              <span className="nav-separator">·</span>
-              <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
-              <span className="nav-separator">·</span>
-              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
-              <span className="nav-separator">·</span>
-              <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+          <div className="home-band-slot home-intro-track">
+            <div className="home-intro-runner">
+              <QwopBand />
             </div>
           </div>
         </div>
