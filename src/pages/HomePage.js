@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import QwopBand from '../components/QwopBand';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
@@ -30,11 +29,7 @@ export default function HomePage() {
           <header className="home-band-header">
             <h1 className="home-band-name">Patrick Brown</h1>
             <p className="home-band-place">Austin, TX. Relocating to San Francisco.</p>
-            <p className="home-band-lead">
-              Data Platform Engineer. Beat the official{' '}
-              <Link to="/projects/qwop-python">world record</Link>
-              {' '}at 45.167s — that&apos;s the run above.
-            </p>
+            <p className="home-band-lead">Data Platform Engineer</p>
           </header>
 
           <p className="home-band-social">
