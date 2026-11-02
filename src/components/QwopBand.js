@@ -19,7 +19,8 @@ import './QwopBand.css';
  * Day follows light theme, night follows html.is-dark; ?sky=day|night overrides.
  */
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
-const RUNNER_H = 58;
+const BAND_ZOOM = 1.15; // ~15% closer (runner/track/grass/hills); sky pad stays put
+const RUNNER_H = Math.round(58 * BAND_ZOOM); // was 58
 const BODY_WORLD_H = 14.2;
 const TRACK_CENTER_Y = 10.74275;
 const METERS_TO_WORLD = 10;
@@ -27,10 +28,11 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10;
-const SKY_EXTRA_MIN = 200; // taller sky so fade reaches behind name/links
+const SKY_EXTRA_MIN = 200; // unchanged — zoom grows content into the frame, not more empty sky
 const TRACK_DRAW_SCALE = 1.35; // visual mass (layout contact stays on unscaled trackH)
 const UG_DEPTH = 6.2;
 const PLAYBACK_RATE = 1.5;
+const ATMOS_SCALE = 2 * BAND_ZOOM; // clouds/hills/stars (nearest-neighbor, stays crisp)
 
 // Parallax factors vs on-screen ground CSS px/s (NOT native scroll units —
 // blitScrolling takes destination CSS px; dirt scrolls at scrollNative * partScale).
@@ -399,80 +401,69 @@ function buildGrassTile() {
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
   const rand = mulberry32(0x6A55C0DE);
-  // Palette matches day near-hills + a few darker / brighter blades.
-  const base = [
-    [0x4a, 0x73, 0x58],
-    [0x5f, 0x8a, 0x6a],
-    [0x6e, 0x9a, 0x78],
-    [0x3f, 0x64, 0x4c],
-    [0x7a, 0xa8, 0x88],
-  ];
+  // Homogeneous field: solid per-row base (no 1px X noise — that becomes
+  // vertical streaks when the tile is nearest-neighbor stretched), then a
+  // few large soft patches (±4) for calm pixel-art variation.
+  const mid = [0x58, 0x82, 0x64]; // #588264 near-hill green
   for (let y = 0; y < H; y += 1) {
-    const depth = y / (H - 1); // 0 = track edge, 1 = deep
-    for (let x = 0; x < W; x += 1) {
-      const n = rand();
-      let idx;
-      if (depth < 0.18) idx = n > 0.55 ? 2 : (n > 0.25 ? 1 : 4);
-      else if (depth < 0.45) idx = n > 0.6 ? 1 : (n > 0.25 ? 0 : 2);
-      else if (depth < 0.75) idx = n > 0.5 ? 0 : 3;
-      else idx = n > 0.45 ? 3 : 0;
-      // Subtle horizontal speck so the tile isn't a flat wash.
-      if (((x * 3 + y * 7) & 7) === 0 && n > 0.4) {
-        idx = Math.min(base.length - 1, idx + (n > 0.7 ? 1 : -1));
-        if (idx < 0) idx = 0;
-      }
-      const [r, gre, b] = base[idx];
-      g.fillStyle = `rgb(${r},${gre},${b})`;
-      g.fillRect(x, y, 1, 1);
-    }
+    const depth = y / (H - 1);
+    const shift = -Math.round(depth * 12);
+    const r = Math.max(42, Math.min(100, mid[0] + shift));
+    const gre = Math.max(72, Math.min(130, mid[1] + shift));
+    const b = Math.max(50, Math.min(110, mid[2] + Math.round(shift * 0.85)));
+    g.fillStyle = `rgb(${r},${gre},${b})`;
+    g.fillRect(0, y, W, 1);
   }
-  // Sparse short blades under the track overlap (NOT a comb — over-track
-  // tufts are drawn separately in buildGrassTuftStrip).
-  const blade = ['#6e9a78', '#7aa888', '#5f8a6a', '#8bb898'];
-  for (let x = 0; x < W; x += 1) {
-    if (rand() > 0.12) continue; // ~12% — soft texture, not a sawtooth edge
-    const h = 1 + Math.floor(rand() * 2);
-    const col = blade[Math.floor(rand() * blade.length)];
-    g.fillStyle = col;
-    for (let dy = 0; dy < h; dy += 1) {
-      const ox = (rand() > 0.7 ? (rand() > 0.5 ? 1 : -1) : 0);
-      g.fillRect((x + ox + W) % W, dy, 1, 1);
+  // Soft rectangular patches (tiling). Same hue family, low contrast.
+  for (let i = 0; i < 18; i += 1) {
+    const pw = 6 + Math.floor(rand() * 10); // 6–15
+    const ph = 4 + Math.floor(rand() * 8); // 4–11
+    const px0 = Math.floor(rand() * W);
+    const py0 = Math.floor(rand() * H);
+    const lift = Math.floor((rand() - 0.5) * 8); // ±3
+    for (let dy = 0; dy < ph; dy += 1) {
+      const y = (py0 + dy) % H;
+      const depth = y / (H - 1);
+      const shift = -Math.round(depth * 12) + lift;
+      const r = Math.max(42, Math.min(100, mid[0] + shift));
+      const gre = Math.max(72, Math.min(130, mid[1] + shift));
+      const b = Math.max(50, Math.min(110, mid[2] + Math.round(shift * 0.85)));
+      g.fillStyle = `rgb(${r},${gre},${b})`;
+      for (let dx = 0; dx < pw; dx += 1) {
+        g.fillRect((px0 + dx) % W, y, 1, 1);
+      }
     }
   }
   return c;
 }
 
-/**
- * Sparse irregular tufts that poke OVER the orange track edges.
- * Authored at ~1 CSS-px per source px (NOT the ~0.2 world scale used for
- * the track crop) so 3–5px blades stay visible. Drawn AFTER the track and
- * BEFORE the runner; scrolls at ground CSS speed; seamless tile.
- */
 function buildGrassTuftStrip() {
-  // Wide tile + few seeded clusters → irregular gaps, not a comb.
-  const W = 720;
-  const H = 16; // bottom-aligned over track; blades grow upward (a few px taller)
+  // Long period (≥2× common desktop widths) so the wrap isn't a visible repeat.
+  // Seeded gap walk: close pairs + long empty stretches, varied cluster sizes.
+  const W = 2880;
+  const H = Math.max(18, Math.round(18 * BAND_ZOOM));
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
-  const rand = mulberry32(0x71F75);
-  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898', '#9bc8a4', '#a8d4b0'];
+  const rand = mulberry32(0xC0FFEE ^ 0x71F75);
+  // Readable over orange track; still in the grass family.
+  const colors = ['#3f6a4c', '#4a7358', '#5a8a68', '#6a9a78', '#7aac88'];
 
   function paintBlade(cx, baseY, dir, maxLen) {
-    const len = 4 + Math.floor(rand() * Math.max(1, maxLen - 3)); // 4..maxLen
+    const len = 5 + Math.floor(rand() * Math.max(1, maxLen - 4)); // 5..maxLen
     const col = colors[Math.floor(rand() * colors.length)];
     g.fillStyle = col;
     for (let dy = 0; dy < len; dy += 1) {
-      const lean = dy > 1 && rand() > 0.5 ? (rand() > 0.5 ? 1 : -1) : 0;
+      const lean = dy > 2 && rand() > 0.55 ? (rand() > 0.5 ? 1 : -1) : 0;
       const x = (cx + lean + W) % W;
       const y = baseY + dir * dy;
       if (y < 0 || y >= H) continue;
       g.fillRect(x, y, 1, 1);
     }
-    if (dir < 0 && rand() > 0.25) {
-      g.fillStyle = '#a8d4b0';
+    if (dir < 0 && rand() > 0.3) {
+      g.fillStyle = '#8fbe9a';
       const tipX = (cx + (rand() > 0.5 ? 1 : -1) + W) % W;
       g.fillRect(tipX, Math.max(0, baseY - len), 1, 1);
     }
@@ -484,40 +475,48 @@ function buildGrassTuftStrip() {
     }
   }
 
-  // Fixed irregular anchors (seeded jitter) — guaranteed sparse, never a comb.
-  // 3 clusters / 720px ≈ 6 across a 1440 desktop with big empty gaps.
-  const anchors = [95, 310, 560];
-  for (let i = 0; i < anchors.length; i += 1) {
-    const jitter = Math.floor(rand() * 50) - 25;
-    const x = (anchors[i] + jitter + W) % W;
+  // Irregular placement across the long strip.
+  let x = 30 + Math.floor(rand() * 70);
+  while (x < W - 16) {
     const blades = 2 + Math.floor(rand() * 3); // 2–4
-    const maxLen = 8 + Math.floor(rand() * 5); // varied 8–12 (taller, still sparse)
-    paintTuft(x, H - 1, -1, maxLen, blades);
+    const maxLen = 9 + Math.floor(rand() * 6); // 9–14
+    paintTuft(Math.floor(x) % W, H - 1, -1, maxLen, blades);
+    const roll = rand();
+    if (roll < 0.18) {
+      x += 12 + Math.floor(rand() * 22); // tight pair
+    } else if (roll < 0.35) {
+      x += 40 + Math.floor(rand() * 50); // medium-close
+    } else {
+      x += 70 + Math.floor(rand() * 220); // 70–290 empty
+    }
   }
   return c;
 }
 
-/** Subtle top-edge (infield) blades — one sparse cluster per wide tile. */
+/** Subtle top-edge (infield) blades — irregular sparse clusters on a long strip. */
 function buildGrassTuftTopStrip() {
-  const W = 720;
-  const H = 5;
+  const W = 2880;
+  const H = Math.max(6, Math.round(6 * BAND_ZOOM));
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
   const rand = mulberry32(0xA11CE);
-  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358'];
-  // One subtle cluster per wide tile
-  const cx = 200 + Math.floor(rand() * 280);
-  const blades = 2 + Math.floor(rand() * 2); // 2–3
-  for (let b = 0; b < blades; b += 1) {
-    const len = 2 + Math.floor(rand() * 2);
-    g.fillStyle = colors[Math.floor(rand() * colors.length)];
-    for (let dy = 0; dy < len; dy += 1) {
-      const x = (cx + b + (dy > 0 && rand() > 0.6 ? 1 : 0) + W) % W;
-      g.fillRect(x, dy, 1, 1);
+  const colors = ['#3f6a4c', '#4a7358', '#5a8a68', '#6a9a78'];
+  let x = 80 + Math.floor(rand() * 160);
+  while (x < W - 16) {
+    const blades = 2 + Math.floor(rand() * 2); // 2–3
+    for (let b = 0; b < blades; b += 1) {
+      const len = 2 + Math.floor(rand() * 3);
+      g.fillStyle = colors[Math.floor(rand() * colors.length)];
+      for (let dy = 0; dy < len; dy += 1) {
+        const px = (Math.floor(x) + b + (dy > 0 && rand() > 0.6 ? 1 : 0) + W) % W;
+        g.fillRect(px, dy, 1, 1);
+      }
     }
+    const roll = rand();
+    x += roll < 0.2 ? (20 + Math.floor(rand() * 40)) : (140 + Math.floor(rand() * 380));
   }
   return c;
 }
@@ -750,7 +749,7 @@ export default function QwopBand() {
       const groundCss = scrollNative * s;
 
       if (night && state.nightExtras) {
-        const starScale = 2;
+        const starScale = ATMOS_SCALE;
         blitScrolling(
           og,
           state.nightExtras,
@@ -763,7 +762,7 @@ export default function QwopBand() {
       }
 
       // Clouds — slowest moving layer, integer scale for crisp pixels.
-      const cloudScale = 2;
+      const cloudScale = ATMOS_SCALE;
       const cloudH = clouds.height * cloudScale;
       const cloudY = Math.max(2, Math.round(skyH * 0.12));
       blitScrolling(
@@ -777,7 +776,7 @@ export default function QwopBand() {
       );
 
       // Far hills
-      const farScale = 2;
+      const farScale = ATMOS_SCALE;
       const farDestH = farH.height * farScale;
       const farY = skyH - farDestH - Math.round(skyH * 0.08);
       blitScrolling(
@@ -791,7 +790,7 @@ export default function QwopBand() {
       );
 
       // Near hills — sit just above the track
-      const nearScale = 2;
+      const nearScale = ATMOS_SCALE;
       const nearDestH = nearH.height * nearScale;
       const nearY = skyH - nearDestH;
       blitScrolling(

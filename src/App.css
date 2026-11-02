@@ -40,8 +40,8 @@ body,
 #root {
   background-color: var(--paper);
   background-image:
-    radial-gradient(var(--stipple) 0.55px, transparent 0.6px);
-  background-size: 3.5px 3.5px;
+    radial-gradient(var(--stipple) 0.9px, transparent 1.05px);
+  background-size: 4.5px 4.5px;
 }
 
 body {
@@ -226,8 +226,8 @@ section {
   /* Solid paper tone with a whisper of stipple so content never shows through */
   background-color: var(--paper);
   background-image:
-    radial-gradient(var(--stipple-nav) 0.5px, transparent 0.6px);
-  background-size: 3.5px 3.5px;
+    radial-gradient(var(--stipple-nav) 0.75px, transparent 0.95px);
+  background-size: 4.5px 4.5px;
   padding: var(--nav-pad-y) 0;
   border-bottom: 1px solid var(--rule);
 }
