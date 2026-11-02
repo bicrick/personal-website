@@ -9,13 +9,14 @@ import './QwopBand.css';
  * Loop: hard cut on a seam pair searched from best-run.json where pose[b]
  * closely matches pose[a]. Every rendered pose is a real recorded frame (or
  * a sub-frame lerp between two adjacent real frames). No crossfade blend.
- * Ground meters stay continuous via a loopBaseMeters offset.
+ * Runner pose still plays recorded frames; ground scroll is decoupled.
  *
  * Atmosphere: full-width pixel day/night sky (blue / deep navy) with
- * drifting pixel clouds + two rolling-hill layers. Parallax is tied to
- * run meters (clouds slowest → far hills → near hills → ground). Vertical
- * alpha only: opaque at the track, fade to transparent going up / down.
- * Override with ?sky=day|night; else local hour (6–18 day) or is-dark → night.
+ * drifting pixel clouds + two rolling-hill layers. Ground + layers scroll at
+ * a CONSTANT average loop speed (not the replay's micro-accelerations).
+ * Parallax factors are fractions of on-screen ground CSS px/s. Vertical alpha
+ * only: opaque through the hills, then a long dithered fade upward.
+ * Day follows light theme, night follows html.is-dark; ?sky=day|night overrides.
  */
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
 const RUNNER_H = 58;
@@ -26,14 +27,16 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10;
-const SKY_EXTRA = 52; // CSS px of sky above the previous band top
-const UG_DEPTH = 2.55;
+const SKY_EXTRA_MIN = 160; // tall sky so the vertical fade can be long/slow
+const UG_DEPTH = 6.2;
 const PLAYBACK_RATE = 1.5;
 
-// Parallax factors vs ground native scroll (meters * METERS_TO_WORLD * worldScale).
-const CLOUD_PARALLAX = 0.045;
-const FAR_HILL_PARALLAX = 0.12;
-const NEAR_HILL_PARALLAX = 0.28;
+// Parallax factors vs on-screen ground CSS px/s (NOT native scroll units —
+// blitScrolling takes destination CSS px; dirt scrolls at scrollNative * partScale).
+const CLOUD_PARALLAX = 0.025;
+const FAR_HILL_PARALLAX = 0.06;
+const NEAR_HILL_PARALLAX = 0.15;
+const STAR_PARALLAX = 0.01;
 
 // Hard-loop window [START, END): pose[END] ≈ pose[START] (offline search).
 const STRIDE_START = 240;
@@ -104,12 +107,14 @@ function readSkyQuery() {
 function resolveSkyMode() {
   const q = readSkyQuery();
   if (q) return q;
+  // Follow the site theme toggle (html.is-dark). Night into the light
+  // wallpaper looks muddy; day into dark wallpaper does too — so sky
+  // tracks theme unless ?sky= forces a preview.
   if (typeof document !== 'undefined'
       && document.documentElement.classList.contains('is-dark')) {
     return 'night';
   }
-  const hour = new Date().getHours();
-  return (hour >= 6 && hour < 18) ? 'day' : 'night';
+  return 'day';
 }
 
 function mulberry32(seed) {
@@ -322,46 +327,54 @@ function buildNightExtras() {
   return c;
 }
 
-/** Bayer-ish stepped vertical alpha mask (pixel-y but intentional). */
+/**
+ * Bayer-dithered vertical alpha mask.
+ * Sky (opaqueAt=bottom): fully opaque through the hill belt near the track,
+ * then a long gentle fade over the remaining height (slow as you leave).
+ * Dirt (opaqueAt=top): opaque under the track, slower fade downward.
+ */
 function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
   const c = document.createElement('canvas');
   c.width = 1;
   c.height = Math.max(1, Math.ceil(h));
   const g = c.getContext('2d');
   const H = c.height;
-  // 4x4 Bayer thresholds 0..15
   const bayer = [
     0, 8, 2, 10,
     12, 4, 14, 6,
     3, 11, 1, 9,
     15, 7, 13, 5,
   ];
+  // Absolute opaque belt near the track (px), then fade over the rest.
+  const opaquePx = opaqueAt === 'bottom'
+    ? Math.min(Math.round(H * 0.34), Math.max(64, Math.round(H * 0.28)))
+    : Math.min(Math.round(H * 0.28), Math.max(18, Math.round(H * 0.22)));
   const img = g.createImageData(1, H);
   for (let y = 0; y < H; y += 1) {
-    // t: 0 at transparent end, 1 at opaque end
-    let t = opaqueAt === 'bottom' ? y / Math.max(1, H - 1) : 1 - y / Math.max(1, H - 1);
-    // Long gentle curve: stay fully opaque near the track for longer.
     let a;
     if (opaqueAt === 'bottom') {
-      // sky: opaque near bottom (track), transparent at top
-      if (t > 0.72) a = 1;
-      else if (t < 0.08) a = 0;
+      // y=0 top (transparent) → y=H-1 bottom/track (opaque)
+      const distFromTrack = (H - 1) - y;
+      if (distFromTrack <= opaquePx) a = 1;
       else {
-        const u = (t - 0.08) / 0.64;
-        a = u * u; // ease-in toward opaque
+        const fadeH = Math.max(1, H - 1 - opaquePx);
+        const u = 1 - (distFromTrack - opaquePx) / fadeH; // 1 at opaque edge → 0 at top
+        // Smoothstep squared: slow start leaving opaque, long soft finish.
+        const s = u * u * (3 - 2 * u);
+        a = s * s;
       }
     } else {
-      // dirt: opaque near top (track), transparent at bottom
-      if (t > 0.55) a = 1;
-      else if (t < 0.05) a = 0;
+      // dirt: y=0 top/track opaque → y=H-1 bottom transparent (long soft fade)
+      if (y <= opaquePx) a = 1;
       else {
-        const u = (t - 0.05) / 0.5;
-        a = u * u;
+        const fadeH = Math.max(1, H - 1 - opaquePx);
+        const u = 1 - (y - opaquePx) / fadeH;
+        const s = u * u * (3 - 2 * u);
+        a = s * s * s;
       }
     }
-    // Quantize with dither for a pixel feel without hard banding.
     const level = a * 16;
-    const thr = bayer[y % 4]; // only 1px wide — use y
+    const thr = bayer[y % 16];
     const on = level > thr ? Math.min(1, Math.ceil(level) / 16) : Math.floor(level) / 16;
     const A = Math.round(Math.max(0, Math.min(1, on)) * 255);
     const i = y * 4;
@@ -451,7 +464,8 @@ export default function QwopBand() {
       loopLen: 0,
       loopMeters: 0,
       phase: 0,
-      loopBaseMeters: 0,
+      scrollMeters: 0,
+      avgMetersPerSec: 0,
       torsoIndex: 0,
       lastTs: 0,
       cssW: 0,
@@ -469,18 +483,28 @@ export default function QwopBand() {
       return RUNNER_H / (BODY_WORLD_H * state.run.worldScale);
     }
 
+    /** Tall sky pad: opaque hill belt + long fade (≈150–250px on desktop). */
+    function skyExtraPx() {
+      const w = state.cssW || wrap.clientWidth || 320;
+      const fade = Math.round(Math.min(240, Math.max(160, w * 0.14)));
+      const opaque = Math.round(Math.min(88, Math.max(64, w * 0.055)));
+      // skyH ≈ opaque + fade; SKY_EXTRA ≈ that minus runner/head pad + track
+      return Math.max(SKY_EXTRA_MIN, opaque + fade - HEAD_PAD - 46);
+    }
+
     function layoutMetrics() {
       const s = partScale();
       const trackH = state.trackSurface.height * s;
       const ugNativeH = state.underground.height * s;
       const ugH = ugNativeH * UG_DEPTH;
       const overlap = UG_OVERLAP_NATIVE * s;
-      const contactBandY = SKY_EXTRA + HEAD_PAD + RUNNER_H;
+      const skyExtra = skyExtraPx();
+      const contactBandY = skyExtra + HEAD_PAD + RUNNER_H;
       const trackTop = contactBandY - trackH + 2;
       const ugTop = trackTop + trackH - overlap;
       const bandH = Math.ceil(ugTop + ugH);
       return {
-        s, trackH, ugH, ugNativeH, overlap, trackTop, ugTop, bandH, contactBandY,
+        s, trackH, ugH, ugNativeH, overlap, trackTop, ugTop, bandH, contactBandY, skyExtra,
       };
     }
 
@@ -518,26 +542,13 @@ export default function QwopBand() {
       );
     }
 
-    function metersInLoop(local) {
-      const { run, strideStart, strideEnd, loopLen: L, loopMeters } = state;
-      if (local >= L) return loopMeters;
-      if (local <= 0) return 0;
-      const i0 = Math.floor(local);
-      const f = local - i0;
-      const d0 = (i0 >= L - 1)
-        ? run.distance[strideEnd - 1]
-        : run.distance[strideStart + i0];
-      const d1 = (i0 >= L - 1)
-        ? run.distance[strideEnd]
-        : run.distance[strideStart + i0 + 1];
-      return lerp(d0, d1, f) - run.distance[strideStart];
-    }
 
     function displaySample() {
-      return {
-        pose: samplePose(state.phase),
-        meters: state.loopBaseMeters + metersInLoop(state.phase),
-      };
+      return { pose: samplePose(state.phase) };
+    }
+
+    function groundScrollNative() {
+      return state.scrollMeters * METERS_TO_WORLD * state.run.worldScale;
     }
 
     function ensureSkyMask(h) {
@@ -560,9 +571,9 @@ export default function QwopBand() {
 
     /**
      * Full-width pixel sky + clouds + hills. Vertical alpha only (opaque
-     * near the track → transparent at top). Parallax from run meters.
+     * near the track → transparent at top). Parallax in CSS px vs ground.
      */
-    function drawSky(w, trackTop, scrollNative) {
+    function drawSky(w, trackTop, scrollNative, s) {
       const night = state.skyMode === 'night';
       const skyH = Math.max(1, Math.ceil(trackTop + 2));
       state.skyBuf = ensureBuffer(state.skyBuf, w, skyH);
@@ -580,13 +591,15 @@ export default function QwopBand() {
       // Sky fill — single-column stretch, full width, no L/R fade.
       og.drawImage(fill, 0, 0, 1, fill.height, 0, 0, w, skyH);
 
+      // Ground on-screen CSS px scroll; layer offsets are fractions of that.
+      const groundCss = scrollNative * s;
+
       if (night && state.nightExtras) {
-        // Stars/moon: almost static (tiny parallax) so they feel distant.
         const starScale = 2;
         blitScrolling(
           og,
           state.nightExtras,
-          scrollNative * 0.01,
+          groundCss * STAR_PARALLAX,
           0,
           Math.round(state.nightExtras.height * starScale),
           w,
@@ -601,7 +614,7 @@ export default function QwopBand() {
       blitScrolling(
         og,
         clouds,
-        scrollNative * CLOUD_PARALLAX,
+        groundCss * CLOUD_PARALLAX,
         cloudY,
         cloudH,
         w,
@@ -615,7 +628,7 @@ export default function QwopBand() {
       blitScrolling(
         og,
         farH,
-        scrollNative * FAR_HILL_PARALLAX,
+        groundCss * FAR_HILL_PARALLAX,
         farY,
         farDestH,
         w,
@@ -629,7 +642,7 @@ export default function QwopBand() {
       blitScrolling(
         og,
         nearH,
-        scrollNative * NEAR_HILL_PARALLAX,
+        groundCss * NEAR_HILL_PARALLAX,
         nearY,
         nearDestH,
         w,
@@ -645,10 +658,9 @@ export default function QwopBand() {
       ctx.drawImage(oc, 0, 0, w, skyH, 0, 0, w, skyH);
     }
 
-    function drawGround(w, meters) {
+    function drawGround(w, scrollNative) {
       const m = layoutMetrics();
       const { s, trackH, ugH, trackTop, ugTop } = m;
-      const scrollNative = meters * METERS_TO_WORLD * state.run.worldScale;
 
       ctx.save();
       ctx.imageSmoothingEnabled = false;
@@ -744,11 +756,28 @@ export default function QwopBand() {
       const h = state.bandH;
       ctx.clearRect(0, 0, w, h);
       if (!state.run || !state.trackSurface || !state.underground) return;
-      const { pose, meters } = displaySample();
+      const { pose } = displaySample();
       const m = layoutMetrics();
-      const scrollNative = meters * METERS_TO_WORLD * state.run.worldScale;
-      drawSky(w, m.trackTop, scrollNative);
-      const { trackTop, trackH } = drawGround(w, meters);
+      const scrollNative = groundScrollNative();
+      const groundCss = scrollNative * m.s;
+      // Lightweight readback for Playwright speed checks (CSS px offsets).
+      wrap.__qwop = {
+        t: performance.now(),
+        s: m.s,
+        scrollMeters: state.scrollMeters,
+        avgMetersPerSec: state.avgMetersPerSec,
+        groundCss,
+        cloudCss: groundCss * CLOUD_PARALLAX,
+        farCss: groundCss * FAR_HILL_PARALLAX,
+        nearCss: groundCss * NEAR_HILL_PARALLAX,
+        factors: {
+          cloud: CLOUD_PARALLAX,
+          far: FAR_HILL_PARALLAX,
+          near: NEAR_HILL_PARALLAX,
+        },
+      };
+      drawSky(w, m.trackTop, scrollNative, m.s);
+      const { trackTop, trackH } = drawGround(w, scrollNative);
       drawRunner(pose, trackTop, trackH, w / 2);
     }
 
@@ -761,8 +790,9 @@ export default function QwopBand() {
         state.phase += (dt * PLAYBACK_RATE) / state.run.dt;
         while (state.phase >= state.loopLen) {
           state.phase -= state.loopLen;
-          state.loopBaseMeters += state.loopMeters;
         }
+        // Constant average loop speed — no micro-accelerations from distance[].
+        state.scrollMeters += state.avgMetersPerSec * dt;
       }
       paint();
       rafId = window.requestAnimationFrame(tick);
@@ -826,7 +856,10 @@ export default function QwopBand() {
         state.loopLen = win.strideEnd - win.strideStart;
         state.loopMeters = run.distance[win.strideEnd] - run.distance[win.strideStart];
         state.phase = 0;
-        state.loopBaseMeters = 0;
+        state.scrollMeters = 0;
+        // Constant scroll: average ground speed over the loop at PLAYBACK_RATE.
+        const loopSec = (state.loopLen * run.dt) / PLAYBACK_RATE;
+        state.avgMetersPerSec = loopSec > 0 ? state.loopMeters / loopSec : 0;
         state.torsoIndex = Math.max(0, run.parts.indexOf('torso'));
         sizeCanvas();
         paint();
