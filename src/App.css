@@ -30,6 +30,9 @@ html {
 html {
   background-color: var(--paper);
   overscroll-behavior-y: none;
+  /* Native scrolling only — no smooth hijack, no scroll-snap. */
+  scroll-behavior: auto;
+  scroll-snap-type: none;
 }
 
 /* Quiet stippled paper texture across the landing shell */
@@ -43,6 +46,7 @@ body,
 
 body {
   overscroll-behavior-y: none;
+  scroll-snap-type: none;
 }
 
 #root {

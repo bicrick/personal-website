@@ -6,8 +6,11 @@ import './QwopBand.css';
  * real track surface (sprintbg crop) + underground dirt. Transparent canvas
  * so it blends into the page. Playback 1.5x. Loop window chosen by
  * minimizing full-ragdoll pose distance (rel. positions + angles +
- * velocity) between seam frames; a short pose blend hides residual pop.
- * Ground scroll stays locked to distance meters (never resets).
+ * velocity) between seam frames. Playback is a continuous float phase
+ * with sub-frame pose lerp. Near the seam, two overlapping streams
+ * (end segment + start segment) crossfade root-relative pose and
+ * meters; phase wraps by (L-B) so the blend lands on the start stream
+ * with continuous velocity and ground speed.
  */
 
 const ASSET = `${process.env.PUBLIC_URL}/demos/qwop`;
@@ -50,7 +53,9 @@ function prefersReducedMotion() {
 //   seam cost ≈ 0.55 vs median frame-to-frame ≈ 1.42
 const STRIDE_START = 453;
 const STRIDE_END = 706;
-const BLEND_FRAMES = 5; // lerp end→start over these ticks at the seam
+// Seam crossfade length in source frames. Long enough that velocity and
+// pose ease through the wrap with no visible hitch.
+const BLEND_FRAMES = 20;
 
 function shortestAngleDelta(from, to) {
   let d = (to - from) % (Math.PI * 2);
@@ -59,23 +64,45 @@ function shortestAngleDelta(from, to) {
   return d;
 }
 
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
 function lerpPose(fromPose, toPose, t) {
   const out = new Array(fromPose.length);
   for (let i = 0; i < fromPose.length; i += 1) {
     const [x0, y0, a0] = fromPose[i];
     const [x1, y1, a1] = toPose[i];
     out[i] = [
-      x0 + (x1 - x0) * t,
-      y0 + (y1 - y0) * t,
+      lerp(x0, x1, t),
+      lerp(y0, y1, t),
       a0 + shortestAngleDelta(a0, a1) * t,
     ];
   }
   return out;
 }
 
-function easeInOut(t) {
-  return t * t * (3 - 2 * t);
+/** Root-relative lerp so absolute world X/Y discontinuities at the wrap vanish. */
+function lerpPoseRootRelative(fromPose, toPose, t, rootIndex) {
+  const [fx, fy] = fromPose[rootIndex];
+  const [tx, ty] = toPose[rootIndex];
+  const out = new Array(fromPose.length);
+  for (let i = 0; i < fromPose.length; i += 1) {
+    const [x0, y0, a0] = fromPose[i];
+    const [x1, y1, a1] = toPose[i];
+    const rx = lerp(x0 - fx, x1 - tx, t);
+    const ry = lerp(y0 - fy, y1 - ty, t);
+    const rootX = lerp(fx, tx, t);
+    const rootY = lerp(fy, ty, t);
+    out[i] = [
+      rootX + rx,
+      rootY + ry,
+      a0 + shortestAngleDelta(a0, a1) * t,
+    ];
+  }
+  return out;
 }
+
 
 function pickStrideWindow(/* run */) {
   return { strideStart: STRIDE_START, strideEnd: STRIDE_END };
@@ -127,10 +154,13 @@ export default function QwopBand() {
       tiledUnderground: null,
       strideStart: 0,
       strideEnd: 0,
-      frameIndex: 0,
+      loopLen: 0, // exclusive-end frame count (END - START)
+      loopMeters: 0, // distance[END] - distance[START]
+      blendFrames: 0,
+      periodMeters: 0, // meters advanced per wrap (loopMeters - meters at B)
+      phase: 0, // continuous float; wraps by (loopLen - blendFrames)
       loopBaseMeters: 0,
-      blend: null, // { i, fromPose, toPose } while crossfading the seam
-      acc: 0,
+      torsoIndex: 0,
       lastTs: 0,
       cssW: 0,
       bandH: 96,
@@ -180,9 +210,75 @@ export default function QwopBand() {
       return cssW;
     }
 
-    function displayMeters() {
-      const { run, frameIndex, strideStart, loopBaseMeters } = state;
-      return loopBaseMeters + (run.distance[frameIndex] - run.distance[strideStart]);
+    function loopIndex(i) {
+      const L = state.loopLen;
+      let x = i % L;
+      if (x < 0) x += L;
+      return state.strideStart + x;
+    }
+
+    /** Sub-frame sample of a pose at local phase in [0, loopLen). */
+    function samplePose(local) {
+      const i0 = Math.floor(local);
+      const f = local - i0;
+      const a = state.run.poses[loopIndex(i0)];
+      const b = state.run.poses[loopIndex(i0 + 1)];
+      return lerpPose(a, b, f);
+    }
+
+    /**
+     * Continuous meters along [0, loopLen]. The wrap subframe
+     * (L-1 → L) advances toward distance[END] (= start + loopMeters)
+     * so ground speed never goes flat at the seam.
+     */
+    function metersInLoop(local) {
+      const { run, strideStart, loopLen: L, loopMeters } = state;
+      if (local >= L) return loopMeters;
+      if (local <= 0) return 0;
+      const i0 = Math.floor(local);
+      const f = local - i0;
+      const d0 = run.distance[loopIndex(i0)];
+      const d1 = (i0 + 1 >= L)
+        ? run.distance[strideStart] + loopMeters
+        : run.distance[loopIndex(i0 + 1)];
+      return lerp(d0, d1, f) - run.distance[strideStart];
+    }
+
+    /**
+     * Dual-stream seam: as local walks the end segment [L-B, L), crossfade
+     * into the start segment [0, B) (root-relative pose + meters). Phase
+     * then wraps by (L-B) onto B, where the start stream already is — so
+     * pose, velocity, and ground meters stay continuous.
+     */
+    function sampleSeamless(local) {
+      const L = state.loopLen;
+      const B = state.blendFrames;
+      const root = state.torsoIndex;
+      const poseA = samplePose(local);
+      const metersA = metersInLoop(local);
+
+      if (B > 1 && local >= L - B) {
+        // Linear weight preserves velocity better than smoothstep at the seam.
+        const t = (local - (L - B)) / B;
+        const localB = local - (L - B);
+        const poseB = samplePose(localB);
+        const metersB = metersInLoop(localB);
+        return {
+          pose: lerpPoseRootRelative(poseA, poseB, t, root),
+          // Start stream is one period behind in absolute meters.
+          meters: lerp(metersA, metersB + state.periodMeters, t),
+        };
+      }
+
+      return { pose: poseA, meters: metersA };
+    }
+
+    function displaySample() {
+      const sample = sampleSeamless(state.phase);
+      return {
+        pose: sample.pose,
+        meters: state.loopBaseMeters + sample.meters,
+      };
     }
 
     function drawGround(w, meters) {
@@ -272,49 +368,25 @@ export default function QwopBand() {
       // Transparent — page texture shows through. No fill.
       ctx.clearRect(0, 0, w, h);
       if (!state.run || !state.trackSurface || !state.underground) return;
-      const { trackTop, trackH } = drawGround(w, displayMeters());
-      let pose = state.run.poses[state.frameIndex];
-      if (state.blend) {
-        const t = easeInOut((state.blend.i + 1) / BLEND_FRAMES);
-        pose = lerpPose(state.blend.fromPose, state.blend.toPose, t);
-      }
+      const { pose, meters } = displaySample();
+      const { trackTop, trackH } = drawGround(w, meters);
       drawRunner(pose, trackTop, trackH, w / 2);
-    }
-
-    function advanceStride() {
-      // Finish an in-progress seam blend before advancing the frame index.
-      if (state.blend) {
-        state.blend.i += 1;
-        if (state.blend.i >= BLEND_FRAMES) {
-          state.blend = null;
-        }
-        return;
-      }
-
-      state.frameIndex += 1;
-      if (state.frameIndex > state.strideEnd) {
-        // Ground stays continuous: fold the window length into the base and
-        // snap the index back. Pose pops are hidden by a short lerp.
-        const fromPose = state.run.poses[state.strideEnd];
-        const toPose = state.run.poses[state.strideStart];
-        state.loopBaseMeters += (
-          state.run.distance[state.strideEnd] - state.run.distance[state.strideStart]
-        );
-        state.frameIndex = state.strideStart;
-        state.blend = { i: 0, fromPose, toPose };
-      }
     }
 
     function tick(ts) {
       if (cancelled || !playing) return;
       if (!state.lastTs) state.lastTs = ts;
-      const dt = (ts - state.lastTs) / 1000;
+      const dt = Math.min(0.05, (ts - state.lastTs) / 1000);
       state.lastTs = ts;
-      if (!reduced && visible && tabVisible) {
-        state.acc += dt * PLAYBACK_RATE;
-        while (state.acc >= state.run.dt) {
-          state.acc -= state.run.dt;
-          advanceStride();
+      if (!reduced && visible && tabVisible && state.loopLen > 0) {
+        // Continuous float phase in source-frame units — no integer stall.
+        state.phase += (dt * PLAYBACK_RATE) / state.run.dt;
+        const period = state.loopLen - state.blendFrames;
+        while (state.phase >= state.loopLen) {
+          // Land on the start stream (phase B), not phase 0 — matches the
+          // dual-stream blend which ends on samplePose(B).
+          state.phase -= period;
+          state.loopBaseMeters += state.periodMeters;
         }
       }
       paint();
@@ -325,7 +397,6 @@ export default function QwopBand() {
       if (playing || cancelled || !state.run) return;
       playing = true;
       state.lastTs = 0;
-      state.acc = 0;
       rafId = window.requestAnimationFrame(tick);
     }
 
@@ -339,7 +410,6 @@ export default function QwopBand() {
       tabVisible = document.visibilityState !== 'hidden';
       if (!tabVisible) {
         state.lastTs = 0;
-        state.acc = 0;
       }
     }
 
@@ -362,7 +432,18 @@ export default function QwopBand() {
         const win = pickStrideWindow(run);
         state.strideStart = win.strideStart;
         state.strideEnd = win.strideEnd;
-        state.frameIndex = win.strideStart;
+        // Exclusive end: frames [START, END) with END's distance as the
+        // wrap-subframe target. Pose[END] ≈ Pose[START] (seam pick).
+        state.loopLen = win.strideEnd - win.strideStart;
+        state.loopMeters = run.distance[win.strideEnd] - run.distance[win.strideStart];
+        state.blendFrames = Math.min(BLEND_FRAMES, Math.floor(state.loopLen / 3));
+        // periodMeters filled after metersInLoop is usable — approx from distance table:
+        state.periodMeters = state.loopMeters - (
+          run.distance[win.strideStart + state.blendFrames] - run.distance[win.strideStart]
+        );
+        state.phase = 0;
+        state.loopBaseMeters = 0;
+        state.torsoIndex = Math.max(0, run.parts.indexOf('torso'));
         sizeCanvas();
         paint();
         startLoop();
@@ -388,7 +469,6 @@ export default function QwopBand() {
           visible = Boolean(entry?.isIntersecting);
           if (!visible) {
             state.lastTs = 0;
-            state.acc = 0;
           }
         },
         { threshold: 0.05 },

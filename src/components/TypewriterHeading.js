@@ -17,6 +17,7 @@ export default function TypewriterHeading({
   className,
   label,
   suffix = null,
+  delayMs = 0,
   children,
 }) {
   const text = String(children ?? '').replace(/\s+/g, ' ').trim();
@@ -57,11 +58,12 @@ export default function TypewriterHeading({
       timersRef.current.push(id);
     };
 
-    const start = window.setTimeout(() => tick(0), 70);
+    const startAt = 70 + Math.max(0, Number(delayMs) || 0);
+    const start = window.setTimeout(() => tick(0), startAt);
     timersRef.current.push(start);
 
     return () => clearTimers();
-  }, [text]);
+  }, [text, delayMs]);
 
   const classes = ['typewriter-heading', 'page-title', className].filter(Boolean).join(' ');
   const done = shown >= text.length;
