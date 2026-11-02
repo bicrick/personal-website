@@ -1,0 +1,16 @@
+.qwop-band {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0;
+  /* square — no rounded corners */
+  border-radius: 0;
+}
+
+.qwop-band-canvas {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border-radius: 0;
+  background: var(--bg, #f4f3ef);
+}

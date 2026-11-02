@@ -1,40 +1,105 @@
-.page-section.home-section.is-dossier {
-  justify-content: flex-start;
-  padding-top: var(--page-pad-top);
-  padding-bottom: var(--page-pad-bottom);
+/* Band homepage — minimal, square, no rounded corners */
+
+.page-section.home-section.home-band-page {
+  padding-top: 0;
 }
 
-.home-block {
-  margin-top: 2.4rem;
+.home-band-slot {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-top: 0.75rem; /* head clearance from top edge */
+  border-radius: 0;
 }
 
-.home-block-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
+.home-band-inner {
+  padding-top: 1.75rem;
 }
 
-.home-block-head h2 {
+.home-band-header {
+  margin: 0 0 1.5rem;
+}
+
+.home-band-name {
   margin: 0;
-  font-family: var(--font-pixel);
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: var(--ink-muted);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  border-radius: 0;
 }
 
-.home-heatmap {
+.home-band-place {
+  margin: 0.4rem 0 0;
+  color: var(--muted, #6b6b6b);
+  font-size: 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.home-band-lead {
+  margin: 0.85rem 0 0;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink, #141414);
+}
+
+.home-band-lead a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-band-index,
+.home-band-social {
   margin: 0;
-  padding: 12px;
-  border: 1px solid var(--rule);
+  font-size: 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  line-height: 1.8;
 }
 
-@media (max-width: 800px) {
-  .page-section.home-section.is-dossier {
-    justify-content: flex-start;
-    padding-top: var(--page-pad-top);
-    padding-bottom: var(--page-pad-bottom);
+.home-band-index {
+  margin-bottom: 0.65rem;
+}
+
+.home-band-index a,
+.home-band-social a {
+  color: var(--ink, #141414);
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.home-band-index a:hover,
+.home-band-social a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-band-sep {
+  margin: 0 0.35rem;
+  color: var(--muted, #6b6b6b);
+}
+
+.home-band-social {
+  color: var(--muted, #6b6b6b);
+  margin-bottom: 3rem;
+}
+
+.home-band-social a {
+  color: var(--muted, #6b6b6b);
+}
+
+@media (max-width: 640px) {
+  .home-band-slot {
+    padding-top: 0.5rem;
+  }
+
+  .home-band-name {
+    font-size: 1.35rem;
+  }
+
+  .home-band-index,
+  .home-band-social {
+    font-size: 0.85rem;
   }
 }
