@@ -27,7 +27,8 @@ const TRACK_ROW_TOP = 325;
 const TRACK_ROW_BOT = 383;
 const UG_OVERLAP_NATIVE = 4;
 const HEAD_PAD = 10;
-const SKY_EXTRA_MIN = 160; // tall sky so the vertical fade can be long/slow
+const SKY_EXTRA_MIN = 200; // taller sky so fade reaches behind name/links
+const TRACK_DRAW_SCALE = 1.35; // visual mass (layout contact stays on unscaled trackH)
 const UG_DEPTH = 6.2;
 const PLAYBACK_RATE = 1.5;
 
@@ -350,6 +351,8 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
     ? Math.min(Math.round(H * 0.34), Math.max(64, Math.round(H * 0.28)))
     : Math.min(Math.round(H * 0.28), Math.max(18, Math.round(H * 0.22)));
   const img = g.createImageData(1, H);
+  // Fully clear tip/tail so Bayer dither can't leave a 1px hairline vs wallpaper.
+  const tipClear = Math.min(14, Math.max(6, Math.round(H * 0.035)));
   for (let y = 0; y < H; y += 1) {
     let a;
     if (opaqueAt === 'bottom') {
@@ -363,6 +366,7 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
         const s = u * u * (3 - 2 * u);
         a = s * s;
       }
+      if (y < tipClear) a = 0;
     } else {
       // dirt: y=0 top/track opaque → y=H-1 bottom transparent (long soft fade)
       if (y <= opaquePx) a = 1;
@@ -372,7 +376,10 @@ function buildVerticalAlphaMask(h, opaqueAt /* 'bottom' | 'top' */) {
         const s = u * u * (3 - 2 * u);
         a = s * s * s;
       }
+      if (y >= H - tipClear) a = 0;
     }
+    // Kill near-zero alpha so sparse Bayer dots don't form a faint full-width line.
+    if (a < 0.045) a = 0;
     const level = a * 16;
     const thr = bayer[y % 16];
     const on = level > thr ? Math.min(1, Math.ceil(level) / 16) : Math.floor(level) / 16;
@@ -427,11 +434,12 @@ function buildGrassTile() {
       g.fillRect(x, y, 1, 1);
     }
   }
-  // Dense short blades along the top edge (under the track overlap).
+  // Sparse short blades under the track overlap (NOT a comb — over-track
+  // tufts are drawn separately in buildGrassTuftStrip).
   const blade = ['#6e9a78', '#7aa888', '#5f8a6a', '#8bb898'];
   for (let x = 0; x < W; x += 1) {
-    if (rand() > 0.62) continue;
-    const h = 1 + Math.floor(rand() * 3);
+    if (rand() > 0.12) continue; // ~12% — soft texture, not a sawtooth edge
+    const h = 1 + Math.floor(rand() * 2);
     const col = blade[Math.floor(rand() * blade.length)];
     g.fillStyle = col;
     for (let dy = 0; dy < h; dy += 1) {
@@ -449,29 +457,30 @@ function buildGrassTile() {
  * BEFORE the runner; scrolls at ground CSS speed; seamless tile.
  */
 function buildGrassTuftStrip() {
-  const W = 256;
-  const H = 10; // bottom-aligned over track; blades grow upward
+  // Wide tile + few seeded clusters → irregular gaps, not a comb.
+  const W = 720;
+  const H = 12; // bottom-aligned over track; blades grow upward
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
   const rand = mulberry32(0x71F75);
-  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898'];
+  const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358', '#8bb898', '#9bc8a4'];
 
   function paintBlade(cx, baseY, dir, maxLen) {
     const len = 3 + Math.floor(rand() * Math.max(1, maxLen - 2)); // 3..maxLen
     const col = colors[Math.floor(rand() * colors.length)];
     g.fillStyle = col;
     for (let dy = 0; dy < len; dy += 1) {
-      const lean = dy > 1 && rand() > 0.55 ? (rand() > 0.5 ? 1 : -1) : 0;
+      const lean = dy > 1 && rand() > 0.5 ? (rand() > 0.5 ? 1 : -1) : 0;
       const x = (cx + lean + W) % W;
       const y = baseY + dir * dy;
       if (y < 0 || y >= H) continue;
       g.fillRect(x, y, 1, 1);
     }
-    if (dir < 0 && rand() > 0.4) {
-      g.fillStyle = '#8bb898';
+    if (dir < 0 && rand() > 0.35) {
+      g.fillStyle = '#9bc8a4';
       const tipX = (cx + (rand() > 0.5 ? 1 : -1) + W) % W;
       g.fillRect(tipX, Math.max(0, baseY - len), 1, 1);
     }
@@ -483,33 +492,22 @@ function buildGrassTuftStrip() {
     }
   }
 
-  function tooClose(used, candidate, minGap) {
-    for (let u = 0; u < used.length; u += 1) {
-      const d = Math.abs(used[u] - candidate);
-      if (d < minGap || d > W - minGap) return true;
-    }
-    return false;
-  }
-
-  // Bottom edge: handful of tufts growing UP into the track (sparse across 256px).
-  const usedBot = [];
-  for (let i = 0; i < 9; i += 1) {
-    let x = Math.floor(rand() * W);
-    let guard = 0;
-    while (tooClose(usedBot, x, 18) && guard < 16) {
-      x = Math.floor(rand() * W);
-      guard += 1;
-    }
-    usedBot.push(x);
-    const blades = 2 + Math.floor(rand() * 3);
-    paintTuft(x, H - 1, -1, 6, blades);
+  // Fixed irregular anchors (seeded jitter) — guaranteed sparse, never a comb.
+  // 3 clusters / 720px ≈ 6 across a 1440 desktop with big empty gaps.
+  const anchors = [95, 310, 560];
+  for (let i = 0; i < anchors.length; i += 1) {
+    const jitter = Math.floor(rand() * 50) - 25;
+    const x = (anchors[i] + jitter + W) % W;
+    const blades = 2 + Math.floor(rand() * 3); // 2–4
+    const maxLen = 5 + Math.floor(rand() * 4); // varied 5–8
+    paintTuft(x, H - 1, -1, maxLen, blades);
   }
   return c;
 }
 
-/** Subtle top-edge (infield) blades poking down over the track lip. */
+/** Subtle top-edge (infield) blades — one sparse cluster per wide tile. */
 function buildGrassTuftTopStrip() {
-  const W = 256;
+  const W = 720;
   const H = 5;
   const c = document.createElement('canvas');
   c.width = W;
@@ -518,28 +516,31 @@ function buildGrassTuftTopStrip() {
   g.imageSmoothingEnabled = false;
   const rand = mulberry32(0xA11CE);
   const colors = ['#5f8a6a', '#6e9a78', '#7aa888', '#4a7358'];
-  for (let i = 0; i < 3; i += 1) {
-    const cx = Math.floor(rand() * W);
-    const blades = 1 + Math.floor(rand() * 2);
-    for (let b = 0; b < blades; b += 1) {
-      const len = 1 + Math.floor(rand() * 2);
-      g.fillStyle = colors[Math.floor(rand() * colors.length)];
-      for (let dy = 0; dy < len; dy += 1) {
-        const x = (cx + b + (dy > 0 && rand() > 0.6 ? 1 : 0) + W) % W;
-        g.fillRect(x, dy, 1, 1);
-      }
+  // One subtle cluster per wide tile
+  const cx = 200 + Math.floor(rand() * 280);
+  const blades = 2 + Math.floor(rand() * 2); // 2–3
+  for (let b = 0; b < blades; b += 1) {
+    const len = 2 + Math.floor(rand() * 2);
+    g.fillStyle = colors[Math.floor(rand() * colors.length)];
+    for (let dy = 0; dy < len; dy += 1) {
+      const x = (cx + b + (dy > 0 && rand() > 0.6 ? 1 : 0) + W) % W;
+      g.fillRect(x, dy, 1, 1);
     }
   }
   return c;
 }
 
 function tileHorizontally(src, reps = 128) {
+  // Cap width — browsers reject canvases past ~16k–32k on a side.
+  // (720px tuft strips × 128 reps = 92160 → empty canvas, invisible tufts.)
+  const maxW = 16384;
+  const safeReps = Math.max(2, Math.min(reps, Math.floor(maxW / Math.max(1, src.width))));
   const c = document.createElement('canvas');
-  c.width = src.width * reps;
+  c.width = src.width * safeReps;
   c.height = src.height;
   const g = c.getContext('2d');
   g.imageSmoothingEnabled = false;
-  for (let x = 0; x < reps; x += 1) g.drawImage(src, x * src.width, 0);
+  for (let x = 0; x < safeReps; x += 1) g.drawImage(src, x * src.width, 0);
   return c;
 }
 
@@ -604,6 +605,7 @@ export default function QwopBand() {
       skyMode: resolveSkyMode(),
       skyBuf: null,
       dirtBuf: null,
+      fgBuf: null, // ground+runner; night tint via source-atop
       skyMask: null,
       dirtMask: null,
       skyMaskH: 0,
@@ -627,6 +629,8 @@ export default function QwopBand() {
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return undefined;
     const ctx = canvas.getContext('2d', { alpha: true });
+    // drawGround/drawRunner paint into paintCtx (main or offscreen FG layer).
+    let paintCtx = ctx;
 
     function partScale() {
       return RUNNER_H / (BODY_WORLD_H * state.run.worldScale);
@@ -635,8 +639,9 @@ export default function QwopBand() {
     /** Tall sky pad: opaque hill belt + long fade (≈150–250px on desktop). */
     function skyExtraPx() {
       const w = state.cssW || wrap.clientWidth || 320;
-      const fade = Math.round(Math.min(240, Math.max(160, w * 0.14)));
-      const opaque = Math.round(Math.min(88, Math.max(64, w * 0.055)));
+      // Longer fade so dissipating sky reaches up behind the name/links.
+      const fade = Math.round(Math.min(280, Math.max(190, w * 0.17)));
+      const opaque = Math.round(Math.min(96, Math.max(70, w * 0.06)));
       // skyH ≈ opaque + fade; SKY_EXTRA ≈ that minus runner/head pad + track
       return Math.max(SKY_EXTRA_MIN, opaque + fade - HEAD_PAD - 46);
     }
@@ -810,9 +815,10 @@ export default function QwopBand() {
     function drawGround(w, scrollNative) {
       const m = layoutMetrics();
       const { s, trackH, ugH, trackTop, ugTop } = m;
+      const gctx = paintCtx;
 
-      ctx.save();
-      ctx.imageSmoothingEnabled = false;
+      gctx.save();
+      gctx.imageSmoothingEnabled = false;
 
       state.dirtBuf = ensureBuffer(state.dirtBuf, w + 2, ugH + 2);
       const oc = state.dirtBuf;
@@ -857,51 +863,51 @@ export default function QwopBand() {
       og.drawImage(mask, 0, 0, 1, mask.height, 0, 0, w, ugH);
       og.globalCompositeOperation = 'source-over';
 
-      ctx.drawImage(oc, 0, 0, w, ugH, 0, ugTop, w, ugH);
+      gctx.drawImage(oc, 0, 0, w, ugH, 0, ugTop, w, ugH);
 
-      // Single full-width blit — uniform stretch of one source column.
-      ctx.drawImage(
+      // Single full-width blit — stretch taller for visual mass; contact Y unchanged.
+      const trackDrawH = trackH * TRACK_DRAW_SCALE;
+      const trackDrawTop = trackTop + trackH - trackDrawH;
+      gctx.drawImage(
         state.trackSurface,
         0, 0, state.trackSurface.width, state.trackSurface.height,
-        0, trackTop, w, trackH,
+        0, trackDrawTop, w, trackDrawH,
       );
 
       // Sparse grass tufts at ~1 CSS px/source px (visible over the track).
-      // Scroll matches ground CSS speed; drawn after track, before runner.
+      // Scroll from the small source strip with wrap — do NOT use a mega-tiled
+      // canvas (720×128 exceeds browser max width and draws nothing).
       const groundCss = scrollNative * s;
-      const blitTufts = (tiled, src, destY) => {
-        if (!tiled || !src) return;
+      const blitTufts = (src, destY) => {
+        if (!src) return;
         const tw = src.width;
         const th = src.height;
         let tSrcX = groundCss % tw;
         if (tSrcX < 0) tSrcX += tw;
         tSrcX = Math.floor(tSrcX);
-        const firstW = Math.min(tw - tSrcX, w + 2);
-        ctx.drawImage(
-          tiled,
-          tSrcX, 0, firstW, th,
-          0, destY,
-          firstW, th,
-        );
-        if (firstW < w + 1) {
-          const secondW = w + 2 - firstW;
-          ctx.drawImage(
-            tiled,
-            0, 0, secondW, th,
-            firstW - 1, destY,
-            secondW + 1, th,
-          );
+        // Repeat the strip across the band width.
+        let dx = -tSrcX;
+        while (dx < w + tw) {
+          gctx.drawImage(src, 0, 0, tw, th, dx, destY, tw, th);
+          dx += tw;
         }
       };
-      if (state.tiledTufts && state.grassTufts) {
+      if (state.grassTufts) {
         const th = state.grassTufts.height;
-        blitTufts(state.tiledTufts, state.grassTufts, trackTop + trackH - th);
+        // Integer destY — fractional Y can drop 1px blades under nearest-neighbor.
+        blitTufts(
+          state.grassTufts,
+          Math.round(trackTop + trackH - th),
+        );
       }
-      if (state.tiledTuftsTop && state.grassTuftsTop) {
-        blitTufts(state.tiledTuftsTop, state.grassTuftsTop, trackTop);
+      if (state.grassTuftsTop) {
+        blitTufts(
+          state.grassTuftsTop,
+          Math.round(trackDrawTop),
+        );
       }
 
-      ctx.restore();
+      gctx.restore();
       return { ...m, scrollNative };
     }
 
@@ -922,17 +928,18 @@ export default function QwopBand() {
         const heightPx = fr.h * s;
         const screenX = cx + (x - torso[0]) * worldToBand;
         const screenY = contactBandY + (y - contactWorldY) * worldToBand;
-        ctx.save();
-        ctx.translate(screenX, screenY);
-        ctx.rotate(angle);
-        ctx.imageSmoothingEnabled = true;
-        ctx.drawImage(
+        const rctx = paintCtx;
+        rctx.save();
+        rctx.translate(screenX, screenY);
+        rctx.rotate(angle);
+        rctx.imageSmoothingEnabled = true;
+        rctx.drawImage(
           state.atlas,
           fr.x, fr.y, fr.w, fr.h,
           -widthPx / 2, -heightPx / 2,
           widthPx, heightPx,
         );
-        ctx.restore();
+        rctx.restore();
       }
     }
 
@@ -962,25 +969,32 @@ export default function QwopBand() {
         },
       };
       drawSky(w, m.trackTop, scrollNative, m.s);
+
+      // Foreground (grass + track + tufts + runner) on an offscreen layer so
+      // night tint can use source-atop — only painted pixels dim; transparent
+      // fade regions stay transparent (no gray-blue slab under the grass).
+      state.fgBuf = ensureBuffer(state.fgBuf, w, h);
+      const fg = state.fgBuf;
+      const fctx = fg.getContext('2d');
+      fctx.setTransform(1, 0, 0, 1, 0, 0);
+      fctx.clearRect(0, 0, fg.width, fg.height);
+      paintCtx = fctx;
       const { trackTop, trackH } = drawGround(w, scrollNative);
       drawRunner(pose, trackTop, trackH, w / 2);
-      // Dim / cool the foreground (track + grass + tufts + runner) at night.
-      // Sky/hills are already night-colored — only tint below the sky fade.
+      paintCtx = ctx;
+
       if (state.skyMode === 'night') {
-        const fgTop = Math.max(0, trackTop - 2);
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(0, fgTop, w, h - fgTop);
-        ctx.clip();
-        ctx.globalCompositeOperation = 'multiply';
-        // ~60% brightness with a navy cast
-        ctx.fillStyle = '#8e9bb8';
-        ctx.fillRect(0, fgTop, w, h - fgTop);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = 'rgba(12, 18, 36, 0.22)';
-        ctx.fillRect(0, fgTop, w, h - fgTop);
-        ctx.restore();
+        fctx.save();
+        fctx.globalCompositeOperation = 'source-atop';
+        // Cool navy dim — multiplies only where alpha > 0
+        fctx.fillStyle = 'rgba(40, 52, 90, 0.42)';
+        fctx.fillRect(0, 0, w, h);
+        fctx.fillStyle = 'rgba(12, 18, 36, 0.20)';
+        fctx.fillRect(0, 0, w, h);
+        fctx.restore();
       }
+
+      ctx.drawImage(fg, 0, 0, w, h, 0, 0, w, h);
     }
 
     function tick(ts) {

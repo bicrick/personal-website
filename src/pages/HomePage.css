@@ -43,8 +43,8 @@
   width: 100%;
   max-width: var(--measure);
   margin: 0 auto;
-  /* Pull the band up under the links so text sits on the fade */
-  margin-bottom: calc(-1 * clamp(3.25rem, 7.5vh, 5.25rem));
+  /* Pull the band further under name/links so sky fade sits behind them */
+  margin-bottom: calc(-1 * clamp(5.75rem, 11vh, 8.75rem));
   padding: 0 0.5rem;
   box-sizing: border-box;
   display: flex;
@@ -61,8 +61,9 @@
   pointer-events: auto;
   /* Minimal legibility over the sky — soft paper halo, not a heavy shadow */
   text-shadow:
-    0 0 12px color-mix(in srgb, var(--paper) 70%, transparent),
-    0 1px 0 color-mix(in srgb, var(--paper) 55%, transparent);
+    0 0 14px color-mix(in srgb, var(--paper) 78%, transparent),
+    0 0 28px color-mix(in srgb, var(--paper) 45%, transparent),
+    0 1px 0 color-mix(in srgb, var(--paper) 60%, transparent);
 }
 
 /* Live type-out: TypewriterHeading + .home-heading (Geist Pixel, ink caret).
@@ -89,8 +90,8 @@
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  /* Small nudge so the track sits a bit lower under the name */
-  padding-top: clamp(0.35rem, 1.2vh, 0.85rem);
+  /* No top pad — band sits up so dissipating sky reaches the links */
+  padding-top: 0;
   border-radius: 0;
   background: transparent;
   border: none;
