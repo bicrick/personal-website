@@ -41,7 +41,6 @@ const EDUCATION = [
     org: 'UT Austin',
     role: 'M.S. Artificial Intelligence',
     dates: 'Aug 2024 – Dec 2025',
-    note: 'GPA 3.84',
     href: '/projects/ai-masters',
   },
   {
@@ -49,7 +48,7 @@ const EDUCATION = [
     org: 'UT Austin',
     role: 'B.S. Electrical and Computer Engineering',
     dates: 'May 2023',
-    note: 'GPA 3.87. ECE with a senior-year turn toward ML.',
+    note: 'ECE with a senior-year turn toward ML.',
   },
 ];
 
