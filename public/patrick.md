@@ -208,10 +208,10 @@ https://www.bicrick.com/career.
 
 ## Education
 
-| Years | Degree | School | GPA |
-| --- | --- | --- | --- |
-| Aug 2024 – Dec 2025 | M.S. Artificial Intelligence | The University of Texas at Austin | 3.84 |
-| May 2023 | B.S. Electrical and Computer Engineering | The University of Texas at Austin | 3.87 |
+| Years | Degree | School |
+| --- | --- | --- |
+| Aug 2024 – Dec 2025 | M.S. Artificial Intelligence | The University of Texas at Austin |
+| May 2023 | B.S. Electrical and Computer Engineering | The University of Texas at Austin |
 
 MSAI covered end-to-end LLM training: data curation, training, fine-tuning,
 and evaluation.
