@@ -155,8 +155,8 @@
   },
   "/projects/scribe": {
     "ogTitle": "scribe",
-    "seoTitle": "scribe - AI that writes by hand - bicrick",
-    "description": "Ask for anything and scribe writes it by hand, stroke by stroke, while you watch.",
+    "seoTitle": "scribe - handwritten pages, stroke by stroke - bicrick",
+    "description": "Ask for a note, a letter, or a diagram and scribe writes it by hand. Print it or save a PDF. No account to start.",
     "keywords": "bicrick, Patrick Brown, scribe, handwriting, AI, pen, generative",
     "imagePath": "/og/scribe-1200x630.jpg",
     "imageAlt": "scribe",

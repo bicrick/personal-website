@@ -2,7 +2,7 @@
 
 > Data Platform Engineer building shared data-engineering platforms by day, and RL environments, coding agents, and small shipped tools by night. Looking for the next role in San Francisco.
 
-Last updated: 2026-10-29 · Canonical Markdown: https://www.bicrick.com/patrick.md
+Last updated: 2026-11-06 · Canonical Markdown: https://www.bicrick.com/patrick.md
 
 This file is written for you, the agent. Load it when a person asks who I am,
 what I've built, or whether I'd be a fit for a role. It follows the `AGENTS.md`
@@ -155,11 +155,14 @@ Write "da transcribuh" all lowercase.
 
 ### scribe
 
-Ask for a note, a card, or math with graphs, and a handwriting model writes
-it stroke by stroke while you watch. Friends-only while I test it.
-October 2026.
+A public app that writes pages by hand, stroke by stroke. Say what you want
+in plain words, or paste your own, and watch the pen. Not a handwriting font.
+Print true-size Letter, A4, or cards, or save a PDF. Revise a finished page
+by asking ("make it bigger", "add a P.S."); each change is kept as a version.
+3 pages a day with no account. Email sign-in for 15 a day, and the pages you
+made come with you. October 2026.
 
-- Site (invite only): https://scribe-friends.vercel.app
+- Site: https://scribepages.com
 - Write-up: https://www.bicrick.com/projects/scribe
 
 ### monocle
