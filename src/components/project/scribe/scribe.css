@@ -21,10 +21,6 @@
   --sqd-desk-bg: #96653d;
   --sqd-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
   --sqd-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --bot: var(--sqd-navy);
-  --link: var(--sqd-navy-ink);
-  --ink: var(--sqd-text);
-  --ink-muted: var(--sqd-muted);
 
   margin: 8px 0 28px;
   container-type: inline-size;
@@ -36,9 +32,10 @@
 
 .sqd figcaption {
   margin: 8px 0 0;
+  padding: 0 4px;
   text-align: center;
-  color: var(--sqd-muted);
-  font: italic 15px/20px var(--sqd-sans);
+  color: var(--ink-muted);
+  font: italic 15px/1.4 var(--sqd-sans);
   letter-spacing: -0.15px;
 }
 
@@ -58,6 +55,10 @@
 /* ---- desk (no browser chrome) ---- */
 
 .sqd-desk {
+  --bot: var(--sqd-navy);
+  --link: var(--sqd-navy-ink);
+  --ink: var(--sqd-text);
+  --ink-muted: var(--sqd-muted);
   position: relative;
   display: flex;
   flex-direction: column;

@@ -9,8 +9,7 @@ import deskUrl from './media/desk-m.jpg';
 import './scribe.css';
 
 /**
- * Interactive scribe orchestrator demo restyled like the friends desk app:
- * brown desk, floating navy panel, transport, no fake browser chrome.
+ * Canned scribe writing reel. Same pipeline as the public app, played offline.
  * Autoplay on mount; after a run finishes, advance through the reel.
  */
 export default function ScribeDemo({
@@ -188,7 +187,7 @@ export default function ScribeDemo({
         />
       </div>
       <figcaption>
-        a reel of real pages. the live app plans the layout, then a handwriting model writes it.
+        canned reel, offline. same writing pipeline as the live app.
       </figcaption>
     </figure>
   );

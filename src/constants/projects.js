@@ -75,13 +75,13 @@ export const PROJECTS = [
   },
   {
     title: 'scribe',
-    description: 'ai that writes it out by hand',
+    description: 'pages written by hand, ready to print',
     timelineDescription:
-      'Ask for a note, a card, or math with graphs, and a handwriting model writes it stroke by stroke while you watch.',
+      'Ask for a note, a thank-you, or a diagram. It writes the page stroke by stroke. Print it true size or keep a pdf — no account to start.',
     image: `${process.env.PUBLIC_URL}/images/scribe/scribe-pen.webp`,
     blogLink: '/projects/scribe',
-    appLink: 'https://scribe-friends.vercel.app',
-    appLabel: 'invite only',
+    appLink: 'https://scribepages.com',
+    appLabel: 'try it',
     relevanceRank: 3,
     dateRank: 1,
     date: 'October 2026',
