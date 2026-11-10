@@ -1,5 +1,6 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import T100Card from './T100Card';
 import T100Ingest from './T100Ingest';
 import './T100.css';
 
@@ -101,7 +102,11 @@ function T100() {
       staticTitle
     >
       <div className="t100-article">
-        <T100Ingest />
+        <figure className="t100-hero">
+          <div className="t100-hero-stage">
+            <T100Card />
+          </div>
+        </figure>
 
         <p>
           T100 is an Expo / React Native app with a FastAPI extraction server on
@@ -109,6 +114,8 @@ function T100() {
           mask keeps the paper silhouette; the server rectifies with LSD quads and
           — only when a crease is found — runs a fold-aware dewarp.
         </p>
+
+        <T100Ingest />
 
         <p>
           RapidOCR (ONNX) finds the grid. Each score cell goes to Jev, a hosted
@@ -121,7 +128,7 @@ function T100() {
         <p>
           That Jev-first, ask-the-user loop reaches 98.2% of cells correct after a
           median of two questions per card, at $0.0037/card — against Opus at
-          98.8% and $0.044/card in a single pass. The demo card above is the real
+          98.8% and $0.044/card in a single pass. The demo card is the real
           Pebble Beach guest card; scores inside were written with Scribe for the
           landing demo.
         </p>
