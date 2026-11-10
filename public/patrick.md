@@ -167,14 +167,13 @@ made come with you. October 2026.
 
 ### t100
 
-iOS app (Expo / React Native, also on web) that keeps every paper golf
-scorecard you play in a digital library. Photograph the card after the round.
-Cards are cut out at true paper shape onto a mahogany shelf; folded cards
-animate open at the detected fold. Scores are read by a FastAPI service with
-a handwritten-digit classifier and an LLM fallback. WHS handicap from rating
-and slope. Import from 18Birdies. Draft write-up. November 2026.
+Reads paper golf scorecards. Photograph the card; the pipeline cuts out the
+paper, finds the grid with RapidOCR (ONNX), and asks Jev (TypeSafe hosted)
+per cell before falling back to Sonnet or asking the golfer. Expo / React
+Native app, FastAPI on Vercel, Firebase, Reanimated fold. Draft write-up.
+November 2026.
 
-Write "t100" lowercase.
+Write "t100" lowercase. Do not claim 18Birdies import as shipped.
 
 - Site: https://t100-web.vercel.app
 - Write-up: https://www.bicrick.com/projects/t100

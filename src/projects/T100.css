@@ -1,114 +1,35 @@
-/* t100 project article — quiet figures, phone demos, hero loop */
+/* t100 — short engineering write-up; single cropped hero */
 
 .t100-article {
   text-align: left;
 }
 
-.t100-title-mark {
-  height: 0.86em;
-  width: auto;
-  margin-left: 0.32em;
-  vertical-align: -0.14em;
-  border: 0;
+.t100-hero {
+  max-width: 32rem;
+  margin: 8px auto 28px;
 }
 
-.t100-hero,
-.t100-still,
-.t100-phone {
-  margin: 28px 0 24px;
+.t100-hero-frame {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  border: 1px solid var(--rule);
+  background: #f7f3ea;
+  overflow: hidden;
 }
 
-.t100-hero-video,
-.t100-still img,
-.t100-phone-video {
+.t100-hero-video {
   display: block;
   width: 100%;
   height: auto;
   margin: 0;
-  border: 1px solid var(--rule);
-  background: var(--card-wash);
-}
-
-.t100-hero {
-  max-width: 26rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.t100-hero-video {
-  border-radius: 0;
-}
-
-.t100-still {
-  max-width: 22rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.t100-still-wide {
-  max-width: 100%;
-}
-
-.t100-phone {
-  max-width: 14rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.t100-phone-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  align-items: start;
-  margin: 28px 0 24px;
-}
-
-.t100-phone-row .t100-phone {
-  margin: 0;
-  max-width: none;
-}
-
-.t100-hero figcaption,
-.t100-still figcaption,
-.t100-phone figcaption {
-  text-align: center;
-  color: var(--ink-muted);
-  font-size: 15px;
-  line-height: 20px;
-  letter-spacing: -0.15px;
-  margin: 8px 0 0;
-  font-style: italic;
-}
-
-.t100-article > h2 {
-  margin: 40px 0 12px;
-}
-
-.t100-article > h2:first-of-type {
-  margin-top: 8px;
+  border: 0;
+  vertical-align: top;
+  background: #f7f3ea;
 }
 
 @media (max-width: 700px) {
-  .t100-phone-row {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 14rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
   .t100-hero {
     max-width: 100%;
-  }
-
-  .t100-still {
-    max-width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .t100-hero-video,
-  .t100-phone-video {
-    /* posters remain; JS pauses playback */
   }
 }

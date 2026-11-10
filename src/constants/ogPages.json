@@ -166,9 +166,9 @@
   },
   "/projects/t100": {
     "ogTitle": "t100",
-    "seoTitle": "t100 - paper golf scorecards in a digital library - bicrick",
-    "description": "Lose the phone on the golf course. Photograph the paper scorecard after the round. T100 keeps every card in a digital library and reads the scores.",
-    "keywords": "bicrick, Patrick Brown, t100, golf, scorecard, paper, expo, react native, handicap",
+    "seoTitle": "t100 - reading paper golf scorecards - bicrick",
+    "description": "How T100 reads a paper golf scorecard: cutout, RapidOCR grid, Jev-first digit reads, and ask-the-user confirmation.",
+    "keywords": "bicrick, Patrick Brown, t100, golf, scorecard, Jev, RapidOCR, Expo, FastAPI",
     "imagePath": "/og/t100-1200x630.jpg",
     "imageAlt": "t100",
     "imageWidth": 1200,

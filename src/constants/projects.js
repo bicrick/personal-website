@@ -1,9 +1,9 @@
 export const PROJECTS = [
   {
     title: 't100',
-    description: 'paper golf scorecards in a digital library',
+    description: 'reading paper golf scorecards with jev first',
     timelineDescription:
-      'Photograph the card after the round. T100 cuts it out at true paper shape, unfolds folded cards in 3D, and reads the scores. Lose the phone on the golf course.',
+      'Cut the card from a photo, find the grid with RapidOCR, ask Jev per cell, and confirm with the golfer when unsure — 98.2% at $0.0037/card.',
     image: `${process.env.PUBLIC_URL}/images/t100/t100-tile.jpg`,
     blogLink: '/projects/t100',
     appLink: 'https://t100-web.vercel.app',

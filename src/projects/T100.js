@@ -5,16 +5,8 @@ import './T100.css';
 const SITE = 'https://t100-web.vercel.app';
 const IMG = `${process.env.PUBLIC_URL}/images/t100`;
 
-/** Muted looping demo; pauses under prefers-reduced-motion. */
-function LoopVideo({
-  src,
-  poster,
-  width,
-  height,
-  className = '',
-  preload = 'none',
-  eager = false,
-}) {
+/** Muted looping hero; pauses under prefers-reduced-motion. */
+function HeroVideo() {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -43,33 +35,22 @@ function LoopVideo({
   }, []);
 
   return (
-    <video
-      ref={ref}
-      className={className}
-      src={src}
-      poster={poster}
-      width={width}
-      height={height}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload={eager ? 'metadata' : preload}
-    />
-  );
-}
-
-function PhoneDemo({ src, poster, label }) {
-  return (
-    <figure className="t100-phone">
-      <LoopVideo
-        src={src}
-        poster={poster}
-        width={390}
-        height={844}
-        className="t100-phone-video"
-      />
-      {label ? <figcaption>{label}</figcaption> : null}
+    <figure className="t100-hero">
+      <div className="t100-hero-frame">
+        <video
+          ref={ref}
+          className="t100-hero-video"
+          src={`${IMG}/pebble-unfold.mp4`}
+          poster={`${IMG}/pebble-unfold-poster.jpg`}
+          width={960}
+          height={672}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+      </div>
     </figure>
   );
 }
@@ -78,153 +59,49 @@ function T100() {
   return (
     <ProjectDetail
       title="t100"
-      titleLabel="t100"
-      titleSuffix={(
-        <img
-          className="project-title-logo t100-title-mark"
-          src={`${IMG}/t100-header-mark.png`}
-          alt=""
-          width={81}
-          height={80}
-        />
-      )}
       date="draft · November 2026"
       linkHref={SITE}
       linkLabel="t100-web.vercel.app"
-      abstract="Lose the phone on the golf course. T100 keeps every paper scorecard you play in a digital library — photograph the card after the round, keep the crease and the pencil marks."
+      abstract="How to read a paper golf scorecard — cut the card out of a photo, find the grid, ask a digit model first, and only bother the golfer when you are unsure."
     >
       <div className="t100-article">
-        <figure className="t100-hero">
-          <LoopVideo
-            src={`${IMG}/pebble-unfold.mp4`}
-            poster={`${IMG}/pebble-unfold-poster.jpg`}
-            width={800}
-            height={1036}
-            className="t100-hero-video"
-            eager
-            preload="metadata"
-          />
-          <figcaption>
-            the real Pebble Beach guest card, unfolding — same hero as{' '}
-            <a href={SITE} target="_blank" rel="noopener noreferrer">
-              the landing page
-            </a>
-          </figcaption>
-        </figure>
+        <HeroVideo />
 
         <p>
-          golf was meant to be scored with pencil and paper, not on your phone.
-          t100 is an ios app (expo / react native, also on web) for the rounds you
-          already mark on a card. you play the round, photograph the card when it
-          is over, and every card sits in a library on a mahogany wood shelf —
-          cut out of the photo at its true paper shape, with even lighting.
+          t100 is an expo / react native app (also on web) with a fastapi extraction
+          server on vercel. you photograph the card after the round. on device, an
+          apple vision mask keeps the true paper silhouette. the server cleans the
+          paper, rectifies it, and — only when a crease is found — runs a fold-aware
+          dewarp before reading the grid.
         </p>
 
-        <h2>/ unfold</h2>
         <p>
-          folded cards with front and back photos animate open at the detected
-          fold. the motion is 3d, driven by reanimated, so the crease feels like
-          paper rather than a page flip.
-        </p>
-        <PhoneDemo
-          src={`${IMG}/unfold.mp4`}
-          poster={`${IMG}/unfold-poster.jpg`}
-          label="front and back, opening at the fold"
-        />
-
-        <h2>/ scores</h2>
-        <p>
-          a custom fastapi server on vercel reads the card. a per-cell handwritten
-          digit classifier handles most holes; an llm fallback steps in when the
-          ink is messy, and the app asks you to confirm when it is unsure. it
-          understands score notation and circled tees.
-        </p>
-        <figure className="t100-still">
-          <img
-            src={`${IMG}/tee.webp`}
-            alt="Scorecard detail with circled tee markers and handwritten scores"
-            width={900}
-            height={1948}
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>circled tees and handwritten scores, kept as they were</figcaption>
-        </figure>
-
-        <h2>/ library</h2>
-        <p>
-          sort by date or course. edit or delete a round. zoom into a card on the
-          shelf. import from 18birdies exports and generate scorecards for those
-          rounds. accounts run on firebase.
-        </p>
-        <div className="t100-phone-row" aria-label="library demos">
-          <PhoneDemo
-            src={`${IMG}/sort.mp4`}
-            poster={`${IMG}/sort-poster.jpg`}
-            label="sort"
-          />
-          <PhoneDemo
-            src={`${IMG}/delete-edit.mp4`}
-            poster={`${IMG}/delete-edit-poster.jpg`}
-            label="edit and delete"
-          />
-          <PhoneDemo
-            src={`${IMG}/zoom.mp4`}
-            poster={`${IMG}/zoom-poster.jpg`}
-            label="zoom"
-          />
-        </div>
-
-        <h2>/ handicap</h2>
-        <p>
-          whs handicap from course rating and slope. the app remembers your usual
-          tees per course so the next round starts where you left off.
-        </p>
-        <PhoneDemo
-          src={`${IMG}/profile.mp4`}
-          poster={`${IMG}/profile-poster.jpg`}
-          label="profile and tees"
-        />
-
-        <h2>/ reading the cards</h2>
-        <p>
-          the reading pipeline was benchmarked on a test corpus of about 1,500
-          internet scorecards plus synthetic front/back pairs — enough variety to
-          stress the digit model and the llm fallback before asking a golfer to
-          trust a round.
+          print is read with rapidocr (onnx, so no pytorch in the vercel bundle).
+          hole columns snap to ruled lines; player rows come from lines plus
+          ink-versus-print. each score cell is cropped and sent to jev, a hosted
+          typesafe model, as a multiple choice: blank, 1–12, dash, or unreadable.
+          a sure jev read (confidence ≥ 0.9) is never overwritten. sonnet only steps
+          in for unusual notation, ambiguous rows, or totals that do not add up.
+          anything still unsure becomes a short question with jev&apos;s top guesses
+          as choices.
         </p>
 
-        <h2>/ web</h2>
         <p>
-          the same library runs on the web. the landing page uses the pebble beach
-          guest card as its scroll hero.
+          that jev-first, ask-the-user loop is the whole product bet. on a
+          hand-checked set it reaches 98.2% of cells correct after a median of two
+          questions per card, at $0.0037/card — against opus at 98.8% and $0.044/card
+          in a single pass. the test corpus behind the work is 1,508 internet
+          scorecard images plus 52 complete front/back pairs (2 real, 50 synthetic).
         </p>
-        <figure className="t100-still t100-still-wide">
-          <img
-            src={`${IMG}/landing.webp`}
-            alt="T100 landing page with paper scorecards"
-            width={1400}
-            height={876}
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-        <figure className="t100-still t100-still-wide">
-          <img
-            src={`${IMG}/web-library.webp`}
-            alt="T100 web library of paper scorecards on a wood shelf"
-            width={1400}
-            height={3030}
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>web library — cards on the shelf</figcaption>
-        </figure>
 
         <p>
+          the app is local-first on firebase, with a reanimated 3d unfold for
+          foldable front+back cards. the{' '}
           <a href={SITE} target="_blank" rel="noopener noreferrer">
-            see t100
-          </a>
+            landing page
+          </a>{' '}
+          hero is the real pebble beach guest card; the scores inside are invented
+          for the demo and written with scribe, my handwriting model.
         </p>
       </div>
     </ProjectDetail>
