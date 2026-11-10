@@ -1,9 +1,9 @@
-/* Closed Pebble card — CSS 3D desk pose adapted from t100-web.vercel.app */
+/* Closed Pebble card — CSS 3D desk pose; soft shadows only (no fake stack edge) */
 
 .t100-card {
-  --rest-x: 20deg;
-  --rest-y: -16deg;
-  --rest-z: -2.2deg;
+  --rest-x: 18deg;
+  --rest-y: -14deg;
+  --rest-z: -2deg;
   --px: 0;
   --py: 0;
   position: relative;
@@ -15,9 +15,9 @@
 }
 
 .t100-card.is-compact {
-  --rest-x: 16deg;
-  --rest-y: -12deg;
-  --rest-z: -1.6deg;
+  --rest-x: 14deg;
+  --rest-y: -10deg;
+  --rest-z: -1.4deg;
   width: min(86%, 280px);
 }
 
@@ -26,7 +26,7 @@
   inset: -30% -40% -36% -30%;
   background: radial-gradient(
     ellipse 72% 68% at 26% 18%,
-    rgba(255, 214, 160, 0.16),
+    rgba(255, 214, 160, 0.14),
     rgba(244, 241, 234, 0) 70%
   );
   pointer-events: none;
@@ -36,7 +36,7 @@
 html.is-dark .t100-card-glow {
   background: radial-gradient(
     ellipse 72% 68% at 26% 18%,
-    rgba(255, 214, 160, 0.08),
+    rgba(255, 214, 160, 0.07),
     rgba(0, 0, 0, 0) 70%
   );
 }
@@ -57,14 +57,14 @@ html.is-dark .t100-card-glow {
   transform:
     translate3d(calc(12px + var(--px) * 8px), calc(22px + var(--py) * 6px), 0)
     rotate(calc(-2deg + var(--px) * 1deg))
-    skewX(-6deg)
+    skewX(-5deg)
     scale(0.94, 0.9);
-  opacity: 0.22;
+  opacity: 0.2;
   filter: blur(14px);
 }
 
 html.is-dark .t100-card-idle-shadow {
-  opacity: 0.42;
+  opacity: 0.4;
   background: #000;
 }
 
@@ -92,7 +92,6 @@ html.is-dark .t100-card-idle-shadow {
   background-repeat: no-repeat;
   background-position: center;
   pointer-events: none;
-  /* Soften the rectangular PNG bounds so only the bloom reads */
   -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
   mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
 }
@@ -100,22 +99,22 @@ html.is-dark .t100-card-idle-shadow {
 .t100-card-shadow-soft {
   background-image: var(--t100-shadow-soft);
   background-size: 150% 155%;
-  opacity: 0.62;
+  opacity: 0.58;
   filter: blur(2px);
 }
 
 .t100-card-shadow-contact {
   background-image: var(--t100-shadow-contact);
   background-size: 118% 118%;
-  opacity: 0.32;
+  opacity: 0.28;
 }
 
 html.is-dark .t100-card-shadow-soft {
-  opacity: 0.78;
+  opacity: 0.72;
 }
 
 html.is-dark .t100-card-shadow-contact {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .t100-card-frame {
@@ -136,7 +135,7 @@ html.is-dark .t100-card-shadow-contact {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #f4f1ea;
+  background: transparent;
   -webkit-mask-image: var(--t100-mask);
   mask-image: var(--t100-mask);
   -webkit-mask-size: 100% 100%;
@@ -145,11 +144,11 @@ html.is-dark .t100-card-shadow-contact {
   mask-repeat: no-repeat;
   mask-mode: alpha;
   transform: translateZ(0.5px);
-  filter: drop-shadow(0 18px 28px rgba(26, 42, 34, 0.18));
+  filter: drop-shadow(0 16px 26px rgba(26, 42, 34, 0.16));
 }
 
 html.is-dark .t100-card-face {
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
 }
 
 .t100-card-face::before,
@@ -164,16 +163,16 @@ html.is-dark .t100-card-face {
 .t100-card-face::before {
   background: linear-gradient(
     135deg,
-    rgba(255, 248, 236, 0.34) 0%,
-    rgba(255, 248, 236, 0.08) 26%,
+    rgba(255, 248, 236, 0.28) 0%,
+    rgba(255, 248, 236, 0.06) 26%,
     transparent 55%
   );
-  opacity: 0.75;
+  opacity: 0.7;
 }
 
 .t100-card-face::after {
-  background: linear-gradient(135deg, transparent 40%, rgba(32, 24, 16, 0.18) 100%);
-  opacity: 0.32;
+  background: linear-gradient(135deg, transparent 42%, rgba(32, 24, 16, 0.14) 100%);
+  opacity: 0.28;
 }
 
 .t100-card-face picture,
@@ -194,56 +193,15 @@ html.is-dark .t100-card-face {
   background-image: var(--t100-grain);
   background-repeat: repeat;
   background-size: 128px 128px;
-  opacity: 0.14;
+  opacity: 0.12;
   pointer-events: none;
   z-index: 2;
 }
 
-.t100-card-extrude {
-  position: absolute;
-  pointer-events: none;
-  transform-style: preserve-3d;
-  z-index: 0;
-}
-
-.t100-card-extrude-right {
-  top: 0;
-  right: 0;
-  width: 7px;
-  height: 100%;
-  transform-origin: left center;
-  transform: rotateY(90deg) translateZ(0);
-  background: linear-gradient(to bottom, #eadcc4, #c9b48e 45%, #b08960 100%);
-  clip-path: inset(8% 0 8% 0);
-}
-
-.t100-card-extrude-left {
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  transform-origin: right center;
-  transform: rotateY(-90deg) translateZ(0);
-  background: linear-gradient(to bottom, #fbf6ea, #efe4d0 70%, #e0d0b4);
-  clip-path: inset(8% 0 8% 0);
-}
-
-.t100-card-extrude-bottom {
-  left: 0;
-  width: 100%;
-  height: 6px;
-  bottom: 0;
-  transform-origin: center top;
-  transform: rotateX(-90deg) translateZ(0);
-  background: linear-gradient(to right, #e8d8bc, #c4a87a 50%, #d8c4a0);
-  clip-path: inset(0 8% 0 8%);
-  opacity: 0.85;
-}
-
 @media (max-width: 700px) {
   .t100-card {
-    --rest-x: 14deg;
-    --rest-y: -10deg;
+    --rest-x: 12deg;
+    --rest-y: -8deg;
     width: min(92%, 360px);
   }
 }

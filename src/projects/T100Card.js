@@ -5,7 +5,7 @@ const CARD = `${process.env.PUBLIC_URL}/images/t100/card`;
 
 /**
  * Closed Pebble Beach guest card in the same CSS-3D desk pose as
- * https://t100-web.vercel.app — full cover visible, soft layered shadows.
+ * https://t100-web.vercel.app — full cover, soft shadows, no fake stack edge.
  */
 function T100Card({ compact = false, interactive = true, className = '' }) {
   const rootRef = useRef(null);
@@ -96,15 +96,9 @@ function T100Card({ compact = false, interactive = true, className = '' }) {
         <div className="t100-card-shadow t100-card-shadow-contact" />
       </div>
       <div className="t100-card-frame">
-        <div className="t100-card-extrude t100-card-extrude-left" aria-hidden="true" />
-        <div className="t100-card-extrude t100-card-extrude-right" aria-hidden="true" />
-        <div className="t100-card-extrude t100-card-extrude-bottom" aria-hidden="true" />
         <div className="t100-card-face">
           <picture>
-            <source
-              type="image/webp"
-              srcSet={`${CARD}/pebble-cover-800.webp`}
-            />
+            <source type="image/webp" srcSet={`${CARD}/pebble-cover-800.webp`} />
             <img
               src={`${CARD}/pebble-cover-1200.jpg`}
               alt=""

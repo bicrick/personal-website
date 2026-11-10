@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
-import T100Card from './T100Card';
+import T100Ingest from './T100Ingest';
 import './T100.css';
 
 const SITE = 'https://t100-web.vercel.app';
@@ -101,47 +101,29 @@ function T100() {
       staticTitle
     >
       <div className="t100-article">
-        <figure className="t100-hero">
-          <div className="t100-hero-stage">
-            <T100Card />
-          </div>
-        </figure>
+        <T100Ingest />
 
         <p>
-          T100 is an Expo / React Native app (also on web) with a FastAPI extraction
-          server on Vercel. You photograph the card after the round. On device, an
-          Apple Vision mask keeps the true paper silhouette. The server cleans the
-          paper, rectifies it, and — only when a crease is found — runs a fold-aware
-          dewarp before reading the grid.
+          T100 is an Expo / React Native app with a FastAPI extraction server on
+          Vercel. Photograph the card after the round. On device, an Apple Vision
+          mask keeps the paper silhouette; the server rectifies with LSD quads and
+          — only when a crease is found — runs a fold-aware dewarp.
         </p>
 
         <p>
-          Print is read with RapidOCR (ONNX, so no PyTorch in the Vercel bundle).
-          Hole columns snap to ruled lines; player rows come from lines plus
-          ink-versus-print. Each score cell is cropped and sent to Jev, a hosted
-          TypeSafe model, as a multiple choice: blank, 1–12, dash, or unreadable.
-          A sure Jev read (confidence ≥ 0.9) is never overwritten. Sonnet only steps
-          in for unusual notation, ambiguous rows, or totals that do not add up.
-          Anything still unsure becomes a short question with Jev&apos;s top guesses
-          as choices.
+          RapidOCR (ONNX) finds the grid. Each score cell goes to Jev, a hosted
+          TypeSafe model. A sure read (confidence ≥ 0.9) is never overwritten.
+          Haiku fills the course, date, and player names; Sonnet only steps in for
+          unusual notation or totals that do not add up. Anything still unsure
+          becomes a short question with Jev&apos;s top guesses as choices.
         </p>
 
         <p>
-          That Jev-first, ask-the-user loop is the whole product bet. On a
-          hand-checked set it reaches 98.2% of cells correct after a median of two
-          questions per card, at $0.0037/card — against Opus at 98.8% and $0.044/card
-          in a single pass. The test corpus behind the work is 1,508 internet
-          scorecard images plus 52 complete front/back pairs (2 real, 50 synthetic).
-        </p>
-
-        <p>
-          The app is local-first on Firebase, with a Reanimated 3D unfold for
-          foldable front+back cards. The{' '}
-          <a href={SITE} target="_blank" rel="noopener noreferrer">
-            landing page
-          </a>{' '}
-          hero is the real Pebble Beach guest card; the scores inside are invented
-          for the demo and written with Scribe, my handwriting model.
+          That Jev-first, ask-the-user loop reaches 98.2% of cells correct after a
+          median of two questions per card, at $0.0037/card — against Opus at
+          98.8% and $0.044/card in a single pass. The demo card above is the real
+          Pebble Beach guest card; scores inside were written with Scribe for the
+          landing demo.
         </p>
 
         <BuiltWith />
