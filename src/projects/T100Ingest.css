@@ -37,6 +37,13 @@ html.is-dark .t100-ig-frame {
   isolation: isolate;
 }
 
+/* Cutout / Read / Done: frame matches tight scorecard (~2.4:1) */
+.t100-ig-frame[data-step='cutout'] .t100-ig-stage,
+.t100-ig-frame[data-step='read'] .t100-ig-stage,
+.t100-ig-frame[data-step='done'] .t100-ig-stage {
+  aspect-ratio: 719 / 307;
+}
+
 /* Layers: opacity only — no scale (scale caused ghost double edges) */
 .t100-ig-layer {
   position: absolute;
@@ -83,8 +90,8 @@ html.is-dark .t100-ig-frame {
 .t100-ig-layer.is-rect img {
   width: auto;
   height: auto;
-  max-width: calc(100% - 2 * var(--ig-pad));
-  max-height: calc(100% - 2 * var(--ig-pad));
+  max-width: 92%;
+  max-height: 88%;
   object-fit: contain;
   /* Opaque RGB assets — no alpha fringe / ghost outline */
   background: transparent;
@@ -97,8 +104,8 @@ html.is-dark .t100-ig-frame {
 /* Shared padded card box for Read / Done — stage ≈ card aspect, so 90% fits */
 .t100-ig-cardbox {
   position: relative;
-  aspect-ratio: 719 / 536;
-  width: 90%;
+  aspect-ratio: 719 / 307;
+  width: 92%;
   height: auto;
   /* Hard edges — no shadow/filter that paints a duplicate outline */
   filter: none;
@@ -196,11 +203,13 @@ html.is-dark .t100-ig-frame {
 }
 
 .t100-ig-result-overlay {
+  /* Lower-right below the handwritten score row (~y 25–33%) */
   position: absolute;
-  right: 3%;
-  top: 3%;
-  width: min(32%, 220px);
-  max-height: 34%;
+  right: 1.5%;
+  top: 46%;
+  bottom: auto;
+  width: min(26%, 190px);
+  max-height: 50%;
   overflow: auto;
   pointer-events: auto;
   z-index: 2;
