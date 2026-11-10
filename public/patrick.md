@@ -165,6 +165,20 @@ made come with you. October 2026.
 - Site: https://scribepages.com
 - Write-up: https://www.bicrick.com/projects/scribe
 
+### t100
+
+iOS app (Expo / React Native, also on web) that keeps every paper golf
+scorecard you play in a digital library. Photograph the card after the round.
+Cards are cut out at true paper shape onto a mahogany shelf; folded cards
+animate open at the detected fold. Scores are read by a FastAPI service with
+a handwritten-digit classifier and an LLM fallback. WHS handicap from rating
+and slope. Import from 18Birdies. Draft write-up. November 2026.
+
+Write "t100" lowercase.
+
+- Site: https://t100-web.vercel.app
+- Write-up: https://www.bicrick.com/projects/t100
+
 ### monocle
 
 A Chrome extension that restyles the live tab using your local Cursor CLI.

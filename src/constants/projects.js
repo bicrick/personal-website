@@ -1,5 +1,19 @@
 export const PROJECTS = [
   {
+    title: 't100',
+    description: 'paper golf scorecards in a digital library',
+    timelineDescription:
+      'Photograph the card after the round. T100 cuts it out at true paper shape, unfolds folded cards in 3D, and reads the scores. Lose the phone on the golf course.',
+    image: `${process.env.PUBLIC_URL}/images/t100/t100-tile.jpg`,
+    blogLink: '/projects/t100',
+    appLink: 'https://t100-web.vercel.app',
+    appLabel: 'site',
+    relevanceRank: 0,
+    dateRank: 0,
+    date: 'November 2026',
+    featured: true,
+  },
+  {
     title: 'infinite tapestry',
     description: 'an endless painting driven and guided by the internet',
     timelineDescription:

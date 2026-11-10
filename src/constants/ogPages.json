@@ -164,6 +164,17 @@
     "imageHeight": 630,
     "type": "article"
   },
+  "/projects/t100": {
+    "ogTitle": "t100",
+    "seoTitle": "t100 - paper golf scorecards in a digital library - bicrick",
+    "description": "Lose the phone on the golf course. Photograph the paper scorecard after the round. T100 keeps every card in a digital library and reads the scores.",
+    "keywords": "bicrick, Patrick Brown, t100, golf, scorecard, paper, expo, react native, handicap",
+    "imagePath": "/og/t100-1200x630.jpg",
+    "imageAlt": "t100",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "article"
+  },
   "/projects/monocle": {
     "ogTitle": "monocle",
     "seoTitle": "monocle - restyle the live tab with Cursor CLI - bicrick",
