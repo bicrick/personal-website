@@ -1,23 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import T100Card from './T100Card';
 import './T100Ingest.css';
 
-const CARD = `${process.env.PUBLIC_URL}/images/t100/card`;
+const INGEST = `${process.env.PUBLIC_URL}/images/t100/ingest`;
 
-/** Exact values printed / written on the Pebble Beach guest card asset. */
-const CARD_VALUES = {
-  course: 'Pebble Beach Golf Links',
-  tee: 'White',
-  date: 'Oct 18',
-  players: [
-    { name: 'Tom', out: 39, inn: 43, tot: 82 },
-    { name: 'Sam', out: 49, inn: 41, tot: 90 },
-  ],
+/** Crow Canyon extract — develop e548054 / #56 card 03. */
+const EXTRACT = {
+  player: 'ANTHONY',
+  out: 30,
+  inn: 34,
+  total: 64,
+  holesPlayed: 18,
+  teeOptions: ['Blue', 'White'],
   holes: [
-    { n: 1, tom: 4, sam: 6 },
-    { n: 7, tom: 2, sam: 3 },
-    { n: 12, tom: 3, sam: 2 },
-    { n: 18, tom: 6, sam: 6 },
+    { n: 1, v: 4 },
+    { n: 7, v: 3 },
+    { n: 12, v: 3 },
+    { n: 18, v: 4 },
+  ],
+  questions: [
+    { id: 'course', prompt: 'Is this the course?' },
+    { id: 'date', prompt: 'When did you play?' },
+    { id: 'tee', prompt: 'Which tees?', options: ['Blue', 'White'] },
   ],
 };
 
@@ -25,31 +28,31 @@ const STAGES = [
   {
     id: 'photo',
     label: 'Photo',
-    note: 'Capture after the round',
+    note: 'System camera or library · Front required · Back optional',
   },
   {
     id: 'cutout',
     label: 'Cutout',
-    note: 'Apple Vision mask · LSD quads',
+    note: 'Vision alpha silhouette · server LSD only if it beats identity',
   },
   {
     id: 'read',
     label: 'Read',
-    note: 'RapidOCR grid · Jev per cell · Haiku for header',
+    note: 'RapidOCR maps the grid · Jev per cell · Haiku only if header missing',
   },
   {
     id: 'dewarp',
     label: 'Dewarp',
-    note: 'Fold-aware mesh when a crease is found',
+    note: 'Fold-aware mesh kept when crease ≥ 0.05 or warp ≥ 45 px',
   },
   {
     id: 'done',
     label: 'Done',
-    note: 'Ask below 0.9 confidence',
+    note: 'One tap question per screen · ask below 0.72',
   },
 ];
 
-const STAGE_MS = [2200, 2400, 3200, 2600, 0];
+const STAGE_MS = [2400, 2800, 3400, 2800, 0];
 
 function prefersReducedMotion() {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -58,21 +61,30 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function StagePhoto({ flashing }) {
+function StagePhoto() {
   return (
-    <div className={`t100-ig-photo${flashing ? ' is-flash' : ''}`}>
-      <div className="t100-ig-phone" aria-hidden="true">
-        <div className="t100-ig-phone-notch" />
-        <div className="t100-ig-viewfinder">
-          <img
-            src={`${CARD}/pebble-cover-800.webp`}
-            alt=""
-            width={800}
-            height={503}
-            draggable={false}
-          />
-          <span className="t100-ig-reticle" />
-          <span className="t100-ig-shutter" />
+    <div className="t100-ig-photo">
+      <div className="t100-ig-slots" aria-hidden="true">
+        <div className="t100-ig-slot is-front is-filled">
+          <span className="t100-ig-slot-label">Front</span>
+          <div className="t100-ig-slot-frame">
+            <img
+              src={`${INGEST}/photo-front.webp`}
+              alt=""
+              width={720}
+              height={540}
+              draggable={false}
+            />
+          </div>
+        </div>
+        <div className="t100-ig-slot is-back is-empty">
+          <span className="t100-ig-slot-label">Back</span>
+          <div className="t100-ig-slot-frame">
+            <span className="t100-ig-slot-empty">
+              <i className="t100-ig-cam" />
+              <em>Optional</em>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -80,28 +92,33 @@ function StagePhoto({ flashing }) {
 }
 
 function StageCutout() {
+  // On-device Vision alpha (Yale) + server LSD quad when it beats identity (Seve)
   return (
     <div className="t100-ig-cutout">
       <div className="t100-ig-desk-noise" aria-hidden="true" />
-      <div
-        className="t100-ig-paper"
-        style={{ '--t100-mask': `url(${CARD}/pebble-cover-mask.webp)` }}
-      >
-        <img
-          className="t100-ig-paper-img"
-          src={`${CARD}/pebble-cover-800.webp`}
-          alt=""
-          width={800}
-          height={503}
-          draggable={false}
-        />
-        {/* CSS quad hugs the masked card outline (no SVG viewBox letterboxing) */}
-        <span className="t100-ig-quad" aria-hidden="true">
-          <i className="t100-ig-quad-handle is-tl" />
-          <i className="t100-ig-quad-handle is-tr" />
-          <i className="t100-ig-quad-handle is-br" />
-          <i className="t100-ig-quad-handle is-bl" />
-        </span>
+      <div className="t100-ig-cut-pair">
+        <figure className="t100-ig-cut-panel is-vision">
+          <img
+            className="t100-ig-vision-img"
+            src={`${INGEST}/cutout-vision.webp`}
+            alt=""
+            width={715}
+            height={1040}
+            draggable={false}
+          />
+          <figcaption className="t100-ig-cut-tag">Vision mask</figcaption>
+        </figure>
+        <figure className="t100-ig-cut-panel is-lsd">
+          <img
+            className="t100-ig-quad-img"
+            src={`${INGEST}/cutout-quad.webp`}
+            alt=""
+            width={1279}
+            height={720}
+            draggable={false}
+          />
+          <figcaption className="t100-ig-cut-tag">Server LSD quad</figcaption>
+        </figure>
       </div>
     </div>
   );
@@ -112,44 +129,38 @@ function StageRead() {
     <div className="t100-ig-read">
       <div className="t100-ig-grid-wrap">
         <img
-          src={`${CARD}/pebble-inside-top-800.webp`}
+          src={`${INGEST}/read-grid.webp`}
           alt=""
-          width={800}
-          height={483}
+          width={1200}
+          height={899}
           draggable={false}
         />
-        {/* Highlights land on the circled WHITE tee + Tom/Sam handwritten score columns */}
-        <span className="t100-ig-hl t100-ig-hl-tee" />
-        <span className="t100-ig-hl t100-ig-hl-tom" />
-        <span className="t100-ig-hl t100-ig-hl-sam" />
       </div>
       <aside className="t100-ig-chips" aria-label="Extracted values">
-        <div className="t100-ig-chip is-course">
-          <span>Course</span>
-          <strong>{CARD_VALUES.course}</strong>
+        <div className="t100-ig-chip is-player">
+          <span>Player</span>
+          <strong>{EXTRACT.player}</strong>
         </div>
-        <div className="t100-ig-chip is-tee">
-          <span>Tee</span>
-          <strong>{CARD_VALUES.tee}</strong>
+        <div className="t100-ig-chip is-holes-n">
+          <span>Holes</span>
+          <strong>{EXTRACT.holesPlayed}</strong>
         </div>
-        <div className="t100-ig-chip is-date">
-          <span>Date</span>
-          <strong>{CARD_VALUES.date}</strong>
+        <div className="t100-ig-chip is-score">
+          <span>{EXTRACT.player}</span>
+          <strong>
+            OUT {EXTRACT.out} · IN {EXTRACT.inn} · TOT {EXTRACT.total}
+          </strong>
         </div>
-        {CARD_VALUES.players.map((p) => (
-          <div key={p.name} className="t100-ig-chip is-player">
-            <span>{p.name}</span>
-            <strong>
-              OUT {p.out} · IN {p.inn} · TOT {p.tot}
-            </strong>
-          </div>
-        ))}
+        <div className="t100-ig-chip is-tees">
+          <span>Tees</span>
+          <strong>{EXTRACT.teeOptions.join(' · ')}</strong>
+        </div>
         <div className="t100-ig-chip is-holes">
           <span>Sample holes</span>
           <strong>
-            {CARD_VALUES.holes.map((h) => (
+            {EXTRACT.holes.map((h) => (
               <em key={h.n}>
-                {h.n}: {h.tom}/{h.sam}
+                {h.n}: {h.v}
               </em>
             ))}
           </strong>
@@ -160,76 +171,81 @@ function StageRead() {
 }
 
 function StageDewarp({ progress }) {
-  // progress 0 = creased halves; near 1 = single flat corrected card (no seam)
-  const crease = Math.sin(progress * Math.PI);
-  const flat = progress > 0.92;
+  // Real fold-aware pair: left = creased, right = mesh kept (score 0.13, 91 px)
+  const t = Math.max(0, Math.min(1, progress));
   return (
-    <div
-      className={`t100-ig-dewarp${flat ? ' is-flat' : ''}`}
-      style={{
-        '--open': progress,
-        '--crease': crease,
-      }}
-    >
-      {flat ? (
-        <div className="t100-ig-flat-card t100-ig-dewarp-flat">
-          <div className="t100-ig-flat-shadow" aria-hidden="true" />
-          <img
-            src={`${CARD}/pebble-flat-800.webp`}
-            alt=""
-            width={800}
-            height={992}
-            draggable={false}
-          />
-        </div>
-      ) : (
-        <div className="t100-ig-fold-flat">
-          <div className="t100-ig-leaf t100-ig-leaf-top">
-            <img
-              src={`${CARD}/pebble-inside-top-800.webp`}
-              alt=""
-              width={800}
-              height={483}
-              draggable={false}
-            />
-          </div>
-          <div className="t100-ig-leaf t100-ig-leaf-bot">
-            <img
-              src={`${CARD}/pebble-inside-bot-800.webp`}
-              alt=""
-              width={800}
-              height={509}
-              draggable={false}
-            />
-          </div>
-          <span className="t100-ig-crease" aria-hidden="true" />
-        </div>
-      )}
+    <div className="t100-ig-dewarp" style={{ '--open': t }}>
+      <div className="t100-ig-dewarp-frame">
+        <img
+          src={`${INGEST}/dewarp-before-after.webp`}
+          alt=""
+          width={1396}
+          height={1240}
+          draggable={false}
+        />
+        <span className="t100-ig-dewarp-label is-before">Before</span>
+        <span className="t100-ig-dewarp-label is-after">After</span>
+        <span
+          className="t100-ig-dewarp-scrub"
+          style={{ left: `${50 + t * 0}%` }}
+          aria-hidden="true"
+        />
+      </div>
     </div>
   );
 }
 
 function StageDone({ open }) {
+  const shown = open > 0.15;
+  const qIndex = Math.min(
+    EXTRACT.questions.length - 1,
+    Math.floor(Math.max(0, open - 0.2) * EXTRACT.questions.length),
+  );
+  const question = EXTRACT.questions[qIndex];
+
   return (
     <div
-      className={`t100-ig-done${open > 0.5 ? ' is-open' : ''}`}
+      className={`t100-ig-done${shown ? ' is-open' : ''}`}
       style={{ '--open': open }}
     >
-      <div className="t100-ig-done-closed">
-        <T100Card interactive={false} />
+      <div className="t100-ig-done-cards">
+        <img
+          className="t100-ig-rendition is-front"
+          src={`${INGEST}/rendition-front.webp`}
+          alt=""
+          width={800}
+          height={727}
+          draggable={false}
+        />
+        <img
+          className="t100-ig-rendition is-back"
+          src={`${INGEST}/rendition-back.webp`}
+          alt=""
+          width={800}
+          height={696}
+          draggable={false}
+        />
       </div>
-      <div className="t100-ig-done-open" aria-hidden={open < 0.5}>
-        {/* Single flat corrected card — no stacked halves, no fold seam */}
-        <div className="t100-ig-flat-card">
-          <div className="t100-ig-flat-shadow" aria-hidden="true" />
-          <img
-            className="t100-ig-flat-img"
-            src={`${CARD}/pebble-flat-800.webp`}
-            alt=""
-            width={800}
-            height={992}
-            draggable={false}
-          />
+      <div className="t100-ig-done-side">
+        <div className="t100-ig-done-score">
+          <span>{EXTRACT.player}</span>
+          <strong>{EXTRACT.total}</strong>
+          <em>
+            {EXTRACT.holesPlayed} holes · OUT {EXTRACT.out} · IN {EXTRACT.inn}
+          </em>
+        </div>
+        <div className="t100-ig-ask" aria-live="polite">
+          <span className="t100-ig-ask-kicker">
+            Confirm · {qIndex + 1}/{EXTRACT.questions.length}
+          </span>
+          <strong>{question.prompt}</strong>
+          {question.options ? (
+            <div className="t100-ig-ask-opts">
+              {question.options.map((opt) => (
+                <span key={opt}>{opt}</span>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
@@ -240,7 +256,6 @@ function T100Ingest() {
   const rootRef = useRef(null);
   const [stage, setStage] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [flashing, setFlashing] = useState(false);
   const [dewarp, setDewarp] = useState(0);
   const [doneOpen, setDoneOpen] = useState(0);
   const [reduced, setReduced] = useState(() => prefersReducedMotion());
@@ -262,7 +277,6 @@ function T100Ingest() {
     clearTimers();
     const next = Math.max(0, Math.min(STAGES.length - 1, index));
     setStage(next);
-    setFlashing(false);
     setPlaying(false);
 
     if (next === 3) {
@@ -290,29 +304,12 @@ function T100Ingest() {
     setPlaying(true);
     let i = startIndex;
 
-    const animateDewarp = (onDone) => {
+    const animateProgress = (setter, dur, onDone) => {
       const start = performance.now();
-      const dur = 1400;
       const tick = (now) => {
         const t = Math.min(1, (now - start) / dur);
         const eased = 1 - (1 - t) ** 3;
-        setDewarp(eased);
-        if (t < 1) {
-          rafRef.current = requestAnimationFrame(tick);
-        } else {
-          onDone();
-        }
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    const animateDoneOpen = (onDone) => {
-      const start = performance.now();
-      const dur = 1100;
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / dur);
-        const eased = 1 - (1 - t) ** 3;
-        setDoneOpen(eased);
+        setter(eased);
         if (t < 1) {
           rafRef.current = requestAnimationFrame(tick);
         } else {
@@ -324,23 +321,10 @@ function T100Ingest() {
 
     const step = () => {
       setStage(i);
-      setFlashing(false);
-
-      if (i === 0) {
-        timerRef.current = window.setTimeout(() => {
-          setFlashing(true);
-          timerRef.current = window.setTimeout(() => {
-            setFlashing(false);
-            i += 1;
-            step();
-          }, 280);
-        }, 900);
-        return;
-      }
 
       if (i === 3) {
         setDewarp(0);
-        animateDewarp(() => {
+        animateProgress(setDewarp, 1500, () => {
           i += 1;
           step();
         });
@@ -349,7 +333,7 @@ function T100Ingest() {
 
       if (i === 4) {
         setDoneOpen(0);
-        animateDoneOpen(() => {
+        animateProgress(setDoneOpen, 1400, () => {
           setPlaying(false);
         });
         return;
@@ -415,32 +399,19 @@ function T100Ingest() {
     clearTimers();
     setPlaying(false);
     goTo(index, { animate: true });
-    if (index === 3) {
-      // scrub to dewarp mid/end — animate flatten once selected
+
+    const animateProgress = (setter, dur) => {
       const start = performance.now();
-      const dur = 1000;
       const tick = (now) => {
         const t = Math.min(1, (now - start) / dur);
-        setDewarp(1 - (1 - t) ** 3);
+        setter(1 - (1 - t) ** 3);
         if (t < 1) rafRef.current = requestAnimationFrame(tick);
       };
       rafRef.current = requestAnimationFrame(tick);
-    }
-    if (index === 4) {
-      const start = performance.now();
-      const dur = 900;
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / dur);
-        setDoneOpen(1 - (1 - t) ** 3);
-        if (t < 1) rafRef.current = requestAnimationFrame(tick);
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    }
-    if (index === 0) {
-      setFlashing(false);
-      timerRef.current = window.setTimeout(() => setFlashing(true), 400);
-      timerRef.current = window.setTimeout(() => setFlashing(false), 700);
-    }
+    };
+
+    if (index === 3) animateProgress(setDewarp, 1100);
+    if (index === 4) animateProgress(setDoneOpen, 1000);
   };
 
   const onReplay = () => {
@@ -455,7 +426,7 @@ function T100Ingest() {
       aria-label="Scorecard ingestion sequence"
     >
       <div className="t100-ig-stage" data-stage={STAGES[stage].id}>
-        {stage === 0 && <StagePhoto flashing={flashing} />}
+        {stage === 0 && <StagePhoto />}
         {stage === 1 && <StageCutout />}
         {stage === 2 && <StageRead />}
         {stage === 3 && <StageDewarp progress={dewarp} />}

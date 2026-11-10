@@ -1,0 +1,1163 @@
+{
+  "model": "jev-first@scorecard-shelf-1",
+  "layout": {
+    "holesPlayed": 18,
+    "courseName": null,
+    "date": null,
+    "dateConfidence": 0,
+    "tee": "Blue",
+    "rating": null,
+    "slope": null,
+    "par": [
+      4,
+      5,
+      4,
+      3,
+      4,
+      3,
+      4,
+      3,
+      4,
+      4,
+      4,
+      3,
+      5,
+      4,
+      4,
+      3,
+      4,
+      4
+    ],
+    "strokeIndex": [
+      9,
+      3,
+      5,
+      17,
+      7,
+      13,
+      11,
+      15,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "teeRows": [
+      {
+        "name": "Blue",
+        "rating": 68.0,
+        "slope": 145,
+        "yards": 3075,
+        "circled": true,
+        "circle_score": 0.75
+      },
+      {
+        "name": "White",
+        "rating": 68.0,
+        "slope": 136,
+        "yards": 2802,
+        "circled": true,
+        "circle_score": 0.75
+      }
+    ],
+    "tees": [
+      {
+        "name": "Blue",
+        "rating": 68.0,
+        "slope": 145
+      },
+      {
+        "name": "White",
+        "rating": 68.0,
+        "slope": 136
+      }
+    ],
+    "teeOptions": [
+      "Blue",
+      "White"
+    ]
+  },
+  "players": [
+    {
+      "name": "ANTHONY",
+      "nameConfidence": 0.7,
+      "holes": [
+        4,
+        5,
+        4,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3,
+        4,
+        4,
+        3,
+        5,
+        3,
+        4,
+        3,
+        4,
+        4
+      ],
+      "out": 30,
+      "in": 34,
+      "total": 64
+    }
+  ],
+  "cells": [
+    {
+      "playerIndex": 0,
+      "hole": 1,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.30653,
+        "y": 0.55458,
+        "w": 0.05025,
+        "h": 0.04128
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 2,
+      "value": 5,
+      "distribution": [
+        {
+          "value": 5,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.35655,
+        "y": 0.55408,
+        "w": 0.05025,
+        "h": 0.04128
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 3,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.40657,
+        "y": 0.55357,
+        "w": 0.05136,
+        "h": 0.04129
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 4,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 0.99
+        },
+        {
+          "value": 2,
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.4577,
+        "y": 0.55308,
+        "w": 0.04858,
+        "h": 0.04126
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 5,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 0.99
+        },
+        {
+          "value": 2,
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.50605,
+        "y": 0.55258,
+        "w": 0.05025,
+        "h": 0.04128
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 6,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 0.98
+        },
+        {
+          "value": 2,
+          "p": 0.01
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.98,
+      "bbox": {
+        "x": 0.55607,
+        "y": 0.55207,
+        "w": 0.05136,
+        "h": 0.04129
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 7,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 1.0
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 1.0,
+      "bbox": {
+        "x": 0.6072,
+        "y": 0.55156,
+        "w": 0.05136,
+        "h": 0.04129
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 8,
+      "value": 2,
+      "distribution": [
+        {
+          "value": 2,
+          "p": 1.0
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 3,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 1.0,
+      "bbox": {
+        "x": 0.65833,
+        "y": 0.55106,
+        "w": 0.04969,
+        "h": 0.04128
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 9,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 0.99
+        },
+        {
+          "value": 2,
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.70779,
+        "y": 0.55056,
+        "w": 0.05025,
+        "h": 0.04128
+      },
+      "side": "front"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 10,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.23898,
+        "y": 0.55338,
+        "w": 0.05169,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 11,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.98
+        },
+        {
+          "value": 1,
+          "p": 0.01
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.98,
+      "bbox": {
+        "x": 0.29067,
+        "y": 0.55338,
+        "w": 0.05447,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 12,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 1.0
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 1.0,
+      "bbox": {
+        "x": 0.34514,
+        "y": 0.55338,
+        "w": 0.05335,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 13,
+      "value": 5,
+      "distribution": [
+        {
+          "value": 5,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.39849,
+        "y": 0.55338,
+        "w": 0.05447,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 14,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 0.96
+        },
+        {
+          "value": 8,
+          "p": 0.02
+        },
+        {
+          "value": 2,
+          "p": 0.01
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.96,
+      "bbox": {
+        "x": 0.45295,
+        "y": 0.55338,
+        "w": 0.05502,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 15,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.99
+        },
+        {
+          "value": "can't read",
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.99,
+      "bbox": {
+        "x": 0.50798,
+        "y": 0.55338,
+        "w": 0.0528,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 16,
+      "value": 3,
+      "distribution": [
+        {
+          "value": 3,
+          "p": 1.0
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        },
+        {
+          "value": 4,
+          "p": 0.0
+        }
+      ],
+      "confidence": 1.0,
+      "bbox": {
+        "x": 0.56077,
+        "y": 0.55338,
+        "w": 0.05447,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 17,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.95
+        },
+        {
+          "value": 1,
+          "p": 0.01
+        },
+        {
+          "value": 5,
+          "p": 0.01
+        },
+        {
+          "value": 7,
+          "p": 0.01
+        },
+        {
+          "value": "blank",
+          "p": 0.01
+        }
+      ],
+      "confidence": 0.95,
+      "bbox": {
+        "x": 0.61524,
+        "y": 0.55338,
+        "w": 0.05502,
+        "h": 0.03984
+      },
+      "side": "back"
+    },
+    {
+      "playerIndex": 0,
+      "hole": 18,
+      "value": 4,
+      "distribution": [
+        {
+          "value": 4,
+          "p": 0.97
+        },
+        {
+          "value": "can't read",
+          "p": 0.03
+        },
+        {
+          "value": "blank",
+          "p": 0.0
+        },
+        {
+          "value": 1,
+          "p": 0.0
+        },
+        {
+          "value": 2,
+          "p": 0.0
+        }
+      ],
+      "confidence": 0.97,
+      "bbox": {
+        "x": 0.67026,
+        "y": 0.55338,
+        "w": 0.05113,
+        "h": 0.03984
+      },
+      "side": "back"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q-course",
+      "kind": "course",
+      "prompt": "Is this the course?"
+    },
+    {
+      "id": "q-date",
+      "kind": "date",
+      "prompt": "When did you play?"
+    },
+    {
+      "id": "q-tee",
+      "kind": "tee",
+      "prompt": "Which tees?",
+      "options": [
+        "Blue",
+        "White"
+      ]
+    }
+  ],
+  "meta": {
+    "cost_usd": 0.001877,
+    "latency_s": 11.81,
+    "jev_calls": 41,
+    "fallbacks": [],
+    "gate": {
+      "is_scorecard": {
+        "noul": 0.97
+      },
+      "notation": {
+        "choice": "gross",
+        "confidence": 0.96,
+        "probabilities": {
+          "gross": 0.97,
+          "relative_to_par": 0.02,
+          "stableford": 0.0,
+          "scramble": 0.01
+        }
+      },
+      "orientation": {
+        "choice": "upright",
+        "confidence": 0.81,
+        "probabilities": {
+          "upright": 0.86,
+          "rotated_cw": 0.06,
+          "rotated_ccw": 0.08,
+          "upside_down": 0.0
+        }
+      },
+      "has_totals": {
+        "noul": 0.82
+      }
+    },
+    "timing": {
+      "total_s": 11.81,
+      "sides": {
+        "front": 3.03,
+        "back": 5.41
+      },
+      "norm": {
+        "front": {
+          "rectify": {
+            "method": "identity",
+            "confidence": 1.0,
+            "quad": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                719.2999877929688,
+                0.0
+              ],
+              [
+                719.2999877929688,
+                539.2999877929688
+              ],
+              [
+                0.0,
+                539.2999877929688
+              ]
+            ],
+            "quad_clip": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                719.28,
+                0.0
+              ],
+              [
+                719.28,
+                539.28
+              ],
+              [
+                0.0,
+                539.28
+              ]
+            ],
+            "photo_shape": [
+              540,
+              720
+            ],
+            "fell_back_to_identity": true,
+            "used_vlm": false,
+            "touching_border": []
+          },
+          "orientation": {
+            "rotation": 0,
+            "confidence": 1.0,
+            "scores": {
+              "0": {
+                "text": 259.7,
+                "hole_seq": 13.0,
+                "total": 415.7
+              }
+            },
+            "early_stop": true
+          },
+          "deskew": {
+            "angle": -0.43,
+            "spread": 0.56,
+            "confidence": 0.861,
+            "applied": true
+          },
+          "dewarp": {
+            "method": "fold",
+            "segments": 1297,
+            "fold": null,
+            "max_disp_px": 7.7,
+            "mean_disp_px": 2.2,
+            "applied": false,
+            "seconds": 1.14,
+            "auto": "skipped (no fold, max correction 7.7 px < 45)"
+          },
+          "ocr_passes": "ocr_text+digits_pass (13->13)",
+          "photometric": {
+            "glare_frac": 0.0
+          },
+          "grid": {
+            "status": "ok",
+            "axis": "x",
+            "nines": [
+              "front"
+            ],
+            "holes_mapped": 9,
+            "holes_missing": [],
+            "ocr_anchor_inliers": 9,
+            "confidence": 1.0,
+            "row_kinds": {
+              "blank": 7,
+              "hole": 1,
+              "yardage": 3,
+              "stroke_index": 2,
+              "handwritten": 1,
+              "par?": 2
+            },
+            "logical_rows": 3,
+            "par_ocr": [
+              4,
+              5,
+              4,
+              3,
+              4,
+              3,
+              4,
+              3,
+              4,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "seconds": 2.43,
+          "stage_s": {
+            "localize": 0.533,
+            "orient": 0.008,
+            "prepare": 1.674,
+            "dewarp": 1.14,
+            "ocr_grid": 0.217
+          }
+        },
+        "back": {
+          "rectify": {
+            "method": "identity",
+            "confidence": 1.0,
+            "quad": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                719.2999877929688,
+                0.0
+              ],
+              [
+                719.2999877929688,
+                551.5
+              ],
+              [
+                0.0,
+                551.5
+              ]
+            ],
+            "quad_clip": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                719.28,
+                0.0
+              ],
+              [
+                719.28,
+                551.52
+              ],
+              [
+                0.0,
+                551.52
+              ]
+            ],
+            "photo_shape": [
+              552,
+              720
+            ],
+            "fell_back_to_identity": true,
+            "used_vlm": false,
+            "touching_border": []
+          },
+          "orientation": {
+            "rotation": 0,
+            "confidence": 1.0,
+            "scores": {
+              "0": {
+                "text": 288.6,
+                "hole_seq": 17.0,
+                "total": 492.6
+              }
+            },
+            "early_stop": true
+          },
+          "deskew": {
+            "angle": 0.06,
+            "spread": 0.73,
+            "confidence": 0.818,
+            "applied": false
+          },
+          "dewarp": {
+            "method": "fold",
+            "segments": 1617,
+            "fold": null,
+            "max_disp_px": 6.0,
+            "mean_disp_px": 2.4,
+            "applied": false,
+            "seconds": 1.18,
+            "auto": "skipped (no fold, max correction 6.0 px < 45)"
+          },
+          "ocr_passes": "ocr_text",
+          "photometric": {
+            "glare_frac": 0.0
+          },
+          "grid": {
+            "status": "ok",
+            "axis": "x",
+            "nines": [
+              "back"
+            ],
+            "holes_mapped": 9,
+            "holes_missing": [],
+            "ocr_anchor_inliers": 9,
+            "confidence": 1.0,
+            "row_kinds": {
+              "blank": 6,
+              "hole": 1,
+              "yardage": 3,
+              "stroke_index": 2,
+              "par?": 1,
+              "par": 2,
+              "handwritten": 1
+            },
+            "logical_rows": 2,
+            "par_ocr": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              4,
+              4,
+              3,
+              5,
+              4,
+              4,
+              3,
+              4,
+              4
+            ]
+          },
+          "seconds": 2.48,
+          "stage_s": {
+            "localize": 0.579,
+            "orient": 0.01,
+            "prepare": 1.665,
+            "dewarp": 1.18,
+            "ocr_grid": 0.223
+          }
+        }
+      },
+      "stages": {
+        "total_s": 11.81,
+        "normalize": {
+          "wall_s": 2.48,
+          "orient_s": 0.018,
+          "dewarp_s": 2.32,
+          "ocr_grid_s": 0.44,
+          "localize_s": 1.112,
+          "prepare_s": 3.339,
+          "n": 2
+        },
+        "jev": {
+          "n": 41,
+          "sum_s": 5.276,
+          "wall_s": 5.354,
+          "mean_s": 0.129,
+          "max_s": 0.247,
+          "cost_usd": 0.001877,
+          "start_s": 0.049,
+          "end_s": 5.403,
+          "exclusive_s": 2.923
+        },
+        "haiku": {
+          "n": 0,
+          "wall_s": 0,
+          "sum_s": 0,
+          "cost_usd": 0
+        },
+        "sonnet": {
+          "n": 0,
+          "wall_s": 0,
+          "sum_s": 0,
+          "cost_usd": 0
+        },
+        "calls": {
+          "jev": {
+            "n": 41,
+            "sum_s": 5.276,
+            "wall_s": 5.354,
+            "mean_s": 0.129,
+            "max_s": 0.247,
+            "cost_usd": 0.001877,
+            "start_s": 0.049,
+            "end_s": 5.403
+          }
+        }
+      }
+    },
+    "rendition": {
+      "front": {
+        "size": [
+          1168,
+          1062
+        ],
+        "corner_radius_px": 26.6,
+        "corners_rounded": {
+          "tl": false,
+          "tr": false,
+          "br": false,
+          "bl": false
+        },
+        "cut_edges": [
+          "bottom"
+        ],
+        "glare_frac": 0.0,
+        "paper_pixels_frac": 0.659,
+        "border_filled_frac": 0.0,
+        "hand_removed_frac": 0.0,
+        "png_bytes": 1108557
+      },
+      "back": {
+        "size": [
+          1248,
+          1085
+        ],
+        "corner_radius_px": 27.1,
+        "corners_rounded": {
+          "tl": false,
+          "tr": false,
+          "br": false,
+          "bl": false
+        },
+        "cut_edges": [
+          "bottom"
+        ],
+        "glare_frac": 0.0,
+        "paper_pixels_frac": 0.651,
+        "border_filled_frac": 0.0,
+        "hand_removed_frac": 0.0,
+        "png_bytes": 1260720
+      }
+    }
+  },
+  "rendition_png": "09-rendition-front.png",
+  "rendition_back_png": "09-rendition-back.png"
+}

@@ -110,25 +110,30 @@ function T100() {
 
         <p>
           T100 is an Expo / React Native app with a FastAPI extraction server on
-          Vercel. Photograph the card after the round. On device, an Apple Vision
-          mask keeps the paper silhouette; the server rectifies with LSD quads and
-          — only when a crease is found — runs a fold-aware dewarp.
+          Vercel. After the round you shoot the score sides — Front required, Back
+          optional — with the system camera or photo library. On iOS, Apple Vision
+          builds a per-pixel paper silhouette for the slot; the server still gets
+          the original photo, scores identity against contour and LSD quads, and
+          keeps identity unless a quad wins by more than 0.03. Fold-aware dewarp
+          runs after rectify and stays only when the crease score is at least 0.05
+          or the warp is at least 45&nbsp;px.
         </p>
 
         <T100Ingest />
 
         <p>
-          RapidOCR (ONNX) finds the grid. Each score cell goes to Jev, a hosted
-          TypeSafe model. A sure read (confidence ≥ 0.9) is never overwritten.
-          Haiku fills the course, date, and player names; Sonnet only steps in for
-          unusual notation or totals that do not add up. Anything still unsure
-          becomes a short question with Jev&apos;s top guesses as choices.
+          RapidOCR (ONNX) maps the printed hole grid and header. Jev reads each
+          handwritten cell and also gates scorecard-ness, notation, player count,
+          row kind, and totals. Haiku is only a fallback when the course is missing
+          or confidence is below 0.7. The app asks one question per screen —
+          course, date, tees, or a low-confidence cell below 0.72.
         </p>
 
         <p>
-          The Jev-first, ask-the-user loop keeps sure reads and only escalates
-          when confidence is low. The demo card is the real Pebble Beach guest
-          card; scores inside were written with Scribe for the landing demo.
+          Latest production-shaped check: 191/194 holes = 98.45%, $0.154 for six
+          cards (about $2.57 per 100). The floating card above is a Pebble Beach
+          guest cover; the ingest stages below use real Crow Canyon, Yale, and Seve
+          intermediates from develop e548054.
         </p>
 
         <BuiltWith />
