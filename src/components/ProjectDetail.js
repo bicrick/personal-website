@@ -12,6 +12,7 @@ function ProjectDetail({
   title,
   titleLabel,
   titleSuffix = null,
+  staticTitle = false,
   date,
   linkHref,
   linkLabel,
@@ -46,9 +47,13 @@ function ProjectDetail({
             ← {backLabel}
           </Link>
           <header className="project-header">
-            <TypewriterHeading as="h1" label={titleLabel} suffix={titleSuffix}>
-              {title}
-            </TypewriterHeading>
+            {staticTitle ? (
+              <h1 className="page-title" aria-label={titleLabel || title}>{title}</h1>
+            ) : (
+              <TypewriterHeading as="h1" label={titleLabel} suffix={titleSuffix}>
+                {title}
+              </TypewriterHeading>
+            )}
             {tldr && <p className="project-tldr">{tldr}</p>}
             <div className="project-meta">
               {hasPrimary && (

@@ -1,0 +1,256 @@
+/* Closed Pebble card — CSS 3D desk pose adapted from t100-web.vercel.app */
+
+.t100-card {
+  --rest-x: 20deg;
+  --rest-y: -16deg;
+  --rest-z: -2.2deg;
+  --px: 0;
+  --py: 0;
+  position: relative;
+  width: min(480px, 84%);
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+.t100-card.is-compact {
+  --rest-x: 16deg;
+  --rest-y: -12deg;
+  --rest-z: -1.6deg;
+  width: min(86%, 280px);
+}
+
+.t100-card-glow {
+  position: absolute;
+  inset: -30% -40% -36% -30%;
+  background: radial-gradient(
+    ellipse 72% 68% at 26% 18%,
+    rgba(255, 214, 160, 0.16),
+    rgba(244, 241, 234, 0) 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+html.is-dark .t100-card-glow {
+  background: radial-gradient(
+    ellipse 72% 68% at 26% 18%,
+    rgba(255, 214, 160, 0.08),
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
+.t100-card-idle-shadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: var(--t100-mask);
+  mask-image: var(--t100-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
+  background: #201810;
+  transform:
+    translate3d(calc(12px + var(--px) * 8px), calc(22px + var(--py) * 6px), 0)
+    rotate(calc(-2deg + var(--px) * 1deg))
+    skewX(-6deg)
+    scale(0.94, 0.9);
+  opacity: 0.22;
+  filter: blur(14px);
+}
+
+html.is-dark .t100-card-idle-shadow {
+  opacity: 0.42;
+  background: #000;
+}
+
+.t100-card-shadow-rig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 55%;
+  transform:
+    rotateX(calc(var(--rest-x) + var(--py) * 5deg))
+    rotateY(calc(var(--rest-y) + var(--px) * -6deg))
+    rotateZ(var(--rest-z))
+    translate3d(
+      calc(14px + var(--px) * 10px),
+      calc(22px + var(--py) * 8px),
+      -18px
+    );
+}
+
+.t100-card-shadow {
+  position: absolute;
+  inset: -22% -26% -32% -22%;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  /* Soften the rectangular PNG bounds so only the bloom reads */
+  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
+}
+
+.t100-card-shadow-soft {
+  background-image: var(--t100-shadow-soft);
+  background-size: 150% 155%;
+  opacity: 0.62;
+  filter: blur(2px);
+}
+
+.t100-card-shadow-contact {
+  background-image: var(--t100-shadow-contact);
+  background-size: 118% 118%;
+  opacity: 0.32;
+}
+
+html.is-dark .t100-card-shadow-soft {
+  opacity: 0.78;
+}
+
+html.is-dark .t100-card-shadow-contact {
+  opacity: 0.45;
+}
+
+.t100-card-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1806 / 1206;
+  transform-style: preserve-3d;
+  transform-origin: 50% 55%;
+  transform:
+    rotateX(calc(var(--rest-x) + var(--py) * 5deg))
+    rotateY(calc(var(--rest-y) + var(--px) * -6deg))
+    rotateZ(var(--rest-z));
+  z-index: 1;
+  will-change: transform;
+}
+
+.t100-card-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #f4f1ea;
+  -webkit-mask-image: var(--t100-mask);
+  mask-image: var(--t100-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
+  transform: translateZ(0.5px);
+  filter: drop-shadow(0 18px 28px rgba(26, 42, 34, 0.18));
+}
+
+html.is-dark .t100-card-face {
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+
+.t100-card-face::before,
+.t100-card-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.t100-card-face::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 236, 0.34) 0%,
+    rgba(255, 248, 236, 0.08) 26%,
+    transparent 55%
+  );
+  opacity: 0.75;
+}
+
+.t100-card-face::after {
+  background: linear-gradient(135deg, transparent 40%, rgba(32, 24, 16, 0.18) 100%);
+  opacity: 0.32;
+}
+
+.t100-card-face picture,
+.t100-card-face img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.t100-card-grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--t100-grain);
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.t100-card-extrude {
+  position: absolute;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  z-index: 0;
+}
+
+.t100-card-extrude-right {
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 100%;
+  transform-origin: left center;
+  transform: rotateY(90deg) translateZ(0);
+  background: linear-gradient(to bottom, #eadcc4, #c9b48e 45%, #b08960 100%);
+  clip-path: inset(8% 0 8% 0);
+}
+
+.t100-card-extrude-left {
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transform-origin: right center;
+  transform: rotateY(-90deg) translateZ(0);
+  background: linear-gradient(to bottom, #fbf6ea, #efe4d0 70%, #e0d0b4);
+  clip-path: inset(8% 0 8% 0);
+}
+
+.t100-card-extrude-bottom {
+  left: 0;
+  width: 100%;
+  height: 6px;
+  bottom: 0;
+  transform-origin: center top;
+  transform: rotateX(-90deg) translateZ(0);
+  background: linear-gradient(to right, #e8d8bc, #c4a87a 50%, #d8c4a0);
+  clip-path: inset(0 8% 0 8%);
+  opacity: 0.85;
+}
+
+@media (max-width: 700px) {
+  .t100-card {
+    --rest-x: 14deg;
+    --rest-y: -10deg;
+    width: min(92%, 360px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t100-card-frame,
+  .t100-card-shadow-rig {
+    transition: none;
+  }
+}

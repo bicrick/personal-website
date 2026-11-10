@@ -4,7 +4,7 @@ export const PROJECTS = [
     description: 'reading paper golf scorecards with jev first',
     timelineDescription:
       'Cut the card from a photo, find the grid with RapidOCR, ask Jev per cell, and confirm with the golfer when unsure — 98.2% at $0.0037/card.',
-    image: `${process.env.PUBLIC_URL}/images/t100/t100-tile.jpg`,
+    livePreview: 't100',
     blogLink: '/projects/t100',
     appLink: 'https://t100-web.vercel.app',
     appLabel: 'site',

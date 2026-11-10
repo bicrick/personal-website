@@ -1,57 +1,93 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import ProjectDetail from '../components/ProjectDetail';
+import T100Card from './T100Card';
 import './T100.css';
 
 const SITE = 'https://t100-web.vercel.app';
-const IMG = `${process.env.PUBLIC_URL}/images/t100`;
+const LOGO = `${process.env.PUBLIC_URL}/images/t100/logos`;
 
-/** Muted looping hero; pauses under prefers-reduced-motion. */
-function HeroVideo() {
-  const ref = useRef(null);
+const STACK = [
+  {
+    id: 'typesafe',
+    label: 'Jev',
+    detail: 'TypeSafe AI',
+    src: `${LOGO}/typesafe.png`,
+    kind: 'img',
+  },
+  {
+    id: 'claude',
+    label: 'Claude',
+    detail: 'Haiku & Sonnet',
+    src: `${LOGO}/claude.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'gcp',
+    label: 'Google Cloud',
+    detail: 'GCP',
+    src: `${LOGO}/googlecloud.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'firebase',
+    label: 'Firestore',
+    detail: 'Firebase',
+    src: `${LOGO}/firebase.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'vercel',
+    label: 'Vercel',
+    detail: 'extraction host',
+    src: `${LOGO}/vercel.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'fastapi',
+    label: 'FastAPI',
+    detail: 'Python server',
+    src: `${LOGO}/fastapi.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'rapidocr',
+    label: 'RapidOCR',
+    detail: 'ONNX Runtime',
+    src: `${LOGO}/rapidocr.png`,
+    kind: 'img-wide',
+  },
+  {
+    id: 'apple',
+    label: 'Apple Vision',
+    detail: 'on-device cutout',
+    src: `${LOGO}/apple.svg`,
+    kind: 'svg',
+  },
+  {
+    id: 'expo',
+    label: 'Expo',
+    detail: 'React Native',
+    src: `${LOGO}/expo.svg`,
+    kind: 'svg',
+  },
+];
 
-  useEffect(() => {
-    const video = ref.current;
-    if (!video) return undefined;
-
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => {
-      if (mq.matches) {
-        video.pause();
-        try {
-          video.currentTime = 0;
-        } catch (_) {
-          /* ignore */
-        }
-        return;
-      }
-      if (video.paused) {
-        video.play().catch(() => {});
-      }
-    };
-
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-
+function BuiltWith() {
   return (
-    <figure className="t100-hero">
-      <div className="t100-hero-frame">
-        <video
-          ref={ref}
-          className="t100-hero-video"
-          src={`${IMG}/pebble-unfold.mp4`}
-          poster={`${IMG}/pebble-unfold-poster.jpg`}
-          width={960}
-          height={672}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
-      </div>
-    </figure>
+    <section className="t100-stack" aria-labelledby="t100-built-with">
+      <h2 id="t100-built-with">Built with</h2>
+      <ul className="t100-stack-list">
+        {STACK.map((item) => (
+          <li key={item.id} className={`t100-stack-item is-${item.kind}`}>
+            <span className="t100-stack-icon" aria-hidden="true">
+              <img src={item.src} alt="" />
+            </span>
+            <span className="t100-stack-label">{item.label}</span>
+            <span className="t100-stack-detail">{item.detail}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -62,47 +98,53 @@ function T100() {
       date="draft · November 2026"
       linkHref={SITE}
       linkLabel="t100-web.vercel.app"
-      abstract="How to read a paper golf scorecard — cut the card out of a photo, find the grid, ask a digit model first, and only bother the golfer when you are unsure."
+      staticTitle
     >
       <div className="t100-article">
-        <HeroVideo />
+        <figure className="t100-hero">
+          <div className="t100-hero-stage">
+            <T100Card />
+          </div>
+        </figure>
 
         <p>
-          t100 is an expo / react native app (also on web) with a fastapi extraction
-          server on vercel. you photograph the card after the round. on device, an
-          apple vision mask keeps the true paper silhouette. the server cleans the
+          T100 is an Expo / React Native app (also on web) with a FastAPI extraction
+          server on Vercel. You photograph the card after the round. On device, an
+          Apple Vision mask keeps the true paper silhouette. The server cleans the
           paper, rectifies it, and — only when a crease is found — runs a fold-aware
           dewarp before reading the grid.
         </p>
 
         <p>
-          print is read with rapidocr (onnx, so no pytorch in the vercel bundle).
-          hole columns snap to ruled lines; player rows come from lines plus
-          ink-versus-print. each score cell is cropped and sent to jev, a hosted
-          typesafe model, as a multiple choice: blank, 1–12, dash, or unreadable.
-          a sure jev read (confidence ≥ 0.9) is never overwritten. sonnet only steps
+          Print is read with RapidOCR (ONNX, so no PyTorch in the Vercel bundle).
+          Hole columns snap to ruled lines; player rows come from lines plus
+          ink-versus-print. Each score cell is cropped and sent to Jev, a hosted
+          TypeSafe model, as a multiple choice: blank, 1–12, dash, or unreadable.
+          A sure Jev read (confidence ≥ 0.9) is never overwritten. Sonnet only steps
           in for unusual notation, ambiguous rows, or totals that do not add up.
-          anything still unsure becomes a short question with jev&apos;s top guesses
+          Anything still unsure becomes a short question with Jev&apos;s top guesses
           as choices.
         </p>
 
         <p>
-          that jev-first, ask-the-user loop is the whole product bet. on a
+          That Jev-first, ask-the-user loop is the whole product bet. On a
           hand-checked set it reaches 98.2% of cells correct after a median of two
-          questions per card, at $0.0037/card — against opus at 98.8% and $0.044/card
-          in a single pass. the test corpus behind the work is 1,508 internet
+          questions per card, at $0.0037/card — against Opus at 98.8% and $0.044/card
+          in a single pass. The test corpus behind the work is 1,508 internet
           scorecard images plus 52 complete front/back pairs (2 real, 50 synthetic).
         </p>
 
         <p>
-          the app is local-first on firebase, with a reanimated 3d unfold for
-          foldable front+back cards. the{' '}
+          The app is local-first on Firebase, with a Reanimated 3D unfold for
+          foldable front+back cards. The{' '}
           <a href={SITE} target="_blank" rel="noopener noreferrer">
             landing page
           </a>{' '}
-          hero is the real pebble beach guest card; the scores inside are invented
-          for the demo and written with scribe, my handwriting model.
+          hero is the real Pebble Beach guest card; the scores inside are invented
+          for the demo and written with Scribe, my handwriting model.
         </p>
+
+        <BuiltWith />
       </div>
     </ProjectDetail>
   );

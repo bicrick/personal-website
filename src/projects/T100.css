@@ -1,35 +1,156 @@
-/* t100 — short engineering write-up; single cropped hero */
+/* t100 — short engineering write-up + 3D card hero */
 
 .t100-article {
   text-align: left;
 }
 
 .t100-hero {
-  max-width: 32rem;
-  margin: 8px auto 28px;
+  margin: 4px auto 36px;
+  max-width: none;
 }
 
-.t100-hero-frame {
+.t100-hero-stage {
   position: relative;
-  width: 100%;
-  line-height: 0;
-  border: 1px solid var(--rule);
-  background: #f7f3ea;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(52vh, 420px);
+  padding: 28px 8px 48px;
+  perspective: 1100px;
+  -webkit-perspective: 1100px;
+  perspective-origin: 48% 42%;
+  overflow: visible;
 }
 
-.t100-hero-video {
-  display: block;
-  width: 100%;
-  height: auto;
+.t100-article > p {
+  margin: 0 0 1.15em;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.t100-stack {
+  margin: 36px 0 8px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.t100-stack h2 {
+  margin: 0 0 22px;
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.t100-stack-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 14px;
   margin: 0;
-  border: 0;
-  vertical-align: top;
-  background: #f7f3ea;
+  padding: 0 0 8px;
 }
 
-@media (max-width: 700px) {
-  .t100-hero {
-    max-width: 100%;
+.t100-stack-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  min-width: 0;
+  text-align: center;
+}
+
+.t100-stack-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--ink);
+}
+
+.t100-stack-icon img {
+  display: block;
+  max-width: 28px;
+  max-height: 28px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.t100-stack-item.is-svg .t100-stack-icon img {
+  width: 26px;
+  height: 26px;
+  filter: none;
+}
+
+html.is-dark .t100-stack-item.is-svg .t100-stack-icon img {
+  filter: invert(1) brightness(1.05);
+  /* Avoid a faint inverted bounding box reading as a border */
+  mix-blend-mode: screen;
+}
+
+/* Official TypeSafe mark keeps brand pink; fine in both themes */
+.t100-stack-item.is-img .t100-stack-icon img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/* RapidOCR official wordmark is wide — give it room, mono-tune in dark */
+.t100-stack-item.is-img-wide .t100-stack-icon {
+  width: 72px;
+}
+
+.t100-stack-item.is-img-wide .t100-stack-icon img {
+  max-width: 68px;
+  max-height: 22px;
+}
+
+html.is-dark .t100-stack-item.is-img-wide .t100-stack-icon img {
+  filter: invert(1) brightness(1.08);
+}
+
+.t100-stack-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.t100-stack-detail {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--ink-muted);
+}
+
+@media (min-width: 760px) {
+  .t100-stack-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 26px 12px;
+  }
+
+  .t100-hero-stage {
+    min-height: min(56vh, 460px);
+    padding: 36px 12px 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .t100-stack-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 8px;
+  }
+
+  .t100-hero-stage {
+    min-height: 300px;
+    padding: 20px 0 40px;
   }
 }
