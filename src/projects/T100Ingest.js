@@ -38,23 +38,22 @@ const META = {
   holesPlayed: 18,
   teeOptions: ['Blue', 'White'],
   question: 'Which tees?',
-  // Normalized boxes from Crow Canyon front grid (sequence.json / 08-player-rows)
   nameBox: {
-    x: 0.10503512880562066,
-    y: 0.36659663865546216,
-    w: 0.2105386416861826,
-    h: 0.05777310924369748,
+    x: 0.10633333333333336,
+    y: 0.5505003706449222,
+    w: 0.19977777777777775,
+    h: 0.04099913700585288,
   },
   cells: [
-    { hole: 1, value: 4, x: 0.3155737704918033, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
-    { hole: 2, value: 5, x: 0.36826697892271665, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
-    { hole: 3, value: 4, x: 0.42096018735363, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
-    { hole: 4, value: 3, x: 0.474824355971897, y: 0.36659663865546216, w: 0.050936768149882905, h: 0.05777310924369748 },
-    { hole: 5, value: 3, x: 0.5257611241217799, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
-    { hole: 6, value: 3, x: 0.5784543325526932, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
-    { hole: 7, value: 3, x: 0.6323185011709602, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
-    { hole: 8, value: 2, x: 0.6861826697892272, y: 0.36659663865546216, w: 0.052107728337236536, h: 0.05777310924369748 },
-    { hole: 9, value: 3, x: 0.7382903981264637, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
+    { hole: 1, value: 4, x: 0.3061111111111111, y: 0.5505003706449222, w: 0.049999999999999906, h: 0.04099913700585288 },
+    { hole: 2, value: 5, x: 0.35611111111111104, y: 0.5505003706449222, w: 0.050000000000000065, h: 0.04099913700585288 },
+    { hole: 3, value: 4, x: 0.4061111111111111, y: 0.5505003706449222, w: 0.051111111111111086, h: 0.04099913700585288 },
+    { hole: 4, value: 3, x: 0.4572222222222222, y: 0.5505003706449222, w: 0.04833333333333341, h: 0.04099913700585288 },
+    { hole: 5, value: 3, x: 0.5055555555555555, y: 0.5505003706449222, w: 0.04999999999999998, h: 0.04099913700585288 },
+    { hole: 6, value: 3, x: 0.5555555555555556, y: 0.5505003706449222, w: 0.051111111111111086, h: 0.04099913700585288 },
+    { hole: 7, value: 3, x: 0.6066666666666667, y: 0.5505003706449222, w: 0.05111111111111116, h: 0.04099913700585288 },
+    { hole: 8, value: 2, x: 0.6577777777777778, y: 0.5505003706449222, w: 0.04944444444444435, h: 0.04099913700585288 },
+    { hole: 9, value: 3, x: 0.7072222222222222, y: 0.5505003706449222, w: 0.050000000000000065, h: 0.04099913700585288 },
   ],
 };
 
@@ -72,10 +71,19 @@ function boxStyle(b) {
   };
 }
 
+function nameTagStyle(b) {
+  /* Anchor above the name row — keep handwritten ink fully visible */
+  return {
+    left: `${b.x * 100}%`,
+    top: `calc(${b.y * 100}% - 26px)`,
+    width: 'auto',
+  };
+}
+
 function T100Ingest() {
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [cutPhase, setCutPhase] = useState(0); // 0 photo→mask, 1 mask→rect
+  const [cutPhase, setCutPhase] = useState(0);
   const [litCount, setLitCount] = useState(0);
   const [tee, setTee] = useState(null);
   const timerRef = useRef(null);
@@ -98,7 +106,6 @@ function T100Ingest() {
       const next = Math.max(0, Math.min(STEPS.length - 1, index));
       setStep(next);
       setPlaying(false);
-      // Photo: original. Cutout tab: mask-on-void (bg dropped). Read/Done: flat rect.
       setCutPhase(next >= 2 ? 1 : 0);
       setLitCount(next >= 2 ? META.cells.length : 0);
       if (next < 3) setTee(null);
@@ -210,27 +217,59 @@ function T100Ingest() {
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const showPhoto = step === 0 || (step === 1 && cutPhase === 0);
+  const showPhoto = step === 0;
   const showCutout = step === 1 && cutPhase === 0;
-  const showRect = (step === 1 && cutPhase === 1) || step === 2;
-  const showGrid = step === 2;
+  const showRect = step === 1 && cutPhase === 1;
+  const showRead = step === 2;
   const showDone = step === 3;
+
+  const resultPanel = (
+    <div className="t100-ig-result-inner">
+      <div className="t100-ig-score">
+        <div className="t100-ig-score-text">
+          <span>{META.player}</span>
+          <em>
+            {META.holesPlayed} holes · OUT {META.out} · IN {META.inn}
+          </em>
+        </div>
+        <strong>{META.total}</strong>
+      </div>
+      <div className="t100-ig-ask" aria-live="polite">
+        <span className="t100-ig-ask-kicker">Confirm · 1/1</span>
+        <p>{META.question}</p>
+        <div className="t100-ig-ask-opts">
+          {META.teeOptions.map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              className={tee === opt ? 'is-picked' : undefined}
+              onClick={() => setTee(opt)}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <section className="t100-ingest" aria-label="Scorecard ingestion sequence">
       <div className="t100-ig-frame" data-step={STEPS[step].id}>
         <div className="t100-ig-stage">
-          {/* Photo — original card, landscape */}
-          <img
+          <div
             className={`t100-ig-layer is-photo${showPhoto ? ' is-on' : ''}`}
-            src={`${INGEST}/step-photo.webp`}
-            alt=""
-            width={960}
-            height={444}
-            draggable={false}
-          />
+            aria-hidden={!showPhoto}
+          >
+            <img
+              src={`${INGEST}/step-photo.webp`}
+              alt=""
+              width={720}
+              height={540}
+              draggable={false}
+            />
+          </div>
 
-          {/* Cutout — masked paper over stage (bg drops away) */}
           <div
             className={`t100-ig-layer is-cutout${showCutout ? ' is-on' : ''}`}
             aria-hidden={!showCutout}
@@ -238,94 +277,83 @@ function T100Ingest() {
             <img
               src={`${INGEST}/step-cutout.webp`}
               alt=""
-              width={960}
-              height={444}
+              width={719}
+              height={536}
               draggable={false}
             />
           </div>
 
-          {/* Rectified — flat square card */}
-          <img
+          <div
             className={`t100-ig-layer is-rect${showRect ? ' is-on' : ''}`}
-            src={`${INGEST}/step-rectified.webp`}
-            alt=""
-            width={960}
-            height={444}
-            draggable={false}
-          />
-
-          {/* Read — grid overlay + cell lights */}
-          <div
-            className={`t100-ig-layer is-read${showGrid ? ' is-on' : ''}`}
-            aria-hidden={!showGrid}
-          >
-            <img
-              src={`${INGEST}/step-grid.webp`}
-              alt=""
-              width={960}
-              height={444}
-              draggable={false}
-            />
-            <div className="t100-ig-cells" aria-hidden="true">
-              <span
-                className={`t100-ig-cell is-name${litCount > 0 ? ' is-lit' : ''}`}
-                style={boxStyle(META.nameBox)}
-              >
-                <em>{META.player}</em>
-              </span>
-              {META.cells.map((cell, idx) => (
-                <span
-                  key={cell.hole}
-                  className={`t100-ig-cell${litCount > idx ? ' is-lit' : ''}`}
-                  style={boxStyle(cell)}
-                >
-                  <em>{cell.value}</em>
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Done — result chip on the same rectified card */}
-          <div
-            className={`t100-ig-layer is-done${showDone ? ' is-on' : ''}`}
-            aria-hidden={!showDone}
+            aria-hidden={!showRect}
           >
             <img
               src={`${INGEST}/step-rectified.webp`}
               alt=""
-              width={960}
-              height={444}
+              width={719}
+              height={536}
               draggable={false}
             />
-            <div className="t100-ig-result">
-              <div className="t100-ig-score">
-                <div className="t100-ig-score-text">
-                  <span>{META.player}</span>
-                  <em>
-                    {META.holesPlayed} holes · OUT {META.out} · IN {META.inn}
-                  </em>
-                </div>
-                <strong>{META.total}</strong>
-              </div>
-              <div className="t100-ig-ask" aria-live="polite">
-                <span className="t100-ig-ask-kicker">Confirm · 1/1</span>
-                <p>{META.question}</p>
-                <div className="t100-ig-ask-opts">
-                  {META.teeOptions.map((opt) => (
-                    <button
-                      key={opt}
-                      type="button"
-                      className={tee === opt ? 'is-picked' : undefined}
-                      onClick={() => setTee(opt)}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
+          </div>
+
+          <div
+            className={`t100-ig-layer is-read${showRead ? ' is-on' : ''}`}
+            aria-hidden={!showRead}
+          >
+            <div className="t100-ig-cardbox">
+              <img
+                src={`${INGEST}/step-grid.webp`}
+                alt=""
+                width={719}
+              height={536}
+                draggable={false}
+              />
+              <div className="t100-ig-cells" aria-hidden="true">
+                <span
+                  className={`t100-ig-name-tag${litCount > 0 ? ' is-lit' : ''}`}
+                  style={nameTagStyle(META.nameBox)}
+                >
+                  {META.player}
+                </span>
+                <span
+                  className={`t100-ig-cell is-name-hit${litCount > 0 ? ' is-lit' : ''}`}
+                  style={boxStyle(META.nameBox)}
+                />
+                {META.cells.map((cell, idx) => (
+                  <span
+                    key={cell.hole}
+                    className={`t100-ig-cell${litCount > idx ? ' is-lit' : ''}`}
+                    style={boxStyle(cell)}
+                  >
+                    <em>{cell.value}</em>
+                  </span>
+                ))}
               </div>
             </div>
           </div>
+
+          <div
+            className={`t100-ig-layer is-done${showDone ? ' is-on' : ''}`}
+            aria-hidden={!showDone}
+          >
+            <div className="t100-ig-cardbox">
+              <img
+                src={`${INGEST}/step-rectified.webp`}
+                alt=""
+                width={719}
+              height={536}
+                draggable={false}
+              />
+            </div>
+            <div className="t100-ig-result t100-ig-result-overlay">
+              {resultPanel}
+            </div>
+          </div>
         </div>
+
+        {showDone && (
+          <div className="t100-ig-result t100-ig-result-below">{resultPanel}</div>
+        )}
       </div>
 
       <div className="t100-ig-controls">

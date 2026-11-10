@@ -1,9 +1,9 @@
 /* Closed Pebble card — one cover face; floor shadow only (below, never above) */
 
 .t100-card {
-  --rest-x: 2deg;
-  --rest-y: -5deg;
-  --rest-z: -0.8deg;
+  --rest-x: 0deg;
+  --rest-y: 0deg;
+  --rest-z: 0deg;
   --px: 0;
   --py: 0;
   position: relative;
@@ -15,9 +15,9 @@
 }
 
 .t100-card.is-compact {
-  --rest-x: 14deg;
-  --rest-y: -10deg;
-  --rest-z: -1.4deg;
+  --rest-x: 8deg;
+  --rest-y: -8deg;
+  --rest-z: -1deg;
   width: min(86%, 280px);
 }
 
@@ -56,7 +56,7 @@ html.is-dark .t100-card-floor {
 .t100-card-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 800 / 629;
+  aspect-ratio: 800 / 519;
   transform-style: preserve-3d;
   transform-origin: 50% 55%;
   transform:
@@ -72,9 +72,8 @@ html.is-dark .t100-card-floor {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #b4b9b4;
-  /* Opaque cover + radius clip — avoids alpha-edge AA that read as a
-     translucent pale panel above the card under 3D transforms. */
+  /* Match cover sky top so 3D foreshortening never flashes a grey lip */
+  background: #fbfafa;
   border-radius: 1.4% / 2.2%;
   transform: translateZ(0.1px);
   -webkit-backface-visibility: hidden;
@@ -99,8 +98,8 @@ html.is-dark .t100-card-floor {
 
 @media (max-width: 700px) {
   .t100-card {
-    --rest-x: 12deg;
-    --rest-y: -8deg;
+    --rest-x: 0deg;
+    --rest-y: 0deg;
     width: min(92%, 360px);
   }
 }

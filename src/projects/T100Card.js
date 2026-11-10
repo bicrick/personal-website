@@ -93,7 +93,7 @@ function T100Card({ compact = false, interactive = true, className = '' }) {
             src={`${CARD}/pebble-cover-800.webp`}
             alt=""
             width={800}
-            height={629}
+            height={519}
             draggable={false}
             decoding="async"
             loading={compact ? 'lazy' : 'eager'}
