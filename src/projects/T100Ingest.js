@@ -68,7 +68,7 @@ function StagePhoto({ flashing }) {
             src={`${CARD}/pebble-cover-800.webp`}
             alt=""
             width={800}
-            height={538}
+            height={503}
             draggable={false}
           />
           <span className="t100-ig-reticle" />
@@ -92,22 +92,16 @@ function StageCutout() {
           src={`${CARD}/pebble-cover-800.webp`}
           alt=""
           width={800}
-          height={538}
+          height={503}
           draggable={false}
         />
-        <svg className="t100-ig-quad" viewBox="0 0 100 100" aria-hidden="true">
-          <polyline
-            points="6,8 94,7 95,93 5,94 6,8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="0.7"
-            strokeDasharray="2.2 1.6"
-          />
-          <circle cx="6" cy="8" r="1.4" />
-          <circle cx="94" cy="7" r="1.4" />
-          <circle cx="95" cy="93" r="1.4" />
-          <circle cx="5" cy="94" r="1.4" />
-        </svg>
+        {/* CSS quad hugs the masked card outline (no SVG viewBox letterboxing) */}
+        <span className="t100-ig-quad" aria-hidden="true">
+          <i className="t100-ig-quad-handle is-tl" />
+          <i className="t100-ig-quad-handle is-tr" />
+          <i className="t100-ig-quad-handle is-br" />
+          <i className="t100-ig-quad-handle is-bl" />
+        </span>
       </div>
     </div>
   );
@@ -121,12 +115,13 @@ function StageRead() {
           src={`${CARD}/pebble-inside-top-800.webp`}
           alt=""
           width={800}
-          height={534}
+          height={492}
           draggable={false}
         />
+        {/* Highlights land on the circled WHITE tee + Tom/Sam handwritten score columns */}
         <span className="t100-ig-hl t100-ig-hl-tee" />
-        <span className="t100-ig-hl t100-ig-hl-scores" />
-        <span className="t100-ig-hl t100-ig-hl-names" />
+        <span className="t100-ig-hl t100-ig-hl-tom" />
+        <span className="t100-ig-hl t100-ig-hl-sam" />
       </div>
       <aside className="t100-ig-chips" aria-label="Extracted values">
         <div className="t100-ig-chip is-course">
@@ -165,38 +160,51 @@ function StageRead() {
 }
 
 function StageDewarp({ progress }) {
-  // progress 0 = creased, 1 = flat
+  // progress 0 = creased halves; near 1 = single flat corrected card (no seam)
   const crease = Math.sin(progress * Math.PI);
-  const open = progress;
+  const flat = progress > 0.92;
   return (
     <div
-      className="t100-ig-dewarp"
+      className={`t100-ig-dewarp${flat ? ' is-flat' : ''}`}
       style={{
-        '--open': open,
+        '--open': progress,
         '--crease': crease,
       }}
     >
-      <div className="t100-ig-fold-flat">
-        <div className="t100-ig-leaf t100-ig-leaf-top">
+      {flat ? (
+        <div className="t100-ig-flat-card t100-ig-dewarp-flat">
+          <div className="t100-ig-flat-shadow" aria-hidden="true" />
           <img
-            src={`${CARD}/pebble-inside-top-800.webp`}
+            src={`${CARD}/pebble-flat-800.webp`}
             alt=""
             width={800}
-            height={534}
+            height={997}
             draggable={false}
           />
         </div>
-        <div className="t100-ig-leaf t100-ig-leaf-bot">
-          <img
-            src={`${CARD}/pebble-inside-bot-800.webp`}
-            alt=""
-            width={800}
-            height={527}
-            draggable={false}
-          />
+      ) : (
+        <div className="t100-ig-fold-flat">
+          <div className="t100-ig-leaf t100-ig-leaf-top">
+            <img
+              src={`${CARD}/pebble-inside-top-800.webp`}
+              alt=""
+              width={800}
+              height={492}
+              draggable={false}
+            />
+          </div>
+          <div className="t100-ig-leaf t100-ig-leaf-bot">
+            <img
+              src={`${CARD}/pebble-inside-bot-800.webp`}
+              alt=""
+              width={800}
+              height={509}
+              draggable={false}
+            />
+          </div>
+          <span className="t100-ig-crease" aria-hidden="true" />
         </div>
-        <span className="t100-ig-crease" aria-hidden="true" />
-      </div>
+      )}
     </div>
   );
 }
@@ -204,33 +212,24 @@ function StageDewarp({ progress }) {
 function StageDone({ open }) {
   return (
     <div
-      className={`t100-ig-done${open ? ' is-open' : ''}`}
+      className={`t100-ig-done${open > 0.5 ? ' is-open' : ''}`}
       style={{ '--open': open }}
     >
       <div className="t100-ig-done-closed">
         <T100Card interactive={false} />
       </div>
-      <div className="t100-ig-done-open" aria-hidden={!open}>
-        <div className="t100-ig-open-card">
-          <div className="t100-ig-open-shadow" aria-hidden="true" />
-          <div className="t100-ig-open-top">
-            <img
-              src={`${CARD}/pebble-inside-top-800.webp`}
-              alt=""
-              width={800}
-              height={534}
-              draggable={false}
-            />
-          </div>
-          <div className="t100-ig-open-bot">
-            <img
-              src={`${CARD}/pebble-inside-bot-800.webp`}
-              alt=""
-              width={800}
-              height={527}
-              draggable={false}
-            />
-          </div>
+      <div className="t100-ig-done-open" aria-hidden={open < 0.5}>
+        {/* Single flat corrected card — no stacked halves, no fold seam */}
+        <div className="t100-ig-flat-card">
+          <div className="t100-ig-flat-shadow" aria-hidden="true" />
+          <img
+            className="t100-ig-flat-img"
+            src={`${CARD}/pebble-flat-800.webp`}
+            alt=""
+            width={800}
+            height={997}
+            draggable={false}
+          />
         </div>
       </div>
     </div>

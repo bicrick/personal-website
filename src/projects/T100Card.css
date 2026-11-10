@@ -122,7 +122,7 @@ html.is-dark .t100-card-shadow-contact {
 .t100-card-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1806 / 1206;
+  aspect-ratio: 800 / 503;
   transform-style: preserve-3d;
   transform-origin: 50% 55%;
   transform:
@@ -153,28 +153,15 @@ html.is-dark .t100-card-face {
   filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
 }
 
-.t100-card-face::before,
+/* Soft shade only — no bright top lip / edge highlight */
 .t100-card-face::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 3;
-}
-
-.t100-card-face::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 248, 236, 0.28) 0%,
-    rgba(255, 248, 236, 0.06) 26%,
-    transparent 55%
-  );
-  opacity: 0.7;
-}
-
-.t100-card-face::after {
-  background: linear-gradient(135deg, transparent 42%, rgba(32, 24, 16, 0.14) 100%);
-  opacity: 0.28;
+  background: linear-gradient(135deg, transparent 48%, rgba(32, 24, 16, 0.12) 100%);
+  opacity: 0.22;
 }
 
 .t100-card-face picture,

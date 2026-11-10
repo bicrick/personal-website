@@ -58,7 +58,7 @@ html.is-dark .t100-ig-phone {
   position: relative;
   overflow: hidden;
   border-radius: 14px;
-  aspect-ratio: 1806 / 1206;
+  aspect-ratio: 800 / 503;
   background: #111;
 }
 
@@ -127,7 +127,7 @@ html.is-dark .t100-ig-phone {
 .t100-ig-paper {
   position: relative;
   width: 86%;
-  aspect-ratio: 1806 / 1206;
+  aspect-ratio: 800 / 503;
   -webkit-mask-image: var(--t100-mask);
   mask-image: var(--t100-mask);
   -webkit-mask-size: 100% 100%;
@@ -151,17 +151,40 @@ html.is-dark .t100-ig-paper {
 
 .t100-ig-quad {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  color: #2f6fed;
-  opacity: 0.9;
+  /* Sit on the card outline — slight inset only for the stroke itself */
+  inset: 1px;
+  border: 1.5px dashed #2f6fed;
+  border-radius: 2px;
+  box-sizing: border-box;
+  pointer-events: none;
+  opacity: 0.92;
   animation: t100-ig-fade 0.5s ease 0.15s both;
 }
 
 html.is-dark .t100-ig-quad {
-  color: #7aa7ff;
+  border-color: #7aa7ff;
 }
+
+.t100-ig-quad-handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -5px;
+  border-radius: 50%;
+  background: #1a1c1e;
+  border: 1.5px solid #2f6fed;
+  box-sizing: border-box;
+}
+
+html.is-dark .t100-ig-quad-handle {
+  background: #0c0d0e;
+  border-color: #7aa7ff;
+}
+
+.t100-ig-quad-handle.is-tl { top: 0; left: 0; }
+.t100-ig-quad-handle.is-tr { top: 0; right: 0; }
+.t100-ig-quad-handle.is-br { bottom: 0; right: 0; }
+.t100-ig-quad-handle.is-bl { bottom: 0; left: 0; }
 
 @keyframes t100-ig-lift {
   from { transform: translateY(10px) scale(0.97); opacity: 0.4; }
@@ -215,27 +238,30 @@ html.is-dark .t100-ig-hl {
   background: rgba(122, 167, 255, 0.14);
 }
 
+/* WHITE tee label (circled on the real card) */
 .t100-ig-hl-tee {
-  left: 28%;
-  top: 2%;
-  width: 12%;
-  height: 9%;
+  left: 23%;
+  top: 29.9%;
+  width: 6.75%;
+  height: 7.5%;
   animation-delay: 0.15s;
 }
 
-.t100-ig-hl-names {
-  left: 58%;
-  top: 1.5%;
-  width: 18%;
-  height: 8%;
+/* Tom handwritten OUT column (holes 1–9 + total) */
+.t100-ig-hl-tom {
+  left: 45.5%;
+  top: 38%;
+  width: 4.75%;
+  height: 61.6%;
   animation-delay: 0.35s;
 }
 
-.t100-ig-hl-scores {
-  left: 58%;
-  top: 12%;
-  width: 18%;
-  height: 72%;
+/* Sam handwritten OUT column */
+.t100-ig-hl-sam {
+  left: 50.25%;
+  top: 38%;
+  width: 7%;
+  height: 61.6%;
   animation-delay: 0.55s;
 }
 
@@ -317,7 +343,8 @@ html.is-dark .t100-ig-fold-flat {
 
 .t100-ig-leaf {
   overflow: hidden;
-  background: #fff;
+  background: transparent;
+  line-height: 0;
 }
 
 .t100-ig-leaf img {
@@ -330,31 +357,42 @@ html.is-dark .t100-ig-fold-flat {
   border-radius: 10px 10px 0 0;
   transform-origin: center bottom;
   transform: rotateX(calc(var(--crease) * -28deg));
+  margin-bottom: -2px;
+  z-index: 1;
 }
 
 .t100-ig-leaf-bot {
   border-radius: 0 0 10px 10px;
   transform-origin: center top;
   transform: rotateX(calc(var(--crease) * 18deg));
+  margin-top: -2px;
+  z-index: 0;
 }
 
+/* Crease only while folding — fully gone when flat */
 .t100-ig-crease {
   position: absolute;
   left: 2%;
   right: 2%;
   top: 50%;
-  height: 18px;
-  margin-top: -9px;
+  height: 14px;
+  margin-top: -7px;
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(22, 16, 10, 0.35) 48%,
-    rgba(22, 16, 10, 0.35) 52%,
+    rgba(22, 16, 10, 0.32) 48%,
+    rgba(22, 16, 10, 0.32) 52%,
     transparent
   );
-  opacity: calc(0.15 + var(--crease) * 0.7);
+  opacity: calc(var(--crease) * 0.85);
   pointer-events: none;
   z-index: 2;
+  transition: opacity 0.05s linear;
+}
+
+.t100-ig-dewarp-flat {
+  width: min(300px, 78%);
+  margin: 0 auto;
 }
 
 /* ---- Done ---- */
@@ -382,7 +420,7 @@ html.is-dark .t100-ig-fold-flat {
 
 .t100-ig-done-open {
   position: relative;
-  width: min(340px, 78%);
+  width: min(320px, 76%);
   opacity: var(--open);
   transform:
     translateY(calc((1 - var(--open)) * 18px))
@@ -390,47 +428,31 @@ html.is-dark .t100-ig-fold-flat {
   pointer-events: none;
 }
 
-.t100-ig-open-card {
+/* Done = flat corrected card (no fold seam, face-on) */
+.t100-ig-flat-card {
   position: relative;
-  filter: drop-shadow(0 18px 30px rgba(26, 42, 34, 0.22));
-  transform: rotateX(8deg) rotateY(-5deg) rotateZ(-1deg);
+  filter: drop-shadow(0 16px 28px rgba(26, 42, 34, 0.2));
 }
 
-html.is-dark .t100-ig-open-card {
-  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.5));
+html.is-dark .t100-ig-flat-card {
+  filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.48));
 }
 
-.t100-ig-open-shadow {
+.t100-ig-flat-shadow {
   position: absolute;
-  inset: 8% -4% -10% 4%;
-  background: radial-gradient(ellipse at 50% 60%, rgba(32, 24, 16, 0.28), transparent 70%);
-  filter: blur(12px);
+  inset: 10% -6% -12% 2%;
+  background: radial-gradient(ellipse at 50% 65%, rgba(32, 24, 16, 0.26), transparent 70%);
+  filter: blur(14px);
   z-index: 0;
 }
 
-.t100-ig-open-top,
-.t100-ig-open-bot {
+.t100-ig-flat-img {
   position: relative;
   z-index: 1;
-  overflow: hidden;
-  background: #fff;
-}
-
-.t100-ig-open-top {
-  border-radius: 12px 12px 0 0;
-  margin-bottom: -1px;
-}
-
-.t100-ig-open-bot {
-  border-radius: 0 0 12px 12px;
-  margin-top: -1px;
-}
-
-.t100-ig-open-top img,
-.t100-ig-open-bot img {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 12px;
 }
 
 /* ---- Controls ---- */
