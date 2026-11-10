@@ -132,8 +132,8 @@ function T100() {
         <p>
           Latest production-shaped check: 191/194 holes = 98.45%, $0.154 for six
           cards (about $2.57 per 100). The floating card above is a Pebble Beach
-          guest cover; the ingest stages below use real Crow Canyon, Yale, and Seve
-          intermediates from develop e548054.
+          guest cover; the sequence below walks one Crow Canyon front card from
+          photo through extract on develop e548054.
         </p>
 
         <BuiltWith />

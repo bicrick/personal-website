@@ -1,9 +1,9 @@
 /* Closed Pebble card — one cover face; floor shadow only (below, never above) */
 
 .t100-card {
-  --rest-x: 18deg;
-  --rest-y: -14deg;
-  --rest-z: -2deg;
+  --rest-x: 3deg;
+  --rest-y: -6deg;
+  --rest-z: -1deg;
   --px: 0;
   --py: 0;
   position: relative;
@@ -56,7 +56,7 @@ html.is-dark .t100-card-floor {
 .t100-card-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 800 / 503;
+  aspect-ratio: 800 / 596;
   transform-style: preserve-3d;
   transform-origin: 50% 55%;
   transform:
@@ -72,7 +72,7 @@ html.is-dark .t100-card-floor {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #e8e4dc;
+  background: #d7cbb2;
   /* Opaque cover + radius clip — avoids alpha-edge AA that read as a
      translucent pale panel above the card under 3D transforms. */
   border-radius: 1.4% / 2.2%;

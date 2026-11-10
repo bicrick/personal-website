@@ -3,262 +3,81 @@ import './T100Ingest.css';
 
 const INGEST = `${process.env.PUBLIC_URL}/images/t100/ingest`;
 
-/** Crow Canyon extract — develop e548054 / #56 card 03. */
-const EXTRACT = {
-  player: 'ANTHONY',
-  out: 30,
-  inn: 34,
-  total: 64,
-  holesPlayed: 18,
-  teeOptions: ['Blue', 'White'],
-  holes: [
-    { n: 1, v: 4 },
-    { n: 7, v: 3 },
-    { n: 12, v: 3 },
-    { n: 18, v: 4 },
-  ],
-  questions: [
-    { id: 'course', prompt: 'Is this the course?' },
-    { id: 'date', prompt: 'When did you play?' },
-    { id: 'tee', prompt: 'Which tees?', options: ['Blue', 'White'] },
-  ],
-};
-
-const STAGES = [
+const STEPS = [
   {
     id: 'photo',
     label: 'Photo',
-    note: 'System camera or library · Front required · Back optional',
+    caption: 'System camera or library — Front required, Back optional.',
   },
   {
     id: 'cutout',
     label: 'Cutout',
-    note: 'Vision alpha silhouette · server LSD only if it beats identity',
+    caption:
+      'Vision mask lifts the paper; the server snaps it flat. Fold-aware dewarp runs only when a crease is found — this card had none, so it was skipped.',
   },
   {
     id: 'read',
     label: 'Read',
-    note: 'RapidOCR maps the grid · Jev per cell · Haiku only if header missing',
-  },
-  {
-    id: 'dewarp',
-    label: 'Dewarp',
-    note: 'Fold-aware mesh kept when crease ≥ 0.05 or warp ≥ 45 px',
+    caption:
+      'RapidOCR maps the printed hole grid; Jev reads each handwritten cell.',
   },
   {
     id: 'done',
     label: 'Done',
-    note: 'One tap question per screen · ask below 0.72',
+    caption: 'One tap question per screen · ask below 0.72.',
   },
 ];
 
-const STAGE_MS = [2400, 2800, 3400, 2800, 0];
+const STEP_MS = [2600, 3200, 4200, 0];
+
+const META = {
+  player: 'ANTHONY',
+  total: 64,
+  out: 30,
+  inn: 34,
+  holesPlayed: 18,
+  teeOptions: ['Blue', 'White'],
+  question: 'Which tees?',
+  // Normalized boxes from Crow Canyon front grid (sequence.json / 08-player-rows)
+  nameBox: {
+    x: 0.10503512880562066,
+    y: 0.36659663865546216,
+    w: 0.2105386416861826,
+    h: 0.05777310924369748,
+  },
+  cells: [
+    { hole: 1, value: 4, x: 0.3155737704918033, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
+    { hole: 2, value: 5, x: 0.36826697892271665, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
+    { hole: 3, value: 4, x: 0.42096018735363, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
+    { hole: 4, value: 3, x: 0.474824355971897, y: 0.36659663865546216, w: 0.050936768149882905, h: 0.05777310924369748 },
+    { hole: 5, value: 3, x: 0.5257611241217799, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
+    { hole: 6, value: 3, x: 0.5784543325526932, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
+    { hole: 7, value: 3, x: 0.6323185011709602, y: 0.36659663865546216, w: 0.053864168618266976, h: 0.05777310924369748 },
+    { hole: 8, value: 2, x: 0.6861826697892272, y: 0.36659663865546216, w: 0.052107728337236536, h: 0.05777310924369748 },
+    { hole: 9, value: 3, x: 0.7382903981264637, y: 0.36659663865546216, w: 0.05269320843091335, h: 0.05777310924369748 },
+  ],
+};
 
 function prefersReducedMotion() {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-    return false;
-  }
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function StagePhoto() {
-  return (
-    <div className="t100-ig-photo">
-      <div className="t100-ig-slots" aria-hidden="true">
-        <div className="t100-ig-slot is-front is-filled">
-          <span className="t100-ig-slot-label">Front</span>
-          <div className="t100-ig-slot-frame">
-            <img
-              src={`${INGEST}/photo-front.webp`}
-              alt=""
-              width={720}
-              height={540}
-              draggable={false}
-            />
-          </div>
-        </div>
-        <div className="t100-ig-slot is-back is-empty">
-          <span className="t100-ig-slot-label">Back</span>
-          <div className="t100-ig-slot-frame">
-            <span className="t100-ig-slot-empty">
-              <i className="t100-ig-cam" />
-              <em>Optional</em>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StageCutout() {
-  // On-device Vision alpha (Yale) + server LSD quad when it beats identity (Seve)
-  return (
-    <div className="t100-ig-cutout">
-      <div className="t100-ig-desk-noise" aria-hidden="true" />
-      <div className="t100-ig-cut-pair">
-        <figure className="t100-ig-cut-panel is-vision">
-          <img
-            className="t100-ig-vision-img"
-            src={`${INGEST}/cutout-vision.webp`}
-            alt=""
-            width={715}
-            height={1040}
-            draggable={false}
-          />
-          <figcaption className="t100-ig-cut-tag">Vision mask</figcaption>
-        </figure>
-        <figure className="t100-ig-cut-panel is-lsd">
-          <img
-            className="t100-ig-quad-img"
-            src={`${INGEST}/cutout-quad.webp`}
-            alt=""
-            width={1279}
-            height={720}
-            draggable={false}
-          />
-          <figcaption className="t100-ig-cut-tag">Server LSD quad</figcaption>
-        </figure>
-      </div>
-    </div>
-  );
-}
-
-function StageRead() {
-  return (
-    <div className="t100-ig-read">
-      <div className="t100-ig-grid-wrap">
-        <img
-          src={`${INGEST}/read-grid.webp`}
-          alt=""
-          width={1200}
-          height={899}
-          draggable={false}
-        />
-      </div>
-      <aside className="t100-ig-chips" aria-label="Extracted values">
-        <div className="t100-ig-chip is-player">
-          <span>Player</span>
-          <strong>{EXTRACT.player}</strong>
-        </div>
-        <div className="t100-ig-chip is-holes-n">
-          <span>Holes</span>
-          <strong>{EXTRACT.holesPlayed}</strong>
-        </div>
-        <div className="t100-ig-chip is-score">
-          <span>{EXTRACT.player}</span>
-          <strong>
-            OUT {EXTRACT.out} · IN {EXTRACT.inn} · TOT {EXTRACT.total}
-          </strong>
-        </div>
-        <div className="t100-ig-chip is-tees">
-          <span>Tees</span>
-          <strong>{EXTRACT.teeOptions.join(' · ')}</strong>
-        </div>
-        <div className="t100-ig-chip is-holes">
-          <span>Sample holes</span>
-          <strong>
-            {EXTRACT.holes.map((h) => (
-              <em key={h.n}>
-                {h.n}: {h.v}
-              </em>
-            ))}
-          </strong>
-        </div>
-      </aside>
-    </div>
-  );
-}
-
-function StageDewarp({ progress }) {
-  // Real fold-aware pair: left = creased, right = mesh kept (score 0.13, 91 px)
-  const t = Math.max(0, Math.min(1, progress));
-  return (
-    <div className="t100-ig-dewarp" style={{ '--open': t }}>
-      <div className="t100-ig-dewarp-frame">
-        <img
-          src={`${INGEST}/dewarp-before-after.webp`}
-          alt=""
-          width={1396}
-          height={1240}
-          draggable={false}
-        />
-        <span className="t100-ig-dewarp-label is-before">Before</span>
-        <span className="t100-ig-dewarp-label is-after">After</span>
-        <span
-          className="t100-ig-dewarp-scrub"
-          style={{ left: `${50 + t * 0}%` }}
-          aria-hidden="true"
-        />
-      </div>
-    </div>
-  );
-}
-
-function StageDone({ open }) {
-  const shown = open > 0.15;
-  const qIndex = Math.min(
-    EXTRACT.questions.length - 1,
-    Math.floor(Math.max(0, open - 0.2) * EXTRACT.questions.length),
-  );
-  const question = EXTRACT.questions[qIndex];
-
-  return (
-    <div
-      className={`t100-ig-done${shown ? ' is-open' : ''}`}
-      style={{ '--open': open }}
-    >
-      <div className="t100-ig-done-cards">
-        <img
-          className="t100-ig-rendition is-front"
-          src={`${INGEST}/rendition-front.webp`}
-          alt=""
-          width={800}
-          height={727}
-          draggable={false}
-        />
-        <img
-          className="t100-ig-rendition is-back"
-          src={`${INGEST}/rendition-back.webp`}
-          alt=""
-          width={800}
-          height={696}
-          draggable={false}
-        />
-      </div>
-      <div className="t100-ig-done-side">
-        <div className="t100-ig-done-score">
-          <span>{EXTRACT.player}</span>
-          <strong>{EXTRACT.total}</strong>
-          <em>
-            {EXTRACT.holesPlayed} holes · OUT {EXTRACT.out} · IN {EXTRACT.inn}
-          </em>
-        </div>
-        <div className="t100-ig-ask" aria-live="polite">
-          <span className="t100-ig-ask-kicker">
-            Confirm · {qIndex + 1}/{EXTRACT.questions.length}
-          </span>
-          <strong>{question.prompt}</strong>
-          {question.options ? (
-            <div className="t100-ig-ask-opts">
-              {question.options.map((opt) => (
-                <span key={opt}>{opt}</span>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  );
+function boxStyle(b) {
+  return {
+    left: `${b.x * 100}%`,
+    top: `${b.y * 100}%`,
+    width: `${b.w * 100}%`,
+    height: `${b.h * 100}%`,
+  };
 }
 
 function T100Ingest() {
-  const rootRef = useRef(null);
-  const [stage, setStage] = useState(0);
+  const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [dewarp, setDewarp] = useState(0);
-  const [doneOpen, setDoneOpen] = useState(0);
-  const [reduced, setReduced] = useState(() => prefersReducedMotion());
+  const [cutPhase, setCutPhase] = useState(0); // 0 photo→mask, 1 mask→rect
+  const [litCount, setLitCount] = useState(0);
+  const [tee, setTee] = useState(null);
   const timerRef = useRef(null);
   const rafRef = useRef(0);
 
@@ -268,101 +87,99 @@ function T100Ingest() {
       timerRef.current = null;
     }
     if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
+      window.clearInterval(rafRef.current);
       rafRef.current = 0;
     }
   }, []);
 
-  const goTo = useCallback((index, { animate = true } = {}) => {
-    clearTimers();
-    const next = Math.max(0, Math.min(STAGES.length - 1, index));
-    setStage(next);
-    setPlaying(false);
+  const goTo = useCallback(
+    (index) => {
+      clearTimers();
+      const next = Math.max(0, Math.min(STEPS.length - 1, index));
+      setStep(next);
+      setPlaying(false);
+      // Photo: original. Cutout tab: mask-on-void (bg dropped). Read/Done: flat rect.
+      setCutPhase(next >= 2 ? 1 : 0);
+      setLitCount(next >= 2 ? META.cells.length : 0);
+      if (next < 3) setTee(null);
+    },
+    [clearTimers],
+  );
 
-    if (next === 3) {
-      setDewarp(animate && !prefersReducedMotion() ? 0 : 1);
-    } else if (next > 3) {
-      setDewarp(1);
-    } else {
-      setDewarp(0);
-    }
+  const runFrom = useCallback(
+    (startIndex) => {
+      clearTimers();
+      if (prefersReducedMotion()) {
+        setStep(STEPS.length - 1);
+        setCutPhase(1);
+        setLitCount(META.cells.length);
+        setPlaying(false);
+        return;
+      }
 
-    if (next === 4) {
-      setDoneOpen(animate && !prefersReducedMotion() ? 0 : 1);
-    } else {
-      setDoneOpen(0);
-    }
-  }, [clearTimers]);
+      setPlaying(true);
+      let i = startIndex;
 
-  const runFrom = useCallback((startIndex) => {
-    clearTimers();
-    if (prefersReducedMotion()) {
-      goTo(STAGES.length - 1, { animate: false });
-      return;
-    }
+      const advance = () => {
+        setStep(i);
 
-    setPlaying(true);
-    let i = startIndex;
-
-    const animateProgress = (setter, dur, onDone) => {
-      const start = performance.now();
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / dur);
-        const eased = 1 - (1 - t) ** 3;
-        setter(eased);
-        if (t < 1) {
-          rafRef.current = requestAnimationFrame(tick);
-        } else {
-          onDone();
+        if (i === 1) {
+          setCutPhase(0);
+          timerRef.current = window.setTimeout(() => {
+            setCutPhase(1);
+            timerRef.current = window.setTimeout(() => {
+              i += 1;
+              advance();
+            }, 1600);
+          }, 1400);
+          return;
         }
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    };
 
-    const step = () => {
-      setStage(i);
+        if (i === 2) {
+          setLitCount(0);
+          let n = 0;
+          rafRef.current = window.setInterval(() => {
+            n += 1;
+            setLitCount(n);
+            if (n >= META.cells.length) {
+              window.clearInterval(rafRef.current);
+              rafRef.current = 0;
+              timerRef.current = window.setTimeout(() => {
+                i += 1;
+                advance();
+              }, 900);
+            }
+          }, 280);
+          return;
+        }
 
-      if (i === 3) {
-        setDewarp(0);
-        animateProgress(setDewarp, 1500, () => {
+        if (i === 3) {
+          setLitCount(META.cells.length);
+          setCutPhase(1);
+          setPlaying(false);
+          return;
+        }
+
+        timerRef.current = window.setTimeout(() => {
           i += 1;
-          step();
-        });
-        return;
-      }
+          if (i < STEPS.length) advance();
+          else setPlaying(false);
+        }, STEP_MS[i] || 2400);
+      };
 
-      if (i === 4) {
-        setDoneOpen(0);
-        animateProgress(setDoneOpen, 1400, () => {
-          setPlaying(false);
-        });
-        return;
-      }
-
-      const wait = STAGE_MS[i] || 2200;
-      timerRef.current = window.setTimeout(() => {
-        i += 1;
-        if (i < STAGES.length) {
-          step();
-        } else {
-          setPlaying(false);
-        }
-      }, wait);
-    };
-
-    step();
-  }, [clearTimers, goTo]);
+      advance();
+    },
+    [clearTimers],
+  );
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => {
-      const on = mq.matches;
-      setReduced(on);
-      if (on) {
+      if (mq.matches) {
         clearTimers();
-        setStage(STAGES.length - 1);
-        setDewarp(1);
-        setDoneOpen(1);
+        setStep(3);
+        setCutPhase(1);
+        setLitCount(META.cells.length);
         setPlaying(false);
       }
     };
@@ -372,88 +189,169 @@ function T100Ingest() {
   }, [clearTimers]);
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root || reduced) return undefined;
+    const root = document.querySelector('.t100-ingest');
+    if (!root || prefersReducedMotion()) return undefined;
 
     let started = false;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started) {
+      (entries) => {
+        if (started) return;
+        if (entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.35)) {
           started = true;
           runFrom(0);
+          io.disconnect();
         }
       },
-      { threshold: 0.35 },
+      { threshold: [0.35] },
     );
     io.observe(root);
     return () => io.disconnect();
-  }, [reduced, runFrom]);
+  }, [runFrom]);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const onSelectStage = (index) => {
-    if (reduced) {
-      goTo(STAGES.length - 1, { animate: false });
-      return;
-    }
-    clearTimers();
-    setPlaying(false);
-    goTo(index, { animate: true });
-
-    const animateProgress = (setter, dur) => {
-      const start = performance.now();
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / dur);
-        setter(1 - (1 - t) ** 3);
-        if (t < 1) rafRef.current = requestAnimationFrame(tick);
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    if (index === 3) animateProgress(setDewarp, 1100);
-    if (index === 4) animateProgress(setDoneOpen, 1000);
-  };
-
-  const onReplay = () => {
-    if (reduced) return;
-    runFrom(0);
-  };
+  const showPhoto = step === 0 || (step === 1 && cutPhase === 0);
+  const showCutout = step === 1 && cutPhase === 0;
+  const showRect = (step === 1 && cutPhase === 1) || step === 2;
+  const showGrid = step === 2;
+  const showDone = step === 3;
 
   return (
-    <section
-      ref={rootRef}
-      className="t100-ingest"
-      aria-label="Scorecard ingestion sequence"
-    >
-      <div className="t100-ig-stage" data-stage={STAGES[stage].id}>
-        {stage === 0 && <StagePhoto />}
-        {stage === 1 && <StageCutout />}
-        {stage === 2 && <StageRead />}
-        {stage === 3 && <StageDewarp progress={dewarp} />}
-        {stage === 4 && <StageDone open={doneOpen} />}
+    <section className="t100-ingest" aria-label="Scorecard ingestion sequence">
+      <div className="t100-ig-frame" data-step={STEPS[step].id}>
+        <div className="t100-ig-stage">
+          {/* Photo — original card, landscape */}
+          <img
+            className={`t100-ig-layer is-photo${showPhoto ? ' is-on' : ''}`}
+            src={`${INGEST}/step-photo.webp`}
+            alt=""
+            width={960}
+            height={444}
+            draggable={false}
+          />
+
+          {/* Cutout — masked paper over stage (bg drops away) */}
+          <div
+            className={`t100-ig-layer is-cutout${showCutout ? ' is-on' : ''}`}
+            aria-hidden={!showCutout}
+          >
+            <img
+              src={`${INGEST}/step-cutout.webp`}
+              alt=""
+              width={960}
+              height={444}
+              draggable={false}
+            />
+          </div>
+
+          {/* Rectified — flat square card */}
+          <img
+            className={`t100-ig-layer is-rect${showRect ? ' is-on' : ''}`}
+            src={`${INGEST}/step-rectified.webp`}
+            alt=""
+            width={960}
+            height={444}
+            draggable={false}
+          />
+
+          {/* Read — grid overlay + cell lights */}
+          <div
+            className={`t100-ig-layer is-read${showGrid ? ' is-on' : ''}`}
+            aria-hidden={!showGrid}
+          >
+            <img
+              src={`${INGEST}/step-grid.webp`}
+              alt=""
+              width={960}
+              height={444}
+              draggable={false}
+            />
+            <div className="t100-ig-cells" aria-hidden="true">
+              <span
+                className={`t100-ig-cell is-name${litCount > 0 ? ' is-lit' : ''}`}
+                style={boxStyle(META.nameBox)}
+              >
+                <em>{META.player}</em>
+              </span>
+              {META.cells.map((cell, idx) => (
+                <span
+                  key={cell.hole}
+                  className={`t100-ig-cell${litCount > idx ? ' is-lit' : ''}`}
+                  style={boxStyle(cell)}
+                >
+                  <em>{cell.value}</em>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Done — result chip on the same rectified card */}
+          <div
+            className={`t100-ig-layer is-done${showDone ? ' is-on' : ''}`}
+            aria-hidden={!showDone}
+          >
+            <img
+              src={`${INGEST}/step-rectified.webp`}
+              alt=""
+              width={960}
+              height={444}
+              draggable={false}
+            />
+            <div className="t100-ig-result">
+              <div className="t100-ig-score">
+                <div className="t100-ig-score-text">
+                  <span>{META.player}</span>
+                  <em>
+                    {META.holesPlayed} holes · OUT {META.out} · IN {META.inn}
+                  </em>
+                </div>
+                <strong>{META.total}</strong>
+              </div>
+              <div className="t100-ig-ask" aria-live="polite">
+                <span className="t100-ig-ask-kicker">Confirm · 1/1</span>
+                <p>{META.question}</p>
+                <div className="t100-ig-ask-opts">
+                  {META.teeOptions.map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      className={tee === opt ? 'is-picked' : undefined}
+                      onClick={() => setTee(opt)}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="t100-ig-controls">
-        <ol className="t100-ig-steps">
-          {STAGES.map((s, index) => (
-            <li key={s.id}>
-              <button
-                type="button"
-                className={`t100-ig-step${stage === index ? ' is-active' : ''}${stage > index ? ' is-done' : ''}`}
-                onClick={() => onSelectStage(index)}
-                aria-current={stage === index ? 'step' : undefined}
-              >
-                <span className="t100-ig-step-label">{s.label}</span>
-              </button>
-            </li>
+        <div className="t100-ig-tabs" role="tablist" aria-label="Ingest steps">
+          {STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              role="tab"
+              aria-selected={step === i}
+              className={step === i ? 'is-active' : undefined}
+              onClick={() => goTo(i)}
+            >
+              {s.label}
+            </button>
           ))}
-        </ol>
-        <p className="t100-ig-note">{STAGES[stage].note}</p>
-        {!reduced && (
-          <button type="button" className="t100-ig-replay" onClick={onReplay} disabled={playing}>
-            Replay
-          </button>
-        )}
+        </div>
+        <p className="t100-ig-caption">{STEPS[step].caption}</p>
+        <button
+          type="button"
+          className="t100-ig-replay"
+          onClick={() => runFrom(0)}
+          disabled={playing}
+        >
+          Replay
+        </button>
       </div>
     </section>
   );
