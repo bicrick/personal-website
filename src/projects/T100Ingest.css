@@ -41,7 +41,7 @@ html.is-dark .t100-ig-frame {
 .t100-ig-frame[data-step='cutout'] .t100-ig-stage,
 .t100-ig-frame[data-step='read'] .t100-ig-stage,
 .t100-ig-frame[data-step='done'] .t100-ig-stage {
-  aspect-ratio: 719 / 307;
+  aspect-ratio: 719 / 341;
 }
 
 /* Layers: opacity only — no scale (scale caused ghost double edges) */
@@ -90,8 +90,8 @@ html.is-dark .t100-ig-frame {
 .t100-ig-layer.is-rect img {
   width: auto;
   height: auto;
-  max-width: 92%;
-  max-height: 88%;
+  max-width: 90%;
+  max-height: 84%;
   object-fit: contain;
   /* Opaque RGB assets — no alpha fringe / ghost outline */
   background: transparent;
@@ -104,8 +104,8 @@ html.is-dark .t100-ig-frame {
 /* Shared padded card box for Read / Done — stage ≈ card aspect, so 90% fits */
 .t100-ig-cardbox {
   position: relative;
-  aspect-ratio: 719 / 307;
-  width: 92%;
+  aspect-ratio: 719 / 341;
+  width: 90%;
   height: auto;
   /* Hard edges — no shadow/filter that paints a duplicate outline */
   filter: none;
@@ -171,29 +171,6 @@ html.is-dark .t100-ig-frame {
   border-color: color-mix(in srgb, #3b82b8 70%, #fff);
 }
 
-.t100-ig-name-tag {
-  position: absolute;
-  box-sizing: border-box;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-family: var(--font-sans);
-  font-size: clamp(9px, 1.5vw, 11px);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: transparent;
-  background: transparent;
-  border: 1px solid transparent;
-  text-align: center;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-  white-space: nowrap;
-}
-
-.t100-ig-name-tag.is-lit {
-  color: #0f2740;
-  background: color-mix(in srgb, #cfe6f8 92%, #fff);
-  border-color: color-mix(in srgb, #3b82b8 45%, #fff);
-}
 
 /* Done results */
 .t100-ig-result-inner {
@@ -202,21 +179,27 @@ html.is-dark .t100-ig-frame {
   gap: 10px;
 }
 
+/* Overlay removed — Done panels always stack below the card */
 .t100-ig-result-overlay {
-  /* Lower-right below the handwritten score row (~y 25–33%) */
-  position: absolute;
-  right: 1.5%;
-  top: 46%;
-  bottom: auto;
-  width: min(26%, 190px);
-  max-height: 50%;
-  overflow: auto;
-  pointer-events: auto;
-  z-index: 2;
+  display: none !important;
 }
 
 .t100-ig-result-below {
-  display: none;
+  display: block;
+  margin-top: 12px;
+}
+
+.t100-ig-result-below .t100-ig-result-inner {
+  gap: 8px;
+}
+
+@media (min-width: 701px) {
+  .t100-ig-result-below .t100-ig-result-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
 }
 
 .t100-ig-score {
@@ -409,17 +392,9 @@ html.is-dark .t100-ig-tabs button.is-active {
     border-radius: 10px;
   }
 
-  /* Mobile Done: hide overlay, show stacked panel below stage */
-  .t100-ig-result-overlay {
-    display: none;
-  }
-
-  .t100-ig-result-below {
-    display: block;
-    margin-top: 12px;
-  }
-
   .t100-ig-result-below .t100-ig-result-inner {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
 
@@ -436,12 +411,6 @@ html.is-dark .t100-ig-tabs button.is-active {
   .t100-ig-tabs button {
     padding: 6px 11px;
     font-size: 12px;
-  }
-}
-
-@media (min-width: 701px) {
-  .t100-ig-result-below {
-    display: none !important;
   }
 }
 
