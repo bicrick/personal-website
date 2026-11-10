@@ -126,11 +126,9 @@ function T100() {
         </p>
 
         <p>
-          That Jev-first, ask-the-user loop reaches 98.2% of cells correct after a
-          median of two questions per card, at $0.0037/card — against Opus at
-          98.8% and $0.044/card in a single pass. The demo card is the real
-          Pebble Beach guest card; scores inside were written with Scribe for the
-          landing demo.
+          The Jev-first, ask-the-user loop keeps sure reads and only escalates
+          when confidence is low. The demo card is the real Pebble Beach guest
+          card; scores inside were written with Scribe for the landing demo.
         </p>
 
         <BuiltWith />

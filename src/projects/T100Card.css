@@ -1,4 +1,4 @@
-/* Closed Pebble card — CSS 3D desk pose; soft shadows only (no fake stack edge) */
+/* Closed Pebble card — one cover face; floor shadow only (below, never above) */
 
 .t100-card {
   --rest-x: 18deg;
@@ -21,102 +21,36 @@
   width: min(86%, 280px);
 }
 
-.t100-card-glow {
+/* Soft ellipse under the card — no cover silhouette, cannot peek above */
+.t100-card-floor {
   position: absolute;
-  inset: -30% -40% -36% -30%;
+  left: 8%;
+  right: 2%;
+  top: 58%;
+  bottom: -6%;
+  z-index: 0;
+  pointer-events: none;
   background: radial-gradient(
-    ellipse 72% 68% at 26% 18%,
-    rgba(255, 214, 160, 0.14),
-    rgba(244, 241, 234, 0) 70%
+    ellipse 70% 45% at 48% 40%,
+    rgba(32, 24, 16, 0.28),
+    rgba(32, 24, 16, 0.08) 45%,
+    transparent 72%
   );
-  pointer-events: none;
-  z-index: 0;
+  filter: blur(10px);
+  transform: translate3d(
+    calc(var(--px) * 6px),
+    calc(8px + var(--py) * 4px),
+    0
+  );
 }
 
-html.is-dark .t100-card-glow {
+html.is-dark .t100-card-floor {
   background: radial-gradient(
-    ellipse 72% 68% at 26% 18%,
-    rgba(255, 214, 160, 0.07),
-    rgba(0, 0, 0, 0) 70%
+    ellipse 70% 45% at 48% 40%,
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.16) 45%,
+    transparent 72%
   );
-}
-
-.t100-card-idle-shadow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  -webkit-mask-image: var(--t100-mask);
-  mask-image: var(--t100-mask);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  mask-mode: alpha;
-  background: #201810;
-  /* Offset only down/right so nothing peeks above the cover */
-  transform:
-    translate3d(calc(14px + var(--px) * 8px), calc(26px + var(--py) * 6px), 0)
-    rotate(calc(-1.5deg + var(--px) * 1deg))
-    skewX(-4deg)
-    scale(0.93, 0.88);
-  opacity: 0.18;
-  filter: blur(16px);
-}
-
-html.is-dark .t100-card-idle-shadow {
-  opacity: 0.4;
-  background: #000;
-}
-
-.t100-card-shadow-rig {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  transform-style: preserve-3d;
-  transform-origin: 50% 55%;
-  transform:
-    rotateX(calc(var(--rest-x) + var(--py) * 5deg))
-    rotateY(calc(var(--rest-y) + var(--px) * -6deg))
-    rotateZ(var(--rest-z))
-    translate3d(
-      calc(14px + var(--px) * 10px),
-      calc(22px + var(--py) * 8px),
-      -18px
-    );
-}
-
-.t100-card-shadow {
-  position: absolute;
-  /* Keep bloom under/ beside the cover so it never reads as a top edge strip */
-  inset: 8% -24% -34% -18%;
-  background-repeat: no-repeat;
-  background-position: center 30%;
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 52% 58%, #000 30%, transparent 72%);
-  mask-image: radial-gradient(ellipse 72% 70% at 52% 58%, #000 30%, transparent 72%);
-}
-
-.t100-card-shadow-soft {
-  background-image: var(--t100-shadow-soft);
-  background-size: 150% 155%;
-  opacity: 0.58;
-  filter: blur(2px);
-}
-
-.t100-card-shadow-contact {
-  background-image: var(--t100-shadow-contact);
-  background-size: 118% 118%;
-  opacity: 0.28;
-}
-
-html.is-dark .t100-card-shadow-soft {
-  opacity: 0.72;
-}
-
-html.is-dark .t100-card-shadow-contact {
-  opacity: 0.4;
 }
 
 .t100-card-frame {
@@ -131,40 +65,22 @@ html.is-dark .t100-card-shadow-contact {
     rotateZ(var(--rest-z));
   z-index: 1;
   will-change: transform;
+  /* No CSS filter — drop-shadow was blooming a pale panel above the cover */
 }
 
 .t100-card-face {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: transparent;
-  -webkit-mask-image: var(--t100-mask);
-  mask-image: var(--t100-mask);
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  mask-mode: alpha;
-  transform: translateZ(0.5px);
-  filter: drop-shadow(0 16px 26px rgba(26, 42, 34, 0.16));
+  background: #e8e4dc;
+  /* Opaque cover + radius clip — avoids alpha-edge AA that read as a
+     translucent pale panel above the card under 3D transforms. */
+  border-radius: 1.4% / 2.2%;
+  transform: translateZ(0.1px);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-html.is-dark .t100-card-face {
-  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.42));
-}
-
-/* Soft shade only — no bright top lip / edge highlight */
-.t100-card-face::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  background: linear-gradient(135deg, transparent 48%, rgba(32, 24, 16, 0.12) 100%);
-  opacity: 0.22;
-}
-
-.t100-card-face picture,
 .t100-card-face img {
   position: absolute;
   inset: 0;
@@ -172,19 +88,13 @@ html.is-dark .t100-card-face {
   height: 100%;
   display: block;
   object-fit: fill;
+  /* Override .project-article img margin/border — those painted a pale
+     lip above the cover and a rule-colored edge around the mask */
+  margin: 0;
+  border: 0;
+  border-radius: 0;
   user-select: none;
   -webkit-user-drag: none;
-}
-
-.t100-card-grain {
-  position: absolute;
-  inset: 0;
-  background-image: var(--t100-grain);
-  background-repeat: repeat;
-  background-size: 128px 128px;
-  opacity: 0.12;
-  pointer-events: none;
-  z-index: 2;
 }
 
 @media (max-width: 700px) {
@@ -196,8 +106,7 @@ html.is-dark .t100-card-face {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .t100-card-frame,
-  .t100-card-shadow-rig {
+  .t100-card-frame {
     transition: none;
   }
 }

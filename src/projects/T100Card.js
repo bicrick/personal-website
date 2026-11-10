@@ -4,8 +4,9 @@ import './T100Card.css';
 const CARD = `${process.env.PUBLIC_URL}/images/t100/card`;
 
 /**
- * Closed Pebble Beach guest card in the same CSS-3D desk pose as
- * https://t100-web.vercel.app — full cover, soft shadows, no fake stack edge.
+ * Closed Pebble Beach guest card — exactly one cover face.
+ * Shadow is a separate floor ellipse below the card (never a masked
+ * duplicate of the cover, which read as a pale panel / ghosted logo).
  */
 function T100Card({ compact = false, interactive = true, className = '' }) {
   const rootRef = useRef(null);
@@ -75,10 +76,6 @@ function T100Card({ compact = false, interactive = true, className = '' }) {
   const style = {
     '--px': 0,
     '--py': 0,
-    '--t100-mask': `url(${CARD}/pebble-cover-mask.webp)`,
-    '--t100-grain': `url(${CARD}/paper-grain.png)`,
-    '--t100-shadow-soft': `url(${CARD}/shadow-soft.png)`,
-    '--t100-shadow-contact': `url(${CARD}/shadow-contact.png)`,
   };
 
   return (
@@ -89,28 +86,19 @@ function T100Card({ compact = false, interactive = true, className = '' }) {
       role="img"
       aria-label="Pebble Beach Golf Links guest scorecard in 3D"
     >
-      <div className="t100-card-glow" aria-hidden="true" />
-      <div className="t100-card-idle-shadow" aria-hidden="true" />
-      <div className="t100-card-shadow-rig" aria-hidden="true">
-        <div className="t100-card-shadow t100-card-shadow-soft" />
-        <div className="t100-card-shadow t100-card-shadow-contact" />
-      </div>
+      <div className="t100-card-floor" aria-hidden="true" />
       <div className="t100-card-frame">
         <div className="t100-card-face">
-          <picture>
-            <source type="image/webp" srcSet={`${CARD}/pebble-cover-800.webp`} />
-            <img
-              src={`${CARD}/pebble-cover-1200.jpg`}
-              alt=""
-              width={1200}
-              height={754}
-              draggable={false}
-              decoding="async"
-              loading={compact ? 'lazy' : 'eager'}
-              fetchPriority={compact ? 'low' : 'high'}
-            />
-          </picture>
-          <span className="t100-card-grain" aria-hidden="true" />
+          <img
+            src={`${CARD}/pebble-cover-800.webp`}
+            alt=""
+            width={800}
+            height={503}
+            draggable={false}
+            decoding="async"
+            loading={compact ? 'lazy' : 'eager'}
+            fetchPriority={compact ? 'low' : 'high'}
+          />
         </div>
       </div>
     </div>

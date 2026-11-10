@@ -82,9 +82,17 @@
   width: auto;
   height: auto;
   object-fit: contain;
+  margin: 0;
   border: 0;
   background: transparent;
   box-shadow: none;
+}
+
+/* Any decorative / stage asset inside the t100 write-up must not inherit
+   the article figure margin+border from ProjectDetail.css */
+.t100-article img {
+  margin: 0;
+  border: 0;
 }
 
 .t100-stack-item.is-svg .t100-stack-icon img {

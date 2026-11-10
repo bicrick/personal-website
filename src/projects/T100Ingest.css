@@ -68,6 +68,9 @@ html.is-dark .t100-ig-phone {
   height: 100%;
   object-fit: cover;
   transform: scale(1.04);
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 
 .t100-ig-reticle {
@@ -147,6 +150,9 @@ html.is-dark .t100-ig-paper {
   width: 100%;
   height: 100%;
   object-fit: fill;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 
 .t100-ig-quad {
@@ -208,8 +214,10 @@ html.is-dark .t100-ig-quad-handle {
 
 .t100-ig-grid-wrap {
   position: relative;
-  border-radius: 8px;
+  /* No border-radius — rounded white corners read as a pale strip above the grid */
+  border-radius: 0;
   overflow: hidden;
+  line-height: 0;
   box-shadow: 0 12px 28px rgba(26, 42, 34, 0.14);
   animation: t100-ig-lift 0.55s ease both;
 }
@@ -222,6 +230,11 @@ html.is-dark .t100-ig-grid-wrap {
   display: block;
   width: 100%;
   height: auto;
+  /* Kill .project-article img { margin: 32px 0 0; border: 1px solid } —
+     that margin was the blank pale strip above the Read grid */
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 
 .t100-ig-hl {
@@ -238,30 +251,30 @@ html.is-dark .t100-ig-hl {
   background: rgba(122, 167, 255, 0.14);
 }
 
-/* WHITE tee label (circled on the real card) */
+/* WHITE tee label (circled on the real card) — % after top pale-lip crop */
 .t100-ig-hl-tee {
   left: 23%;
-  top: 29.9%;
+  top: 24.6%;
   width: 6.75%;
-  height: 7.5%;
+  height: 7.7%;
   animation-delay: 0.15s;
 }
 
 /* Tom handwritten OUT column (holes 1–9 + total) */
 .t100-ig-hl-tom {
   left: 45.5%;
-  top: 38%;
+  top: 33%;
   width: 4.75%;
-  height: 61.6%;
+  height: 63.7%;
   animation-delay: 0.35s;
 }
 
 /* Sam handwritten OUT column */
 .t100-ig-hl-sam {
   left: 50.25%;
-  top: 38%;
+  top: 33%;
   width: 7%;
-  height: 61.6%;
+  height: 63.7%;
   animation-delay: 0.55s;
 }
 
@@ -351,6 +364,9 @@ html.is-dark .t100-ig-fold-flat {
   display: block;
   width: 100%;
   height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 
 .t100-ig-leaf-top {
@@ -434,6 +450,15 @@ html.is-dark .t100-ig-fold-flat {
   filter: drop-shadow(0 16px 28px rgba(26, 42, 34, 0.2));
 }
 
+.t100-ig-flat-card > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 12px;
+}
+
 html.is-dark .t100-ig-flat-card {
   filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.48));
 }
@@ -452,6 +477,8 @@ html.is-dark .t100-ig-flat-card {
   display: block;
   width: 100%;
   height: auto;
+  margin: 0;
+  border: 0;
   border-radius: 12px;
 }
 

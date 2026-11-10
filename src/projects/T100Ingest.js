@@ -45,7 +45,7 @@ const STAGES = [
   {
     id: 'done',
     label: 'Done',
-    note: 'Ask below 0.9 confidence · 98.2% at $0.0037/card',
+    note: 'Ask below 0.9 confidence',
   },
 ];
 
@@ -115,7 +115,7 @@ function StageRead() {
           src={`${CARD}/pebble-inside-top-800.webp`}
           alt=""
           width={800}
-          height={492}
+          height={483}
           draggable={false}
         />
         {/* Highlights land on the circled WHITE tee + Tom/Sam handwritten score columns */}
@@ -178,7 +178,7 @@ function StageDewarp({ progress }) {
             src={`${CARD}/pebble-flat-800.webp`}
             alt=""
             width={800}
-            height={997}
+            height={992}
             draggable={false}
           />
         </div>
@@ -189,7 +189,7 @@ function StageDewarp({ progress }) {
               src={`${CARD}/pebble-inside-top-800.webp`}
               alt=""
               width={800}
-              height={492}
+              height={483}
               draggable={false}
             />
           </div>
@@ -227,7 +227,7 @@ function StageDone({ open }) {
             src={`${CARD}/pebble-flat-800.webp`}
             alt=""
             width={800}
-            height={997}
+            height={992}
             draggable={false}
           />
         </div>
