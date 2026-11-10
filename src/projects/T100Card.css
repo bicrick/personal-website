@@ -54,13 +54,14 @@ html.is-dark .t100-card-glow {
   mask-repeat: no-repeat;
   mask-mode: alpha;
   background: #201810;
+  /* Offset only down/right so nothing peeks above the cover */
   transform:
-    translate3d(calc(12px + var(--px) * 8px), calc(22px + var(--py) * 6px), 0)
-    rotate(calc(-2deg + var(--px) * 1deg))
-    skewX(-5deg)
-    scale(0.94, 0.9);
-  opacity: 0.2;
-  filter: blur(14px);
+    translate3d(calc(14px + var(--px) * 8px), calc(26px + var(--py) * 6px), 0)
+    rotate(calc(-1.5deg + var(--px) * 1deg))
+    skewX(-4deg)
+    scale(0.93, 0.88);
+  opacity: 0.18;
+  filter: blur(16px);
 }
 
 html.is-dark .t100-card-idle-shadow {
@@ -88,12 +89,13 @@ html.is-dark .t100-card-idle-shadow {
 
 .t100-card-shadow {
   position: absolute;
-  inset: -22% -26% -32% -22%;
+  /* Keep bloom under/ beside the cover so it never reads as a top edge strip */
+  inset: 8% -24% -34% -18%;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center 30%;
   pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
-  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 35%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 52% 58%, #000 30%, transparent 72%);
+  mask-image: radial-gradient(ellipse 72% 70% at 52% 58%, #000 30%, transparent 72%);
 }
 
 .t100-card-shadow-soft {
