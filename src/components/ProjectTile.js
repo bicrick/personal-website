@@ -6,7 +6,6 @@ import TapestryTilePreview from './TapestryTilePreview';
 import { MonocleTilePreview } from './project/monocle';
 import { CartPoleTilePreview } from './CartPoleEmbed';
 import NotepadableTilePreview from './notepadable-tile/NotepadableTilePreview';
-import T100TilePreview from '../projects/T100TilePreview';
 import './ProjectTile.css';
 
 function useFineHover() {
@@ -135,8 +134,6 @@ export default function ProjectTile({
     <CartPoleTilePreview />
   ) : project.livePreview === 'notepadable' ? (
     <NotepadableTilePreview />
-  ) : project.livePreview === 't100' ? (
-    <T100TilePreview />
   ) : project.video ? (
     <span className="project-card-theme-media" aria-hidden="true">
       <video
