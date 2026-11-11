@@ -1,56 +1,136 @@
-/* Closed Pebble card — one cover face; floor shadow only (below, never above) */
+/* Floating Pebble cover — exaggerated CSS 3D tilt, layered floor shadow + glare */
 
 .t100-card {
-  --rest-x: 0deg;
-  --rest-y: 0deg;
-  --rest-z: 0deg;
+  /* Gentle resting desk pose — never dead flat when idle */
+  --rest-x: 7deg;
+  --rest-y: -9deg;
+  --rest-z: -1.6deg;
+  /* Cursor / idle / orientation deltas in [-1, 1] */
   --px: 0;
   --py: 0;
+  --hover: 0;
+  /* Follow ±15° → extremes ~22° / −24° on each axis */
+  --tilt-x: 15deg;
+  --tilt-y: 15deg;
   position: relative;
   width: min(480px, 84%);
   margin: 0 auto;
+  padding: 12% 14% 18%;
+  box-sizing: content-box;
   transform-style: preserve-3d;
   isolation: isolate;
   touch-action: pan-y;
+  overflow: visible;
 }
 
 .t100-card.is-compact {
-  --rest-x: 8deg;
-  --rest-y: -8deg;
-  --rest-z: -1deg;
+  --rest-x: 12deg;
+  --rest-y: -10deg;
+  --rest-z: -1.2deg;
+  --tilt-x: 10deg;
+  --tilt-y: 10deg;
   width: min(86%, 280px);
+  padding: 10% 12% 16%;
 }
 
-/* Soft ellipse under the card — no cover silhouette, cannot peek above */
+.t100-card.is-static {
+  /* Tile / non-interactive: keep rest pose, no follow */
+  --px: 0;
+  --py: 0;
+  --hover: 0;
+}
+
+/* Soft ambient wash behind the card */
+.t100-card-glow {
+  position: absolute;
+  inset: 4% 0 8%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 42%,
+    rgba(255, 214, 160, 0.14),
+    rgba(244, 241, 234, 0) 72%
+  );
+}
+
+html.is-dark .t100-card-glow {
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 42%,
+    rgba(255, 214, 160, 0.07),
+    transparent 72%
+  );
+}
+
+/* Layered floor shadow — shifts opposite the tilt so the card feels lifted */
 .t100-card-floor {
   position: absolute;
-  left: 8%;
-  right: 2%;
-  top: 58%;
-  bottom: -6%;
+  left: 18%;
+  right: 14%;
+  top: 52%;
+  bottom: 6%;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 70% 45% at 48% 40%,
-    rgba(32, 24, 16, 0.28),
-    rgba(32, 24, 16, 0.08) 45%,
-    transparent 72%
-  );
-  filter: blur(10px);
-  transform: translate3d(
-    calc(var(--px) * 6px),
-    calc(8px + var(--py) * 4px),
-    0
-  );
+  border-radius: 50%;
+  transform-origin: 50% 40%;
 }
 
-html.is-dark .t100-card-floor {
+.t100-card-floor-soft {
   background: radial-gradient(
-    ellipse 70% 45% at 48% 40%,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.16) 45%,
+    ellipse 72% 48% at 50% 40%,
+    rgba(32, 24, 16, 0.3),
+    rgba(32, 24, 16, 0.1) 42%,
+    transparent 74%
+  );
+  filter: blur(16px);
+  opacity: calc(0.85 + var(--hover) * 0.15);
+  transform: translate3d(
+      calc(var(--px) * -22px),
+      calc(18px + var(--py) * -14px + var(--hover) * 6px),
+      0
+    )
+    rotate(calc(var(--px) * -3deg))
+    scale(calc(1.02 + var(--hover) * 0.04), calc(0.92 + var(--hover) * 0.02));
+}
+
+.t100-card-floor-contact {
+  left: 24%;
+  right: 20%;
+  top: 58%;
+  bottom: 10%;
+  background: radial-gradient(
+    ellipse 58% 36% at 50% 40%,
+    rgba(32, 24, 16, 0.34),
+    rgba(32, 24, 16, 0.08) 48%,
     transparent 72%
   );
+  filter: blur(7px);
+  opacity: calc(0.7 + var(--hover) * 0.2);
+  transform: translate3d(
+      calc(var(--px) * -12px),
+      calc(10px + var(--py) * -8px + var(--hover) * 4px),
+      0
+    )
+    scale(calc(0.96 + var(--hover) * 0.02), 0.78);
+}
+
+html.is-dark .t100-card-floor-soft {
+  background: radial-gradient(
+    ellipse 72% 48% at 50% 40%,
+    rgba(0, 0, 0, 0.78),
+    rgba(0, 0, 0, 0.32) 40%,
+    transparent 74%
+  );
+  opacity: calc(1 + var(--hover) * 0.08);
+}
+
+html.is-dark .t100-card-floor-contact {
+  background: radial-gradient(
+    ellipse 58% 36% at 50% 40%,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.28) 46%,
+    transparent 72%
+  );
+  opacity: calc(0.9 + var(--hover) * 0.1);
 }
 
 .t100-card-frame {
@@ -60,24 +140,34 @@ html.is-dark .t100-card-floor {
   transform-style: preserve-3d;
   transform-origin: 50% 55%;
   transform:
-    rotateX(calc(var(--rest-x) + var(--py) * 5deg))
-    rotateY(calc(var(--rest-y) + var(--px) * -6deg))
-    rotateZ(var(--rest-z));
+    translate3d(0, calc(var(--hover) * -10px), calc(var(--hover) * 28px))
+    rotateX(calc(var(--rest-x) + (var(--py) * var(--tilt-x))))
+    rotateY(calc(var(--rest-y) - (var(--px) * var(--tilt-y))))
+    rotateZ(var(--rest-z))
+    scale(calc(1 + var(--hover) * 0.035));
   z-index: 1;
   will-change: transform;
-  /* No CSS filter — drop-shadow was blooming a pale panel above the cover */
 }
 
 .t100-card-face {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /* Match cover sky top so 3D foreshortening never flashes a grey lip */
+  /* Match cover sky so foreshortening never flashes a grey lip */
   background: #fbfafa;
   border-radius: 1.4% / 2.2%;
-  transform: translateZ(0.1px);
+  transform: translateZ(1px);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 -1px 0 rgba(32, 24, 16, 0.12) inset;
+}
+
+html.is-dark .t100-card-face {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.35) inset;
 }
 
 .t100-card-face img {
@@ -87,8 +177,6 @@ html.is-dark .t100-card-floor {
   height: 100%;
   display: block;
   object-fit: fill;
-  /* Override .project-article img margin/border — those painted a pale
-     lip above the cover and a rule-colored edge around the mask */
   margin: 0;
   border: 0;
   border-radius: 0;
@@ -96,15 +184,76 @@ html.is-dark .t100-card-floor {
   -webkit-user-drag: none;
 }
 
+/* Specular glare that tracks the cursor / idle tilt */
+.t100-card-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle at calc(50% + var(--px) * -40%) calc(40% + var(--py) * -34%),
+    rgba(255, 252, 245, 0.72) 0%,
+    rgba(255, 250, 240, 0.22) 26%,
+    transparent 56%
+  );
+  mix-blend-mode: overlay;
+  opacity: calc(0.65 + var(--hover) * 0.3);
+}
+
+html.is-dark .t100-card-glare {
+  background: radial-gradient(
+    circle at calc(50% + var(--px) * -40%) calc(40% + var(--py) * -34%),
+    rgba(255, 250, 240, 0.55) 0%,
+    rgba(255, 248, 236, 0.16) 26%,
+    transparent 56%
+  );
+  mix-blend-mode: soft-light;
+  opacity: calc(0.7 + var(--hover) * 0.25);
+}
+
+/* Thin edge catch-light opposite the glare */
+.t100-card-edge {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    calc(125deg + var(--px) * 18deg),
+    rgba(255, 255, 255, 0.42) 0%,
+    transparent 20%,
+    transparent 68%,
+    rgba(32, 24, 16, 0.18) 100%
+  );
+  opacity: calc(0.5 + var(--hover) * 0.28);
+  mix-blend-mode: soft-light;
+}
+
+html.is-dark .t100-card-edge {
+  background: linear-gradient(
+    calc(125deg + var(--px) * 18deg),
+    rgba(255, 255, 255, 0.28) 0%,
+    transparent 22%,
+    transparent 66%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
 @media (max-width: 700px) {
   .t100-card {
-    --rest-x: 0deg;
-    --rest-y: 0deg;
+    --rest-x: 9deg;
+    --rest-y: -10deg;
     width: min(92%, 360px);
+    padding: 14% 12% 20%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .t100-card {
+    --px: 0 !important;
+    --py: 0 !important;
+    --hover: 0 !important;
+  }
+
   .t100-card-frame {
     transition: none;
   }
