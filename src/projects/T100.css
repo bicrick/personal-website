@@ -5,7 +5,7 @@
 }
 
 .t100-hero {
-  margin: 4px auto 32px;
+  margin: 8px auto 36px;
   max-width: none;
   overflow: visible;
 }
@@ -15,12 +15,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: min(58vh, 520px);
-  /* Room for ~20° tilt corners + floor shadow — never clip the logo */
-  padding: 56px 28px 72px;
-  perspective: 960px;
-  -webkit-perspective: 960px;
-  perspective-origin: 50% 42%;
+  /* Open fold is 3/4 portrait — leave room above meta and below copy */
+  min-height: min(72vh, 640px);
+  padding: 48px 24px 64px;
+  perspective: 1400px;
+  -webkit-perspective: 1400px;
+  perspective-origin: 50% 45%;
   overflow: visible;
 }
 
@@ -152,8 +152,8 @@ html.is-dark .t100-stack-item.is-img-wide .t100-stack-icon img {
   }
 
   .t100-hero-stage {
-    min-height: min(60vh, 560px);
-    padding: 64px 36px 88px;
+    min-height: min(76vh, 680px);
+    padding: 56px 40px 72px;
   }
 }
 
@@ -164,7 +164,7 @@ html.is-dark .t100-stack-item.is-img-wide .t100-stack-icon img {
   }
 
   .t100-hero-stage {
-    min-height: 340px;
-    padding: 40px 12px 64px;
+    min-height: 420px;
+    padding: 36px 12px 56px;
   }
 }
