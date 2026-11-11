@@ -58,6 +58,17 @@ function poseForStep(step, cutProgress) {
   return FLAT;
 }
 
+/** Keep ≥12px side margin; no-ops on desktop where the card already fits. */
+function maxCardScaleForView(camY, fovDeg, canvasW, canvasH, yawPad) {
+  if (canvasW < 8 || canvasH < 8) return Number.POSITIVE_INFINITY;
+  const vFov = THREE.MathUtils.degToRad(fovDeg);
+  const visibleH = 2 * Math.tan(vFov * 0.5) * Math.max(0.4, camY);
+  const visibleW = visibleH * (canvasW / canvasH);
+  const marginPx = 14;
+  const usableW = visibleW * Math.max(0.5, (canvasW - marginPx * 2) / canvasW);
+  return usableW / (CARD_W * yawPad);
+}
+
 function makeDeskTexture(isDark) {
   const size = 1024;
   const canvas = document.createElement('canvas');
@@ -174,11 +185,13 @@ function useReadOverlayTexture(litCount, active) {
       return;
     }
     const paint = (box, stroke, fill) => {
-      const x = box.x * canvas.width;
-      const y = box.y * canvas.height;
-      const w = box.w * canvas.width;
-      const h = box.h * canvas.height;
-      const r = 3;
+      // Inset by half the stroke so the outline sits on the cell, not outside it
+      const lw = 2;
+      const x = box.x * canvas.width + lw / 2;
+      const y = box.y * canvas.height + lw / 2;
+      const w = box.w * canvas.width - lw;
+      const h = box.h * canvas.height - lw;
+      const r = 2.5;
       ctx.beginPath();
       ctx.moveTo(x + r, y);
       ctx.arcTo(x + w, y, x + w, y + h, r);
@@ -191,7 +204,7 @@ function useReadOverlayTexture(litCount, active) {
         ctx.fill();
       }
       ctx.strokeStyle = stroke;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = lw;
       ctx.stroke();
     };
 
@@ -200,16 +213,7 @@ function useReadOverlayTexture(litCount, active) {
     }
     META.cells.forEach((cell, idx) => {
       if (litCount > idx) {
-        paint(cell, 'rgba(201,162,39,0.9)', 'rgba(245,215,110,0.32)');
-        ctx.fillStyle = '#1a1408';
-        ctx.font = '650 13px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(
-          String(cell.value),
-          (cell.x + cell.w / 2) * canvas.width,
-          (cell.y + cell.h / 2) * canvas.height,
-        );
+        paint(cell, 'rgba(201,162,39,0.9)', 'rgba(245,215,110,0.28)');
       }
     });
     texture.needsUpdate = true;
@@ -276,7 +280,7 @@ function ScorecardMesh({
           polygonOffsetUnits={-1}
         />
       </mesh>
-      <mesh ref={overlayMeshRef} position={[0, 0, 0.0025]} visible={showRead}>
+      <mesh ref={overlayMeshRef} position={[0, 0, 0.0008]} visible={showRead}>
         <planeGeometry args={[CARD_W, CARD_H]} />
         <meshBasicMaterial
           map={overlay}
@@ -397,7 +401,7 @@ function SceneRig({
   isDark,
   reducedMotion,
 }) {
-  const { camera, gl, scene, invalidate } = useThree();
+  const { camera, gl, scene, invalidate, size } = useThree();
   const cardRef = useRef();
   const deskRef = useRef();
   const shadowRef = useRef();
@@ -407,6 +411,8 @@ function SceneRig({
   const bendRef = useRef(-1);
   const lookTarget = useRef(PHOTO.camTarget.clone());
   const yawEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
+  const sizeRef = useRef(size);
+  sizeRef.current = size;
 
   const state = useRef({
     camPos: PHOTO.camPos.clone(),
@@ -430,7 +436,7 @@ function SceneRig({
 
   useEffect(() => {
     invalidate();
-  }, [step, cutProgress, litCount, reducedMotion, invalidate]);
+  }, [step, cutProgress, litCount, reducedMotion, size.width, size.height, invalidate]);
 
   useFrame((_, dt) => {
     const { step: s, cutProgress: cp, reducedMotion: rm } = drivers.current;
@@ -458,10 +464,16 @@ function SceneRig({
     lookTarget.current.copy(c.camTarget);
     camera.lookAt(lookTarget.current);
 
+    // Fit whole card on narrow/mobile canvases without changing desktop framing
+    const { width: cw, height: ch } = sizeRef.current;
+    const yawPad = s <= 0 ? 1.1 : s === 1 ? 1.06 : 1.04;
+    const fit = maxCardScaleForView(c.camPos.y, camera.fov, cw, ch, yawPad);
+    const drawnScale = Math.min(c.cardScale, fit);
+
     if (cardRef.current) {
       cardRef.current.position.copy(c.cardPos);
       cardRef.current.quaternion.copy(c.cardQuat);
-      cardRef.current.scale.setScalar(c.cardScale);
+      cardRef.current.scale.setScalar(drawnScale);
     }
 
     if (shadowRef.current) {
@@ -471,7 +483,7 @@ function SceneRig({
       shadowRef.current.position.y = 0.0004;
       yawEuler.current.setFromQuaternion(c.cardQuat, 'YXZ');
       shadowRef.current.rotation.set(0, yawEuler.current.y, 0);
-      shadowRef.current.scale.setScalar(c.cardScale);
+      shadowRef.current.scale.setScalar(drawnScale);
       shadowRef.current.visible = true;
     }
 
@@ -492,7 +504,8 @@ function SceneRig({
   });
 
   const showRead = step === 2;
-  const useGrid = step === 2;
+  // Always the clean cutout — step-grid.webp has baked OCR boxes that sit low/left
+  const useGrid = false;
 
   return (
     <>
