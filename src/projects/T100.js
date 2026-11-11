@@ -95,7 +95,7 @@ function BuiltWith() {
 function T100() {
   return (
     <ProjectDetail
-      title="t100"
+      title="t|100"
       date="draft · November 2026"
       linkHref={SITE}
       linkLabel="t100-web.vercel.app"
@@ -109,7 +109,7 @@ function T100() {
         </figure>
 
         <p>
-          T100 is an Expo / React Native app with a FastAPI extraction server on
+          t|100 is an Expo / React Native app with a FastAPI extraction server on
           Vercel. After the round you shoot the score sides — Front required, Back
           optional — with the system camera or photo library. On iOS, Apple Vision
           builds a per-pixel paper silhouette for the slot; the server still gets
