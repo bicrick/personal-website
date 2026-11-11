@@ -83,8 +83,8 @@ function T100Ingest() {
       setCutProgress(0);
       setLitCount(0);
     } else if (next === 1) {
-      // Mid-normalize pose for the Cutout scrubber frame
-      setCutProgress(0.42);
+      // Mid-normalize: mostly flattened so bend can't shear the HANDICAP row
+      setCutProgress(0.55);
       setLitCount(0);
     } else if (next === 2) {
       setCutProgress(1);

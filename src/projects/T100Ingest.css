@@ -4,12 +4,13 @@
   --ig-aspect: 16 / 10;
   --ig-radius: 14px;
   --ig-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ig-void: #eceae4;
+  /* Match desk clear color so any canvas edge never flashes page void */
+  --ig-void: #cbb79a;
   margin: 2.25rem 0 0.5rem;
 }
 
 html.is-dark .t100-ingest {
-  --ig-void: #121212;
+  --ig-void: #5a4a3c;
 }
 
 .t100-ig-frame {
