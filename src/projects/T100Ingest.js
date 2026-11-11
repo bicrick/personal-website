@@ -1,190 +1,241 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import './T100Ingest.css';
+import {
+  META,
+  STEPS,
+  prefersReducedMotion,
+} from './T100IngestMeta';
 
-const INGEST = `${process.env.PUBLIC_URL}/images/t100/ingest`;
+const T100IngestScene = lazy(() => import('./T100IngestScene'));
 
-const STEPS = [
-  {
-    id: 'photo',
-    label: 'Photo',
-    caption: 'System camera or library — Front required, Back optional.',
-  },
-  {
-    id: 'cutout',
-    label: 'Cutout',
-    caption:
-      'Vision mask lifts the paper; the server snaps it flat. Fold-aware dewarp runs only when a crease is found — this card had none, so it was skipped.',
-  },
-  {
-    id: 'read',
-    label: 'Read',
-    caption:
-      'RapidOCR maps the printed hole grid; Jev reads each handwritten cell.',
-  },
-  {
-    id: 'done',
-    label: 'Done',
-    caption: 'One tap question per screen · ask below 0.72.',
-  },
-];
+const PHOTO_MS = 3200;
+const CUTOUT_MS = 2400;
+const READ_CELL_MS = 280;
+const READ_TAIL_MS = 900;
+const DONE_DWELL_MS = 2800;
+const LOOP_GAP_MS = 700;
 
-const STEP_MS = [2600, 3200, 4200, 0];
+function useIsDark() {
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== 'undefined'
+      ? document.documentElement.classList.contains('is-dark')
+      : false,
+  );
 
-const META = {
-  player: 'ANTHONY',
-  total: 64,
-  out: 30,
-  inn: 34,
-  holesPlayed: 18,
-  teeOptions: ['Blue', 'White'],
-  question: 'Which tees?',
-  nameBox: {
-    x: 0.10633333333333336,
-    y: 0.3286457438876195,
-    w: 0.19977777777777775,
-    h: 0.06444439130538751,
-  },
-  cells: [
-    { hole: 1, value: 4, x: 0.3061111111111111, y: 0.3286457438876195, w: 0.049999999999999906, h: 0.06444439130538751 },
-    { hole: 2, value: 5, x: 0.35611111111111104, y: 0.3286457438876195, w: 0.050000000000000065, h: 0.06444439130538751 },
-    { hole: 3, value: 4, x: 0.4061111111111111, y: 0.3286457438876195, w: 0.051111111111111086, h: 0.06444439130538751 },
-    { hole: 4, value: 3, x: 0.4572222222222222, y: 0.3286457438876195, w: 0.04833333333333341, h: 0.06444439130538751 },
-    { hole: 5, value: 3, x: 0.5055555555555555, y: 0.3286457438876195, w: 0.04999999999999998, h: 0.06444439130538751 },
-    { hole: 6, value: 3, x: 0.5555555555555556, y: 0.3286457438876195, w: 0.051111111111111086, h: 0.06444439130538751 },
-    { hole: 7, value: 3, x: 0.6066666666666667, y: 0.3286457438876195, w: 0.05111111111111116, h: 0.06444439130538751 },
-    { hole: 8, value: 2, x: 0.6577777777777778, y: 0.3286457438876195, w: 0.04944444444444435, h: 0.06444439130538751 },
-    { hole: 9, value: 3, x: 0.7072222222222222, y: 0.3286457438876195, w: 0.050000000000000065, h: 0.06444439130538751 },
-  ],
-};
+  useEffect(() => {
+    const root = document.documentElement;
+    const sync = () => setIsDark(root.classList.contains('is-dark'));
+    sync();
+    const mo = new MutationObserver(sync);
+    mo.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => mo.disconnect();
+  }, []);
 
-function prefersReducedMotion() {
-  if (typeof window === 'undefined' || !window.matchMedia) return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function boxStyle(b) {
-  return {
-    left: `${b.x * 100}%`,
-    top: `${b.y * 100}%`,
-    width: `${b.w * 100}%`,
-    height: `${b.h * 100}%`,
-  };
+  return isDark;
 }
 
 function T100Ingest() {
   const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [cutPhase, setCutPhase] = useState(0);
+  const [, setPlaying] = useState(false);
+  const [cutProgress, setCutProgress] = useState(0);
   const [litCount, setLitCount] = useState(0);
   const [tee, setTee] = useState(null);
+  const [flash, setFlash] = useState(0);
+  const [viewfinder, setViewfinder] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion);
+  const isDark = useIsDark();
+
   const timerRef = useRef(null);
+  const intervalRef = useRef(0);
   const rafRef = useRef(0);
+  const loopRef = useRef(true);
+  const userControlRef = useRef(false);
 
   const clearTimers = useCallback(() => {
     if (timerRef.current) {
       window.clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = 0;
+    }
     if (rafRef.current) {
-      window.clearInterval(rafRef.current);
+      window.cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
     }
+  }, []);
+
+  const settleStaticStep = useCallback((index) => {
+    const next = Math.max(0, Math.min(STEPS.length - 1, index));
+    setStep(next);
+    setPlaying(false);
+    setFlash(0);
+    setViewfinder(false);
+    if (next === 0) {
+      setCutProgress(0);
+      setLitCount(0);
+    } else if (next === 1) {
+      // Mid-normalize pose for the Cutout scrubber frame
+      setCutProgress(0.42);
+      setLitCount(0);
+    } else if (next === 2) {
+      setCutProgress(1);
+      setLitCount(META.cells.length);
+    } else {
+      setCutProgress(1);
+      setLitCount(META.cells.length);
+    }
+    if (next < 3) setTee(null);
   }, []);
 
   const goTo = useCallback(
     (index) => {
       clearTimers();
-      const next = Math.max(0, Math.min(STEPS.length - 1, index));
-      setStep(next);
-      setPlaying(false);
-      setCutPhase(next >= 2 ? 1 : 0);
-      setLitCount(next >= 2 ? META.cells.length : 0);
-      if (next < 3) setTee(null);
+      loopRef.current = false;
+      userControlRef.current = true;
+      settleStaticStep(index);
     },
-    [clearTimers],
+    [clearTimers, settleStaticStep],
   );
 
   const runFrom = useCallback(
     (startIndex) => {
       clearTimers();
+      loopRef.current = true;
+      userControlRef.current = false;
+
       if (prefersReducedMotion()) {
-        setStep(STEPS.length - 1);
-        setCutPhase(1);
-        setLitCount(META.cells.length);
-        setPlaying(false);
+        settleStaticStep(startIndex);
         return;
       }
 
       setPlaying(true);
+      setTee(null);
       let i = startIndex;
 
-      const advance = () => {
-        setStep(i);
+      const schedule = (fn, ms) => {
+        timerRef.current = window.setTimeout(fn, ms);
+      };
 
-        if (i === 1) {
-          setCutPhase(0);
-          timerRef.current = window.setTimeout(() => {
-            setCutPhase(1);
-            timerRef.current = window.setTimeout(() => {
-              i += 1;
-              advance();
-            }, 1600);
+      const advance = () => {
+        if (!loopRef.current && i !== startIndex) {
+          /* scrubber interrupted */
+        }
+        setStep(i);
+        setFlash(0);
+        setViewfinder(false);
+
+        if (i === 0) {
+          setCutProgress(0);
+          setLitCount(0);
+          // Viewfinder then shutter blink mid-Photo
+          schedule(() => {
+            setViewfinder(true);
+            schedule(() => {
+              setFlash(1);
+              setViewfinder(false);
+              schedule(() => {
+                setFlash(0);
+                schedule(() => {
+                  i = 1;
+                  advance();
+                }, 700);
+              }, 140);
+            }, 700);
           }, 1400);
           return;
         }
 
+        if (i === 1) {
+          setLitCount(0);
+          setCutProgress(0);
+          const start = performance.now();
+          const tick = (now) => {
+            const t = Math.min(1, (now - start) / CUTOUT_MS);
+            setCutProgress(t);
+            if (t < 1) {
+              rafRef.current = window.requestAnimationFrame(tick);
+            } else {
+              rafRef.current = 0;
+              schedule(() => {
+                i = 2;
+                advance();
+              }, 350);
+            }
+          };
+          rafRef.current = window.requestAnimationFrame(tick);
+          return;
+        }
+
         if (i === 2) {
+          setCutProgress(1);
           setLitCount(0);
           let n = 0;
-          rafRef.current = window.setInterval(() => {
+          intervalRef.current = window.setInterval(() => {
             n += 1;
             setLitCount(n);
             if (n >= META.cells.length) {
-              window.clearInterval(rafRef.current);
-              rafRef.current = 0;
-              timerRef.current = window.setTimeout(() => {
-                i += 1;
+              window.clearInterval(intervalRef.current);
+              intervalRef.current = 0;
+              schedule(() => {
+                i = 3;
                 advance();
-              }, 900);
+              }, READ_TAIL_MS);
             }
-          }, 280);
+          }, READ_CELL_MS);
           return;
         }
 
         if (i === 3) {
+          setCutProgress(1);
           setLitCount(META.cells.length);
-          setCutPhase(1);
-          setPlaying(false);
+          schedule(() => {
+            if (!loopRef.current) {
+              setPlaying(false);
+              return;
+            }
+            schedule(() => {
+              i = 0;
+              advance();
+            }, LOOP_GAP_MS);
+          }, DONE_DWELL_MS);
           return;
         }
 
-        timerRef.current = window.setTimeout(() => {
+        schedule(() => {
           i += 1;
           if (i < STEPS.length) advance();
           else setPlaying(false);
-        }, STEP_MS[i] || 2400);
+        }, PHOTO_MS);
       };
 
       advance();
     },
-    [clearTimers],
+    [clearTimers, settleStaticStep],
   );
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => {
-      if (mq.matches) {
+      const on = mq.matches;
+      setReducedMotion(on);
+      if (on) {
         clearTimers();
-        setStep(3);
-        setCutPhase(1);
-        setLitCount(META.cells.length);
-        setPlaying(false);
+        settleStaticStep(0);
       }
     };
     sync();
     mq.addEventListener('change', sync);
     return () => mq.removeEventListener('change', sync);
-  }, [clearTimers]);
+  }, [clearTimers, settleStaticStep]);
 
   useEffect(() => {
     const root = document.querySelector('.t100-ingest');
@@ -193,7 +244,7 @@ function T100Ingest() {
     let started = false;
     const io = new IntersectionObserver(
       (entries) => {
-        if (started) return;
+        if (started || userControlRef.current) return;
         if (entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.35)) {
           started = true;
           runFrom(0);
@@ -208,10 +259,6 @@ function T100Ingest() {
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const showPhoto = step === 0;
-  const showCutout = step === 1 && cutPhase === 0;
-  const showRect = step === 1 && cutPhase === 1;
-  const showRead = step === 2;
   const showDone = step === 3;
 
   const resultPanel = (
@@ -246,91 +293,42 @@ function T100Ingest() {
 
   return (
     <section className="t100-ingest" aria-label="Scorecard ingestion sequence">
-      <div className="t100-ig-frame" data-step={STEPS[step].id}>
+      <div
+        className="t100-ig-frame"
+        data-step={STEPS[step].id}
+        data-cut={cutProgress.toFixed(2)}
+        data-lit={litCount}
+      >
         <div className="t100-ig-stage">
-          <div
-            className={`t100-ig-layer is-photo${showPhoto ? ' is-on' : ''}`}
-            aria-hidden={!showPhoto}
-          >
-            <img
-              src={`${INGEST}/step-photo.webp`}
-              alt=""
-              width={720}
-              height={540}
-              draggable={false}
-            />
-          </div>
-
-          <div
-            className={`t100-ig-layer is-cutout${showCutout ? ' is-on' : ''}`}
-            aria-hidden={!showCutout}
-          >
-            <img
-              src={`${INGEST}/step-cutout.webp`}
-              alt=""
-              width={719}
-              height={341}
-              draggable={false}
-            />
-          </div>
-
-          <div
-            className={`t100-ig-layer is-rect${showRect ? ' is-on' : ''}`}
-            aria-hidden={!showRect}
-          >
-            <img
-              src={`${INGEST}/step-rectified.webp`}
-              alt=""
-              width={719}
-              height={341}
-              draggable={false}
-            />
-          </div>
-
-          <div
-            className={`t100-ig-layer is-read${showRead ? ' is-on' : ''}`}
-            aria-hidden={!showRead}
-          >
-            <div className="t100-ig-cardbox">
-              <img
-                src={`${INGEST}/step-grid.webp`}
-                alt=""
-                width={719}
-              height={341}
-                draggable={false}
-              />
-              <div className="t100-ig-cells" aria-hidden="true">
-                <span
-                  className={`t100-ig-cell is-name-hit${litCount > 0 ? ' is-lit' : ''}`}
-                  style={boxStyle(META.nameBox)}
-                />
-                {META.cells.map((cell, idx) => (
-                  <span
-                    key={cell.hole}
-                    className={`t100-ig-cell${litCount > idx ? ' is-lit' : ''}`}
-                    style={boxStyle(cell)}
-                  >
-                    <em>{cell.value}</em>
-                  </span>
-                ))}
+          <Suspense
+            fallback={
+              <div className="t100-ig-fallback" aria-hidden="true">
+                Loading 3D…
               </div>
-            </div>
-          </div>
+            }
+          >
+            <T100IngestScene
+              step={step}
+              cutProgress={cutProgress}
+              litCount={litCount}
+              isDark={isDark}
+              reducedMotion={reducedMotion}
+            />
+          </Suspense>
 
           <div
-            className={`t100-ig-layer is-done${showDone ? ' is-on' : ''}`}
-            aria-hidden={!showDone}
+            className={`t100-ig-viewfinder${viewfinder ? ' is-on' : ''}`}
+            aria-hidden="true"
           >
-            <div className="t100-ig-cardbox">
-              <img
-                src={`${INGEST}/step-rectified.webp`}
-                alt=""
-                width={719}
-                height={341}
-                draggable={false}
-              />
-            </div>
+            <span />
+            <span />
+            <span />
+            <span />
           </div>
+          <div
+            className={`t100-ig-flash${flash > 0 ? ' is-on' : ''}`}
+            aria-hidden="true"
+          />
         </div>
 
         {showDone && (
@@ -357,8 +355,10 @@ function T100Ingest() {
         <button
           type="button"
           className="t100-ig-replay"
-          onClick={() => runFrom(0)}
-          disabled={playing}
+          onClick={() => {
+            loopRef.current = true;
+            runFrom(0);
+          }}
         >
           Replay
         </button>

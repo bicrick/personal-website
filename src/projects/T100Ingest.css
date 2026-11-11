@@ -1,10 +1,9 @@
-/* One card · one frame · four steps — landscape Crow Canyon front */
+/* Crow Canyon ingest — lazy R3F 3D scene + DOM scrubber / Done panels */
 
 .t100-ingest {
-  --ig-aspect: 720 / 540;
+  --ig-aspect: 16 / 10;
   --ig-radius: 14px;
   --ig-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ig-pad: 5%;
   --ig-void: #eceae4;
   margin: 2.25rem 0 0.5rem;
 }
@@ -37,151 +36,103 @@ html.is-dark .t100-ig-frame {
   isolation: isolate;
 }
 
-/* Cutout / Read / Done: frame matches tight scorecard (~2.4:1) */
-.t100-ig-frame[data-step='cutout'] .t100-ig-stage,
-.t100-ig-frame[data-step='read'] .t100-ig-stage,
-.t100-ig-frame[data-step='done'] .t100-ig-stage {
-  aspect-ratio: 719 / 341;
+.t100-ig-canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  border-radius: inherit;
 }
 
-/* Layers: opacity only — no scale (scale caused ghost double edges) */
-.t100-ig-layer {
+.t100-ig-fallback {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--ink-muted);
+  background: var(--ig-void);
+}
+
+/* Phone viewfinder corners during Photo snap */
+.t100-ig-viewfinder {
+  position: absolute;
+  inset: 10%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  z-index: 3;
+}
+
+.t100-ig-viewfinder.is-on {
+  opacity: 1;
+}
+
+.t100-ig-viewfinder span {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.t100-ig-viewfinder span:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.t100-ig-viewfinder span:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.t100-ig-viewfinder span:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-top: 0;
+}
+
+.t100-ig-viewfinder span:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-left: 0;
+  border-top: 0;
+}
+
+.t100-ig-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s var(--ig-ease);
-  display: grid;
-  place-items: center;
+  z-index: 4;
+  mix-blend-mode: screen;
 }
 
-.t100-ig-layer.is-on {
-  opacity: 1;
-  pointer-events: auto;
+.t100-ig-flash.is-on {
+  animation: t100-ig-shutter 0.14s ease-out forwards;
 }
 
-.t100-ig-layer img,
-.project-article .t100-ig-layer img,
-.project-article .t100-ig-cardbox > img {
-  display: block;
-  margin: 0 !important;
-  border: 0 !important;
-  border-radius: 0;
-  box-shadow: none !important;
-  user-select: none;
-  -webkit-user-drag: none;
-  max-width: 100%;
-  max-height: 100%;
+@keyframes t100-ig-shutter {
+  0% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-/* Photo: full original fitted with contain — surroundings visible */
-.t100-ig-layer.is-photo img {
-  width: auto;
-  height: auto;
-  max-width: 94%;
-  max-height: 94%;
-  object-fit: contain;
-}
-
-/* Cutout / rect: whole card with even padding */
-.t100-ig-layer.is-cutout img,
-.t100-ig-layer.is-rect img {
-  width: auto;
-  height: auto;
-  max-width: 90%;
-  max-height: 84%;
-  object-fit: contain;
-  /* Opaque RGB assets — no alpha fringe / ghost outline */
-  background: transparent;
-  box-shadow: none;
-  filter: none;
-}
-
-/* No drop-shadow — it painted a ghost duplicate edge above the card */
-
-/* Shared padded card box for Read / Done — stage ≈ card aspect, so 90% fits */
-.t100-ig-cardbox {
-  position: relative;
-  aspect-ratio: 719 / 341;
-  width: 90%;
-  height: auto;
-  /* Hard edges — no shadow/filter that paints a duplicate outline */
-  filter: none;
-  box-shadow: none;
-}
-
-.t100-ig-cardbox > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
-.t100-ig-layer.is-read,
-.t100-ig-layer.is-done {
-  display: grid;
-  place-items: center;
-}
-
-.t100-ig-cells {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.t100-ig-cell {
-  position: absolute;
-  box-sizing: border-box;
-  border: 1.5px solid transparent;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  transition:
-    border-color 0.25s ease,
-    background 0.25s ease;
-}
-
-.t100-ig-cell em {
-  font-style: normal;
-  font-family: var(--font-sans);
-  font-weight: 650;
-  font-size: clamp(10px, 1.8vw, 14px);
-  color: transparent;
-  letter-spacing: 0.02em;
-  transition: color 0.2s ease;
-}
-
-.t100-ig-cell.is-lit {
-  border-color: color-mix(in srgb, #c9a227 70%, #fff);
-  background: color-mix(in srgb, #f5d76e 38%, transparent);
-}
-
-.t100-ig-cell.is-lit em {
-  color: #1a1408;
-}
-
-/* Name hit: outline only — handwriting stays visible */
-.t100-ig-cell.is-name-hit.is-lit {
-  background: transparent;
-  border-color: color-mix(in srgb, #3b82b8 70%, #fff);
-}
-
-
-/* Done results */
+/* Done results — always below the 3D stage */
 .t100-ig-result-inner {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-/* Overlay removed — Done panels always stack below the card */
-.t100-ig-result-overlay {
-  display: none !important;
 }
 
 .t100-ig-result-below {
@@ -308,7 +259,7 @@ html.is-dark .t100-ig-ask {
   background: color-mix(in srgb, var(--ink) 12%, transparent);
 }
 
-/* Controls */
+/* Controls / scrubber */
 .t100-ig-controls {
   max-width: 920px;
   margin: 14px auto 0;
@@ -383,6 +334,10 @@ html.is-dark .t100-ig-tabs button.is-active {
 }
 
 @media (max-width: 700px) {
+  .t100-ingest {
+    --ig-aspect: 5 / 4;
+  }
+
   .t100-ig-frame {
     padding: 10px;
     border-radius: 14px;
@@ -412,10 +367,19 @@ html.is-dark .t100-ig-tabs button.is-active {
     padding: 6px 11px;
     font-size: 12px;
   }
+
+  .t100-ig-viewfinder {
+    inset: 8%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .t100-ig-layer {
+  .t100-ig-viewfinder {
     transition: none;
+  }
+
+  .t100-ig-flash.is-on {
+    animation: none;
+    opacity: 0;
   }
 }
