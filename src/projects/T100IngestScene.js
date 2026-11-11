@@ -169,6 +169,7 @@ function useReadOverlayTexture(litCount, active) {
   const texture = useMemo(() => {
     const t = new THREE.CanvasTexture(canvas);
     t.colorSpace = THREE.SRGBColorSpace;
+    t.flipY = true;
     t.minFilter = THREE.LinearFilter;
     t.magFilter = THREE.LinearFilter;
     return t;
@@ -216,6 +217,10 @@ function useReadOverlayTexture(litCount, active) {
         paint(cell, 'rgba(201,162,39,0.9)', 'rgba(245,215,110,0.28)');
       }
     });
+    // OUT 30 — lights with the last hole so the full handwritten row is framed
+    if (META.outBox && litCount >= META.cells.length) {
+      paint(META.outBox, 'rgba(59,130,184,0.85)', 'rgba(120,180,220,0.18)');
+    }
     texture.needsUpdate = true;
     invalidate();
   }, [active, litCount, canvas, texture, invalidate]);
@@ -256,6 +261,8 @@ function ScorecardMesh({
   useEffect(() => {
     Object.values(textures).forEach((t) => {
       t.colorSpace = THREE.SRGBColorSpace;
+      // Match canvas overlay — keep UV origin locked to the card texture
+      t.flipY = true;
       // No mipmaps — grazing near-edge of HANDICAP was smearing into a ghost fold
       t.generateMipmaps = false;
       t.minFilter = THREE.LinearFilter;
@@ -280,8 +287,13 @@ function ScorecardMesh({
           polygonOffsetUnits={-1}
         />
       </mesh>
-      <mesh ref={overlayMeshRef} position={[0, 0, 0.0008]} visible={showRead}>
-        <planeGeometry args={[CARD_W, CARD_H]} />
+      {/* Same geometry/UVs as the card so Read boxes stay locked under transform */}
+      <mesh
+        ref={overlayMeshRef}
+        geometry={geo}
+        position={[0, 0, 0.0008]}
+        visible={showRead}
+      >
         <meshBasicMaterial
           map={overlay}
           transparent
