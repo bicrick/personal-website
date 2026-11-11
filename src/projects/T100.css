@@ -15,12 +15,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Open fold is 3/4 portrait — leave room above meta and below copy */
-  min-height: min(72vh, 640px);
-  padding: 48px 24px 64px;
-  perspective: 1400px;
-  -webkit-perspective: 1400px;
-  perspective-origin: 50% 45%;
+  /*
+   * Fixed runway sized for the fully open 3/4 card + float room.
+   * No perspective here — the fold owns perspective so tilt doesn't compound.
+   */
+  height: min(68vh, 620px);
+  min-height: 420px;
+  padding: 36px 20px 48px;
+  box-sizing: border-box;
   overflow: visible;
 }
 
@@ -152,8 +154,8 @@ html.is-dark .t100-stack-item.is-img-wide .t100-stack-icon img {
   }
 
   .t100-hero-stage {
-    min-height: min(76vh, 680px);
-    padding: 56px 40px 72px;
+    height: min(72vh, 660px);
+    padding: 44px 32px 56px;
   }
 }
 
@@ -164,7 +166,8 @@ html.is-dark .t100-stack-item.is-img-wide .t100-stack-icon img {
   }
 
   .t100-hero-stage {
-    min-height: 420px;
-    padding: 36px 12px 56px;
+    height: 460px;
+    min-height: 460px;
+    padding: 28px 12px 40px;
   }
 }

@@ -1,21 +1,27 @@
-/* Pebble fold card — mirrors t100-web.vercel.app fold geometry + gentle float */
+/*
+ * Pebble fold card — one concern per wrapper so transforms never fight:
+ *   .t100-card-float  → translateY(--float-y) only
+ *   .t100-card-tilt   → rotateX/Y from cursor only (≤3°)
+ *   .t100-fold-body   → vertical ride for closed centering
+ *   .t100-fold-leaf   → rotateX(--open * 180deg) only
+ *   .t100-fold-shadow → scaleY with --open only
+ */
 
 .t100-card {
   --px: 0;
   --py: 0;
   --open: 0;
-  --float: 0;
+  --float-y: 0px;
   --rest: -25;
-  /* Cursor follow: a few degrees only */
-  --tilt-x: 4deg;
-  --tilt-y: 5deg;
+  --tilt-x: 3deg;
+  --tilt-y: 3deg;
   --lift: 0 1px 1px rgba(22, 24, 26, 0.08),
-    0 14px 28px -10px rgba(26, 42, 34, 0.22),
-    0 28px 48px -18px rgba(26, 42, 34, 0.16);
+    0 14px 28px -10px rgba(26, 42, 34, 0.2),
+    0 28px 48px -18px rgba(26, 42, 34, 0.14);
   position: relative;
-  width: min(420px, 78%);
+  /* Fixed footprint = fully open 3/4 card — page below never shifts */
+  width: min(400px, 76%);
   margin: 0 auto;
-  transform-style: preserve-3d;
   isolation: isolate;
   touch-action: pan-y;
   overflow: visible;
@@ -23,59 +29,35 @@
 
 .t100-card.is-compact {
   --tilt-x: 2deg;
-  --tilt-y: 3deg;
-  width: min(86%, 260px);
+  --tilt-y: 2deg;
+  width: min(86%, 240px);
 }
 
 .t100-card.is-static {
   --px: 0;
   --py: 0;
   --open: 0;
-  --float: 0;
+  --float-y: 0px;
 }
 
-.t100-card-glow {
-  position: absolute;
-  inset: -8% -18% -4%;
-  pointer-events: none;
-  z-index: 0;
-  background: radial-gradient(
-    ellipse 70% 55% at 50% 48%,
-    rgba(196, 163, 90, 0.12),
-    transparent 70%
-  );
-  opacity: calc(0.7 + 0.3 * (0.5 + 0.5 * var(--float)));
+/* Float only — no rotate, no scale */
+.t100-card-float {
+  position: relative;
+  width: 100%;
+  transform: translate3d(0, var(--float-y), 0);
+  transform-style: preserve-3d;
 }
 
-html.is-dark .t100-card-glow {
-  background: radial-gradient(
-    ellipse 70% 55% at 50% 48%,
-    rgba(196, 163, 90, 0.08),
-    transparent 70%
-  );
-}
-
-/* Floating wrapper — same float whether cursor is on or off */
-.t100-card-deal {
+/* Cursor tilt only — ≤3° each axis, no translate */
+.t100-card-tilt {
   position: relative;
   width: 100%;
   container-type: inline-size;
-  z-index: 1;
-  transform: translate3d(
-      calc(var(--px) * 4px),
-      calc(var(--float) * -7px),
-      0
-    )
-    rotateX(calc(var(--py) * var(--tilt-x)))
+  transform: rotateX(calc(var(--py) * var(--tilt-x)))
     rotateY(calc(var(--px) * -1 * var(--tilt-y)));
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
-/*
- * Fold runway is always the open-card size (3/4). When shut, the body rides
- * up so the cover sits centred — same math as t100-web.
- */
 .t100-fold {
   --corner: 3cqw;
   position: relative;
@@ -131,7 +113,6 @@ html.is-dark .t100-card-glow {
   transform-origin: 50% 0;
   transform: translateZ(1px) rotateX(calc(var(--open) * 180deg));
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .t100-fold-face {
@@ -140,13 +121,11 @@ html.is-dark .t100-card-glow {
   -webkit-backface-visibility: hidden;
 }
 
-/* Inside top is printed on the back of the cover */
 .t100-fold-inner {
   transform: rotateX(180deg);
   border-radius: var(--corner) var(--corner) 0 0;
 }
 
-/* Turning-page shading */
 .t100-fold-base::after,
 .t100-fold-face::after {
   content: '';
@@ -170,26 +149,21 @@ html.is-dark .t100-card-glow {
   opacity: calc(0.12 * var(--open));
 }
 
-/* Soft layered shadow — breathes with float, grows as the card opens */
+/* Shadow rides with float wrapper; only scaleY tracks open — no float jitter */
 .t100-fold-shadow {
   inset: 2% 1% -2%;
   border-radius: var(--corner);
   box-shadow: var(--lift);
   transform-origin: 50% 100%;
-  transform: translate3d(
-      calc(var(--px) * -6px),
-      calc(6px + var(--float) * 3px),
-      -1px
-    )
-    scaleY(calc(0.52 + 0.48 * var(--open) + var(--float) * 0.03));
-  opacity: calc(0.78 + 0.12 * var(--open) + var(--float) * 0.06);
+  transform: translateZ(-1px) scaleY(calc(0.52 + 0.48 * var(--open)));
+  opacity: calc(0.82 + 0.1 * var(--open));
   pointer-events: none;
 }
 
 html.is-dark .t100-card {
   --lift: 0 1px 1px rgba(0, 0, 0, 0.35),
-    0 16px 32px -10px rgba(0, 0, 0, 0.55),
-    0 32px 56px -16px rgba(0, 0, 0, 0.4);
+    0 16px 32px -10px rgba(0, 0, 0, 0.5),
+    0 32px 56px -16px rgba(0, 0, 0, 0.38);
 }
 
 html.is-dark .t100-fold-base,
@@ -199,7 +173,7 @@ html.is-dark .t100-fold-face {
 
 @media (max-width: 700px) {
   .t100-card {
-    width: min(88%, 340px);
+    width: min(86%, 320px);
   }
 }
 
@@ -208,12 +182,13 @@ html.is-dark .t100-fold-face {
     --px: 0 !important;
     --py: 0 !important;
     --open: 0 !important;
-    --float: 0 !important;
+    --float-y: 0px !important;
   }
 
-  .t100-card-deal,
+  .t100-card-float,
+  .t100-card-tilt,
   .t100-fold-leaf,
   .t100-fold-body {
-    transition: none;
+    transition: none !important;
   }
 }
