@@ -7,6 +7,7 @@ import TapestryTilePreview from '../TapestryTilePreview';
 import { MonocleTilePreview } from '../project/monocle';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
 import NotepadableTilePreview from '../notepadable-tile/NotepadableTilePreview';
+import T100TilePreview from '../../projects/T100TilePreview';
 import './FeaturedProjects.css';
 
 function FeaturedMedia({ project }) {
@@ -27,6 +28,9 @@ function FeaturedMedia({ project }) {
   }
   if (project.livePreview === 'notepadable') {
     return <NotepadableTilePreview />;
+  }
+  if (project.livePreview === 't100') {
+    return <T100TilePreview />;
   }
   if (project.video) {
     return (

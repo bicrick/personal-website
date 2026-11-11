@@ -1,5 +1,19 @@
 export const PROJECTS = [
   {
+    title: 't100',
+    description: 'reading paper golf scorecards with jev first',
+    timelineDescription:
+      'Vision cutout, RapidOCR grid, Jev per cell, ask below 0.72 — 191/194 holes = 98.45%, about $2.57 per 100.',
+    livePreview: 't100',
+    blogLink: '/projects/t100',
+    appLink: 'https://t100-web.vercel.app',
+    appLabel: 'site',
+    relevanceRank: 1,
+    dateRank: 0,
+    date: 'November 2026',
+    featured: true,
+  },
+  {
     title: 'infinite tapestry',
     description: 'an endless painting driven and guided by the internet',
     timelineDescription:
@@ -12,7 +26,6 @@ export const PROJECTS = [
     relevanceRank: 2,
     dateRank: 2,
     date: 'October 2026',
-    featured: true,
   },
   {
     title: 'qwop world record with reinforcement learning',
@@ -23,7 +36,7 @@ export const PROJECTS = [
     blogLink: '/projects/qwop-python',
     appLink: '/demos/qwop',
     appLabel: 'demo',
-    relevanceRank: 1,
+    relevanceRank: 0,
     dateRank: 4,
     date: 'September 2026',
     featured: true,

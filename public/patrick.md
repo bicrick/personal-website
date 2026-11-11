@@ -165,6 +165,19 @@ made come with you. October 2026.
 - Site: https://scribepages.com
 - Write-up: https://www.bicrick.com/projects/scribe
 
+### t100
+
+Reads paper golf scorecards. Photograph the card; the pipeline cuts out the
+paper, finds the grid with RapidOCR (ONNX), and asks Jev (TypeSafe hosted)
+per cell before falling back to Sonnet or asking the golfer. Expo / React
+Native app, FastAPI on Vercel, Firebase, Reanimated fold. Draft write-up.
+November 2026.
+
+Write "t100" lowercase. Do not claim 18Birdies import as shipped.
+
+- Site: https://t100-web.vercel.app
+- Write-up: https://www.bicrick.com/projects/t100
+
 ### monocle
 
 A Chrome extension that restyles the live tab using your local Cursor CLI.

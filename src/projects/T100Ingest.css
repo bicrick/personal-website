@@ -1,0 +1,423 @@
+/* Crow Canyon ingest — chrome themed to t100-web design tokens */
+
+.t100-ingest {
+  /* Light tokens from t100-web.vercel.app */
+  --t100-paper: #f4f1ea;
+  --t100-cream: #f7f4ec;
+  --t100-ink: #16181a;
+  --t100-ink-2: #4d5149;
+  --t100-ink-3: #7f8177;
+  --t100-line: #ddd6c6;
+  --t100-line-strong: #c4bcaa;
+  --t100-green: #1a2a22;
+  --t100-green-2: #24392e;
+  --t100-brass: #c4a35a;
+  --t100-r: 6px;
+  --t100-lift: 0 1px 1px rgba(22, 24, 26, 0.08),
+    0 10px 20px -8px rgba(26, 42, 34, 0.18);
+  --t100-sans: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  --t100-settle: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  --ig-aspect: 16 / 10;
+  --ig-radius: var(--t100-r);
+  --ig-ease: var(--t100-settle);
+  --ig-void: #cbb79a;
+  margin: 2.25rem 0 0.5rem;
+  color: var(--t100-ink);
+  font-family: var(--t100-sans);
+}
+
+html.is-dark .t100-ingest {
+  --t100-paper: #121412;
+  --t100-cream: #1a1c1a;
+  --t100-ink: #f0ebe3;
+  --t100-ink-2: #c4c0b4;
+  --t100-ink-3: #8a877c;
+  --t100-line: #2c2e2a;
+  --t100-line-strong: #4a4d45;
+  --t100-green: #d6c4a0;
+  --t100-green-2: #e4d4b4;
+  --t100-brass: #c4a35a;
+  --t100-lift: 0 1px 1px rgba(0, 0, 0, 0.4),
+    0 12px 24px -10px rgba(0, 0, 0, 0.5);
+  --ig-void: #5a4a3c;
+}
+
+.t100-ig-frame {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  border-radius: calc(var(--t100-r) + 4px);
+  background: var(--t100-paper);
+  border: 1px solid var(--t100-line);
+  box-shadow: var(--t100-lift);
+  padding: 14px;
+}
+
+.t100-ig-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ig-aspect);
+  overflow: hidden;
+  border-radius: var(--t100-r);
+  background: var(--ig-void);
+  isolation: isolate;
+}
+
+.t100-ig-canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  border-radius: inherit;
+}
+
+.t100-ig-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--t100-ink-3);
+  background: var(--ig-void);
+}
+
+.t100-ig-viewfinder {
+  position: absolute;
+  inset: 10%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  z-index: 3;
+}
+
+.t100-ig-viewfinder.is-on {
+  opacity: 1;
+}
+
+.t100-ig-viewfinder span {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--t100-green);
+  box-shadow: none;
+}
+
+.t100-ig-viewfinder span:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 4px;
+}
+
+.t100-ig-viewfinder span:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-left: 0;
+  border-bottom: 0;
+  border-top-right-radius: 4px;
+}
+
+.t100-ig-viewfinder span:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom-left-radius: 4px;
+}
+
+.t100-ig-viewfinder span:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-left: 0;
+  border-top: 0;
+  border-bottom-right-radius: 4px;
+}
+
+.t100-ig-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  mix-blend-mode: screen;
+}
+
+.t100-ig-flash.is-on {
+  animation: t100-ig-shutter 0.14s ease-out forwards;
+}
+
+@keyframes t100-ig-shutter {
+  0% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.t100-ig-result-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.t100-ig-result-below {
+  display: block;
+  margin-top: 12px;
+}
+
+.t100-ig-result-below .t100-ig-result-inner {
+  gap: 8px;
+}
+
+@media (min-width: 701px) {
+  .t100-ig-result-below .t100-ig-result-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+.t100-ig-score {
+  padding: 12px 14px;
+  border-radius: var(--t100-r);
+  background: var(--t100-cream);
+  border: 1px solid var(--t100-line);
+  box-shadow: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.t100-ig-score-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.t100-ig-score span {
+  font-family: var(--t100-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--t100-ink-3);
+}
+
+.t100-ig-score strong {
+  font-family: var(--t100-sans);
+  font-size: clamp(22px, 3.6vw, 30px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--t100-ink);
+}
+
+.t100-ig-score em {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--t100-ink-2);
+}
+
+.t100-ig-ask {
+  padding: 12px 14px;
+  border-radius: var(--t100-r);
+  background: var(--t100-cream);
+  border: 1px solid var(--t100-line);
+}
+
+.t100-ig-ask-kicker {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t100-ink-3);
+  margin-bottom: 4px;
+}
+
+.t100-ig-ask p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--t100-ink);
+}
+
+.t100-ig-ask-opts {
+  display: flex;
+  gap: 8px;
+}
+
+.t100-ig-ask-opts button {
+  flex: 1;
+  appearance: none;
+  border: 1px solid var(--t100-line-strong);
+  background: transparent;
+  color: var(--t100-ink);
+  border-radius: var(--t100-r);
+  padding: 9px 12px;
+  font-family: var(--t100-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.t100-ig-ask-opts button:hover {
+  border-color: var(--t100-ink);
+}
+
+.t100-ig-ask-opts button.is-picked {
+  border-color: var(--t100-green);
+  background: var(--t100-green);
+  color: var(--t100-cream);
+}
+
+html.is-dark .t100-ig-ask-opts button.is-picked {
+  color: #121412;
+}
+
+.t100-ig-controls {
+  max-width: 920px;
+  margin: 14px auto 0;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+}
+
+.t100-ig-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Squared radius buttons — t100-web uses --r: 6px, no pills */
+.t100-ig-tabs button {
+  appearance: none;
+  border: 1px solid var(--t100-line-strong);
+  background: transparent;
+  color: var(--t100-ink-2);
+  border-radius: var(--t100-r);
+  min-height: 38px;
+  padding: 0 14px;
+  font-family: var(--t100-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.t100-ig-tabs button:hover {
+  color: var(--t100-ink);
+  border-color: var(--t100-ink);
+}
+
+.t100-ig-tabs button.is-active {
+  background: var(--t100-green);
+  border-color: var(--t100-green);
+  color: var(--t100-cream);
+}
+
+html.is-dark .t100-ig-tabs button.is-active {
+  color: #121412;
+}
+
+.t100-ig-tabs button.is-active:hover {
+  background: var(--t100-green-2);
+  border-color: var(--t100-green-2);
+}
+
+.t100-ig-caption {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--t100-ink-2);
+}
+
+.t100-ig-replay {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--t100-ink-3);
+  font-family: var(--t100-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.t100-ig-replay:disabled {
+  opacity: 0.45;
+  cursor: default;
+  text-decoration: none;
+}
+
+.t100-ig-replay:hover:not(:disabled) {
+  color: var(--t100-ink);
+}
+
+@media (max-width: 700px) {
+  .t100-ingest {
+    --ig-aspect: 5 / 4;
+  }
+
+  .t100-ig-frame {
+    padding: 10px;
+    border-radius: calc(var(--t100-r) + 2px);
+  }
+
+  .t100-ig-stage {
+    border-radius: var(--t100-r);
+  }
+
+  .t100-ig-result-below .t100-ig-result-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .t100-ig-score,
+  .t100-ig-ask {
+    padding: 10px 12px;
+  }
+
+  .t100-ig-score strong {
+    font-size: 28px;
+  }
+
+  .t100-ig-tabs button {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 0.8rem;
+  }
+
+  .t100-ig-viewfinder {
+    inset: 8%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t100-ig-viewfinder {
+    transition: none;
+  }
+
+  .t100-ig-flash.is-on {
+    animation: none;
+    opacity: 0;
+  }
+}
