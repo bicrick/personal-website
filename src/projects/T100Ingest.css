@@ -62,6 +62,14 @@ html.is-dark .t100-ingest {
   border-radius: var(--t100-r);
   background: var(--ig-void);
   isolation: isolate;
+  transition: background-color 0.45s var(--t100-settle);
+}
+
+/* Cutout → Done: stage chrome matches panel paper (3D clear color does the same) */
+.t100-ig-frame[data-step='cutout'] .t100-ig-stage,
+.t100-ig-frame[data-step='read'] .t100-ig-stage,
+.t100-ig-frame[data-step='done'] .t100-ig-stage {
+  --ig-void: var(--t100-paper);
 }
 
 .t100-ig-canvas {
