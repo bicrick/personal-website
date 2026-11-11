@@ -1,6 +1,6 @@
 export const PROJECTS = [
   {
-    title: 't100',
+    title: 't|100',
     description: 'reading paper golf scorecards with jev first',
     timelineDescription:
       'Vision cutout, RapidOCR grid, Jev per cell, ask below 0.72 — 191/194 holes = 98.45%, about $2.57 per 100.',

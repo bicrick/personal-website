@@ -305,6 +305,20 @@ function ScorecardMesh({
   );
 }
 
+/**
+ * 0 = wood desk (Photo only).
+ * Cutout fades wood out early so the step (and static tab) is fully plain;
+ * Read / Done stay plain. Wood returns only when Photo restarts.
+ */
+function plainAmount(step, cutProgress) {
+  if (step <= 0) return 0;
+  if (step === 1) return THREE.MathUtils.smoothstep(cutProgress, 0, 0.28);
+  return 1;
+}
+
+const WOOD_BG = { light: '#cbb79a', dark: '#5a4a3c' };
+const PLAIN_BG = { light: '#f4f1ea', dark: '#121412' }; // --t100-paper
+
 function Desk({ meshRef, isDark }) {
   const tex = useMemo(() => makeDeskTexture(isDark), [isDark]);
   useEffect(() => () => tex.dispose(), [tex]);
@@ -315,6 +329,9 @@ function Desk({ meshRef, isDark }) {
         map={tex}
         roughness={isDark ? 0.82 : 0.9}
         metalness={0.02}
+        transparent
+        opacity={1}
+        depthWrite
       />
     </mesh>
   );
@@ -417,12 +434,20 @@ function SceneRig({
   const cardRef = useRef();
   const deskRef = useRef();
   const shadowRef = useRef();
+  const hemiRef = useRef();
   const geoRef = useRef();
   const basePositionsRef = useRef();
   const overlayMeshRef = useRef();
   const bendRef = useRef(-1);
   const lookTarget = useRef(PHOTO.camTarget.clone());
   const yawEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
+  const bgWood = useRef(new THREE.Color());
+  const bgPlain = useRef(new THREE.Color());
+  const bgMix = useRef(new THREE.Color());
+  const hemiSky = useRef(new THREE.Color());
+  const hemiGroundWood = useRef(new THREE.Color());
+  const hemiGroundPlain = useRef(new THREE.Color());
+  const hemiGroundMix = useRef(new THREE.Color());
   const sizeRef = useRef(size);
   sizeRef.current = size;
 
@@ -435,26 +460,30 @@ function SceneRig({
     cardScale: PHOTO.cardScale,
   });
 
-  const drivers = useRef({ step, cutProgress, reducedMotion });
-  drivers.current = { step, cutProgress, reducedMotion };
+  const drivers = useRef({ step, cutProgress, reducedMotion, isDark });
+  drivers.current = { step, cutProgress, reducedMotion, isDark };
 
   useEffect(() => {
-    // Match desk so rare edge peeks never flash page void
-    const bg = isDark ? '#5a4a3c' : '#cbb79a';
-    scene.background = new THREE.Color(bg);
-    gl.setClearColor(bg, 1);
+    bgWood.current.set(isDark ? WOOD_BG.dark : WOOD_BG.light);
+    bgPlain.current.set(isDark ? PLAIN_BG.dark : PLAIN_BG.light);
+    hemiSky.current.set(isDark ? '#6a5644' : '#f5f0e6');
+    hemiGroundWood.current.set(isDark ? '#2e241c' : '#a89880');
+    hemiGroundPlain.current.set(isDark ? '#121412' : '#f4f1ea');
     invalidate();
-  }, [isDark, gl, scene, invalidate]);
+  }, [isDark, invalidate]);
 
   useEffect(() => {
     invalidate();
   }, [step, cutProgress, litCount, reducedMotion, size.width, size.height, invalidate]);
 
   useFrame((_, dt) => {
-    const { step: s, cutProgress: cp, reducedMotion: rm } = drivers.current;
+    const { step: s, cutProgress: cp, reducedMotion: rm, isDark: dark } =
+      drivers.current;
     const desired = poseForStep(s, cp);
     const speed = rm ? 1 : Math.min(1, dt * (s === 1 ? 1.45 : 2.3));
     const c = state.current;
+    const plain = plainAmount(s, cp);
+    const deskVis = 1 - plain;
 
     if (rm) {
       c.camPos.copy(desired.camPos);
@@ -488,15 +517,47 @@ function SceneRig({
       cardRef.current.scale.setScalar(drawnScale);
     }
 
+    // Wood desk → plain panel: fade texture + swap clear color to --t100-paper
+    bgMix.current.copy(bgWood.current).lerp(bgPlain.current, plain);
+    scene.background = bgMix.current;
+    gl.setClearColor(bgMix.current, 1);
+
+    if (deskRef.current) {
+      const deskMat = deskRef.current.material;
+      if (deskMat) {
+        deskMat.transparent = true;
+        deskMat.opacity = deskVis;
+        deskMat.depthWrite = deskVis > 0.15;
+        deskMat.needsUpdate = true;
+      }
+      deskRef.current.visible = deskVis > 0.01;
+    }
+
     if (shadowRef.current) {
-      // Contact shadow glued to the card footprint on the desk plane
       shadowRef.current.position.x = c.cardPos.x;
       shadowRef.current.position.z = c.cardPos.z;
       shadowRef.current.position.y = 0.0004;
       yawEuler.current.setFromQuaternion(c.cardQuat, 'YXZ');
       shadowRef.current.rotation.set(0, yawEuler.current.y, 0);
       shadowRef.current.scale.setScalar(drawnScale);
-      shadowRef.current.visible = true;
+      shadowRef.current.traverse((obj) => {
+        if (obj.isMesh && obj.material) {
+          obj.material.opacity = deskVis;
+          obj.material.transparent = true;
+        }
+      });
+      shadowRef.current.visible = deskVis > 0.02;
+    }
+
+    if (hemiRef.current) {
+      hemiGroundMix.current
+        .copy(hemiGroundWood.current)
+        .lerp(hemiGroundPlain.current, plain);
+      hemiRef.current.color.copy(hemiSky.current);
+      hemiRef.current.groundColor.copy(hemiGroundMix.current);
+      hemiRef.current.intensity = dark
+        ? THREE.MathUtils.lerp(0.5, 0.35, plain)
+        : THREE.MathUtils.lerp(0.4, 0.28, plain);
     }
 
     if (
@@ -511,8 +572,6 @@ function SceneRig({
     if (overlayMeshRef.current) {
       overlayMeshRef.current.visible = s === 2;
     }
-
-    void deskRef;
   });
 
   const showRead = step === 2;
@@ -540,6 +599,7 @@ function SceneRig({
         color={isDark ? '#ffd4b0' : '#fff6e8'}
       />
       <hemisphereLight
+        ref={hemiRef}
         args={[
           isDark ? '#6a5644' : '#f5f0e6',
           isDark ? '#2e241c' : '#a89880',
