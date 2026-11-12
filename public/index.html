@@ -32,8 +32,15 @@
     <meta name="twitter:image:alt" content="Patrick Brown, Platform Engineer" />
     <meta name="twitter:creator" content="@patrickbbrown" />
     <script>
+      /* Theme from local clock on every fresh load (no persistence). */
       try {
-        if (localStorage.getItem('theme') === 'dark') {
+        try {
+          localStorage.removeItem('theme');
+          sessionStorage.removeItem('theme');
+        } catch (ignore) {}
+        var hour = new Date().getHours();
+        var dark = hour < 6 || hour >= 18;
+        if (dark) {
           document.documentElement.classList.add('is-dark');
           var themeMeta = document.querySelector('meta[name="theme-color"]');
           if (themeMeta) themeMeta.setAttribute('content', '#14151a');

@@ -3,20 +3,29 @@ import React, { useEffect, useState } from 'react';
 const STORAGE = 'theme';
 const DARK_MARK = '#';
 
-function readDark() {
+/** In-memory only — survives client-side route changes, resets on reload. */
+let sessionDark = null;
+
+function darkFromLocalHour() {
+  const hour = new Date().getHours();
+  // Daylight ~06:00–18:00 local; night otherwise. Time wins over prefers-color-scheme.
+  return hour < 6 || hour >= 18;
+}
+
+function clearPersistedTheme() {
   try {
-    return window.localStorage.getItem(STORAGE) === 'dark';
+    window.localStorage.removeItem(STORAGE);
+    window.sessionStorage.removeItem(STORAGE);
   } catch {
-    return false;
+    /* ignore */
   }
 }
 
-function persist(dark) {
-  try {
-    window.localStorage.setItem(STORAGE, dark ? 'dark' : 'light');
-  } catch {
-    /* ignore quota / private mode */
-  }
+function readDark() {
+  if (sessionDark !== null) return sessionDark;
+  clearPersistedTheme();
+  sessionDark = darkFromLocalHour();
+  return sessionDark;
 }
 
 function applyChromeColor() {
@@ -39,8 +48,9 @@ export default function ThemeToggle() {
   const [dark, setDark] = useState(readDark);
 
   useEffect(() => {
+    sessionDark = dark;
+    clearPersistedTheme();
     applyHtml(dark);
-    persist(dark);
   }, [dark]);
 
   return (

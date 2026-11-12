@@ -2,8 +2,18 @@
   position: relative;
 }
 
+/* Shrink-wrap to the full finished title so parent text-align can center
+   a stable box; typed glyphs grow left→right inside it. */
+.typewriter-heading-box {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
 .typewriter-heading-sizer {
-  display: block;
+  display: inline;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
@@ -18,16 +28,25 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
+  text-align: left;
+  white-space: nowrap;
 }
 
-/* Solid character-cell block, like a terminal cursor — not an editor I-beam */
-.typewriter-heading-caret {
+.typewriter-heading-typed {
+  position: relative;
   display: inline-block;
+}
+
+/* Solid character-cell block, like a terminal cursor — not an editor I-beam.
+   Absolutely positioned so it never contributes to layout width. */
+.typewriter-heading-caret {
+  position: absolute;
+  left: 100%;
+  top: 0.08em;
+  display: block;
   width: 0.62em;
   height: 0.86em;
   margin-left: 0.12em;
-  vertical-align: -0.02em;
   background-color: currentColor;
   animation: typewriter-caret 1.06s step-end infinite;
 }
@@ -36,10 +55,6 @@
 .typewriter-heading-caret.is-typing {
   animation: none;
   opacity: 1;
-}
-
-.typewriter-heading-caret.is-spacer {
-  animation: none;
 }
 
 @keyframes typewriter-caret {

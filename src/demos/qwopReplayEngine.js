@@ -508,6 +508,11 @@ export function createQwopReplayPlayer(canvas, assets, options = {}) {
     drawFrame(frameIndex);
   };
 
+  // Paint once so tiles that mount below the fold aren't a solid black box
+  // until IntersectionObserver starts the loop.
+  resize();
+  drawFrame(frameIndex);
+
   return {
     start,
     stop,
