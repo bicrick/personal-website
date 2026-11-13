@@ -1,7 +1,7 @@
 {
   "/": {
-    "ogTitle": "bicrick",
-    "seoTitle": "bicrick - Patrick Brown | Data Platform Engineer",
+    "ogTitle": "patrickbrown.dev",
+    "seoTitle": "patrickbrown.dev - Patrick Brown | Data Platform Engineer",
     "description": "Patrick Brown. Data Platform Engineer at H-E-B building agents, RL environments, and shared data tooling. QWOP world record 45.167s. Relocating to San Francisco.",
     "keywords": "bicrick, Patrick Brown, Data Platform Engineer, AI, Agents, Reinforcement Learning, Machine Learning, Vertex AI, GCP, AWS, Austin, HEB, UT Austin",
     "imagePath": "/og/home-1200x630.jpg",
@@ -12,7 +12,7 @@
   },
   "/career": {
     "ogTitle": "career",
-    "seoTitle": "Career - bicrick",
+    "seoTitle": "Career - patrickbrown.dev",
     "description": "Data Platform Engineer at H-E-B. UT Austin B.S. ECE and M.S. AI.",
     "keywords": "bicrick, Patrick Brown, Career, UT Austin, AI Masters, H-E-B, Data Platform Engineer",
     "imagePath": "/og/career-1200x630.jpg",
@@ -23,7 +23,7 @@
   },
   "/about": {
     "ogTitle": "about",
-    "seoTitle": "About bicrick - Patrick Brown | Data Platform Engineer",
+    "seoTitle": "About patrickbrown.dev - Patrick Brown | Data Platform Engineer",
     "description": "Data Platform Engineer at H-E-B. Austin, TX. Builds with Cursor and Claude Code.",
     "keywords": "bicrick, Patrick Brown, About, Data Platform Engineer, Vertex AI, GCP, AWS, Austin, HEB, UT Austin, AI Masters",
     "imagePath": "/og/about-1200x630.jpg",
@@ -34,18 +34,18 @@
   },
   "/projects": {
     "ogTitle": "projects",
-    "seoTitle": "Projects by bicrick - RL environments, agents, tools",
+    "seoTitle": "Projects by patrickbrown.dev - RL environments, agents, tools",
     "description": "QWOP world record, cart-pole research loops, Monocle, and Range Rat.",
     "keywords": "bicrick, Patrick Brown, Projects, QWOP, RL, agents, Monocle, Machine Learning",
     "imagePath": "/og/projects-simple-1200x630.jpg",
-    "imageAlt": "projects by bicrick",
+    "imageAlt": "projects by patrickbrown.dev",
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "website"
   },
   "/contact": {
     "ogTitle": "contact",
-    "seoTitle": "Contact bicrick - Patrick Brown",
+    "seoTitle": "Contact patrickbrown.dev - Patrick Brown",
     "description": "patrickbrownai@gmail.com",
     "keywords": "bicrick, Patrick Brown, Contact, Email",
     "imagePath": "/og/contact-1200x630.jpg",
@@ -56,7 +56,7 @@
   },
   "/heb": {
     "ogTitle": "data platform engineering at h-e-b",
-    "seoTitle": "data platform engineering at h-e-b - bicrick",
+    "seoTitle": "data platform engineering at h-e-b - patrickbrown.dev",
     "description": "The control room for data platform engineering at H-E-B. 10+ teams, 100+ users. ML pipelines, endpoints, and training metrics on one dashboard. AWS to GCP.",
     "keywords": "bicrick, Patrick Brown, H-E-B, data platform engineering, Vertex AI, dashboard, BigQuery, GCP",
     "imagePath": "/og/heb-1200x630.jpg",
@@ -67,7 +67,7 @@
   },
   "/projects/auto-research": {
     "ogTitle": "cart pole autoresearch loops",
-    "seoTitle": "cart pole autoresearch loops - bicrick",
+    "seoTitle": "cart pole autoresearch loops - patrickbrown.dev",
     "description": "Agentic loops on cart-pole, from PPO to MPPI.",
     "keywords": "bicrick, Patrick Brown, auto research, grok bot, cart-pole, pendulum, PPO, MPPI, reinforcement learning",
     "imagePath": "/og/auto-research-1200x630.jpg",
@@ -78,7 +78,7 @@
   },
   "/projects/qwop-python": {
     "ogTitle": "qwop world record with reinforcement learning",
-    "seoTitle": "qwop world record with reinforcement learning - bicrick",
+    "seoTitle": "qwop world record with reinforcement learning - patrickbrown.dev",
     "description": "QWOP world record with RL.",
     "keywords": "bicrick, Patrick Brown, qwop-python, QWOP, world record, Gymnasium, reinforcement learning, Box2D, PPO, HTML5, grok bot",
     "imagePath": "/og/qwop-python-1200x630.jpg",
@@ -89,7 +89,7 @@
   },
   "/demos/qwop": {
     "ogTitle": "qwop demo",
-    "seoTitle": "qwop-python PPO agent run - bicrick",
+    "seoTitle": "qwop-python PPO agent run - patrickbrown.dev",
     "description": "PPO agent replay.",
     "keywords": "bicrick, qwop-python, QWOP, world record, reinforcement learning, PPO, demo",
     "imagePath": "/og/qwop-demo-1200x630.jpg",
@@ -100,7 +100,7 @@
   },
   "/projects/notepadable": {
     "ogTitle": "notepadable",
-    "seoTitle": "notepadable - URL-Encoded Text Editor by bicrick",
+    "seoTitle": "notepadable - URL-Encoded Text Editor by patrickbrown.dev",
     "description": "A text editor in the URL.",
     "keywords": "bicrick, Patrick Brown, notepadable, text editor, URL encoding, markdown, PWA, CodeMirror, TypeScript",
     "imagePath": "/og/notepadable-1200x630.jpg",
@@ -122,7 +122,7 @@
   },
   "/projects/gd-visualizer": {
     "ogTitle": "gd-visualizer",
-    "seoTitle": "GD Visualizer - 3D Gradient Descent Optimizer Tool by bicrick",
+    "seoTitle": "GD Visualizer - 3D Gradient Descent Optimizer Tool by patrickbrown.dev",
     "description": "3D optimizer playground.",
     "keywords": "bicrick, Patrick Brown, gradient descent, optimizer, visualization, 3D, SGD, Adam, machine learning, Three.js",
     "imagePath": "/og/gd-visualizer-1200x630.jpg",
@@ -133,7 +133,7 @@
   },
   "/projects/docprep": {
     "ogTitle": "docprep",
-    "seoTitle": "docprep - Microsoft Office Plaintext Extractor by bicrick",
+    "seoTitle": "docprep - Microsoft Office Plaintext Extractor by patrickbrown.dev",
     "description": "Office docs to plaintext.",
     "keywords": "bicrick, Patrick Brown, docprep, Microsoft Office, plaintext extractor, AI documents, PyWebView, React",
     "imagePath": "/og/docprep-1200x630.jpg",
@@ -144,7 +144,7 @@
   },
   "/projects/da-transcribuh": {
     "ogTitle": "da transcribuh",
-    "seoTitle": "da transcribuh - on-device voice-to-text for macOS - bicrick",
+    "seoTitle": "da transcribuh - on-device voice-to-text for macOS - patrickbrown.dev",
     "description": "A free macOS menu bar app for on-device voice-to-text. Hit option-space, talk, and the text pastes wherever you're typing.",
     "keywords": "bicrick, Patrick Brown, da transcribuh, dictation, voice to text, macOS, Parakeet v2, coding agents",
     "imagePath": "/og/da-transcribuh-1200x630.jpg",
@@ -155,7 +155,7 @@
   },
   "/projects/scribe": {
     "ogTitle": "scribe",
-    "seoTitle": "scribe - handwritten pages, stroke by stroke - bicrick",
+    "seoTitle": "scribe - handwritten pages, stroke by stroke - patrickbrown.dev",
     "description": "Ask for a note, a letter, or a diagram and scribe writes it by hand. Print it or save a PDF. No account to start.",
     "keywords": "bicrick, Patrick Brown, scribe, handwriting, AI, pen, generative",
     "imagePath": "/og/scribe-1200x630.jpg",
@@ -166,7 +166,7 @@
   },
   "/projects/monocle": {
     "ogTitle": "monocle",
-    "seoTitle": "monocle - restyle the live tab with Cursor CLI - bicrick",
+    "seoTitle": "monocle - restyle the live tab with Cursor CLI - patrickbrown.dev",
     "description": "Chrome extension that restyles the live tab using your local Cursor CLI.",
     "keywords": "bicrick, Patrick Brown, monocle, Cursor, Chrome extension, agents",
     "imagePath": "/og/monocle-1200x630.jpg",
@@ -177,7 +177,7 @@
   },
   "/writing/agent-research-loops": {
     "ogTitle": "auto research loops for reinforcement learning with Grok Bot",
-    "seoTitle": "auto research loops for reinforcement learning with Grok Bot - bicrick",
+    "seoTitle": "auto research loops for reinforcement learning with Grok Bot - patrickbrown.dev",
     "description": "An agent on the training farm that reshapes rewards and curricula so the next run avoids the last policy's cheat.",
     "keywords": "bicrick, Patrick Brown, auto-research loops for reinforcement learning, agentic research loops, auto research, grok bot, RL, QWOP, cart-pole",
     "imagePath": "/og/agent-research-loops-1200x630.jpg",
@@ -188,7 +188,7 @@
   },
   "/projects/ai-masters": {
     "ogTitle": "ai masters",
-    "seoTitle": "UT Austin AI Masters - Coursework by bicrick",
+    "seoTitle": "UT Austin AI Masters - Coursework by patrickbrown.dev",
     "description": "UT Austin MSAI notes.",
     "keywords": "bicrick, Patrick Brown, UT Austin, AI Masters, Machine Learning, Deep Learning, NLP, Transformers, Artificial Intelligence",
     "imagePath": "/og/ai-masters-1200x630.jpg",
@@ -199,7 +199,7 @@
   },
   "/projects/harness-bench": {
     "ogTitle": "is your harness lobotomizing your model?",
-    "seoTitle": "Is your harness lobotomizing your model? - bicrick",
+    "seoTitle": "Is your harness lobotomizing your model? - patrickbrown.dev",
     "description": "Short answer: no, probably not. Five coding harnesses, one model (Claude Haiku 5.5), 50 SWE-bench Verified bugs: about the same fix rate, but over 4x the tokens per fix for some.",
     "keywords": "bicrick, Patrick Brown, harness-bench, coding harness, SWE-bench Verified, Claude Code, Cursor, OpenCode, SWE-agent, mini-swe-agent, Claude Haiku",
     "imagePath": "/og/harness-bench-v4-1200x630.png",
@@ -210,7 +210,7 @@
   },
   "/projects/infinite-tapestry": {
     "ogTitle": "infinite tapestry",
-    "seoTitle": "infinite tapestry - an endless live AI painting - bicrick",
+    "seoTitle": "infinite tapestry - an endless live AI painting - patrickbrown.dev",
     "description": "One endless horizontal painting, painted live on a single RTX 4090. Visitors type ideas word for word. Auto fills the queue.",
     "keywords": "bicrick, Patrick Brown, Infinite Tapestry, SDXL, RealVisXL, live AI painting, endless canvas",
     "imagePath": "/og/infinite-tapestry-1200x630.jpg",

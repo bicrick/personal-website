@@ -1,7 +1,7 @@
 import rawPages from './ogPages.json';
 
-export const SITE_ORIGIN = 'https://bicrick.com';
-export const ASSET_ORIGIN = 'https://www.bicrick.com';
+export const SITE_ORIGIN = 'https://patrickbrown.dev';
+export const ASSET_ORIGIN = 'https://patrickbrown.dev';
 
 function normalizePath(pathname) {
   if (!pathname) return '/';

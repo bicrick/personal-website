@@ -2,12 +2,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 function SEO({
-  title = 'bicrick',
+  title = 'patrickbrown.dev',
   description = 'Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.',
   keywords = 'bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin',
   author = 'Patrick Brown (bicrick)',
-  url = 'https://bicrick.com',
-  image = 'https://www.bicrick.com/og/home-1200x630.jpg',
+  url = 'https://patrickbrown.dev',
+  image = 'https://patrickbrown.dev/og/home-1200x630.jpg',
   imageAlt = 'Patrick Brown, agent-first engineer',
   imageWidth = 1200,
   imageHeight = 630,
@@ -15,7 +15,7 @@ function SEO({
   ogTitle,
   seoTitle,
 }) {
-  const displayTitle = 'bicrick';
+  const displayTitle = 'patrickbrown.dev';
   const cardTitle = ogTitle || title;
   const searchTitle = seoTitle || cardTitle;
 
@@ -37,7 +37,7 @@ function SEO({
       <meta property="og:image:width" content={String(imageWidth)} />
       <meta property="og:image:height" content={String(imageHeight)} />
       <meta property="og:image:alt" content={imageAlt} />
-      <meta property="og:site_name" content="bicrick" />
+      <meta property="og:site_name" content="patrickbrown.dev" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={url} />
