@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import ExperienceSnapshot from '../components/home/ExperienceSnapshot';
@@ -7,6 +8,8 @@ import WritingBlock from '../components/home/WritingBlock';
 import HomeFooter from '../components/home/HomeFooter';
 import { RESUME_URL } from '../constants/resume';
 import './HomePage.css';
+
+const HEB_LOGO = `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`;
 
 export default function HomePage() {
   return (
@@ -49,9 +52,27 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <p className="home-intro">
-          {"Hi. I'm Patrick. I genuinely think there has never been a better time to be a young, curious person with high aptitude. The friction between me and my goals has never been smaller. We are very lucky to be here. I am so excited about the future, and I can't wait to make my mark."}
-        </p>
+        <div className="home-intro">
+          <p>
+            {"Hi. I'm Patrick. I genuinely think there has never been a better time to be a young, curious person with high aptitude. The friction between me and my goals has never been smaller."}
+          </p>
+          <p>
+            My differentiating factor is my appetite. I want to learn, and I have the tenacity to do anything I put my mind to.
+          </p>
+          <p>
+            I am constantly building. At work, I am a platform engineer creating tooling and infrastructure for our data engineering teams at{' '}
+            <Link to="/heb" className="home-intro-heb-link" aria-label="H-E-B">
+              <img
+                src={HEB_LOGO}
+                alt="H-E-B"
+                className="home-intro-heb"
+                draggable={false}
+              />
+            </Link>
+            . I am always iterating on my workflow, leaning heavily on Cursor, Grok Bot, and Claude Code.
+          </p>
+          <p>Outside of work, I enjoy building small RL projects.</p>
+        </div>
         <ExperienceSnapshot />
         <FeaturedProjects />
         <WritingBlock />
