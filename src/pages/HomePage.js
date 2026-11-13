@@ -68,7 +68,10 @@ export default function HomePage() {
           </p>
           <p>
             My differentiating factor is my appetite. I want to learn, and I have the tenacity to do anything I put{' '}
-            <span className="nowrap">my mind to.</span>
+            <span className="nowrap">
+              my mind to.{' '}
+              <Link to="/about" className="home-intro-more">see more in about →</Link>
+            </span>
           </p>
           <p>
             I am constantly building. At work, I am a platform engineer creating tooling and infrastructure for our data engineering teams at{' '}
@@ -80,11 +83,11 @@ export default function HomePage() {
                 draggable={false}
               />
             </Link>
-            . I am always iterating on my workflow, leaning heavily on Cursor, <span className="nowrap">Grok Bot</span>, and{' '}
-            <span className="nowrap">Claude Code.</span>
-          </p>
-          <p>
-            Outside of work, I enjoy building small <span className="nowrap">RL projects.</span>
+            . I am always iterating on my workflow, leaning heavily on Cursor, <span className="nowrap">Grok Bot</span>,{' '}
+            <span className="nowrap">
+              and Claude Code.{' '}
+              <Link to="/career" className="home-intro-more">see more in career →</Link>
+            </span>
           </p>
         </div>
         <FeaturedProjects />
