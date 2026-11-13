@@ -102,7 +102,7 @@
 
 .home-intro-more {
   display: inline;
-  color: var(--ink);
+  color: inherit;
   white-space: nowrap;
 }
 
