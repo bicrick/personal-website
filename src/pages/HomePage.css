@@ -4,12 +4,81 @@
   padding-bottom: var(--page-pad-bottom);
 }
 
+.home-edu {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.home-edu-logo {
+  display: block;
+  flex: 0 0 auto;
+  height: 1.05em;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.92;
+  pointer-events: none;
+  user-select: none;
+}
+
+.home-edu-long {
+  display: inline;
+}
+
+.home-edu-short {
+  display: none;
+}
+
 .home-intro {
-  margin: 2.4rem 0 0;
-  max-width: 42rem;
+  margin: 2.55rem 0 0;
+  width: 100%;
+  max-width: none;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1.12em;
+  line-height: 1.68;
+  letter-spacing: -0.005em;
+}
+
+.home-intro p {
+  margin: 0 0 1.15em;
+  max-width: none;
+}
+
+.home-intro p:last-child {
+  margin-bottom: 0;
+}
+
+.home-intro-heb-link {
+  display: inline;
+  vertical-align: baseline;
+  text-decoration: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.home-intro-heb-link:after {
+  display: none;
+}
+
+.home-intro-heb {
+  display: inline-block;
+  height: 0.92em;
+  width: auto;
+  vertical-align: -0.12em;
+  margin: 0 0.1em;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+html.is-dark .home-intro {
   color: var(--ink-soft);
-  font-size: 1em;
-  line-height: 1.55;
 }
 
 .home-block {
@@ -44,5 +113,34 @@
     justify-content: flex-start;
     padding-top: var(--page-pad-top);
     padding-bottom: var(--page-pad-bottom);
+  }
+
+  .home-intro {
+    font-size: 1.05em;
+    line-height: 1.62;
+  }
+
+  .home-intro p {
+    margin-bottom: 1em;
+  }
+
+  .home-intro-heb {
+    height: 0.88em;
+    vertical-align: -0.1em;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-edu {
+    font-size: 0.86em;
+    gap: 0.4rem;
+  }
+
+  .home-edu-long {
+    display: none;
+  }
+
+  .home-edu-short {
+    display: inline;
   }
 }
