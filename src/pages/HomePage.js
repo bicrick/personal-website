@@ -34,32 +34,36 @@ export default function HomePage() {
             />
           </picture>
           <div className="home-copy">
-            <TypewriterHeading as="h2" className="home-heading">
-              Patrick Brown
-            </TypewriterHeading>
-            <p className="home-place">Austin, TX. Relocating to San Francisco.</p>
-            <div className="home-edu" aria-label="Education, UT Austin">
-              <p className="home-edu-school">UT Austin</p>
-              <ul className="home-edu-degrees">
-                <li>M.S. Artificial Intelligence</li>
-                <li>B.S. Electrical and Computer Engineering</li>
-              </ul>
+            <div className="home-copy-head">
+              <TypewriterHeading as="h2" className="home-heading">
+                Patrick Brown
+              </TypewriterHeading>
+              <p className="home-place">Austin, TX. Relocating to San Francisco.</p>
             </div>
-            <div className="home-links">
-              <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
-              <span className="nav-separator">·</span>
-              <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
-              <span className="nav-separator">·</span>
-              <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
-              <span className="nav-separator">·</span>
-              <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
-              <span className="nav-separator">·</span>
-              <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+            <div className="home-copy-meta">
+              <div className="home-edu" aria-label="Education, UT Austin">
+                <p className="home-edu-school">UT Austin</p>
+                <ul className="home-edu-degrees">
+                  <li>M.S. Artificial Intelligence</li>
+                  <li>B.S. Electrical and Computer Engineering</li>
+                </ul>
+              </div>
+              <div className="home-links">
+                <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">github</a>
+                <span className="nav-separator">·</span>
+                <a href="https://www.linkedin.com/in/patrick-brown-470617195/" target="_blank" rel="noopener noreferrer">linkedin</a>
+                <span className="nav-separator">·</span>
+                <a href="https://www.youtube.com/@bicrick-dev" target="_blank" rel="noopener noreferrer">youtube</a>
+                <span className="nav-separator">·</span>
+                <a href={RESUME_URL} target="_blank" rel="noopener noreferrer">resume</a>
+                <span className="nav-separator">·</span>
+                <a href="https://x.com/patrickbbrown" target="_blank" rel="noopener noreferrer">x</a>
+              </div>
             </div>
           </div>
         </div>
         <div className="home-intro">
-          <p className="home-intro-lead">
+          <p>
             {"Hi. I'm Patrick. I genuinely think there has never been a better time to be a young, curious person with high aptitude. The friction between me and my goals has never been smaller."}
           </p>
           <p>
