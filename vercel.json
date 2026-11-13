@@ -3,7 +3,7 @@
   "redirects": [
     {
       "source": "/resume.pdf",
-      "destination": "https://resume.bicrick.com/resume.pdf",
+      "destination": "https://resume.patrickbrown.dev/resume.pdf",
       "permanent": true
     },
     {

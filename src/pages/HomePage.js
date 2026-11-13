@@ -49,6 +49,9 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <p className="home-intro">
+          {"Hi. I'm Patrick. I genuinely think there has never been a better time to be a young, curious person with high aptitude. The friction between me and my goals has never been smaller. We are very lucky to be here. I am so excited about the future, and I can't wait to make my mark."}
+        </p>
         <ExperienceSnapshot />
         <FeaturedProjects />
         <WritingBlock />

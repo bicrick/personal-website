@@ -151,7 +151,7 @@ module.exports = async function handler(req, res) {
     const response = await fetch(PROFILE_URL, {
       headers: {
         Accept: 'text/html',
-        'User-Agent': 'bicrick.com-cursor-activity/1.0',
+        'User-Agent': 'patrickbrown.dev-cursor-activity/1.0',
       },
     });
 

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { normalizePagePath } from '../constants/pages';
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'bicrick', path: '/' },
+  { id: 'home', label: 'patrick', path: '/' },
   { id: 'career', label: 'career', path: '/career' },
   { id: 'about', label: 'about', path: '/about' },
   { id: 'projects', label: 'projects', path: '/projects' },

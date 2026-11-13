@@ -4,4 +4,4 @@
 
 I'm an AI enthusiast. I spend my free time developing.
 
-[bicrick.com](https://bicrick.com)
+[patrickbrown.dev](https://patrickbrown.dev)

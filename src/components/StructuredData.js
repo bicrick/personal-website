@@ -7,8 +7,8 @@ function StructuredData() {
     "@type": "Person",
     "name": "Patrick Brown",
     "alternateName": "bicrick",
-    "url": "https://bicrick.com",
-    "image": "https://www.bicrick.com/og/home-1200x630.jpg",
+    "url": "https://patrickbrown.dev",
+    "image": "https://patrickbrown.dev/og/home-1200x630.jpg",
     "email": "mailto:patrickbrownai@gmail.com",
     "jobTitle": "Data Platform Engineer II",
     "worksFor": {
@@ -31,7 +31,7 @@ function StructuredData() {
       "https://www.youtube.com/@bicrick-dev",
       "https://x.com/patrickbbrown",
       "https://cursor.com/@bicrick",
-      "https://bicrick.com/contact"
+      "https://patrickbrown.dev/contact"
     ],
     "knowsAbout": [
       "Data Platform Engineering",
