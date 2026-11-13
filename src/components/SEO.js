@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 function SEO({
-  title = 'patrickbrown.dev',
+  title = 'Patrick Brown',
   description = 'Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.',
   keywords = 'bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin',
   author = 'Patrick Brown (bicrick)',
@@ -15,13 +15,12 @@ function SEO({
   ogTitle,
   seoTitle,
 }) {
-  const displayTitle = 'patrickbrown.dev';
   const cardTitle = ogTitle || title;
   const searchTitle = seoTitle || cardTitle;
 
   return (
     <Helmet>
-      <title>{displayTitle}</title>
+      <title>{searchTitle}</title>
       <meta name="title" content={searchTitle} />
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
@@ -37,7 +36,7 @@ function SEO({
       <meta property="og:image:width" content={String(imageWidth)} />
       <meta property="og:image:height" content={String(imageHeight)} />
       <meta property="og:image:alt" content={imageAlt} />
-      <meta property="og:site_name" content="patrickbrown.dev" />
+      <meta property="og:site_name" content="patrick" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={url} />
