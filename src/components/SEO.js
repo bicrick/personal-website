@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet-async';
 
 function SEO({
   title = 'Patrick Brown',
-  description = 'Patrick Brown (bicrick) - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.',
-  keywords = 'bicrick, Patrick Brown, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin',
-  author = 'Patrick Brown (bicrick)',
+  description = 'Patrick Brown - Agent-first engineer specializing in machine learning. Currently at H-E-B. Austin, TX.',
+  keywords = 'Patrick Brown, patrickbrown.dev, Agent-First Engineer, AI, Agents, Machine Learning, GCP, AWS, Austin, HEB, UT Austin',
+  author = 'Patrick Brown',
   url = 'https://patrickbrown.dev',
   image = 'https://patrickbrown.dev/og/home-1200x630.jpg',
   imageAlt = 'Patrick Brown, agent-first engineer',
@@ -25,6 +25,8 @@ function SEO({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
+      <meta name="application-name" content="patrickbrown.dev" />
+      <meta name="apple-mobile-web-app-title" content="patrickbrown.dev" />
       <link rel="canonical" href={url} />
 
       <meta property="og:type" content={type} />
@@ -36,7 +38,7 @@ function SEO({
       <meta property="og:image:width" content={String(imageWidth)} />
       <meta property="og:image:height" content={String(imageHeight)} />
       <meta property="og:image:alt" content={imageAlt} />
-      <meta property="og:site_name" content="patrick" />
+      <meta property="og:site_name" content="patrickbrown.dev" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={url} />

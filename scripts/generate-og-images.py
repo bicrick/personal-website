@@ -118,7 +118,7 @@ def split_card(visual, title, subtitle, name, fit="cover", bg=PAPER):
     title_h = int(title_font.size * 1.2)
     block = 46 + title_h * len(title_lines) + 22 + 36 * len(sub_lines)
     y = (H - block) // 2
-    draw.text((TEXT_X, y), "patrick", font=font(FONT_BOLD, 28), fill=INK)
+    draw.text((TEXT_X, y), "patrickbrown.dev", font=font(FONT_BOLD, 28), fill=INK)
     ty = y + 46
     for line in title_lines:
         draw.text((TEXT_X, ty), line, font=title_font, fill=INK)
@@ -145,7 +145,7 @@ def center_card(title, subtitle, name, visual=None):
         title_y = 250
     draw.text((W // 2, title_y), title, font=font(FONT_BOLD, 64), fill=INK, anchor="mm")
     draw.text((W // 2, title_y + 70), subtitle, font=font(FONT_REG, 28), fill=MUTED, anchor="mm")
-    draw.text((W // 2, title_y + 130), "patrick", font=font(FONT_BOLD, 24), fill=MUTED, anchor="mm")
+    draw.text((W // 2, title_y + 130), "patrickbrown.dev", font=font(FONT_BOLD, 24), fill=MUTED, anchor="mm")
     save_jpg(canvas, name)
 
 
@@ -165,7 +165,7 @@ def make_about():
     draw = ImageDraw.Draw(canvas)
     draw.line((PANEL, 0, PANEL, H), fill=RULE, width=1)
     x, y = 668, 190
-    draw.text((x, y), "patrick", font=font(FONT_BOLD, 28), fill=INK)
+    draw.text((x, y), "patrickbrown.dev", font=font(FONT_BOLD, 28), fill=INK)
     draw.text((x, y + 46), "about", font=font(FONT_BOLD, 64), fill=INK)
     draw.text((x, y + 130), "Platform Engineer at H-E-B", font=font(FONT_REG, 26), fill=MUTED)
     draw.text((x, 360), "Golf, puzzles, and building\nwith coding agents.", font=font(FONT_REG, 24), fill=MUTED)
@@ -183,12 +183,12 @@ def make_contact():
     draw = ImageDraw.Draw(canvas)
     draw.text((W // 2, 360), "contact", font=font(FONT_BOLD, 64), fill=INK, anchor="mm")
     draw.text((W // 2, 430), "patrickbrownai@gmail.com", font=font(FONT_REG, 28), fill=LINK, anchor="mm")
-    draw.text((W // 2, 490), "patrick", font=font(FONT_BOLD, 24), fill=MUTED, anchor="mm")
+    draw.text((W // 2, 490), "patrickbrown.dev", font=font(FONT_BOLD, 24), fill=MUTED, anchor="mm")
     save_jpg(canvas, "contact-1200x630.jpg")
 
 
 def make_projects():
-    center_card("projects", "software by patrick", "projects-simple-1200x630.jpg")
+    center_card("projects", "software by patrickbrown.dev", "projects-simple-1200x630.jpg")
 
 
 def make_page_cards():

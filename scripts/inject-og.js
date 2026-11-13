@@ -60,7 +60,9 @@ function applySeo(html, seo) {
   next = upsertMeta(next, 'property', 'og:image:width', seo.imageWidth);
   next = upsertMeta(next, 'property', 'og:image:height', seo.imageHeight);
   next = upsertMeta(next, 'property', 'og:image:alt', seo.imageAlt);
-  next = upsertMeta(next, 'property', 'og:site_name', 'patrick');
+  next = upsertMeta(next, 'property', 'og:site_name', 'patrickbrown.dev');
+  next = upsertMeta(next, 'name', 'application-name', 'patrickbrown.dev');
+  next = upsertMeta(next, 'name', 'apple-mobile-web-app-title', 'patrickbrown.dev');
   next = upsertMeta(next, 'name', 'twitter:card', 'summary_large_image');
   next = upsertMeta(next, 'name', 'twitter:url', seo.url);
   next = upsertMeta(next, 'name', 'twitter:title', seo.ogTitle);

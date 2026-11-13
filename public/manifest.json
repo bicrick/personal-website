@@ -1,0 +1,16 @@
+{
+  "name": "patrickbrown.dev",
+  "short_name": "patrickbrown.dev",
+  "description": "Patrick Brown — Data Platform Engineer. Agents, RL environments, shipped tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfbfa",
+  "theme_color": "#fbfbfa",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
