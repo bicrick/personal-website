@@ -1,6 +1,6 @@
 # patrickbrown.dev
 
-> Patrick Brown — Data Platform Engineer. Agents, RL environments, shipped tools.
+> Patrick Brown — Platform Engineer. Agents, RL environments, shipped tools.
 
 ## Profile
 

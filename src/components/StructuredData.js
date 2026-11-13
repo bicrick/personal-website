@@ -6,11 +6,10 @@ function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Patrick Brown",
-    "alternateName": "bicrick",
     "url": "https://patrickbrown.dev",
     "image": "https://patrickbrown.dev/og/home-1200x630.jpg",
     "email": "mailto:patrickbrownai@gmail.com",
-    "jobTitle": "Data Platform Engineer II",
+    "jobTitle": "Platform Engineer",
     "worksFor": {
       "@type": "Organization",
       "name": "H-E-B"
