@@ -8,7 +8,7 @@ const ROWS = [
     href: '/heb',
     logo: `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`,
     entries: [
-      { role: 'Data Platform Engineer', dates: 'Jun 2023 – present' },
+      { role: 'Platform Engineer', dates: 'Jun 2023 – present' },
     ],
   },
   {

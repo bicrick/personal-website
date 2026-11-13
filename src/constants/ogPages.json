@@ -1,9 +1,9 @@
 {
   "/": {
     "ogTitle": "Patrick Brown",
-    "seoTitle": "Patrick Brown | Data Platform Engineer",
-    "description": "Patrick Brown. Data Platform Engineer at H-E-B building agents, RL environments, and shared data tooling. QWOP world record 45.167s. Relocating to San Francisco.",
-    "keywords": "Patrick Brown, patrickbrown.dev, Data Platform Engineer, AI, Agents, Reinforcement Learning, Machine Learning, Vertex AI, GCP, AWS, Austin, HEB, UT Austin",
+    "seoTitle": "Patrick Brown | Platform Engineer",
+    "description": "Patrick Brown. Platform Engineer at H-E-B building agents, RL environments, and shared data tooling. QWOP world record 45.167s. Relocating to San Francisco.",
+    "keywords": "Patrick Brown, patrickbrown.dev, Platform Engineer, AI, Agents, Reinforcement Learning, Machine Learning, Vertex AI, GCP, AWS, Austin, HEB, UT Austin",
     "imagePath": "/og/home-1200x630.jpg",
     "imageAlt": "Patrick Brown, Platform Engineer",
     "imageWidth": 1200,
@@ -13,8 +13,8 @@
   "/career": {
     "ogTitle": "career",
     "seoTitle": "Career - patrickbrown.dev",
-    "description": "Data Platform Engineer at H-E-B. UT Austin B.S. ECE and M.S. AI.",
-    "keywords": "Patrick Brown, patrickbrown.dev, Career, UT Austin, AI Masters, H-E-B, Data Platform Engineer",
+    "description": "Platform Engineer at H-E-B. UT Austin B.S. ECE and M.S. AI.",
+    "keywords": "Patrick Brown, patrickbrown.dev, Career, UT Austin, AI Masters, H-E-B, Platform Engineer",
     "imagePath": "/og/career-1200x630.jpg",
     "imageAlt": "Patrick Brown, Platform Engineer at H-E-B",
     "imageWidth": 1200,
@@ -23,9 +23,9 @@
   },
   "/about": {
     "ogTitle": "about",
-    "seoTitle": "About patrickbrown.dev - Patrick Brown | Data Platform Engineer",
-    "description": "Data Platform Engineer at H-E-B. Austin, TX. Builds with Cursor and Claude Code.",
-    "keywords": "Patrick Brown, patrickbrown.dev, About, Data Platform Engineer, Vertex AI, GCP, AWS, Austin, HEB, UT Austin, AI Masters",
+    "seoTitle": "About patrickbrown.dev - Patrick Brown | Platform Engineer",
+    "description": "Platform Engineer at H-E-B. Austin, TX. Builds with Cursor and Claude Code.",
+    "keywords": "Patrick Brown, patrickbrown.dev, About, Platform Engineer, Vertex AI, GCP, AWS, Austin, HEB, UT Austin, AI Masters",
     "imagePath": "/og/about-1200x630.jpg",
     "imageAlt": "Patrick Brown with his dog",
     "imageWidth": 1200,
