@@ -4,6 +4,35 @@
   padding-bottom: var(--page-pad-bottom);
 }
 
+.home-edu {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0;
+  color: var(--ink-muted);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.home-edu-logo {
+  display: block;
+  flex: 0 0 auto;
+  height: 1.05em;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.92;
+  pointer-events: none;
+  user-select: none;
+}
+
+.home-edu-long {
+  display: inline;
+}
+
+.home-edu-short {
+  display: none;
+}
+
 .home-intro {
   margin: 2.55rem 0 0;
   width: 100%;
@@ -98,5 +127,20 @@ html.is-dark .home-intro {
   .home-intro-heb {
     height: 0.88em;
     vertical-align: -0.1em;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-edu {
+    font-size: 0.86em;
+    gap: 0.4rem;
+  }
+
+  .home-edu-long {
+    display: none;
+  }
+
+  .home-edu-short {
+    display: inline;
   }
 }
