@@ -40,12 +40,7 @@ function TimelineCopy({ project }) {
   );
 }
 
-export default function ProjectTimeline({
-  projects,
-  expandedKey,
-  onToggle,
-  onCollapse,
-}) {
+export default function ProjectTimeline({ projects }) {
   return (
     <div className="project-timeline">
       {projects.map((project, index) => {
@@ -58,13 +53,7 @@ export default function ProjectTimeline({
             className={`project-timeline-row${flipped ? ' is-flip' : ''}`}
           >
             <div className="project-timeline-media">
-              <ProjectTile
-                project={project}
-                isExpanded={expandedKey === key}
-                onToggle={() => onToggle(key)}
-                onCollapse={onCollapse}
-                hideMeta
-              />
+              <ProjectTile project={project} />
             </div>
             <div className="project-timeline-spine" aria-hidden="true">
               <span className="project-timeline-node" />

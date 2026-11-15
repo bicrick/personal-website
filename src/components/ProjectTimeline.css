@@ -37,8 +37,7 @@
   grid-template-areas: "copy spine media";
 }
 
-.project-timeline-row:hover,
-.project-timeline-row:has(.is-expanded) {
+.project-timeline-row:hover {
   z-index: 10;
 }
 
@@ -142,12 +141,9 @@
   border-radius: 2px;
 }
 
-.project-timeline .project-card:hover,
-.project-timeline .project-card--choosable.is-expanded,
-.project-timeline .project-card--choosable.is-hoverable:hover,
-.project-timeline .project-card--choosable.is-hoverable:focus-within {
+.project-timeline .project-card:hover {
+  /* Keep the shared card lift so tiles feel clickable; skip the grid drop-shadow. */
   filter: none;
-  transform: none;
 }
 
 @media (max-width: 800px) {

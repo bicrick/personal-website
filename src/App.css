@@ -440,8 +440,7 @@ section {
 }
 
 .projects-grid > a:hover,
-.projects-grid > .project-card:hover,
-.projects-grid > .project-card.is-expanded {
+.projects-grid > .project-card:hover {
   z-index: 10;
 }
 
@@ -536,18 +535,6 @@ html.is-dark .project-card-theme-media .project-card-theme-dark {
 .project-card--contain img,
 .project-card--contain video {
   object-fit: cover;
-}
-
-.project-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 20px;
-  font-size: 14px;
-  text-align: center;
 }
 
 /* Home page — profile masthead, centered in the space under the nav */

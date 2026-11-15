@@ -70,7 +70,6 @@ function ViewDropdown({ value, onChange }) {
 
 export default function ProjectsPage() {
   const [viewMode, setViewMode] = useState(getDefaultView);
-  const [expandedKey, setExpandedKey] = useState(null);
   const isTimeline = viewMode === 'timeline';
   const sortedProjects = listedProjects();
 
@@ -97,29 +96,12 @@ export default function ProjectsPage() {
           <a href="https://github.com/bicrick" target="_blank" rel="noopener noreferrer">GitHub</a>.
         </p>
         {isTimeline ? (
-          <ProjectTimeline
-            projects={sortedProjects}
-            expandedKey={expandedKey}
-            onToggle={(key) => {
-              setExpandedKey((current) => (current === key ? null : key));
-            }}
-            onCollapse={() => setExpandedKey(null)}
-          />
+          <ProjectTimeline projects={sortedProjects} />
         ) : (
           <div className="projects-grid">
             {sortedProjects.map((project) => {
               const key = project.blogLink || project.link || project.title;
-              return (
-                <ProjectTile
-                  key={key}
-                  project={project}
-                  isExpanded={expandedKey === key}
-                  onToggle={() => {
-                    setExpandedKey((current) => (current === key ? null : key));
-                  }}
-                  onCollapse={() => setExpandedKey(null)}
-                />
-              );
+              return <ProjectTile key={key} project={project} />;
             })}
           </div>
         )}
