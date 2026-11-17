@@ -1,120 +1,156 @@
-/* Site column, same width as home; prose rhythm close to writing pages. */
+/* Same column as home; prose matches the home intro voice. */
 .page-section.about-page {
   max-width: var(--measure);
   margin: 0 auto;
   padding-top: 32px;
-  padding-bottom: 40px;
-  font-size: 20px;
+  padding-bottom: 64px;
 }
 
 .about-article {
   width: 100%;
-  max-width: 42rem;
-}
-
-.about-article p a,
-.about-article figcaption a {
-  display: inline;
 }
 
 .about-header {
   margin-bottom: 1.5rem;
 }
 
-.about-header .page-title {
-  margin-top: 0;
-  margin-bottom: 0.85rem;
-}
-
 .about-article p {
-  margin: 0 0 20px;
-  line-height: 32px;
-  color: var(--ink-soft);
-  font-size: 20px;
-}
-
-.about-article h2 {
-  margin: 40px 0 12px;
-  font-family: var(--font-pixel);
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  line-height: 20px;
+  margin: 0 0 1.1em;
   color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.72;
+  text-wrap: pretty;
 }
 
-.about-article h2:first-of-type {
-  margin-top: 28px;
+.about-article p:last-child {
+  margin-bottom: 0;
 }
 
-.about-figure {
-  margin: 32px 0 20px;
+.about-article p a {
+  display: inline;
 }
 
-.about-figure img {
+.about-article p a.home-intro-heb-link {
+  text-decoration: none;
+  background: none;
+}
+
+.about-prose {
+  margin: 0 0 2.5rem;
+}
+
+.about-photo,
+.about-photo img {
   display: block;
   width: 100%;
-  max-width: 100%;
-  height: auto;
-  margin: 0;
+}
+
+.about-photo img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border: 1px solid var(--rule);
-  border-radius: 0;
   background: var(--card-wash);
 }
 
-.about-figure img.is-contain {
-  object-fit: contain;
-  max-height: 280px;
-  width: auto;
-  margin-left: auto;
-  margin-right: auto;
-  background: #000;
+.about-hero {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 2.5rem;
 }
 
-.about-figure figcaption {
-  text-align: center;
-  color: var(--ink-muted);
-  font-size: 15px;
-  line-height: 20px;
-  letter-spacing: -0.15px;
-  margin: 8px 0 0;
-  font-style: italic;
+.about-hero .about-prose {
+  margin: 0;
 }
 
 .about-heatmap {
-  width: 100%;
+  margin: 0 0 3rem;
   padding: 12px;
   border: 1px solid var(--rule);
-  border-radius: 0;
-  background: var(--card-wash);
+  font-size: 18px;
+}
+
+.about-feats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0 0 3rem;
+}
+
+.about-feat .about-photo {
+  margin-bottom: 16px;
+}
+
+.about-article .about-feat p {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.about-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.about-pair figure {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  margin: 0;
+}
+
+.about-pair figcaption {
+  color: var(--ink-muted);
+  font-size: 15px;
+  font-style: italic;
 }
 
 @media (max-width: 760px) {
   .page-section.about-page {
     max-width: 100%;
     padding-top: 24px;
-    padding-bottom: 32px;
-    font-size: 18px;
-  }
-
-  .about-header {
-    margin-bottom: 1.15rem;
+    padding-bottom: 40px;
   }
 
   .about-article p {
-    font-size: 18px;
-    line-height: 28.8px;
+    font-size: 17px;
   }
 
-  .about-article h2 {
-    margin-top: 32px;
+  .about-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 
-  .about-figure {
-    margin: 28px 0 16px;
+  .about-hero .about-photo {
+    max-width: 220px;
   }
 
-  .about-figure img.is-contain {
-    max-height: 200px;
+  .about-feats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .about-feat {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .about-feat .about-photo {
+    margin-bottom: 0;
+  }
+
+  .about-pair {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .about-pair figure {
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 14px;
   }
 }

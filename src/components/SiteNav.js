@@ -4,8 +4,8 @@ import { normalizePagePath } from '../constants/pages';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'patrick', path: '/' },
-  { id: 'career', label: 'career', path: '/career' },
   { id: 'about', label: 'about', path: '/about' },
+  { id: 'career', label: 'career', path: '/career' },
   { id: 'projects', label: 'projects', path: '/projects' },
   { id: 'contact', label: 'contact', path: '/contact' },
 ];

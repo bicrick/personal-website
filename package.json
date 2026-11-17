@@ -43,6 +43,6 @@
   },
   "devDependencies": {
     "glob": "^13.0.0",
-    "vercel": "^50.9.6"
+    "vercel": "^65.15.0"
   }
 }

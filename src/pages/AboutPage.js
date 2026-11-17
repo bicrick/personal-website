@@ -6,23 +6,16 @@ import './AboutPage.css';
 
 const ABOUT = process.env.PUBLIC_URL + '/about';
 
-function AboutFigure({ src, webp, alt, caption, contain }) {
+function Photo({ src, webp, alt }) {
   return (
-    <figure className="about-figure">
-      <picture>
-        {webp ? <source srcSet={webp} type="image/webp" /> : null}
-        <img
-          src={src}
-          alt={alt}
-          className={contain ? 'is-contain' : undefined}
-          loading="lazy"
-          decoding="async"
-        />
-      </picture>
-      {caption ? <figcaption>{caption}</figcaption> : null}
-    </figure>
+    <picture className="about-photo">
+      {webp ? <source srcSet={webp} type="image/webp" /> : null}
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+    </picture>
   );
 }
+
+const external = { target: '_blank', rel: 'noopener noreferrer' };
 
 export default function AboutPage() {
   return (
@@ -38,92 +31,118 @@ export default function AboutPage() {
           </TypewriterHeading>
         </header>
 
-        <p>
-          My differentiating factor is my appetite. I want to learn, and I have the tenacity to do anything I put my mind to.
-        </p>
-        <p>
-          That is the through line. School, sports, work, side projects. I like being outside and in the sun. I play a lot of golf.
-          I also love video games, mostly the puzzle and automation kind: Factorio, Minecraft. When I care about something, I stay with it.
-        </p>
-
-        <h2>golf</h2>
-        <p>
-          I taught myself golf from YouTube during COVID. No lessons. Just reps. I kept going until I won the club championship at{' '}
-          <a href="https://www.austintexas.gov/golfatx/hancock-course" target="_blank" rel="noopener noreferrer">
-            Hancock golf course
-          </a>{' '}
-          in 2025, then again in 2026. I am a +2.4 handicap now. I took a shot at a US Amateur qualifier and came up short. That is part of it too.
-          You put in the work, you take the test, and sometimes you lose. Then you go again.
-        </p>
-        <AboutFigure
-          src={`${ABOUT}/golf-swing.gif`}
-          alt="Addressing a ball on the range"
-          caption="still working on it"
-        />
-
-        <h2>track</h2>
-        <p>
-          In college I ran with Odyssey Track Club five days a week. The 400m. I never ran high school track. My goal was to break 52 seconds.
-          I ran 49.13.
-        </p>
-        <AboutFigure
-          src={`${ABOUT}/img-4643.gif`}
-          alt="Running the 400m with Odyssey Track Club"
-          caption="odyssey track club"
-        />
-
-        <h2>paloma</h2>
-        <p>
-          I have started a few businesses. One of them still runs:{' '}
-          <a href="https://palomapremiumwear.com" target="_blank" rel="noopener noreferrer">
-            Paloma Premium Wear
-          </a>
-          . Hats. I designed the logo. I handed the business to younger Phi Gamma Delta members at Texas, and it gets passed down generationally.
-        </p>
-        <AboutFigure
-          src={`${ABOUT}/paloma-logo.png`}
-          webp={`${ABOUT}/paloma-logo.webp`}
-          alt="Paloma Premium Wear logo"
-          caption="the logo I designed"
-          contain
-        />
-        <AboutFigure
-          src={`${ABOUT}/paloma-hat.jpg`}
-          webp={`${ABOUT}/paloma-hat.webp`}
-          alt="Paloma Premium Wear hat"
-          caption="still for sale"
-        />
-
-        <h2>building</h2>
-        <p>
-          I love building games and projects. AI lowered the barrier to building. Persistence and patience are what put something meaningful together.
-        </p>
-        <p>
-          I am constantly experimenting with different agentic development workflows. I use{' '}
-          <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
-            Cursor
-          </a>
-          , Claude Code, and Grok Bot. The furthest I have taken it is{' '}
-          <Link to="/writing/agent-research-loops">
-            auto research loops for reinforcement learning with Grok Bot
-          </Link>
-          . More on the{' '}
-          <Link to="/projects">projects</Link> page.
-        </p>
-        <figure className="about-figure about-heatmap-figure">
-          <div className="about-heatmap">
-            <CursorActivityHeatmap />
+        <div className="about-hero">
+          <Photo src={`${ABOUT}/img-4149.jpg`} alt="Me and my dog" />
+          <div className="about-prose">
+            <p>
+              I'm Patrick. I live in Austin and work at{' '}
+              <Link to="/heb" className="home-intro-heb-link" aria-label="H-E-B">
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/heb/heb-logo.png`}
+                  alt="H-E-B"
+                  className="home-intro-heb"
+                  draggable={false}
+                />
+              </Link>{' '}
+              as a data platform engineer. Most of my time outside of
+              work goes into learning new things and building side projects.
+            </p>
+            <p>
+              I have always loved learning, and I think getting better at learning is a skill you can practice like
+              anything else. That is what pulled me into machine learning. I earned my{' '}
+              <Link to="/projects/ai-masters">Master's in AI from UT</Link> in one year while working full time.
+            </p>
           </div>
-          <figcaption>cursor activity</figcaption>
+        </div>
+
+        <div className="about-prose">
+          <p>
+            AI excites me. There has never been a better time to be curious. The friction between me and my goals is
+            the smallest it has ever been, and these tools are massive enablers for ambitious, curious people to build
+            whatever they want. Building doesn't mean you need to make money. You can make{' '}
+            <Link to="/projects/golf-incremental">video games</Link>, or experiment with different kinds of{' '}
+            <Link to="/projects/infinite-tapestry">art</Link>.
+          </p>
+          <p>
+            My development workflow is always changing. I am very familiar with{' '}
+            <a href="https://cursor.com/@bicrick" {...external}>
+              Cursor
+            </a>{' '}
+            and Claude Code, and more recently I have been running{' '}
+            <Link to="/writing/agent-research-loops">long horizon loops with Grok Bot</Link>. There is a lot more on my{' '}
+            <Link to="/projects">projects</Link> page.
+          </p>
+        </div>
+
+        <figure className="about-heatmap">
+          <CursorActivityHeatmap />
         </figure>
 
-        <h2>drive</h2>
-        <p>
-          Eagle Scout, 2018. 36 on the ACT, 2017. Same pattern every time: pick something hard, stay with it longer than is comfortable.
-        </p>
-        <p>
-          I do not stop easy.
-        </p>
+        <div className="about-prose">
+          <p>
+            Learning and building come down to the same thing for me. I am hungry, and I have a knack for putting my
+            mind to something and sticking with it until it works. Here are a few things I put my mind to and was able
+            to accomplish.
+          </p>
+        </div>
+
+        <div className="about-feats">
+          <div className="about-feat">
+            <Photo src={`${ABOUT}/golf-swing.gif`} alt="My golf swing on the range" />
+            <p>
+              I picked up a golf club for the first time during COVID. Watching YouTube instructional videos, I got my
+              handicap down to a +2.4, and won back-to-back club championships at{' '}
+              <a href="https://www.austintexas.gov/golfatx/hancock-course" {...external}>
+                Hancock Golf Course
+              </a>{' '}
+              in 2025 and 2026. I tried to qualify for the US Amateur this past summer and didn't make it. I will try
+              again this year.
+            </p>
+          </div>
+
+          <div className="about-feat">
+            <Photo src={`${ABOUT}/img-4643.gif`} alt="Running the 400m" />
+            <p>
+              I never ran track in high school. I was too busy with school and baseball, but I always loved sprinting.
+              In college I joined Odyssey Track Club and trained for the 400m five days a week. I broke the 50 second
+              barrier and ran a 49.13 at the Texas Relays, winning my heat.
+            </p>
+          </div>
+
+          <div className="about-feat">
+            <Photo
+              src={`${ABOUT}/paloma-fishing.jpg`}
+              webp={`${ABOUT}/paloma-fishing.webp`}
+              alt="Fly fishing in a Paloma hat"
+            />
+            <p>
+              I founded an apparel company, from designing the logo to sourcing materials and finding manufacturers to
+              tie it all together. After college, my cofounders and I passed it down to the underclassmen, and it lives
+              on.{' '}
+              <a href="https://palomapremiumwear.com" {...external}>
+                Go buy something!
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <div className="about-prose">
+          <p>
+            When I am not working I like to be active outside. I love to play golf and tennis, ride bikes, and go
+            fishing. I grew up an Eagle Scout, and ideally I'd spend more of my waking hours outside than inside.
+          </p>
+        </div>
+
+        <div className="about-pair">
+          <figure>
+            <Photo src={`${ABOUT}/img-5371.png`} alt="Me and my brother Walker" />
+            <figcaption>me and my brother walker</figcaption>
+          </figure>
+          <figure>
+            <Photo src={`${ABOUT}/img-5095.jpg`} alt="Me and my girlfriend Izzy" />
+            <figcaption>me and my girlfriend izzy</figcaption>
+          </figure>
+        </div>
       </article>
     </section>
   );
