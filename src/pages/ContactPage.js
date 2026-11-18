@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TypewriterHeading from '../components/TypewriterHeading';
 import { RESUME_LABEL, RESUME_URL } from '../constants/resume';
 import './ContactPage.css';
+import './ContactPage.mobile.css';
 
 const WRITE = [
   {
@@ -46,9 +47,28 @@ const ELSEWHERE = [
     label: 'resume',
     href: RESUME_URL,
     value: RESUME_LABEL,
+    short: 'resume.pdf',
     external: true,
   },
 ];
+
+function CopyEmail({ email }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${email}`;
+    }
+  };
+  return (
+    <button type="button" className={`contact-copy${copied ? ' is-done' : ''}`} onClick={copy}>
+      {copied ? 'copied ✓' : 'copy email'}
+    </button>
+  );
+}
 
 function ContactList({ items }) {
   return (
@@ -63,7 +83,12 @@ function ContactList({ items }) {
                 ? { target: '_blank', rel: 'noopener noreferrer' }
                 : {})}
             >
-              {item.value}
+              <span className="contact-value-full">
+                {typeof item.value === 'string'
+                  ? item.value.split('/').flatMap((part, i) => (i ? [<wbr key={i} />, `/${part}`] : [part]))
+                  : item.value}
+              </span>
+              {item.short && <span className="contact-value-short">{item.short}</span>}
             </a>
           </dd>
         </div>
@@ -90,6 +115,7 @@ export default function ContactPage() {
 
         <h2>/ write</h2>
         <ContactList items={WRITE} />
+        <CopyEmail email={WRITE[0].value} />
 
         <h2>/ elsewhere</h2>
         <ContactList items={ELSEWHERE} />

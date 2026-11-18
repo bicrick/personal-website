@@ -395,6 +395,26 @@ html.is-dark .cursor-activity-tip {
   }
 }
 
+/* Rows are too short for day labels on phones; drop them and their gutter */
+@media (max-width: 600px) {
+  .cursor-activity {
+    --ca-gutter: 0px;
+    --ca-label-gap: 0px;
+  }
+
+  .cursor-activity-days {
+    display: none;
+  }
+
+  .cursor-activity-months {
+    gap: 0;
+  }
+
+  .cursor-activity-gutter {
+    display: none;
+  }
+}
+
 /* Non-linking heatmap (used on the tokens page) keeps resting colors on hover */
 .cursor-activity.is-static:hover,
 .cursor-activity.is-static:hover .cursor-activity-label {

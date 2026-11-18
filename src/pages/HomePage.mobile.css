@@ -1,0 +1,214 @@
+/* Phone-only home layout. */
+.home-intro-toggle {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .page-section.home-section.is-dossier {
+    padding-top: 24px;
+  }
+
+  /* Compact identity header: small square photo beside name */
+  .home-compose {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+  }
+
+  .home-pic {
+    width: 76px;
+    height: 76px;
+    box-shadow: none;
+  }
+
+  .home-heading {
+    font-size: 26px;
+    margin-bottom: 2px;
+  }
+
+  .home-section {
+    --home-meta-size: 14px;
+  }
+
+  .home-place {
+    line-height: 1.4;
+  }
+
+  /* Meta spans the full width under the photo row */
+  .home-compose > picture,
+  .home-copy {
+    display: contents;
+  }
+
+  .home-copy-meta {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 2px;
+  }
+
+  .home-compose source {
+    display: none;
+  }
+
+  .home-pic {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .home-copy-head {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .home-edu {
+    width: 100%;
+    padding-top: 12px;
+  }
+
+  .home-edu-school {
+    font-size: 12px;
+  }
+
+  .home-edu-degrees li {
+    font-size: 14px;
+  }
+
+  /* Plain text links; padding keeps a comfortable tap area without boxes */
+  .home-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 18px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .home-links .nav-separator {
+    display: none;
+  }
+
+  .home-links a {
+    padding: 8px 0;
+    font-size: 15px;
+    color: var(--link);
+  }
+
+  .home-links a:active {
+    opacity: 0.5;
+  }
+
+  /* Intro collapses to its first paragraph */
+  .home-intro {
+    margin-top: 28px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .home-intro:not(.is-open) p:not(:first-child) {
+    display: none;
+  }
+
+  .home-intro:not(.is-open) p:first-child {
+    margin-bottom: 0;
+  }
+
+  .home-intro-toggle {
+    display: inline-block;
+    margin: 8px 0 0;
+    padding: 6px 0;
+    appearance: none;
+    border: 0;
+    background: none;
+    color: var(--link);
+    font-family: var(--font-pixel);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+
+  .home-intro .nowrap {
+    white-space: normal;
+  }
+
+  /* Sections */
+  .home-block {
+    margin-top: 40px;
+  }
+
+  .home-block-head {
+    margin-bottom: 12px;
+  }
+
+  .home-block-head h2 {
+    font-size: 13px;
+  }
+
+  .home-block-head a {
+    font-size: 14px;
+  }
+
+  /* Featured: swipe carousel with a peek of the next card */
+  .featured-list {
+    display: grid;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    gap: 12px;
+    margin: 0 calc(-1 * var(--shell-pad));
+    padding: 0 var(--shell-pad) 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--shell-pad);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .featured-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featured-list li {
+    scroll-snap-align: start;
+  }
+
+  .featured-copy h3 {
+    font-size: 15px;
+  }
+
+  .featured-copy p {
+    font-size: 14px;
+  }
+
+  /* Writing: plain list rows */
+  .writing-list {
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .writing-list li {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .writing-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+    column-gap: 14px;
+    padding: 12px 0;
+  }
+
+  .writing-title {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .writing-date {
+    font-size: 13px;
+  }
+
+  .home-heatmap {
+    padding: 12px;
+  }
+
+  .home-footer-lead {
+    font-size: 16px;
+  }
+}

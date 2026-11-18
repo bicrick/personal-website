@@ -92,7 +92,7 @@
   max-width: none;
 }
 
-.home-intro p:last-child {
+.home-intro p:last-of-type {
   margin-bottom: 0;
 }
 

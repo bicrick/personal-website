@@ -1,0 +1,93 @@
+/* Phone-only contact layout. */
+.contact-copy,
+.contact-value-short {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .page-section.contact-page {
+    padding-top: 28px;
+  }
+
+  .contact-header {
+    margin-bottom: 8px;
+  }
+
+  .contact-article p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+
+  .contact-article h2 {
+    margin: 28px 0 8px;
+    font-size: 13px;
+  }
+
+  /* Whole row is the tap target */
+  .contact-row {
+    position: relative;
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    align-items: center;
+    min-height: 54px;
+    padding: 0;
+  }
+
+  .contact-row::after {
+    content: "→";
+    font-family: var(--font-pixel);
+    color: var(--ink-muted);
+    font-size: 16px;
+  }
+
+  .contact-row dt {
+    font-size: 13px;
+  }
+
+  .contact-row dd {
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .contact-row a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .contact-row:active {
+    background: var(--ink-faint);
+  }
+
+  .contact-value-short {
+    display: inline;
+  }
+
+  .contact-value-short:not(:empty) ~ .contact-value-full,
+  .contact-value-full:has(+ .contact-value-short) {
+    display: none;
+  }
+
+  .contact-copy {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 12px;
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .contact-copy.is-done {
+    background: var(--link);
+  }
+}

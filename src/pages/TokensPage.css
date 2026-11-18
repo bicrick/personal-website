@@ -150,7 +150,7 @@
 }
 
 .tokens-chart-readout {
-  margin: 0 0 10px;
+  margin: 0 0 18px;
   font-size: 14px;
   line-height: 20px;
   color: var(--ink-muted);
@@ -162,6 +162,7 @@
   height: 230px;
   border-bottom: 1px solid var(--rule);
   cursor: crosshair;
+  touch-action: pan-y;
 }
 
 .tokens-chart svg {
@@ -352,11 +353,57 @@
     border-top: 1px solid var(--rule);
   }
 
+  .tokens-header p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+
+  .tokens-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tokens-toggle {
+    display: flex;
+  }
+
+  .tokens-toggle button {
+    flex: 1;
+    padding: 8px 6px;
+  }
+
+  .tokens-stat {
+    padding: 10px 12px;
+  }
+
+  .tokens-stat dt {
+    margin-bottom: 2px;
+  }
+
+  .tokens-stat dd {
+    font-size: 19px;
+    line-height: 24px;
+  }
+
   .tokens-panel {
-    padding: 14px 10px 8px;
+    min-height: 0;
+    padding: 12px 12px 10px;
+  }
+
+  .tokens-heatmap {
+    padding-top: 0;
   }
 
   .tokens-chart-plot {
     height: 180px;
+  }
+
+  .tokens-source {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+
+  .tokens-source-head {
+    font-size: 15px;
   }
 }

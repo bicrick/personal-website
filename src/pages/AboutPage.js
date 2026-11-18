@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import './AboutPage.css';
+import './AboutPage.mobile.css';
 
 const ABOUT = process.env.PUBLIC_URL + '/about';
 

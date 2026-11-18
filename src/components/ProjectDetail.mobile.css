@@ -1,0 +1,48 @@
+/* Phone-only project write-up layout. */
+@media (max-width: 640px) {
+  .project-detail.App_mainColumn {
+    padding: calc(var(--m-topbar-h) + 20px) var(--shell-pad)
+      calc(var(--m-tabbar-h) + var(--m-safe-bottom) + 40px);
+    font-size: 17px;
+  }
+
+  .project-back {
+    margin-bottom: 16px;
+    font-family: var(--font-pixel);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  .project-header h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .project-meta {
+    font-size: 15px;
+  }
+
+  .project-abstract p,
+  .project-article p,
+  .project-article ul,
+  .project-article ol {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .project-body h2 {
+    font-size: 13px;
+  }
+
+  .project-article h3 {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  /* Wide figures and tables scroll sideways instead of squashing */
+  .project-article table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}

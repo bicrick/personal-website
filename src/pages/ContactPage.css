@@ -89,7 +89,11 @@
   }
 
   .contact-row {
-    grid-template-columns: 6.25rem minmax(0, 1fr);
+    grid-template-columns: 5rem minmax(0, 1fr);
     column-gap: 0.85rem;
+  }
+
+  .contact-row dd {
+    overflow-wrap: anywhere;
   }
 }

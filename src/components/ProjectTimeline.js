@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ProjectTile from './ProjectTile';
 import './ProjectTimeline.css';
+import './ProjectTimeline.mobile.css';
 
 function TimelineCopy({ project }) {
   const blogLink = project.blogLink || project.link;

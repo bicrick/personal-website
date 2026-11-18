@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './ProjectDetail.css';
+import './ProjectDetail.mobile.css';
 import SEO from './SEO';
 import StructuredData from './StructuredData';
 import LandingNavBar from './LandingNavBar';

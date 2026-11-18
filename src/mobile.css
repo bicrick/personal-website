@@ -1,0 +1,230 @@
+/*
+ * Phone layer. Everything here is scoped to <=640px so desktop is untouched.
+ * Page-specific phone styles live next to each page as *.mobile.css.
+ */
+
+.m-topbar,
+.m-tabbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --shell-pad: 20px;
+    --m-topbar-h: 52px;
+    --m-tabbar-h: 58px;
+    --m-safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    font-size: 17px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Desktop header is replaced by the top bar + tab bar */
+  .landing-nav {
+    display: none;
+  }
+
+  .App_mainColumn.landing {
+    padding-top: var(--m-topbar-h);
+    padding-bottom: calc(var(--m-tabbar-h) + var(--m-safe-bottom) + 24px);
+  }
+
+  /* Hover underlines don't exist on touch; they just flash on tap */
+  a:after {
+    display: none;
+  }
+
+  /* top bar */
+  .m-topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    height: calc(var(--m-topbar-h) + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) var(--shell-pad) 0;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--rule);
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .m-topbar.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .m-topbar-name {
+    font-family: var(--font-pixel);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+
+  .theme-toggle {
+    top: calc((var(--m-topbar-h) - 1.65em * 1.05) / 2 + env(safe-area-inset-top));
+    right: calc(var(--shell-pad) - 8px);
+    width: 44px;
+    height: 32px;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  html.m-chrome-hidden .theme-toggle {
+    transform: translateY(calc(-1 * (var(--m-topbar-h) + env(safe-area-inset-top))));
+  }
+
+  /* bottom tabs */
+  .m-tabbar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 70;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: calc(var(--m-tabbar-h) + var(--m-safe-bottom));
+    padding-bottom: var(--m-safe-bottom);
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-top: 1px solid var(--rule);
+  }
+
+  .m-tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--ink-muted);
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .m-tab svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .m-tab.is-active {
+    color: var(--link);
+  }
+
+  /* Same 2px rule as the desktop nav's active underline */
+  .m-tab.is-active::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    width: 28px;
+    height: 2px;
+    background: var(--link);
+    transform: translateX(-50%);
+  }
+
+  .m-tab:active {
+    opacity: 0.6;
+  }
+
+  /* Press feedback: every tappable surface visibly reacts to touch */
+  .featured-card,
+  .project-timeline-media a,
+  .project-timeline-copy-link,
+  .writing-row,
+  .career-record-row,
+  .contact-row,
+  .mt-chip,
+  .mt-seg button,
+  .home-intro-toggle,
+  .contact-copy {
+    transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.12s ease;
+    touch-action: manipulation;
+  }
+
+  .featured-card:active,
+  .project-timeline-media a:active {
+    transform: scale(0.98);
+  }
+
+  .project-timeline-copy-link:active,
+  .writing-row:active,
+  .home-intro-toggle:active {
+    opacity: 0.55;
+  }
+
+  .mt-chip:active,
+  .mt-seg button:active,
+  .contact-copy:active {
+    transform: scale(0.96);
+  }
+
+  /* Shared phone page rhythm */
+  .page-section {
+    padding: 28px 0 8px;
+  }
+
+  .page-section h1 {
+    font-size: 30px;
+    line-height: 1.15;
+  }
+
+  /* Small pixel-font section labels used across pages */
+  .m-label {
+    margin: 0 0 10px;
+    font-family: var(--font-pixel);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  /* Bottom sheet */
+  .m-sheet-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    background: rgba(10, 12, 16, 0.32);
+    animation: m-fade 0.18s ease;
+  }
+
+  .m-sheet {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 96;
+    max-height: 75dvh;
+    overflow: auto;
+    padding: 10px var(--shell-pad) calc(24px + var(--m-safe-bottom));
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    box-shadow: 0 -12px 32px var(--shadow);
+    animation: m-sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .m-sheet-grip {
+    width: 36px;
+    height: 4px;
+    margin: 0 auto 14px;
+    background: var(--rule);
+  }
+}
+
+@keyframes m-fade {
+  from { opacity: 0; }
+}
+
+@keyframes m-sheet-in {
+  from { transform: translateY(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-topbar,
+  .m-sheet,
+  .m-sheet-scrim {
+    transition: none;
+    animation: none;
+  }
+}

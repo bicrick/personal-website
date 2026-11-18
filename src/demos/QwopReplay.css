@@ -434,3 +434,10 @@
     padding-top: 0.65rem;
   }
 }
+
+@media (max-width: 640px) {
+  .qwop-replay-main {
+    padding-top: var(--m-topbar-h);
+    padding-bottom: calc(var(--m-tabbar-h) + var(--m-safe-bottom) + 24px);
+  }
+}

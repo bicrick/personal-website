@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './CareerRecord.css';
+import './CareerRecord.mobile.css';
 
 function CareerRow({ item }) {
   const body = (

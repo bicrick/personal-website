@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
@@ -7,10 +7,13 @@ import WritingBlock from '../components/home/WritingBlock';
 import HomeFooter from '../components/home/HomeFooter';
 import { RESUME_URL } from '../constants/resume';
 import './HomePage.css';
+import './HomePage.mobile.css';
 
 const HEB_LOGO = `${process.env.PUBLIC_URL}/images/heb/heb-logo.png`;
 
 export default function HomePage() {
+  const [introOpen, setIntroOpen] = useState(false);
+
   return (
     <section
       id="home"
@@ -62,7 +65,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="home-intro">
+        <div className={`home-intro${introOpen ? ' is-open' : ''}`}>
           <p>
             {"Hi. I'm Patrick. I genuinely think there has never been a better time to be a young, curious person with high aptitude. The friction between me and my goals has never been smaller."}
           </p>
@@ -89,6 +92,11 @@ export default function HomePage() {
               <Link to="/career" className="home-intro-more">see more in career →</Link>
             </span>
           </p>
+          {!introOpen && (
+            <button type="button" className="home-intro-toggle" onClick={() => setIntroOpen(true)}>
+              read more
+            </button>
+          )}
         </div>
         <FeaturedProjects />
         <WritingBlock />

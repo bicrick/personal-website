@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { featuredProjects } from '../../constants/projects';
+import { featuredProjects, listedProjects } from '../../constants/projects';
+import useIsMobile from '../../hooks/useIsMobile';
 import QwopTilePreview from '../QwopTilePreview';
 import HarnessTilePreview from '../HarnessTilePreview';
 import TapestryTilePreview from '../TapestryTilePreview';
@@ -71,7 +72,9 @@ function FeaturedMedia({ project }) {
 }
 
 export default function FeaturedProjects() {
-  const projects = featuredProjects();
+  // Phones get a swipe carousel, so it can hold every project instead of two
+  const isMobile = useIsMobile();
+  const projects = isMobile ? listedProjects() : featuredProjects();
 
   return (
     <section className="home-block" aria-label="featured projects">

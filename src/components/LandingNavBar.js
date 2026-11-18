@@ -1,11 +1,17 @@
 import React from 'react';
+import MobileTabBar from './MobileTabBar';
+import MobileTopBar from './MobileTopBar';
 
 export default function LandingNavBar({ children }) {
   return (
-    <header className="App_header landing-nav">
-      <div className="App_mainColumn landing-nav-inner">
-        {children}
-      </div>
-    </header>
+    <>
+      <header className="App_header landing-nav">
+        <div className="App_mainColumn landing-nav-inner">
+          {children}
+        </div>
+      </header>
+      <MobileTopBar />
+      <MobileTabBar />
+    </>
   );
 }
