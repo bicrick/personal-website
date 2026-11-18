@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
+import useTokenActivity from '../hooks/useTokenActivity';
 import './CursorActivityHeatmap.css';
 
-const PROFILE_URL = 'https://cursor.com/@bicrick';
 const TIME_ZONE = 'America/Chicago';
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
@@ -12,6 +13,15 @@ function formatCount(count) {
   if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`;
   if (count >= 1_000) return `${(count / 1_000).toFixed(1).replace(/\.0$/, '')}k`;
   return String(count);
+}
+
+function formatSources(activityCounts, iso) {
+  const sources = activityCounts?.find((row) => row.date === iso)?.sources;
+  if (!sources || Object.keys(sources).length < 2) return '';
+  return ` (${Object.entries(sources)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => `${name} ${formatCount(count)}`)
+    .join(', ')})`;
 }
 
 function formatDayLabel(iso) {
@@ -194,45 +204,14 @@ function HeatmapGraph({ grid, renderDot }) {
   );
 }
 
-function CursorActivityHeatmap() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(false);
+function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal = true, showLabel = true, activity = null }) {
+  const fetched = useTokenActivity();
+  const data = activity || fetched.data;
+  const error = !activity && fetched.error;
   const [tooltip, setTooltip] = useState(null);
   const [armedDate, setArmedDate] = useState(null);
   const rootRef = useRef(null);
   const isCoarse = useCoarsePointer();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const load = async () => {
-      try {
-        const primary = await fetch('/api/cursor-activity');
-        if (primary.ok) {
-          const json = await primary.json();
-          if (!cancelled) setData(json);
-          return;
-        }
-      } catch (_) {
-        // fall through to static snapshot for local/dev
-      }
-
-      try {
-        const fallback = await fetch(`${process.env.PUBLIC_URL}/cursor-activity.json`);
-        if (!fallback.ok) throw new Error(`status ${fallback.status}`);
-        const json = await fallback.json();
-        if (!cancelled) setData(json);
-      } catch (_) {
-        if (!cancelled) setError(true);
-      }
-    };
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     if (!isCoarse || !armedDate) return undefined;
@@ -275,6 +254,7 @@ function CursorActivityHeatmap() {
   }
 
   const isLoading = !data;
+  const Root = to ? Link : 'div';
 
   const placeTip = (event, day) => {
     if (!day.inRange) {
@@ -293,7 +273,7 @@ function CursorActivityHeatmap() {
     const spaceAbove = rect.top - pad;
     const below = spaceAbove < estimatedHeight + gap;
     setTooltip({
-      text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}`,
+      text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}${showSources ? formatSources(data?.activityCounts, day.date) : ''}`,
       x,
       y: below ? rect.bottom : rect.top,
       below,
@@ -358,22 +338,19 @@ function CursorActivityHeatmap() {
           aria-busy="true"
           aria-label="Loading token usage"
         >
-          <span className="cursor-activity-label">token usage</span>
+          {showLabel && <span className="cursor-activity-label">token usage</span>}
           <HeatmapGraph grid={grid} renderDot={renderDot} />
         </div>
       ) : (
-        <a
+        <Root
           ref={rootRef}
-          className={`cursor-activity${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
-          href={PROFILE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Cursor token usage for @bicrick"
+          className={`cursor-activity${to ? '' : ' is-static'}${isCoarse ? ' is-coarse' : ''}${armedDate ? ' is-armed' : ''}`}
+          {...(to ? { to, 'aria-label': 'Token usage details' } : { 'aria-label': 'Token usage heatmap' })}
           onMouseLeave={() => {
             if (!isCoarse) clearTip();
           }}
         >
-          <span className="cursor-activity-label">token usage</span>
+          {showLabel && <span className="cursor-activity-label">token usage</span>}
           <HeatmapGraph grid={grid} renderDot={renderDot} />
           {tooltip
             && createPortal(
@@ -386,11 +363,13 @@ function CursorActivityHeatmap() {
               </span>,
               document.body
             )}
-        </a>
+        </Root>
       )}
-      <p className={`cursor-activity-total${isLoading ? ' is-ice' : ''}`}>
-        So far I have used {isLoading ? 'x' : formatCount(ytdTotal)} tokens this year.
-      </p>
+      {showTotal && (
+        <p className={`cursor-activity-total${isLoading ? ' is-ice' : ''}`}>
+          So far I have used {isLoading ? 'x' : formatCount(ytdTotal)} tokens this year.
+        </p>
+      )}
     </div>
   );
 }

@@ -26,6 +26,7 @@ import CareerPage from './pages/CareerPage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ContactPage from './pages/ContactPage';
+import TokensPage from './pages/TokensPage';
 function App() {
   return (
     <>
@@ -64,6 +65,7 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/tokens" element={<TokensPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

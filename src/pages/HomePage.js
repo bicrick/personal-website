@@ -95,9 +95,7 @@ export default function HomePage() {
         <section className="home-block" aria-label="how I build">
           <div className="home-block-head">
             <h2>how I build</h2>
-            <a href="https://cursor.com/@bicrick" target="_blank" rel="noopener noreferrer">
-              cursor profile
-            </a>
+            <Link to="/tokens">token stats</Link>
           </div>
           <figure className="home-heatmap">
             <CursorActivityHeatmap />

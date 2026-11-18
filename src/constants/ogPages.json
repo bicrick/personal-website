@@ -218,5 +218,16 @@
     "imageWidth": 1200,
     "imageHeight": 630,
     "type": "article"
+  },
+  "/tokens": {
+    "ogTitle": "tokens",
+    "seoTitle": "Tokens - bicrick",
+    "description": "Every AI token Patrick Brown spends across Cursor, Claude Code, and OpenCode, tracked with tokentracker.",
+    "keywords": "bicrick, Patrick Brown, tokens, AI usage, Cursor, Claude Code, OpenCode, GitHub Copilot, tokentracker",
+    "imagePath": "/og/home-1200x630.jpg",
+    "imageAlt": "Patrick Brown, Platform Engineer",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "type": "website"
   }
 }
