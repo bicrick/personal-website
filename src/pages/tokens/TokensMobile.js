@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
-import useTokenActivity from '../../hooks/useTokenActivity';
+import { useTokenStats } from '../../hooks/useTokenStats';
 import BottomSheet from '../../components/BottomSheet';
 import {
   TRACKER_URL,
@@ -9,7 +9,6 @@ import {
   formatCount,
   timeAgo,
   addDays,
-  computeStats,
 } from './tokenStats';
 import { CumulativeChart, DailyChart } from './TokenCharts';
 import './TokensMobile.css';
@@ -50,23 +49,8 @@ function Segmented({ options, value, onChange, label }) {
   );
 }
 
-/** Quartile levels over active days so a few huge days don't wash everything out. */
-function levelScale(series) {
-  const values = series.map((d) => d.count).filter(Boolean).sort((a, b) => a - b);
-  const q = (p) => values[Math.min(values.length - 1, Math.floor(p * values.length))] || 0;
-  const cuts = [q(0.25), q(0.5), q(0.75)];
-  return (count) => {
-    if (!count) return 0;
-    if (count <= cuts[0]) return 1;
-    if (count <= cuts[1]) return 2;
-    if (count <= cuts[2]) return 3;
-    return 4;
-  };
-}
-
 /** Compact GitHub-style strip: weeks across, days down. Opens scrolled to today. */
 function Calendar({ series, onPick }) {
-  const level = useMemo(() => levelScale(series), [series]);
   const scrollRef = useRef(null);
   const [picked, setPicked] = useState(null);
 
@@ -116,7 +100,7 @@ function Calendar({ series, onPick }) {
                 <button
                   key={d.date}
                   type="button"
-                  className={`mt-cal-cell level-${level(d.count)}${picked === d.date ? ' is-picked' : ''}`}
+                  className={`mt-cal-cell level-${d.level}${picked === d.date ? ' is-picked' : ''}`}
                   aria-label={`${longDay(d.date)}: ${formatCount(d.count)} tokens`}
                   onClick={() => pick(d)}
                 />
@@ -167,23 +151,19 @@ function DaySheet({ day, onClose }) {
   );
 }
 
+const ALL_TOOLS = SOURCES.map((s) => s.id);
+
 export default function TokensMobile() {
-  const { data, error } = useTokenActivity();
   const [view, setView] = useState('calendar');
   const [range, setRange] = useState('year');
-  const [selected, setSelected] = useState(() => new Set(SOURCES.map((s) => s.id)));
+  const [selected, setSelected] = useState(() => new Set(ALL_TOOLS));
   const [day, setDay] = useState(null);
 
   const rangeDays = RANGES.find((r) => r.id === range).days;
-  const stats = useMemo(
-    () => (data ? computeStats(data, selected, rangeDays) : null),
-    [data, selected, rangeDays]
-  );
-  // Source totals stay full-range so chips show what you'd get by turning one back on
-  const allStats = useMemo(
-    () => (data ? computeStats(data, new Set(SOURCES.map((s) => s.id)), rangeDays) : null),
-    [data, rangeDays]
-  );
+  // Every number here is a tokentracker API query (see hooks/useTokenStats).
+  // sourceTotals come back unfiltered, so chips show what turning a tool back on adds.
+  const { data: stats, error } = useTokenStats(selected, ALL_TOOLS, rangeDays);
+  const allStats = stats;
 
   const toggle = (id) =>
     setSelected((prev) => {
@@ -209,7 +189,7 @@ export default function TokensMobile() {
         </p>
       </header>
 
-      {error && <p className="mt-muted">Token data is unavailable right now.</p>}
+      {error && !stats && <p className="mt-muted">Token data is unavailable right now.</p>}
 
       {stats && (
         <>

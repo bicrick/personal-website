@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
-import useTokenActivity from '../hooks/useTokenActivity';
+import { useTokenStats } from '../hooks/useTokenStats';
 import useIsMobile from '../hooks/useIsMobile';
 import {
   TRACKER_URL,
@@ -11,7 +11,6 @@ import {
   formatCount,
   formatDay,
   timeAgo,
-  computeStats,
 } from './tokens/tokenStats';
 import { CumulativeChart, DailyChart } from './tokens/TokenCharts';
 import TokensMobile from './tokens/TokensMobile';
@@ -110,22 +109,20 @@ export default function TokensPage() {
   return useIsMobile() ? <TokensMobile /> : <TokensDesktop />;
 }
 
+const ALL_TOOLS = SOURCES.map((s) => s.id);
+
 function TokensDesktop() {
-  const { data, error } = useTokenActivity();
   const [view, setView] = useState('heatmap');
   const [range, setRange] = useState('year');
-  const [selected, setSelected] = useState(() => new Set(SOURCES.map((s) => s.id)));
+  const [selected, setSelected] = useState(() => new Set(ALL_TOOLS));
 
   // The heatmap is always year-to-date, so stats follow it in that view
   const rangeDays = view === 'heatmap' ? null : RANGES.find((r) => r.id === range).days;
-  const stats = useMemo(
-    () => (data ? computeStats(data, selected, rangeDays) : null),
-    [data, selected, rangeDays]
-  );
-
-  const heatmapData = useMemo(
-    () => (data && stats ? { ...data, activityCounts: stats.filtered } : null),
-    [data, stats]
+  // Every number below is a tokentracker API query (see hooks/useTokenStats)
+  const { data: stats, error } = useTokenStats(selected, ALL_TOOLS, rangeDays);
+  const heatmapTools = useMemo(
+    () => (selected.size === ALL_TOOLS.length ? null : [...selected].join(',')),
+    [selected]
   );
 
   const toggleSource = (id) => {
@@ -156,7 +153,7 @@ function TokensDesktop() {
           </p>
         </header>
 
-        {error && <p className="tokens-muted">Token data is unavailable right now.</p>}
+        {error && !stats && <p className="tokens-muted">Token data is unavailable right now.</p>}
 
         {stats && (
           <>
@@ -174,7 +171,7 @@ function TokensDesktop() {
                 <div className="tokens-heatmap">
                   <CursorActivityHeatmap
                     to={null}
-                    activity={heatmapData}
+                    tools={heatmapTools}
                     showSources
                     showTotal={false}
                     showLabel={false}

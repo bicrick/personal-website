@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import useTokenActivity from '../hooks/useTokenActivity';
+import { tokenApi } from '../lib/tokentracker';
+import { useTokenQuery } from '../hooks/useTokenStats';
 import './CursorActivityHeatmap.css';
 
 const TIME_ZONE = 'America/Chicago';
@@ -15,8 +16,8 @@ function formatCount(count) {
   return String(count);
 }
 
-function formatSources(activityCounts, iso) {
-  const sources = activityCounts?.find((row) => row.date === iso)?.sources;
+function formatSources(splits, iso) {
+  const sources = splits?.get(iso);
   if (!sources || Object.keys(sources).length < 2) return '';
   return ` (${Object.entries(sources)
     .sort((a, b) => b[1] - a[1])
@@ -47,10 +48,6 @@ function centralToday() {
   const month = Number(get('month'));
   const day = Number(get('day'));
   return new Date(Date.UTC(year, month - 1, day));
-}
-
-function centralTodayIso() {
-  return centralToday().toISOString().slice(0, 10);
 }
 
 function buildYtdGrid(activityCounts, year) {
@@ -141,6 +138,24 @@ function buildYtdGrid(activityCounts, year) {
   return { weeks, levelFor, monthMarkers };
 }
 
+/**
+ * Turn GET /heatmap into this component's grid. The API pads the calendar to
+ * Dec 31; trailing future-only weeks are dropped so the chart ends at today.
+ */
+function gridFromApi(hm) {
+  let weeks = hm.weeks.map((week) => week.map((d, i) => {
+    if (!d || d.tokens == null) {
+      return { date: d?.date || `out-${i}`, count: null, level: -1, month: d ? Number(d.date.slice(5, 7)) - 1 : -1, inRange: false };
+    }
+    return { date: d.date, count: d.tokens, level: d.level, month: Number(d.date.slice(5, 7)) - 1, inRange: true };
+  }));
+  while (weeks.length && !weeks[weeks.length - 1].some((d) => d.inRange)) weeks = weeks.slice(0, -1);
+  const monthMarkers = hm.months
+    .filter((m) => m.week < weeks.length)
+    .map((m) => ({ label: m.label, weekIndex: m.week }));
+  return { weeks, levelFor: () => 0, monthMarkers };
+}
+
 function useCoarsePointer() {
   const [coarse, setCoarse] = useState(() => (
     typeof window !== 'undefined'
@@ -204,10 +219,16 @@ function HeatmapGraph({ grid, renderDot }) {
   );
 }
 
-function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal = true, showLabel = true, activity = null }) {
-  const fetched = useTokenActivity();
-  const data = activity || fetched.data;
-  const error = !activity && fetched.error;
+function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal = true, showLabel = true, tools = null }) {
+  // GET /heatmap gives the grid, levels and total; /usage (split by tool) feeds hover detail
+  const { data: hm, error } = useTokenQuery(() => tokenApi('/heatmap', { range: 'year', tools }), [tools]);
+  const { data: splits } = useTokenQuery(
+    () => (showSources
+      ? tokenApi('/usage', { range: 'ytd', group: 'day', split: 'tool', tools })
+        .then((u) => new Map(u.rows.map((r) => [r.period, r.split])))
+      : Promise.resolve(null)),
+    [showSources, tools]
+  );
   const [tooltip, setTooltip] = useState(null);
   const [armedDate, setArmedDate] = useState(null);
   const rootRef = useRef(null);
@@ -227,33 +248,18 @@ function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal 
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, [isCoarse, armedDate]);
 
-  const year = useMemo(() => {
-    if (data?.activityCounts?.length) {
-      return Number(data.activityCounts[data.activityCounts.length - 1].date.slice(0, 4));
-    }
-    return centralToday().getUTCFullYear();
-  }, [data]);
-
+  // While loading, an empty year grid renders as the frosted placeholder
   const grid = useMemo(
-    () => buildYtdGrid(data?.activityCounts || [], year),
-    [data, year]
+    () => (hm ? gridFromApi(hm) : buildYtdGrid([], centralToday().getUTCFullYear())),
+    [hm]
   );
+  const ytdTotal = hm?.total || 0;
 
-  const ytdTotal = useMemo(() => {
-    if (!data?.activityCounts?.length) return 0;
-    const start = `${year}-01-01`;
-    const end = centralTodayIso();
-    return data.activityCounts.reduce((sum, row) => {
-      if (row.date < start || row.date > end) return sum;
-      return sum + (Number(row.count) || 0);
-    }, 0);
-  }, [data, year]);
-
-  if (error) {
+  if (error && !hm) {
     return null;
   }
 
-  const isLoading = !data;
+  const isLoading = !hm;
   const Root = to ? Link : 'div';
 
   const placeTip = (event, day) => {
@@ -273,7 +279,7 @@ function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal 
     const spaceAbove = rect.top - pad;
     const below = spaceAbove < estimatedHeight + gap;
     setTooltip({
-      text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}${showSources ? formatSources(data?.activityCounts, day.date) : ''}`,
+      text: `${formatDayLabel(day.date)} · ${formatCount(day.count)}${showSources ? formatSources(splits, day.date) : ''}`,
       x,
       y: below ? rect.bottom : rect.top,
       below,
@@ -299,7 +305,7 @@ function CursorActivityHeatmap({ to = '/tokens', showSources = false, showTotal 
   };
 
   const renderDot = (day) => {
-    const level = grid.levelFor(day.count);
+    const level = day.level ?? grid.levelFor(day.count);
     const isArmed = armedDate === day.date;
 
     return (
