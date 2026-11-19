@@ -1,6 +1,6 @@
 // tokentracker v1 API client. All token data on this site comes from here.
-// Docs: https://tokentracker-nu.vercel.app/docs
-const BASE = process.env.REACT_APP_TOKEN_API || 'https://tokentracker-nu.vercel.app';
+// Docs: https://tokentracker.patrickbrown.dev/docs
+const BASE = process.env.REACT_APP_TOKEN_API || 'https://tokentracker.patrickbrown.dev';
 export const HANDLE = 'bicrick';
 
 const cache = new Map();
