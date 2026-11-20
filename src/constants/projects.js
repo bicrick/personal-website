@@ -9,7 +9,7 @@ export const PROJECTS = [
     appLink: 'https://tokentracker.patrickbrown.dev',
     appLabel: 'live',
     repoLink: 'https://github.com/bicrick/tokentracker',
-    relevanceRank: 3.5,
+    relevanceRank: 1.5,
     dateRank: -1,
     date: 'November 2026',
     featured: true,
