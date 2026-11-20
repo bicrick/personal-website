@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import TypewriterHeading from '../components/TypewriterHeading';
 import CursorActivityHeatmap from '../components/CursorActivityHeatmap';
 import { useTokenStats } from '../hooks/useTokenStats';
 import useIsMobile from '../hooks/useIsMobile';
 import {
-  TRACKER_URL,
   SOURCES,
   VIEWS,
   RANGES,
@@ -148,8 +148,10 @@ function TokensDesktop() {
             tokens
           </TypewriterHeading>
           <p>
-            Every token I spend with AI coding tools, across every tool and machine I build on.
-            Collected with <a href={TRACKER_URL} target="_blank" rel="noopener noreferrer">tokentracker</a>.
+            Every token my AI coding tools process, across every tool and machine I build on.
+            All of it is collected and served by{' '}
+            <Link to="/projects/tokentracker">tokentracker</Link>, an open source tool I built
+            for exactly this. Every number on this page is a live query to its API.
           </p>
         </header>
 

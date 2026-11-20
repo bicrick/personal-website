@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTokenStats } from '../../hooks/useTokenStats';
 import BottomSheet from '../../components/BottomSheet';
 import {
-  TRACKER_URL,
   MONTHS,
   SOURCES,
   RANGES,
@@ -184,8 +184,8 @@ export default function TokensMobile() {
       <header className="mt-header">
         <h1>tokens</h1>
         <p>
-          Every token I spend with AI coding tools.{' '}
-          <a href={TRACKER_URL} target="_blank" rel="noopener noreferrer">tokentracker</a>
+          Every token my AI coding tools process, collected and served by{' '}
+          <Link to="/projects/tokentracker">tokentracker</Link>, an open source tool I built.
         </p>
       </header>
 

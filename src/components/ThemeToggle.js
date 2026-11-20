@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from 'react';
 
-const STORAGE = 'theme';
-const DARK_MARK = '#';
+// 'system' follows the OS; 'light' and 'dark' are explicit picks
+const STORAGE = 'theme-mode';
+const LEGACY = 'theme';
+const MODES = [
+  { id: 'system', mark: '\u25A1', label: 'system theme' },
+  { id: 'light', mark: '·', label: 'light mode' },
+  { id: 'dark', mark: '#', label: 'dark mode' },
+];
 
-function readDark() {
+function readMode() {
   try {
-    return window.localStorage.getItem(STORAGE) === 'dark';
+    const mode = window.localStorage.getItem(STORAGE);
+    if (mode === 'light' || mode === 'dark' || mode === 'system') return mode;
+    // The old toggle stored 'light' for everyone, so only an explicit dark carries over
+    return window.localStorage.getItem(LEGACY) === 'dark' ? 'dark' : 'system';
   } catch {
-    return false;
+    return 'system';
   }
 }
 
-function persist(dark) {
+function persist(mode) {
   try {
-    window.localStorage.setItem(STORAGE, dark ? 'dark' : 'light');
+    window.localStorage.setItem(STORAGE, mode);
   } catch {
     /* ignore quota / private mode */
   }
+}
+
+const systemQuery = () =>
+  typeof window !== 'undefined' && window.matchMedia
+    ? window.matchMedia('(prefers-color-scheme: dark)')
+    : null;
+
+function resolveDark(mode) {
+  if (mode === 'system') return Boolean(systemQuery()?.matches);
+  return mode === 'dark';
 }
 
 function applyChromeColor() {
@@ -32,26 +51,36 @@ function applyHtml(dark) {
 }
 
 if (typeof document !== 'undefined') {
-  applyHtml(readDark());
+  applyHtml(resolveDark(readMode()));
 }
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(readDark);
+  const [mode, setMode] = useState(readMode);
 
   useEffect(() => {
-    applyHtml(dark);
-    persist(dark);
-  }, [dark]);
+    applyHtml(resolveDark(mode));
+    persist(mode);
+    if (mode !== 'system') return undefined;
+    const query = systemQuery();
+    if (!query) return undefined;
+    const onChange = () => applyHtml(query.matches);
+    query.addEventListener?.('change', onChange);
+    return () => query.removeEventListener?.('change', onChange);
+  }, [mode]);
+
+  const index = Math.max(0, MODES.findIndex((m) => m.id === mode));
+  const current = MODES[index];
+  const next = MODES[(index + 1) % MODES.length];
 
   return (
     <button
       type="button"
-      className={`theme-toggle${dark ? ' is-dot' : ''}`}
-      aria-pressed={dark}
-      aria-label={dark ? 'light mode' : 'dark mode'}
-      onClick={() => setDark((on) => !on)}
+      className={`theme-toggle is-${current.id}`}
+      aria-label={`${current.label}, switch to ${next.label}`}
+      title={`${current.label} · click for ${next.label}`}
+      onClick={() => setMode(next.id)}
     >
-      {dark ? '' : DARK_MARK}
+      {current.mark}
     </button>
   );
 }

@@ -36,7 +36,9 @@
     <meta name="twitter:creator" content="@patrickbbrown" />
     <script>
       try {
-        if (localStorage.getItem('theme') === 'dark') {
+        var themeMode = localStorage.getItem('theme-mode') || (localStorage.getItem('theme') === 'dark' ? 'dark' : 'system');
+        var themeDark = themeMode === 'dark' || (themeMode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (themeDark) {
           document.documentElement.classList.add('is-dark');
           var themeMeta = document.querySelector('meta[name="theme-color"]');
           if (themeMeta) themeMeta.setAttribute('content', '#14151a');

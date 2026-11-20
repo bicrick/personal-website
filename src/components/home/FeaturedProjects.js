@@ -8,6 +8,7 @@ import TapestryTilePreview from '../TapestryTilePreview';
 import { MonocleTilePreview } from '../project/monocle';
 import { CartPoleTilePreview } from '../CartPoleEmbed';
 import NotepadableTilePreview from '../notepadable-tile/NotepadableTilePreview';
+import TokentrackerTilePreview from '../tokentracker/TokentrackerTilePreview';
 import './FeaturedProjects.css';
 
 function FeaturedMedia({ project }) {
@@ -25,6 +26,9 @@ function FeaturedMedia({ project }) {
   }
   if (project.livePreview === 'cartpole') {
     return <CartPoleTilePreview />;
+  }
+  if (project.livePreview === 'tokentracker') {
+    return <TokentrackerTilePreview />;
   }
   if (project.livePreview === 'notepadable') {
     return <NotepadableTilePreview />;

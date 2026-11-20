@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { id: 'about', label: 'about', path: '/about' },
   { id: 'career', label: 'career', path: '/career' },
   { id: 'projects', label: 'projects', path: '/projects' },
+  { id: 'tokens', label: 'tokens', path: '/tokens' },
   { id: 'contact', label: 'contact', path: '/contact' },
 ];
 
@@ -22,7 +23,7 @@ function activeIdFor(pathname) {
 
 /**
  * The one site nav, shared by every page. Desktop shows dot-separated links;
- * phones drop the dots and spread the five links across a single row.
+ * phones drop the dots and spread the links across a single row.
  */
 export default function SiteNav() {
   const { pathname } = useLocation();

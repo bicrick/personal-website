@@ -1,5 +1,20 @@
 export const PROJECTS = [
   {
+    title: 'tokentracker',
+    description: 'token tracking across services, queryable with an api',
+    timelineDescription:
+      'One command reads Claude Code, Codex, Cursor, OpenCode, Copilot and more on every machine, then serves your token usage as a public API.',
+    livePreview: 'tokentracker',
+    blogLink: '/projects/tokentracker',
+    appLink: 'https://tokentracker.patrickbrown.dev',
+    appLabel: 'live',
+    repoLink: 'https://github.com/bicrick/tokentracker',
+    relevanceRank: 3.5,
+    dateRank: -1,
+    date: 'November 2026',
+    featured: true,
+  },
+  {
     title: 'infinite tapestry',
     description: 'an endless painting driven and guided by the internet',
     timelineDescription:
@@ -12,7 +27,6 @@ export const PROJECTS = [
     relevanceRank: 2,
     dateRank: 2,
     date: 'October 2026',
-    featured: true,
   },
   {
     title: 'qwop world record with reinforcement learning',

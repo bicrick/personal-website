@@ -48,6 +48,17 @@ const GLYPHS = {
     '#..#.#..#',
     '####.####',
   ],
+  tokens: [
+    '..#####..',
+    '.#.....#.',
+    '#...#...#',
+    '#..###..#',
+    '#.#####.#',
+    '#..###..#',
+    '#...#...#',
+    '.#.....#.',
+    '..#####..',
+  ],
   contact: [
     '.........',
     '#########',
@@ -76,12 +87,13 @@ const TABS = [
   { id: 'about', label: 'about', path: '/about' },
   { id: 'career', label: 'career', path: '/career' },
   { id: 'projects', label: 'projects', path: '/projects' },
+  { id: 'tokens', label: 'tokens', path: '/tokens' },
   { id: 'contact', label: 'contact', path: '/contact' },
 ].map((tab) => ({ ...tab, d: glyphPath(GLYPHS[tab.id]) }));
 
 function activeIdFor(pathname) {
   const path = normalizePagePath(pathname);
-  if (path === '/' || path.startsWith('/writing') || path.startsWith('/tokens')) return 'home';
+  if (path === '/' || path.startsWith('/writing')) return 'home';
   if (path === '/heb' || path.startsWith('/career')) return 'career';
   if (path.startsWith('/projects') || path.startsWith('/demos/')) return 'projects';
   const match = TABS.find((t) => t.path !== '/' && path.startsWith(t.path));

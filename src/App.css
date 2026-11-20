@@ -80,21 +80,9 @@ body {
   color: var(--ink);
 }
 
-.theme-toggle:focus,
-.theme-toggle:focus-visible,
-.theme-toggle:active {
-  outline: none;
-  box-shadow: none;
-  background: transparent;
-  color: var(--link);
-}
-
-.theme-toggle.is-dot::after {
-  content: "";
-  width: 0.22em;
-  height: 0.22em;
-  border-radius: 50%;
-  background: currentColor;
+.theme-toggle:focus-visible {
+  outline: 1px solid var(--link);
+  outline-offset: 1px;
 }
 
 /* Links - global styles */
