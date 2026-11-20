@@ -128,16 +128,16 @@
   color: var(--ink-muted);
 }
 
-/* main panel */
+/* main panel — height follows each view (heatmap is shorter than charts) */
 .tokens-panel {
   border: 1px solid var(--rule);
-  padding: 18px 16px 12px;
-  min-height: 300px;
+  padding: 14px 16px 10px;
 }
 
 .tokens-heatmap {
   font-size: 15px;
-  padding-top: 8px;
+  padding-top: 4px;
+  padding-bottom: 2px;
 }
 
 .tokens-heatmap .cursor-activity-dot {
@@ -386,12 +386,12 @@
   }
 
   .tokens-panel {
-    min-height: 0;
-    padding: 12px 12px 10px;
+    padding: 12px 12px 8px;
   }
 
   .tokens-heatmap {
     padding-top: 0;
+    padding-bottom: 0;
   }
 
   .tokens-chart-plot {
