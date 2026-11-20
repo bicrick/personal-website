@@ -163,6 +163,9 @@ html.is-dark .ttp {
 }
 
 .ttp .ttp-logos .ttp-logo img {
+  /* Undo .project-card img's absolute full-card fill on the projects grid */
+  position: static;
+  transform: none;
   display: block;
   object-fit: contain;
   width: 6.4cqw;
