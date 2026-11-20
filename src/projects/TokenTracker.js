@@ -20,11 +20,11 @@ function TokenTracker() {
       abstract="Every token my AI coding tools process, across every tool and every machine, saved to my own GitHub and served as a JSON API."
     >
       <LiveSiteEmbed
-        src={PROFILE}
-        title="tokentracker profile"
+        src={SITE}
+        title="tokentracker"
         viewW={1280}
         viewH={900}
-        caption="my profile, built and hosted by GitHub Pages from my data repo"
+        caption="tokentracker.patrickbrown.dev"
       />
 
       <p>
@@ -54,6 +54,14 @@ function TokenTracker() {
       <pre>
         <code>curl {STATS}</code>
       </pre>
+
+      <LiveSiteEmbed
+        src={PROFILE}
+        title="tokentracker profile"
+        viewW={1280}
+        viewH={900}
+        caption="my profile, built and hosted by GitHub Pages from my data repo"
+      />
 
       <p>
         that is the api. no server, no key, and an agent can set the whole thing up for you.
