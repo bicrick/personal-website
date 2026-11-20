@@ -92,7 +92,7 @@ html.is-dark .ttp {
 
 /* install */
 .ttp-term {
-  width: 74cqw;
+  width: 80cqw;
   border: 1px solid var(--ttp-rule);
   background: var(--ttp-panel);
 }
@@ -112,9 +112,30 @@ html.is-dark .ttp {
 }
 
 .ttp-term-body {
-  padding: 4cqw 3.4cqw;
-  font-size: clamp(10px, 3cqw, 17px);
+  padding: 3cqw 3.4cqw;
+  font-size: clamp(9px, 2.6cqw, 15px);
+  line-height: 1.7;
   white-space: nowrap;
+}
+
+.ttp-term-line {
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  color: var(--ttp-dim);
+}
+
+.ttp-term-line.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.ttp-ok {
+  color: #3fb950;
+}
+
+.ttp-strong {
+  color: var(--ttp-strong);
 }
 
 .ttp-prompt {
@@ -164,7 +185,7 @@ html.is-dark .ttp {
 
 /* api */
 .ttp-api {
-  width: 70cqw;
+  width: 80cqw;
   border: 1px solid var(--ttp-rule);
   background: var(--ttp-panel);
   font-size: clamp(8px, 2.2cqw, 13px);
@@ -172,8 +193,16 @@ html.is-dark .ttp {
 
 .ttp-api-url {
   padding: 1.6cqw 2.4cqw;
+  font-size: clamp(7px, 2cqw, 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border-bottom: 1px solid var(--ttp-rule);
   color: var(--ttp-dim);
+}
+
+.ttp-host {
+  color: var(--ttp-strong);
 }
 
 .ttp-get {

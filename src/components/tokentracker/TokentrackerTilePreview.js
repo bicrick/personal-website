@@ -17,10 +17,17 @@ const LOGOS = [
 const COMMAND = 'npx @bicrick/tokentracker init';
 const WORD = 'tokentracker';
 
+// What init prints once the command is typed: sign in to GitHub, save to your own repo
+const INSTALL_LINES = [
+  ['ok', 'Signed in to GitHub as ', 'bicrick'],
+  ['ok', 'Saved 412 rows to ', 'bicrick/tokentracker-data'],
+  ['ok', 'Published on ', 'GitHub Pages'],
+];
+
 const JSON_LINES = [
   [['p', '{']],
   [['k', '  "handle"'], ['p', ': '], ['s', '"bicrick"'], ['p', ',']],
-  [['k', '  "tokens"'], ['p', ': '], ['n', '9692353882'], ['p', ',']],
+  [['k', '  "tokens"'], ['p', ': '], ['n', '9829375428'], ['p', ',']],
   [['k', '  "activeDays"'], ['p', ': '], ['n', '233'], ['p', ',']],
   [['k', '  "topTool"'], ['p', ': { '], ['k', '"name"'], ['p', ': '], ['s', '"Cursor"'], ['p', ' },']],
   [['k', '  "topModel"'], ['p', ': '], ['s', '"claude-opus-5-5"'], ['p', ',']],
@@ -30,7 +37,7 @@ const JSON_LINES = [
 
 // Scene lengths in ms; the reel loops
 const SCENES = [
-  ['install', 2600],
+  ['install', 3900],
   ['logos', 1900],
   ['api', 2600],
   ['heat', 3800],
@@ -97,6 +104,7 @@ export default function TokentrackerTilePreview() {
   const [reduced] = useState(prefersReducedMotion);
   const [scene, setScene] = useState(reduced ? 'coin' : 'install');
   const [typed, setTyped] = useState(0);
+  const [said, setSaid] = useState(0);
   const [lines, setLines] = useState(0);
   const [heat, setHeat] = useState(0);
   const [pointer, setPointer] = useState(0); // 0 hidden, 1 moving in, 2 hovering
@@ -136,6 +144,7 @@ export default function TokentrackerTilePreview() {
     const run = () => {
       if (cancelled) return;
       setTyped(0);
+      setSaid(0);
       setLines(0);
       setHeat(0);
       setPointer(0);
@@ -146,7 +155,8 @@ export default function TokentrackerTilePreview() {
         const start = t;
         later(() => setScene(id), start);
         if (id === 'install') {
-          for (let i = 1; i <= COMMAND.length; i += 1) later(() => setTyped(i), start + 300 + i * 45);
+          for (let i = 1; i <= COMMAND.length; i += 1) later(() => setTyped(i), start + 300 + i * 40);
+          for (let i = 1; i <= INSTALL_LINES.length; i += 1) later(() => setSaid(i), start + 1750 + i * 520);
         } else if (id === 'api') {
           for (let i = 1; i <= JSON_LINES.length; i += 1) later(() => setLines(i), start + 150 + i * 140);
         } else if (id === 'heat') {
@@ -179,8 +189,16 @@ export default function TokentrackerTilePreview() {
         <div className="ttp-term">
           <div className="ttp-term-bar"><i /><i /><i /></div>
           <div className="ttp-term-body">
-            <span className="ttp-prompt">$</span> {COMMAND.slice(0, typed)}
-            <span className="ttp-cursor" />
+            <div>
+              <span className="ttp-prompt">$</span> {COMMAND.slice(0, typed)}
+              {said === 0 ? <span className="ttp-cursor" /> : null}
+            </div>
+            {INSTALL_LINES.map(([, text, strong], i) => (
+              <div key={strong} className={`ttp-term-line${i < said ? ' is-in' : ''}`}>
+                <span className="ttp-ok">✓</span> {text}
+                <span className="ttp-strong">{strong}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -199,7 +217,8 @@ export default function TokentrackerTilePreview() {
       <div className={on('api')}>
         <div className="ttp-api">
           <div className="ttp-api-url">
-            <span className="ttp-get">GET</span> /api/v1/users/bicrick/stats
+            <span className="ttp-get">GET</span>
+            <span className="ttp-host">bicrick.github.io</span>/tokentracker-data/api/v1/stats.json
           </div>
           <pre>
             {JSON_LINES.map((line, i) => (

@@ -3,7 +3,7 @@ export const PROJECTS = [
     title: 'tokentracker',
     description: 'token tracking across services, queryable with an api',
     timelineDescription:
-      'One command reads Claude Code, Codex, Cursor, OpenCode, Copilot and more on every machine, then serves your token usage as a public API.',
+      'One command reads Claude Code, Codex, Cursor, OpenCode, Copilot and more on every machine, saves it to a repo on your own GitHub, and GitHub Pages serves it as a JSON API.',
     livePreview: 'tokentracker',
     blogLink: '/projects/tokentracker',
     appLink: 'https://tokentracker.patrickbrown.dev',
