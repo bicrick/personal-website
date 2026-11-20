@@ -118,7 +118,7 @@ function TokensDesktop() {
 
   // The heatmap is always year-to-date, so stats follow it in that view
   const rangeDays = view === 'heatmap' ? null : RANGES.find((r) => r.id === range).days;
-  // Every number below is a tokentracker API query (see hooks/useTokenStats)
+  // Every number below is computed from rows.json on GitHub Pages (see hooks/useTokenStats)
   const { data: stats, error } = useTokenStats(selected, ALL_TOOLS, rangeDays);
   const heatmapTools = useMemo(
     () => (selected.size === ALL_TOOLS.length ? null : [...selected].join(',')),
@@ -151,7 +151,7 @@ function TokensDesktop() {
             Every token my AI coding tools process, across every tool and machine I build on.
             All of it is collected and served by{' '}
             <Link to="/projects/tokentracker">tokentracker</Link>, an open source tool I built
-            for exactly this. Every number on this page is a live query to its API.
+            for exactly this. Every number on this page is computed from my data repo on GitHub Pages.
           </p>
         </header>
 

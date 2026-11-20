@@ -160,7 +160,7 @@ export default function TokensMobile() {
   const [day, setDay] = useState(null);
 
   const rangeDays = RANGES.find((r) => r.id === range).days;
-  // Every number here is a tokentracker API query (see hooks/useTokenStats).
+  // Every number here is computed from rows.json on GitHub Pages (see hooks/useTokenStats).
   // sourceTotals come back unfiltered, so chips show what turning a tool back on adds.
   const { data: stats, error } = useTokenStats(selected, ALL_TOOLS, rangeDays);
   const allStats = stats;
