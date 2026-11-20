@@ -101,8 +101,13 @@ export default function MacroView({
       const oy = cssH / 2 - cam.y * scale;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, cv.width, cv.height);
-      // Paper wash so empty margins aren't transparent.
-      ctx.fillStyle = getComputedStyle(cv).getPropertyValue('--sqd-white').trim() || '#fffefb';
+      // Paper wash so empty margins aren't transparent — match .sqd-sheet,
+      // not panel --sqd-white (which goes dark under html.is-dark .sqd-panel).
+      const paper =
+        getComputedStyle(cv).getPropertyValue('--sqd-sheet').trim()
+        || getComputedStyle(cv).getPropertyValue('--sqd-paper').trim()
+        || '#fbfaf6';
+      ctx.fillStyle = paper;
       ctx.fillRect(0, 0, cv.width, cv.height);
       ctx.setTransform(scale * dpr, 0, 0, scale * dpr, ox * dpr, oy * dpr);
       drawFrame(ctx, tl, vt, {

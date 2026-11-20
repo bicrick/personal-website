@@ -38,13 +38,12 @@ const smooth = (f) => {
   return x * x * (3 - 2 * x);
 };
 
-/** Friends / production navy on light paper; theme ink under html.is-dark. */
+/**
+ * Navy ink for the paper sheet. The sheet stays paper-colored in both
+ * themes (see .sqd-sheet), so never borrow site --ink — in dark mode that
+ * token is a light text color and washes out on the page.
+ */
 export function inkColor() {
-  if (typeof window === 'undefined') return '#1b2a4a';
-  if (document.documentElement.classList.contains('is-dark')) {
-    const v = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
-    return v || '#e8e6e0';
-  }
   return '#1b2a4a';
 }
 
