@@ -11,6 +11,7 @@ import {
   addDays,
 } from './tokenStats';
 import { CumulativeChart, DailyChart } from './TokenCharts';
+import TokensViewStage from './TokensViewStage';
 import './TokensMobile.css';
 
 const VIEWS = [
@@ -18,6 +19,8 @@ const VIEWS = [
   { id: 'daily', label: 'daily' },
   { id: 'cumulative', label: 'total' },
 ];
+
+const VIEW_ORDER = VIEWS.map((v) => v.id);
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -248,9 +251,11 @@ export default function TokensMobile() {
           <div className="mt-panel">
             <Segmented label="Chart view" options={VIEWS} value={view} onChange={setView} />
             <div className="mt-panel-body">
-              {view === 'calendar' && <Calendar series={stats.series} onPick={setDay} />}
-              {view === 'daily' && <DailyChart series={stats.series} order={SOURCES.map((s) => s.id)} />}
-              {view === 'cumulative' && <CumulativeChart series={stats.series} />}
+              <TokensViewStage view={view} order={VIEW_ORDER}>
+                {view === 'calendar' && <Calendar series={stats.series} onPick={setDay} />}
+                {view === 'daily' && <DailyChart series={stats.series} order={SOURCES.map((s) => s.id)} />}
+                {view === 'cumulative' && <CumulativeChart series={stats.series} />}
+              </TokensViewStage>
             </div>
           </div>
 
