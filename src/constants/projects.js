@@ -91,7 +91,7 @@ export const PROJECTS = [
     title: 'scribe',
     description: 'pages written by hand, ready to print',
     timelineDescription:
-      'Ask for a note, a thank-you, or a diagram. It writes the page stroke by stroke. Print it true size or keep a pdf — no account to start.',
+      'Generative handwriting: AI that writes real pen strokes, not a font. A note, a thank-you, a diagram — print it true size or keep a pdf. No account to start.',
     image: `${process.env.PUBLIC_URL}/images/scribe/scribe-pen.webp`,
     blogLink: '/projects/scribe',
     appLink: 'https://scribepages.com',
