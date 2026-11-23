@@ -87,3 +87,7 @@
 .notepadable-embed figcaption {
   margin-top: 8px;
 }
+
+html.is-dark .notepadable-embed-stage {
+  background: var(--surface);
+}

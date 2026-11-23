@@ -3,3 +3,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Iframes paint the browser's white default canvas until their page loads.
+   Keep them invisible until then so the themed container shows instead.
+   data-loaded is set by the capture listener in src/index.js. */
+iframe {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+iframe[data-loaded] {
+  opacity: 1;
+}

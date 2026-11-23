@@ -23,7 +23,7 @@
   width: 100%;
   overflow: clip;
   container-type: inline-size;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--rule);
 }
 
