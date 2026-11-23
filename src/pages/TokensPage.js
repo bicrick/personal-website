@@ -14,7 +14,10 @@ import {
 } from './tokens/tokenStats';
 import { CumulativeChart, DailyChart } from './tokens/TokenCharts';
 import TokensMobile from './tokens/TokensMobile';
+import TokensViewStage from './tokens/TokensViewStage';
 import './TokensPage.css';
+
+const VIEW_ORDER = VIEWS.map((v) => v.id);
 
 
 function Toggle({ options, value, onChange, label }) {
@@ -169,19 +172,21 @@ function TokensDesktop() {
             <StatStrip stats={stats} />
 
             <div className="tokens-panel">
-              {view === 'heatmap' && (
-                <div className="tokens-heatmap">
-                  <CursorActivityHeatmap
-                    to={null}
-                    tools={heatmapTools}
-                    showSources
-                    showTotal={false}
-                    showLabel={false}
-                  />
-                </div>
-              )}
-              {view === 'cumulative' && <CumulativeChart series={stats.series} />}
-              {view === 'daily' && <DailyChart series={stats.series} order={order} />}
+              <TokensViewStage view={view} order={VIEW_ORDER}>
+                {view === 'heatmap' && (
+                  <div className="tokens-heatmap">
+                    <CursorActivityHeatmap
+                      to={null}
+                      tools={heatmapTools}
+                      showSources
+                      showTotal={false}
+                      showLabel={false}
+                    />
+                  </div>
+                )}
+                {view === 'cumulative' && <CumulativeChart series={stats.series} />}
+                {view === 'daily' && <DailyChart series={stats.series} order={order} />}
+              </TokensViewStage>
             </div>
 
             <SourceFilter stats={stats} selected={selected} onToggle={toggleSource} />
