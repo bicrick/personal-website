@@ -128,6 +128,23 @@ export const PROJECTS = [
     date: 'August 2026',
   },
   {
+    title: 'twist',
+    description: 'a puzzle game about glued and twisted edges',
+    timelineDescription:
+      'A puzzle game starring soft clay bots. Four worlds, one mechanic each: glued and twisted edges, sliding blocks, portals, and gates. Levels are found by random search and verified with a solver.',
+    image: `${process.env.PUBLIC_URL}/images/twist/twist-preview-poster.jpg`,
+    video: `${process.env.PUBLIC_URL}/images/twist/twist-preview.mp4`,
+    poster: `${process.env.PUBLIC_URL}/images/twist/twist-preview-poster.jpg`,
+    blogLink: 'https://twist-game.vercel.app',
+    blogExternal: true,
+    appLink: 'https://twist-game.vercel.app',
+    appLabel: 'play',
+    repoLink: 'https://github.com/bicrick/twist-game',
+    relevanceRank: 10,
+    dateRank: -0.5,
+    date: 'November 2026',
+  },
+  {
     title: 'gd-visualizer',
     description: 'compare optimizer performance in 3d',
     timelineDescription:

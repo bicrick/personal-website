@@ -131,6 +131,11 @@ export default function AboutPage() {
           <p>
             When I am not working I like to be active outside. I love to play golf and tennis, ride bikes, and go
             fishing. I grew up an Eagle Scout, and ideally I'd spend more of my waking hours outside than inside.
+            When I am inside, I like puzzle games. Play my puzzle game,{' '}
+            <a href="https://twist-game.vercel.app" {...external}>
+              twist
+            </a>
+            .
           </p>
         </div>
 
